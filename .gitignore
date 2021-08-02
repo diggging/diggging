@@ -38,6 +38,7 @@ parts/
 sdist/
 var/
 wheels/
+*.whl
 share/python-wheels/
 *.egg-info/
 .installed.cfg
@@ -256,5 +257,33 @@ pip-selfcheck.json
 # Ignore all local history of files
 .history
 .ionide
+
+### Linux ###
+*~
+
+# temporary files which can be created if a process still has a handle open of a deleted file
+.fuse_hidden*
+
+# KDE directory preferences
+.directory
+
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
+
+# .nfs files are created when an open file is removed but is still being accessed
+.nfs*
+
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+### Windows ###
+# Windows thumbnail cache files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
 
 # End of https://www.toptal.com/developers/gitignore/api/venv,visualstudiocode,django,python,git
