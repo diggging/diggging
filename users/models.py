@@ -5,8 +5,6 @@ from django.utils import timezone
 
 
 class User(AbstractUser):
-    user_mem_email = models.EmailField(
-        verbose_name="email", max_length=255, blank=True)
     user_mem_nickname = models.CharField(
         verbose_name="nickname", max_length=150, blank=True)
     user_mem_realname = models.CharField(
@@ -17,8 +15,8 @@ class User(AbstractUser):
         verbose_name="date_joined", default=timezone.now)
     user_profile_content = models.TextField(
         verbose_name="personal description", blank=True)
-    user_following = models.ManyToManyField("self", blank=True)
-    user_followed = models.ManyToManyField("self", blank=True)
+    user_following = models.ManyToManyField("self", blank=True, default=0)
+    user_followed = models.ManyToManyField("self", blank=True, default=0)
     user_profile_image = models.ImageField(
         verbose_name="대표 사진", upload_to="images/", blank=True, null=True)
 
