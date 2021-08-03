@@ -3,6 +3,7 @@
 {% if request.user.pk == host.pk %}
     <h1>{{request.user.username}} my page</h1>
     내 페이지임
+    <a href = '{% url "users:account_detail" host.id%}'> 내정보 수정 </a>
 
       
 {% else %}    
@@ -23,4 +24,4 @@ following 수: {{ host_following|length }}
 <hr/>
 {% for following in host_following %}
     {{ following.username }}
-{% endfor %}  
+{% endfor %}

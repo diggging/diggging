@@ -6,6 +6,7 @@ from .models import User
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.hashers import check_password
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
@@ -79,3 +80,41 @@ def follow(request, host_pk):
         host.user_followed.add(me)
     
     return redirect('users:my_page', host_pk)
+
+
+def account_detail(request, pk):
+    return render(request, template_name = "users/account_detail.html")
+
+def change_nickname(request):
+    context = {}
+    if request.method == "POST":
+        new_nickname = request.POST.get("new_nickname")
+        user = request.user
+        if User.objects.filter(user_nickname=new_nickname):
+            context.update({'error':"이미 존재하는 별명입니다."})
+        
+        else:
+            user.user_nickname=new_nickname
+            user.save()
+            return redirect('users:account_detail', user.id)
+    return redirect('users:account_detail', user.id)
+
+def change_pw(request):
+    context = {}
+    if request.method == "POST":
+        current_password = request.POST.get("origin_password")
+        user = request.user
+        if check_password(current_password, user.password):
+            new_password = request.POST.get("password1")
+            password_confirm = request.POST.get("password2")
+            if new_password == password_confirm:
+                user.set_password(new_password)
+                user.save()
+                login(request, request.user)
+                return redirect('users:login')
+            else:
+                context.update({'error':"새로운 비밀번호를 다시 확인해주세요."})
+    else:
+        context.update({'error':"현재 비밀번호가 일치하지 않습니다."})
+    
+    return redirect('users:login')
