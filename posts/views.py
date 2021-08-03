@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post
+from django.urls import reverse
+from . import models
+from .models import Post, Folder, CustomFolder
 from .forms import PostForm
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
@@ -43,3 +45,13 @@ def post_delete(request, pk):
     posts = Post.objects.get(pk=pk)
     posts.delete()
     return redirect("""'url 넣어주세요'""")
+    return render(request, 'posts/post_list.html', ctx)
+
+def save_custom_list(request, post_pk):
+    post = models.Post.objects.get_or_none(pk = post_pk)
+    if post is not None:
+        the_list, _ = models.CustomFolder.objects.get_or_create(
+            user = request.user, name=CustomFolder.name
+        )
+        the_list.posts.add(post)
+    return redirect(reverse("posts:custom_folder_detail", kwrags={"pk": post_pk}))
