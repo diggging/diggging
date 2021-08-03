@@ -1,0 +1,6 @@
+<form method="POST" action="{% url 'users:login' %}">
+    <!--  form 쓸땐 이걸 꼭 추가해줘야함  -->
+    {% csrf_token %}
+    {{form.as_p}}
+    <button>Login</button>
+</form>

@@ -1,0 +1,6 @@
+<form method="POST" action="{% url 'users:signup' %}">
+    <!--  form 쓸땐 이걸 꼭 추가해줘야함  -->
+    {% csrf_token %}
+    {{signup_form.as_p}}
+    <button type="submit">SignUp</button>
+</form>
