@@ -39,9 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tagging.apps.TaggingConfig',
+    #apps
     "core",
     "users",
     "posts",
+    "comments",
 ]
 
 MIDDLEWARE = [
