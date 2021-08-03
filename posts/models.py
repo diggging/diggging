@@ -29,6 +29,8 @@ class Post(core_models.TimeStampModel):
     code = models.TextField(blank=True)
 
     tag = TagField(blank=False)
+    folder = models.ForeignKey("Folder", related_name="related_posts", on_delete=models.SET_NULL, null=True)
+    custom_folder = models.ForeignKey("CustomFolder", related_name="custom_selected_posts", on_delete=models.SET_NULL, null=True)
 
 
 class Tool(core_models.TimeStampModel):
@@ -38,3 +40,22 @@ class Tool(core_models.TimeStampModel):
 
     def __str__(self):
         return self.name
+
+class Folder(core_models.TimeStampModel):
+
+    def name(self):
+        return self.related_posts.tag
+    
+    def post_count(self):
+        return self.related_posts.count()
+    post_count.short_description = "number of posts saved"
+
+class CustomFolder(Folder):
+    name = CharField(max_length=150, blank=False)
+
+    def __str__(self):
+        return self.name
+
+    def custom_folder_posts_count(self):
+        return self.custom_selected_posts.count()
+    custom_folder_posts_count.short_description = "number of posts saved"
