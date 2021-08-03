@@ -7,12 +7,8 @@
     <title>Document</title>
 </head>
 <body>
-    
-    {% block content %}
-        {% for post in posts %}
-            {{post.title}}
-            {{post.os_choice}}
-        {% endfor %}
+    {% block content%}
+        {{folder}}
     {% endblock%}
 </body>
 </html>

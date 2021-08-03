@@ -19,8 +19,9 @@ class PostAdmin(admin.ModelAdmin):
         "tag",
         "is_public",
         "is_friend",
+        "folder",
     )
-    list_display = ["pk", "title", "desc", "is_public", "is_friend"]
+    list_display = ["pk", "title", "desc", "is_public", "is_friend", "folder"]
     list_filter = ("is_public",)
 
     def short_content(self, Post):

@@ -106,7 +106,7 @@ class Post(core_models.TimeStampModel):
     code = models.TextField(verbose_name="코드", blank=True)
 
     tag = TagField(verbose_name="태그", blank=False)
-    """folder = models.ForeignKey(
+    folder = models.ForeignKey(
         "Folder", related_name="related_posts", on_delete=models.SET_NULL, null=True
     )
     custom_folder = models.ForeignKey(
@@ -114,7 +114,7 @@ class Post(core_models.TimeStampModel):
         related_name="custom_selected_posts",
         on_delete=models.SET_NULL,
         null=True,
-    )"""
+    )
     is_public = models.BooleanField(
         verbose_name="전체공개", default=True
     )  # 해당코드 false로 변경시 비공개
@@ -123,7 +123,7 @@ class Post(core_models.TimeStampModel):
 
 class Folder(core_models.TimeStampModel):
     def name(self):
-        return self.related_posts.tag
+        return self.language
 
     def post_count(self):
         return self.related_posts.count()

@@ -11,6 +11,7 @@ class PostForm(forms.ModelForm):
             "title",
             "problem_solving",
             "os",
+            "language",
             "error_message",
             "image",
             "desc",

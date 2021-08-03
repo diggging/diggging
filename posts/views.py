@@ -10,11 +10,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 def post_list(request):
     posts = Post.objects.all()
-    if request.is_public == False:
-        return redirect()  # 비공개 게시물을 클릭했을때 나오는 html
-    else:
-        ctx = {"posts": posts}
-        return render(request, "post/post_list.html", ctx)
+    ctx = {"posts": posts}
+    return render(request, "posts/post_list.html", ctx)
 
 
 def post_detail(request, pk):
@@ -64,11 +61,9 @@ def post_delete(request, pk):
     return redirect("""'url 넣어주세요'""")
 
 
-def save_custom_list(request, post_pk):
-    post = models.Post.objects.get_or_none(pk=post_pk)
-    if post is not None:
-        the_list, _ = models.CustomFolder.objects.get_or_create(
-            user=request.user, name=CustomFolder.name
-        )
-        the_list.posts.add(post)
-    return redirect(reverse("posts:custom_folder_detail", kwrags={"pk": post_pk}))
+def make_folder(request):
+    folder = Post.objects.filter(request.language)
+    ctx = {
+        "folder":folder
+    }
+    return render(request, "posts/base.html",ctx)
