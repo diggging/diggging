@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
+from django.conf import settings
 # Create your models here.
 
 
@@ -11,8 +12,8 @@ class User(AbstractUser):
     user_point = models.IntegerField(verbose_name="point", default=0)
     user_register_datetime = models.DateTimeField(
         verbose_name="date_joined", default=timezone.now)
-    user_following = models.ManyToManyField("self", blank=True, default=0)
-    user_followed = models.ManyToManyField("self", blank=True, default=0)
+    user_following = models.ManyToManyField("self", symmetrical=False, blank=True, default=0, related_name ='user_followed')
+    #user_followed = models.ManyToManyField("self", symmetrical=False, blank=True, default=0)
     user_profile_content = models.TextField(
         verbose_name="personal description", blank=True)
     user_profile_image = models.ImageField(
@@ -22,9 +23,9 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
-    @property
-    def followers_count(self):
-        return self.user_followed.all().count()
+    # @property
+    # def followers_count(self):
+    #     return self.user_followed.all().count()
 
     @property
     def following_count(self):

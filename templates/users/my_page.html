@@ -1,1 +1,26 @@
-<h1>{{request.user.username}} my page</h1>
+내이름 : {{request.user.username}}
+
+{% if request.user.pk == host.pk %}
+    <h1>{{request.user.username}} my page</h1>
+    내 페이지임
+
+      
+{% else %}    
+    <h1> {{ host.username }} 의 홈페이지 입니다. </h1>
+    남의 페이지임
+    <a href = '{% url "users:follow" host.id%}'>  follow 하기 </a>
+{% endif %}
+
+<h3>follower</h3>
+follower 수: {{ host_follower|length }}
+<hr/>
+{% for follower in host_follower %}
+    {{ follower.username }}
+{% endfor %}
+<hr/>
+<h3>following</h3>
+following 수: {{ host_following|length }}
+<hr/>
+{% for following in host_following %}
+    {{ following.username }}
+{% endfor %}  
