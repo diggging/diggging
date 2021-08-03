@@ -25,8 +25,8 @@ class User(AbstractUser):
 
     @property
     def followers_count(self):
-        return self.followers.all().count()
+        return self.user_followed.all().count()
 
     @property
     def following_count(self):
-        return self.following.all().count()
+        return self.user_following.all().count()
