@@ -123,6 +123,8 @@ class Post(core_models.TimeStampModel):
         verbose_name="전체공개", default=True
     )  # 해당코드 false로 변경시 비공개
     is_friend = models.BooleanField(verbose_name="이웃공개", default=False)  # 나를 팔로잉 하는 사람.
+    scrap_num = models.IntegerField(default=0)
+    helped_num = models.IntegerField(default=0)
 
 
 class Folder(core_models.TimeStampModel):
