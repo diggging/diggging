@@ -19,3 +19,5 @@ class PostForm(forms.ModelForm):
         }
 
 
+class PostSearchForm(forms.Form):
+    search_word = forms.CharField(label="Search Word")

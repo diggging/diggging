@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from .models import Post, Folder, CustomFolder
 from . import models
-from .forms import PostForm
+from .forms import PostForm, PostSearchForm
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic.edit import FormView
+from django.db.models import Q
 
 # Create your views here.
 
@@ -85,26 +87,25 @@ def post_delete(request, pk):
     return redirect("""'url 넣어주세요'""")
 
 
-def search(request):
-    context = dict()
-    language = request.POST.get("language")
-    free_post = Post.objects.filter(title="title").order_by("-id")
-    post = request.POST.get("post", "")
-    if post:
-        free_post = free_post.filter(language=language)
-        context["free_post"] = free_post
-        context["post"] = post
-        return render(request, "posts/search.html", context)
-    else:
-        return render(request, "posts/search.html")
+class SearchFormView(FormView):
+    form_class = PostSearchForm
+    template_name = "posts/search.html"
 
+    def form_vaild(self, form):
+        searchWord = form.cleaned_data["search_word"]
+        ost_list = Post.objects.filter(
+            Q(title__icontains=searchWord)
+            | Q(description__icontains=searchWord)
+            | Q(content__icontains=searchWord)
+        ).distinct()
 
-# def make_folder(request):
-#     folder = Post.objects.filter(request.language)
-#     ctx = {
-#         "folder":folder
-#     }
-#     return render(request, "posts/base.html",ctx)
+        context = {}
+        context["form"] = form
+        context["search_term"] = searchWord
+        context["object_list"] = post_list
+
+        return render(self.request, self.template_name, context)
+
 
 # 삽질 기록 퍼오기
 def get_post(request, post_pk):
