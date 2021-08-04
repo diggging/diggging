@@ -30,3 +30,9 @@ class User(AbstractUser):
     @property
     def following_count(self):
         return self.user_following.all().count()
+
+
+class Sand(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.IntegerField(default=0)
+    
