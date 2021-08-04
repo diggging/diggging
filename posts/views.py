@@ -15,7 +15,7 @@ def post_list(request):
 
 
 def post_detail(request, pk):
-    details = Post.objects.get(pk=pk)
+    details = Post.objects.get(pk=pk)s
     # 댓글기능도 끌어와야함.
     ctx = {
         "details": details
@@ -60,6 +60,7 @@ def post_create(request):
         ctx = {
             "form": form,
         }
+    
 
         return render(request, template_name="posts/post_create.html", context=ctx)
 

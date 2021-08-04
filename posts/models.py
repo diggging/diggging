@@ -139,6 +139,17 @@ class Folder(core_models.TimeStampModel):
 
     # post_count.short_description = "number of posts saved"
 
+    def __str__(self):
+        return self.folder_name
+
+    # def name(self):
+    #    return self.related_posts.language
+
+    # def post_count(self):
+    #    return self.related_posts.count()
+
+    # post_count.short_description = "number of posts saved"
+
 
 class CustomFolder(Folder):
     name = CharField(max_length=150, blank=False)
