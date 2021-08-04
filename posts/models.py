@@ -107,7 +107,11 @@ class Post(core_models.TimeStampModel):
 
     tag = TagField(verbose_name="태그", blank=False)
     folder = models.ForeignKey(
-        "Folder", related_name="related_posts", on_delete=models.SET_NULL, null=True
+        "Folder",
+        related_name="related_posts",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
     )
     custom_folder = models.ForeignKey(
         "CustomFolder",
@@ -122,13 +126,18 @@ class Post(core_models.TimeStampModel):
 
 
 class Folder(core_models.TimeStampModel):
-    def name(self):
-        return self.language
+    folder_name = models.CharField(max_length=100)
 
-    def post_count(self):
-        return self.related_posts.count()
+    def __str__(self):
+        return self.folder_name
 
-    post_count.short_description = "number of posts saved"
+    # def name(self):
+    #    return self.related_posts.language
+
+    # def post_count(self):
+    #    return self.related_posts.count()
+
+    # post_count.short_description = "number of posts saved"
 
 
 class CustomFolder(Folder):

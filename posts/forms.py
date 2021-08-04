@@ -8,6 +8,7 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = {
+            "user",
             "title",
             "problem_solving",
             "os",

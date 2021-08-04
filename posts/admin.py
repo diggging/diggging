@@ -30,8 +30,8 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(models.Folder)
 class FolderAdmin(admin.ModelAdmin):
-    list_display = ["pk", "name", "post_count"]
-    list_display_links = ["name"]
+    list_display = ["pk", "folder_name"]
+    list_display_links = ["folder_name"]
 
 
 @admin.register(models.CustomFolder)
