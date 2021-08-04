@@ -7,7 +7,7 @@ from django.conf import settings
 
 class User(AbstractUser):
     user_nickname = models.CharField(
-        verbose_name="nickname", max_length=150, blank=True)
+        verbose_name="nickname", max_length=8, blank=True)
     user_level = models.IntegerField(verbose_name="level", default=0)
     user_point = models.IntegerField(verbose_name="point", default=0)
     user_register_datetime = models.DateTimeField(
@@ -19,6 +19,7 @@ class User(AbstractUser):
     user_profile_image = models.ImageField(
         verbose_name="대표 사진", upload_to="images/", blank=True, null=True)
     is_active = models.BooleanField(default=True)
+    email = models.EmailField(blank=True, max_length=254, verbose_name='email address', null=False)
 
     def __str__(self):
         return self.username
@@ -35,4 +36,5 @@ class User(AbstractUser):
 class Sand(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     amount = models.IntegerField(default=0)
-    
+    create_time = models.DateTimeField()
+    reason = models.TextField()

@@ -12,7 +12,6 @@ urlpatterns = [
     path('<int:host_pk>/follow', view=views.follow, name = "follow"),
 
     path('<int:pk>/account_detail', view=views.account_detail, name = "account_detail"),
-    path('change_nickname', view=views.change_nickname, name="change_nickname"),
+    path('change_nickname/', view=views.change_nickname, name="change_nickname"),
     path('change_pw/', view=views.change_pw, name="change_pw"),
-
 ] 
