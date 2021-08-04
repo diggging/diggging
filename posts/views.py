@@ -97,3 +97,42 @@ def search(request):
         return render(request, "posts/search.html", context)
     else:
         return render(request, "posts/search.html")
+
+
+# def make_folder(request):
+#     folder = Post.objects.filter(request.language)
+#     ctx = {
+#         "folder":folder
+#     }
+#     return render(request, "posts/base.html",ctx)
+
+# 삽질 기록 퍼오기
+def get_post(request, post_pk):
+    # attach action in frontend
+    # how to attach action
+    # ex> <... href="{% url '...' ... %}?action=remove">
+    #                     or
+    #     <... href={% url '...' ... %}?action=add">
+    action = request.GET.get("action", None)
+    # post = Post.objects.get(pk=post_pk)
+    post = get_object_or_404(Post, pk=post_pk)
+    print(post)
+    target_language = post.language
+    folder = Folder.objects.filter(folder_name=target_language)
+
+    if action == "add":
+        # 폴더가 이미 존재시에 해당 폴더에 포스트 추가
+        if folder:
+            existing_folder = Folder.objects.get(folder_name=target_language)
+            existing_folder.add(post)
+            existing_folder.save()
+        else:
+            # 없으면 folder 형성
+            new_folder = Folder.objects.create(folder_name=target_language)
+            post.folder = new_folder
+            new_folder.save()
+    elif action == "remove":
+        folder.delete(post)
+
+    # url: 저장 후 post_detail 페이지에 남아있음.
+    return render(request, template_name="posts/post_detail.html")
