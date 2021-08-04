@@ -1,0 +1,19 @@
+{% extends 'posts/base.html'%}
+    {% block content%}
+        <form method="POST">
+            {%csrf_token%} 
+
+            {% if not free_post %} 
+            <h1>검색 결과가 없습니다.</h1>
+            {%else%} 
+                {%for post in free_post.all%}
+                    <img src="{{ post.image.url }}" alt="">
+                    {{post.title}}
+                    {{post.desc}}
+                    {{post.tag}}
+                {%endfor%}
+            {%endif%}
+        </form>
+    {% endblock%}
+</body>
+</html>

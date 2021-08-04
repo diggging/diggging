@@ -8,5 +8,5 @@ urlpatterns = [
     path("create/", views.post_create, name="post_create"),
     path("<int:pk>/update", views.post_update, name="post_update"),
     path("<int:pk>/delete", views.post_delete, name="post_delete"),
-    path("folder/", views.make_folder, name="make_folder"),
+    path("search/", views.search, name="search"),
 ]

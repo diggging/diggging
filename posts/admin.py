@@ -32,11 +32,6 @@ class PostAdmin(admin.ModelAdmin):
 class FolderAdmin(admin.ModelAdmin):
     list_display = ["pk", "folder_name"]
     list_display_links = ["folder_name"]
-<<<<<<< HEAD
-
-=======
-        
->>>>>>> 6bdedea871ebc0d142ad9ff1a4b52219c3c98af0
 
 @admin.register(models.CustomFolder)
 class CustomFolderAdmin(admin.ModelAdmin):

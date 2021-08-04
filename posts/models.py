@@ -161,3 +161,4 @@ class CustomFolder(Folder):
         return self.custom_selected_posts.count()
 
     custom_folder_posts_count.short_description = "number of posts saved"
+

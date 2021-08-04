@@ -17,3 +17,5 @@ class PostForm(forms.ModelForm):
             "image",
             "desc",
         }
+
+

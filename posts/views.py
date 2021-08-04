@@ -15,7 +15,7 @@ def post_list(request):
 
 
 def post_detail(request, pk):
-    details = Post.objects.get(pk=pk)s
+    details = Post.objects.get(pk=pk)
     # 댓글기능도 끌어와야함.
     ctx = {
         "details": details
@@ -60,7 +60,6 @@ def post_create(request):
         ctx = {
             "form": form,
         }
-    
 
         return render(request, template_name="posts/post_create.html", context=ctx)
 
@@ -86,7 +85,15 @@ def post_delete(request, pk):
     return redirect("""'url 넣어주세요'""")
 
 
-def make_folder(request):
-    folder = Post.objects.filter(request.language)
-    ctx = {"folder": folder}
-    return render(request, "posts/base.html", ctx)
+def search(request):
+    context = dict()
+    language = request.POST.get("language")
+    free_post = Post.objects.filter(title="title").order_by("-id")
+    post = request.POST.get("post", "")
+    if post:
+        free_post = free_post.filter(language=language)
+        context["free_post"] = free_post
+        context["post"] = post
+        return render(request, "posts/search.html", context)
+    else:
+        return render(request, "posts/search.html")
