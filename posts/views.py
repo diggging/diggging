@@ -33,19 +33,25 @@ def post_create(request):
 
             # 폴더 분류해주기
             language = request.POST.get("language")     # language 가져옴
-            folder = Folder.objects.filter(name = language)
+            print(language)
+            print(type(language))
+            folder = Folder.objects.filter(folder_name = language)
+            
             if folder:
+                print("___________________ 있음 __________________________________________________________________")
                 # 있으면 foriegn key 연결
-                posts.folder = folder
+                existed_folder = Folder.objects.get(folder_name=language)
+                posts.folder = existed_folder
                 posts.save()
             else:
                 # 없으면 folder 만들어서 
-                new_folder = Folder.objects.create()
+                print("___________________ 없슴 __________________________________________________________________")
+                new_folder = Folder.objects.create(folder_name=language)
                 posts.folder = new_folder
                 posts.save()
             
 
-            return redirect("""'url 넣어주세요'""")
+            return redirect('posts:post_list')
     else:
         form = PostForm()
         ctx = {
@@ -53,7 +59,7 @@ def post_create(request):
         }
     
 
-        return render(request, """'html 넣어주세요'""", ctx)
+        return render(request, template_name="posts/post_create.html", context=ctx)
 
 
 def post_update(request, pk):
