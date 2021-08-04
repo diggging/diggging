@@ -30,12 +30,28 @@ def post_create(request):
         if form.is_valid():
             posts = form.save()
             posts.save()
+
+            # 폴더 분류해주기
+            language = request.POST.get("language")     # language 가져옴
+            folder = Folder.objects.filter(name = language)
+            if folder:
+                # 있으면 foriegn key 연결
+                posts.folder = folder
+                posts.save()
+            else:
+                # 없으면 folder 만들어서 
+                new_folder = Folder.objects.create()
+                posts.folder = new_folder
+                posts.save()
+            
+
             return redirect("""'url 넣어주세요'""")
     else:
         form = PostForm()
         ctx = {
             "form": form,
         }
+    
 
         return render(request, """'html 넣어주세요'""", ctx)
 
