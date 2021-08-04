@@ -17,7 +17,3 @@ class PostForm(forms.ModelForm):
             "image",
             "desc",
         }
-
-
-class PostSearchForm(forms.Form):
-    search_word = forms.CharField(label="Search Word")
