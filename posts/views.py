@@ -1,9 +1,11 @@
+from django.http.response import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 from .models import Post, Folder, CustomFolder
 from . import models
 from .forms import PostForm
-from django.views.decorators.csrf import csrf_exempt
+import json
 
 # Create your views here.
 
@@ -141,3 +143,27 @@ def get_post(request, post_pk):
 
     # url: 저장 후 post_detail 페이지에 남아있음.
     return render(request, template_name="posts/post_detail.html")
+
+# 도움이 되었어요, 스크랩 개수 count 하기 위한 axios
+def count_like_scrap(request):
+    # json 문자열을 json.loads를 통해서 json 형태에서 파이썬 객체 형태로 parsing
+    # front 단에서 request.body를 통해서 넘어와야 하는 것들
+    # 1) 'id' (post의 id값)
+    # 2) 'type' (button이 도움이 되었어요 버튼인지 스크랩 개수 버튼인지의 여부)
+    req = json.loads(request.body) 
+    post_id = req['id']
+    button_type = req['type']
+
+    post = get_object_or_404(id=post_id)
+
+    # 만약에 button type이 도움이 되었어요 버튼이면 도움이 되었어요 개수 + 1
+    # 만약에 button type이 퍼오기이라면 스크랩 개수 + 1
+    if button_type == "도움이 되었어요":
+        post.helped_num += 1
+    elif button_type == "퍼오기":
+        post.scrap_num += 1
+
+    post.save()
+
+    # TODO: 굳이 JsonResponse 필요한가? (프론트엔드 단에서는 도움이 되었어요 or 스크랩 개수가 표현이 되지 않는 듯)
+    return JsonResponse({'id': post_id, 'type': button_type})
