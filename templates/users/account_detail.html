@@ -1,0 +1,26 @@
+<p>sand: {{ request.user.user_point }} </p>
+<p>닉네임: {{ request.user.user_nickname }}</p>
+<p>이메일: {{ request.user.email }}</p>
+<hr/>
+<h3>닉네임 변경</h3>
+<form method="POST" action="{% url 'users:change_nickname' %}">
+    {% csrf_token %}
+        Change_nickname
+        <input name="new_nickname">
+    <button type="submit"> 닉네임 변경하기 </button>
+</form>
+<hr/>
+<h3>비밀번호 변경</h3>
+<form method="POST" action="{% url 'users:change_pw' %}">
+    {% csrf_token %}
+        Origin Password
+        <input name="origin_password" type="password">
+
+        New Password
+        <input class="login_input" name="password1" type="password">
+
+        Confirm Password
+        <input class="login_input" name="password2" type="password">
+
+    <button type="submit"> 비밀번호 변경하기 </button>
+</form>

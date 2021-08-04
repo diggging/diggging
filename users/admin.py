@@ -6,5 +6,8 @@ from .models import User
 
 
 @admin.register(User)
-class CustomUserAdmin(UserAdmin):
-    list_display = ("user_mem_nickname", "user_mem_realname")
+class CustomUserAdmin(admin.ModelAdmin):
+    fields = ("username", "password", "last_login", "email", "user_nickname",
+              "user_profile_content", "user_profile_image", "user_following")
+    list_display = ("username", "user_nickname",
+                    "user_level", "user_point",  "following_count","id")
