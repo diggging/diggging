@@ -26,6 +26,7 @@ def signup(request):
 
 # 로그인
 def log_in(request):
+    context = {}
     if request.method == "POST":
         form = AuthenticationForm(request, request.POST)
         if form.is_valid():
@@ -33,7 +34,8 @@ def log_in(request):
             user = form.get_user()
             return redirect('users:my_page', user.pk)
         else:
-            print("_________________________________ 외않되 __________________________________________")
+           context.update({"error:해당하는 유저 정보가 없습니다."})
+           return render(request, template_name="users/login.html")
     else:
         form = AuthenticationForm()
     ctx = {'form' : form}
