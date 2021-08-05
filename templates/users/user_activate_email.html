@@ -1,0 +1,9 @@
+{% load i18n %}
+
+{% autoescape off %}
+{% blocktranslate %}
+Please click on the link to confirm your registration,
+{% endblocktranslate %}
+
+http://{{ domain }}{% url 'account:activate' uidb64=uid token=token %}
+{% endautoescape %}

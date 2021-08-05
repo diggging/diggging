@@ -1,12 +1,16 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic.base import TemplateView
 #from .forms import SignUpForm
-from .forms import UserCustomCreationForm
+from .forms import UserCustomCreationForm, WebUserCreationForm
 from .models import User
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.hashers import check_password
+# 이메일 인증 관련 import
+import logging
 
 # SMTP 관련 인증
 from django.contrib.sites.shortcuts import get_current_site
@@ -18,7 +22,7 @@ from .tokens import account_activation_token
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
-# 회원가입
+# # 회원가입
 # def signup(request):
 #     #if request.user.is_authenticated:
 #     #    return redirect('users:my_page')
@@ -34,8 +38,43 @@ from .tokens import account_activation_token
 
 # 회원가입
 def signup(request):
+    #if request.user.is_authenticated:
+    #    return redirect('users:my_page')
     if request.method == "POST":
-        user = 
+        user_form = WebUserCreationForm(request.POST)
+        if user_form.is_valid():
+            user = user_form.save()
+            return redirect('users:login')
+    else:
+        user_form = WebUserCreationForm()
+    ctx={'signup_form' : user_form}
+    return render(request, template_name="users/signup.html", context=ctx)
+
+# 이메일 인증 활성화 처리 view
+class UserActivateView(TemplateView):
+    logger = logging.getLogger(__name__)
+    template_name = 'users/user_activate_complete.html'
+
+    def get(self, request, *args, **kwargs):
+        self.logger.debug('UserActivateView.get()')
+
+        uid = force_text(urlsafe_base64_decode(self.kwargs['uidb64']))
+        token = self.kwargs['token']
+
+        self.logger.debug('uid: %s, token: %s' % (uid, token))
+
+        try:
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            self.logger.warning('User %s not found' % uid)
+            user = None
+        
+        if user is not None and PasswordResetTokenGenerator().check_token(user, token):
+            user.is_active = True
+            user.save()
+            self.logger.info('User %s(pk=%s) has been activated.' % (user, user.pk))
+
+        return super(UserActivateView, self).get(request, *args, **kwargs)
 
 # 로그인
 def log_in(request):
