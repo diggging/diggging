@@ -1,3 +1,4 @@
+from comments.models import Comment
 from django.http.response import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
@@ -19,8 +20,9 @@ def post_list(request):
 # 프론트에서 해당 포스트 id 넘겨주면
 def post_detail(request, user_id, post_id):
     details = Post.objects.get(pk=post_id)
+    comments = details.comments.all()
     # 댓글기능도 끌어와야함.
-    ctx = {"details": details}
+    ctx = {"details": details, "comments": comments}
     # html added by 종권
     return render(request, "posts/post_detail.html", ctx)
 

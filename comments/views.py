@@ -14,19 +14,15 @@ import json
 @csrf_exempt
 def comment(request):
     req = json.loads(request.body)
-    print(req)
     post_id = req["id"]
-    comment = req["comment_id"]
     comment_content = req["text"]
 
     post = Post.objects.get(id=post_id)
-    comment = Comment.objects.create(post=post, text=comment_content)
+    comment = Comment.objects.create(post=post, text=comment_content, user=request.user)
 
     post.save()
 
-    return JsonResponse(
-        {"id": post_id, "comment_content": comment_content, "comment_id": comment.id}
-    )
+    return JsonResponse({"id": post_id, "comment_content": comment_content})
 
 
 # delete comment
