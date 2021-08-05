@@ -1,4 +1,7 @@
 {% extends 'base.html'%}
 {% block content%}
+<h1>{{post.title}}</h1>
+<h4>작성자 : {{post.user.user_nickname}}</h4>
 
+<span><a href="{% url " posts:get_post" post.user.id post.id %}">퍼가기</a></span>
 {% endblock %}

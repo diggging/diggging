@@ -2,7 +2,7 @@ from django.http.response import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-from .models import Post, Folder, CustomFolder
+from .models import Post, Folder
 from . import models
 from .forms import PostForm
 import json
@@ -16,6 +16,7 @@ def post_list(request):
     return render(request, "posts/post_list.html", ctx)
 
 
+# 프론트에서 해당 포스트 id 넘겨주면 
 def post_detail(request, pk):
     details = Post.objects.get(pk=pk)
     # 댓글기능도 끌어와야함.
@@ -23,7 +24,8 @@ def post_detail(request, pk):
         "details": details
         # 여기에도 댓글 넣어주어야함.
     }
-    return render(request, """'html 넣어주세요'""", ctx)
+    # html added by 종권
+    return render(request, "posts/post_detail.html", ctx)
 
 
 def post_create(request):
@@ -120,26 +122,36 @@ def get_post(request, post_pk):
     # ex> <... href="{% url '...' ... %}?action=remove">
     #                     or
     #     <... href={% url '...' ... %}?action=add">
-    action = request.GET.get("action", None)
+    # action = request.GET.get("action", None)
     # post = Post.objects.get(pk=post_pk)
     post = get_object_or_404(Post, pk=post_pk)
-    print(post)
     target_language = post.language
     folder = Folder.objects.filter(folder_name=target_language)
 
-    if action == "add":
-        # 폴더가 이미 존재시에 해당 폴더에 포스트 추가
-        if folder:
-            existing_folder = Folder.objects.get(folder_name=target_language)
-            existing_folder.add(post)
-            existing_folder.save()
-        else:
-            # 없으면 folder 형성
-            new_folder = Folder.objects.create(folder_name=target_language)
-            post.folder = new_folder
-            new_folder.save()
-    elif action == "remove":
-        folder.delete(post)
+    # if action == "add":
+    #     # 폴더가 이미 존재시에 해당 폴더에 포스트 추가
+    #     if folder:
+    #         existing_folder = Folder.objects.get(folder_name=target_language)
+    #         existing_folder.add(post)
+    #         existing_folder.save()
+    #     else:
+    #         # 없으면 folder 형성
+    #         new_folder = Folder.objects.create(folder_name=target_language)
+    #         post.folder = new_folder
+    #         new_folder.save()
+    # elif action == "remove":
+    #     folder.delete(post)
+
+    # 폴더가 이미 존재시에 해당 폴더에 포스트 추가
+    if folder:
+        existing_folder = Folder.objects.get(folder_name=target_language)
+        existing_folder.add(post)
+        existing_folder.save()
+    else:
+        # 없으면 folder 형성
+        new_folder = Folder.objects.create(folder_name=target_language)
+        post.folder = new_folder
+        new_folder.save()
 
     # url: 저장 후 post_detail 페이지에 남아있음.
     return render(request, template_name="posts/post_detail.html")
@@ -166,4 +178,5 @@ def count_like_scrap(request):
     post.save()
 
     # TODO: 굳이 JsonResponse 필요한가? (프론트엔드 단에서는 도움이 되었어요 or 스크랩 개수가 표현이 되지 않는 듯)
+    # if 전달할 내용이 없다면 Httpresponse로 가도 됨.
     return JsonResponse({'id': post_id, 'type': button_type})
