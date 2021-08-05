@@ -5,7 +5,6 @@
 
 <a href="{% url 'posts:post_detail' user_id=post_scrap.user.id post_id=post_scrap.id %}">{{post_scrap.title}}</a>
 {{post_scrap.language}}
-{{post_scrap.folder}}
 {{post_scrap.scrap_num}}
 {{post_scrap.helped_num}}
 <br/>
@@ -18,7 +17,6 @@
 {% for post_helped in posts_helped %}
 {{ post_helped.title}}
 {{ post_helped.language}}
-{{ post_helped.folder}}
 {{ post_helped.scrap_num}}
 {{ post_helped.helped_num}}
 <br/>

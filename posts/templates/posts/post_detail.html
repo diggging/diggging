@@ -1,11 +1,16 @@
+지금 나는 : {{request.user.username}}
 
 <h1>{{post.title}}</h1>
-<h4>작성자 : {{post.user.user_nickname}}</h4>
-{{post.language}}
-{{post.folder}}
-{{post.scrap_num}}
-{{post.helped_num}}
+<h4>작성자 : {{post.user.username}}</h4>
+<p> 언어 : {{post.language}} </p>
+<p> 폴더 명: {{folder.folder_name}}</p>
+<p> 폴더 주인: {{folder.folder_user}}</p>
+<p> 스크랩: {{post.scrap_num}}</p>
+<p> 도움이 되었어요 : {{post.helped_num}}</p>
 
-{% if me.pk == request.user.pk %}
+{% if request.user.id == post.user.id %}
+
+{% else %}
 <span><a href="{% url 'posts:get_post' user_id=post.user.id post_id=post.id %}">퍼가기</a></span>
+
 {% endif %}

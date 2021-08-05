@@ -35,10 +35,12 @@ def main(request):
 def post_detail(request, user_id, post_id):
     post_details = Post.objects.get(pk=post_id)
     me = get_object_or_404(User, pk = user_id)
+    folder = post_details.folder.get(folder_name=post_details.language, folder_user=post_details.user)
     # 댓글기능도 끌어와야함.
     ctx = {
         "post": post_details,
         "host": me,
+        "folder": folder,
         # 여기에도 댓글 넣어주어야함.
     }
     # html added by 종권
@@ -50,30 +52,22 @@ def post_create(request):
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             posts = form.save()
-            posts.save()
 
             # 폴더 분류해주기
+            me = posts.user # folder 주인 가져오기
             language = request.POST.get("language")  # language 가져옴
-            print(language)
-            print(type(language))
-            folder = Folder.objects.filter(folder_name=language)
+            folder = Folder.objects.filter(folder_name=language, folder_user = me)
 
             if folder:
-                print(
-                    "___________________ 있음 __________________________________________________________________"
-                )
                 # 있으면 foriegn key 연결
-                existed_folder = Folder.objects.get(folder_name=language)
-                posts.folder = existed_folder
-                posts.save()
+                existed_folder = Folder.objects.get(folder_name=language, folder_user = me)
+                posts.folder.add(existed_folder)
             else:
                 # 없으면 folder 만들어서
-                print(
-                    "___________________ 없슴 __________________________________________________________________"
-                )
-                new_folder = Folder.objects.create(folder_name=language)
-                posts.folder = new_folder
-                posts.save()
+                new_folder = Folder.objects.create(folder_name=language, folder_user=me)
+                posts.folder.add(new_folder)
+                
+            posts.save()
 
             return redirect("posts:main")
     else:
@@ -141,9 +135,6 @@ def get_post(request, user_id, post_id):
     #     <... href={% url '...' ... %}?action=add">
     # action = request.GET.get("action", None)
     # post = Post.objects.get(pk=post_pk)
-    post = get_object_or_404(Post, pk=post_id)
-    target_language = post.language
-    folder = Folder.objects.filter(folder_name=target_language)
 
     # if action == "add":
     #     # 폴더가 이미 존재시에 해당 폴더에 포스트 추가
@@ -159,23 +150,23 @@ def get_post(request, user_id, post_id):
     # elif action == "remove":
     #     folder.delete(post)
 
-    # 폴더가 이미 존재시에 해당 폴더에 포스트 추가
+    post = get_object_or_404(Post, pk=post_id)
+    target_language = post.language
+    me = request.user
+    folder = Folder.objects.filter(folder_name=target_language, folder_user=me)
+    
+    # 만약 나, language로 된 폴더 있으면 
     if folder:
-        existing_folder = Folder.objects.get(folder_name=target_language)
-        existing_folder.related_posts.add(post)
-        existing_folder.save()
+        # 그 폴더에 포스트 그냥 추가하기
+        folder = Folder.objects.get(folder_name=target_language, folder_user=me)
+        folder.related_posts.add(post)
+        folder.save()
+    # 없으면
     else:
-        # 없으면 folder 형성
-        new_folder = Folder.objects.create(folder_name=target_language)
-        post.folder = new_folder
-        new_folder.save()
-
-    #if request.method == "POST":
-
-
-    #else:
-
-
+        # 폴더를 생성한 뒤, 거기에 추가하기
+        new_folder = Folder.objects.create(folder_name=target_language, folder_user=me)
+        post.folder.add(new_folder)
+    post.save()
 
     # url: 저장 후 post_detail 페이지에 남아있음.
     return redirect('posts:post_detail', user_id, post_id)
