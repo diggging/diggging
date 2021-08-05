@@ -5,15 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="../../../static/js/ckeditor5/build/ckeditor.js"></script>
+    <link rel="stylesheet" href="./post_create.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/vs2015.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script> 
+    <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body>
     <h1>삽질기록 남기기</h1>
     <br>
     <div class="container">
-        <form method="POST" enctype="multipart/form-data">
+        <form method="POST" enctype="multipart/form-data" autocomplete="off">
             {% csrf_token %}
             {{ form.media }}
-            {{ form.as_p }}
+            {{ form.title }}
+            <span>
+                {{ form.language }}
+                <label>운영체제{{ form.os }}</label>
+                {{ form.problem_solving }}
+                {{ form.error_message }}
+                {{ form.desc }}
+                <div class="code_box">
+                    <textarea name="code" id="ckeditor5" placeholder="코드를 입력해주세요."></textarea>
+                </div>
+                
+                태그입력 {{ form.tag }}
+            </span>
             <input type="submit" value="기록 남기기"/>
         </form>
     </div>
@@ -29,10 +45,17 @@
             </div>
         </form>
     </div> -->
-    <!-- <script>
+    <script>
         var ckeditor;
             ClassicEditor
-                .create( document.querySelector( '#editor' ) )
+                .create( document.querySelector( '#editor' ), {
+                    codeBlock: {
+                        languages: [
+                            { language: 'css', label: 'CSS' },
+                            { language: 'html', label: 'HTML' }
+                        ]
+                    }
+                } )
                 .catch( error => {
                     console.error( error );
                 } );
@@ -46,6 +69,8 @@
                 .catch( error => {
                     console.error( error );
                 } );
-    </script> -->
+
+                
+    </script>
 </body>
 </html>

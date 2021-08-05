@@ -53,8 +53,8 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'full',
-        'height': '100vh',
-        'width': 900,
+        'width': 1000,
+        'height': 700
     },
 }
 CKEDITOR_CONFIGS = {
@@ -65,7 +65,7 @@ CKEDITOR_CONFIGS = {
             ['TextColor', 'BGColor'],
             ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
             ['Link', 'Source', 'Image', 'Table'],
-            ['Maximize'],
+            ['codeBlock'],
         ],
         'filebrowserWindowHeight': 725,
         'filebrowserWindowWidth': 940,
