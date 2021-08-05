@@ -12,3 +12,8 @@ class UserCustomCreationForm(UserCreationForm):
         #model = User
         model = get_user_model()
         fields = ("username","email", "user_nickname", "password1", "password2")
+
+# 웹 페이지 이용자 회원가입을 위한 form
+class WebUserCreationForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        

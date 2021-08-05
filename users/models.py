@@ -18,7 +18,8 @@ class User(AbstractUser):
         verbose_name="personal description", blank=True)
     user_profile_image = models.ImageField(
         verbose_name="대표 사진", upload_to="images/", blank=True, null=True)
-    is_active = models.BooleanField(verbose_name="active", default=True)
+    is_staff = models.BooleanField(verbose_name="staff status", default=False, help_text="Designates whther the user can log into admin site")
+    is_active = models.BooleanField(verbose_name="active", default=False) # 이메일 인증 완료되기 전까지 False로 설정
     email = models.EmailField(blank=True, max_length=254, verbose_name='email address', null=False)
 
     def __str__(self):

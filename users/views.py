@@ -8,21 +8,34 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.hashers import check_password
 
+# SMTP 관련 인증
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
+from django.core.mail import EmailMessage
+from django.utils.encoding import force_bytes, force_text
+from .tokens import account_activation_token
+
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
 # 회원가입
+# def signup(request):
+#     #if request.user.is_authenticated:
+#     #    return redirect('users:my_page')
+#     if request.method == "POST":
+#         user_form = UserCustomCreationForm(request.POST)
+#         if user_form.is_valid():
+#             user = user_form.save()
+#             return redirect('users:login')
+#     else:
+#         user_form = UserCustomCreationForm()
+#     ctx={'signup_form' : user_form}
+#     return render(request, template_name="users/signup.html", context=ctx)
+
+# 회원가입
 def signup(request):
-    #if request.user.is_authenticated:
-    #    return redirect('users:my_page')
     if request.method == "POST":
-        user_form = UserCustomCreationForm(request.POST)
-        if user_form.is_valid():
-            user = user_form.save()
-            return redirect('users:login')
-    else:
-        user_form = UserCustomCreationForm()
-    ctx={'signup_form' : user_form}
-    return render(request, template_name="users/signup.html", context=ctx)
+        user = 
 
 # 로그인
 def log_in(request):
