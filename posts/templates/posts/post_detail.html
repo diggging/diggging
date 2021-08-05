@@ -1,7 +1,75 @@
-{% extends 'base.html'%}
 {% block content%}
-<h1>{{post.title}}</h1>
-<h4>작성자 : {{post.user.user_nickname}}</h4>
-
-<span><a href="{% url " posts:get_post" post.user.id post.id %}">퍼가기</a></span>
+    
+    <h1>{{detail.title}}</h1>
+    <h4>작성자 : {{detail.user.user_nickname}}</h4>
+    {% comment %} 
+    <span><a href="{% url "posts:get_post" post.user.id post.id %}">퍼가기</a></span>
+    {%endcomment%}
+            {% if detail.image %}
+            <img src="{{detail.image.url}}" alt="" width="50px">
+            {% endif %}
+            {{detail.title}}
+            {{detail.content}}
+            <div>
+                댓글
+                
+                {% for comment in comments %}
+                    <div class='addComment'>
+                        <div class='comment_id_{{comment.id}}'>
+                            {{comment.text}}
+                            <button onclick="onClickDelete({{details.id}},{{comment.id}})">삭제</button> <!--comment 별로 id 준당-->
+                        </div>
+                        
+                    </div>
+                    {% endfor %}
+                    <div>
+                        <input class="sibal" type="text" placeholder="댓글달기"/>
+    
+                        <button onclick="onClickComment({{ details.id }})">게시</button> 
+                        <!--comment 별로 id 준당-->
+                    </div>
+            </div>
+        </div>   
 {% endblock %}
+
+{% block extra %}
+    <script>
+        const requestComment = new XMLHttpRequest();
+
+    const onClickComment = (id) =>{
+        const url = '/comments/comment/';
+        requestComment.open('POST',url,true);
+        requestComment.setRequestHeader(
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
+        const text = document.querySelector(`.sibal`).value;
+        requestComment.send(JSON.stringify({id:id, text:text}));
+    };
+    
+    const commentHandleResponse = () =>{
+        if(requestComment.status < 400){
+        const {id} = JSON.parse(requestComment.response);
+        const {text} = JSON.parse(requestComment.response);
+        const {comment_id} = JSON.parse(requestComment.response);
+        const addComment= document.querySelector(`.addComment`)
+        addComment.innerHTML += `
+            <div class='comment_id_${comment_id}'>
+                ${text}
+                <button onclick="onClickDelete(${id},${comment_id})">삭제</button>
+            </div>
+        `
+        };
+        
+    };
+
+    requestComment.onreadystatechange = () =>{
+        if(requestComment.readyState  === XMLHttpRequest.DONE){
+            commentHandleResponse();
+        };      
+    };
+
+    
+
+    </script>
+{% endblock%}
