@@ -11,6 +11,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.hashers import check_password
 # 이메일 인증 관련 import
 import logging
+from django.http import HttpResponse
 
 # SMTP 관련 인증
 from django.contrib.sites.shortcuts import get_current_site
@@ -41,40 +42,69 @@ def signup(request):
     #if request.user.is_authenticated:
     #    return redirect('users:my_page')
     if request.method == "POST":
-        user_form = WebUserCreationForm(request.POST)
+        user_form = UserCustomCreationForm(request.POST)
         if user_form.is_valid():
-            user = user_form.save()
-            return redirect('users:login')
+            user = user_form.save(commit=False)
+            user.is_active = False
+            user.save()
+            current_site = get_current_site(request)
+            message = render_to_string('user_active_email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+            })
+            # sending mail to future user
+            mail_subject = 'Activate your blog account.'
+            to_email = user_form.cleaned_data.get('email')
+            email = EmailMessage(mail_subject, message, to=[to_email])
+            email.send()
+            return HttpResponse('Please confirm your email address to complete the registration')
     else:
-        user_form = WebUserCreationForm()
+        user_form = UserCustomCreationForm()
     ctx={'signup_form' : user_form}
     return render(request, template_name="users/signup.html", context=ctx)
+    
+# 이메일 인증 후 계정 활성화
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        return HttpResponse('Thank you for your email confirmation. Now you can login your account')
+    else:
+        return HttpResponse('Activation link is invalid!')
 
-# 이메일 인증 활성화 처리 view
-class UserActivateView(TemplateView):
-    logger = logging.getLogger(__name__)
-    template_name = 'users/user_activate_complete.html'
+# # 이메일 인증 활성화 처리 view
+# class UserActivateView(TemplateView):
+#     logger = logging.getLogger(__name__)
+#     template_name = 'users/user_activate_complete.html'
 
-    def get(self, request, *args, **kwargs):
-        self.logger.debug('UserActivateView.get()')
+#     def get(self, request, *args, **kwargs):
+#         self.logger.debug('UserActivateView.get()')
 
-        uid = force_text(urlsafe_base64_decode(self.kwargs['uidb64']))
-        token = self.kwargs['token']
+#         uid = force_text(urlsafe_base64_decode(self.kwargs['uidb64']))
+#         token = self.kwargs['token']
 
-        self.logger.debug('uid: %s, token: %s' % (uid, token))
+#         self.logger.debug('uid: %s, token: %s' % (uid, token))
 
-        try:
-            user = User.objects.get(pk=uid)
-        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-            self.logger.warning('User %s not found' % uid)
-            user = None
+#         try:
+#             user = User.objects.get(pk=uid)
+#         except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+#             self.logger.warning('User %s not found' % uid)
+#             user = None
         
-        if user is not None and PasswordResetTokenGenerator().check_token(user, token):
-            user.is_active = True
-            user.save()
-            self.logger.info('User %s(pk=%s) has been activated.' % (user, user.pk))
+#         if user is not None and PasswordResetTokenGenerator().check_token(user, token):
+#             user.is_active = True
+#             user.save()
+#             self.logger.info('User %s(pk=%s) has been activated.' % (user, user.pk))
 
-        return super(UserActivateView, self).get(request, *args, **kwargs)
+#         return super(UserActivateView, self).get(request, *args, **kwargs)
 
 # 로그인
 def log_in(request):
