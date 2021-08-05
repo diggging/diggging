@@ -5,6 +5,7 @@ from django.urls import reverse
 from users.models import User
 from core import models as core_models
 from tagging.fields import TagField
+from ckeditor.fields import RichTextField
 
 # Create your models here.
 
@@ -125,6 +126,7 @@ class Post(core_models.TimeStampModel):
     is_friend = models.BooleanField(verbose_name="이웃공개", default=False)  # 나를 팔로잉 하는 사람.
     scrap_num = models.IntegerField(default=0)
     helped_num = models.IntegerField(default=0)
+    body = RichTextField()
 
 
 class Folder(core_models.TimeStampModel):
@@ -163,4 +165,3 @@ class CustomFolder(Folder):
         return self.custom_selected_posts.count()
 
     custom_folder_posts_count.short_description = "number of posts saved"
-
