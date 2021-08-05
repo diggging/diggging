@@ -34,8 +34,8 @@ def log_in(request):
             user = form.get_user()
             return redirect('users:my_page', user.pk)
         else:
-           context.update({"error:해당하는 유저 정보가 없습니다."})
-           return render(request, template_name="users/login.html")
+            context.update({"error:해당하는 유저 정보가 없습니다."})
+            return render(request, template_name="users/login.html")
     else:
         form = AuthenticationForm()
     ctx = {'form' : form}
@@ -122,15 +122,7 @@ def change_pw(request):
     return redirect('users:login')
 
 
-
-
-
-
 ##test
 def main(requrest):
-    user = User.objects.all()
+    return render(requrest, template_name="base.html")
 
-    ctx = {
-        'user': user,
-    }
-    return render(requrest, template_name="base.html", context=ctx)

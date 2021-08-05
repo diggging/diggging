@@ -11,11 +11,11 @@
     <div class="container">
         <div class="form_container">
             <div class="login_top">
-                <a href="#">
+                <a href="#" class="login_logo">
                     <img class="login_logo" src="{% static 'users/login_logo.png' %}">
                 </a>
                 <div class="login_question">
-                    회원이 아닌가요?
+                    <h4>회원이 아닌가요?</h4>
                     <a href="{% url 'users:signup' %}">회원가입하기</a>
                     <a href="">비밀번호 찾기</a>
                 </div>
@@ -25,12 +25,16 @@
                 <form action="" method="post" autocomplete="off">
                     {% csrf_token %}
                     <div class="login_input">
-                        <span class="input_label">아이디</span>
-                        {{ form.username }}
+                        <div class="input_id">
+                            <span class="input_label">아이디</span>
+                            {{ form.username }}
+                        </div>
                     </div>
                     <div class="login_input">
-                        <span class="input_label">비밀번호</span>
-                        {{ form.password }}
+                        <div class="input_password">
+                            <span class="input_label">비밀번호</span>
+                            {{ form.password }}
+                        </div>
                     </div>
                     {{ context }}
                     <button class="login_btn" type="submit">로그인하기</button>

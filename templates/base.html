@@ -36,7 +36,7 @@
                     <div>
                         <a href="">😎</a>
                     </div>
-                    <h6>{{user.username}}}</h6>
+                    <h6>{{user.username}}</h6>
                 </div>
             {% else %}
                 <div class="nav_vertical">
@@ -53,13 +53,13 @@
                 </div>
                 <div class="nav_vertical">
                     <div>
-                        <a href="">🗝</a>
+                        <a href="{% url 'users:login' %}">🗝</a>
                     </div>
                     <h6>로그인</h6>
                 </div>
                 <div class="nav_vertical">
                     <div>
-                        <a href="">📌</a>
+                        <a href="{% url 'users:signup' %}">📌</a>
                     </div>
                     <h6>회원가입</h6>
                 </div>

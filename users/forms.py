@@ -1,4 +1,5 @@
 from django import forms
+from django.forms.utils import ErrorList
 from django.db.models import fields
 from .models import User
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
@@ -12,3 +13,4 @@ class UserCustomCreationForm(UserCreationForm):
         #model = User
         model = get_user_model()
         fields = ("username","email", "user_nickname", "password1", "password2")
+

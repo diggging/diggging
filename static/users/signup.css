@@ -1,7 +1,8 @@
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
-
 
 :root {
     --border-color: #CEC4B3;
@@ -23,14 +24,9 @@ h1, h2, h3, h4, h5 {
     color: var(--text-color);
 }
 
-
 p {
     color:var(--text-color);
 }
-
-
-
-/* 반응형 웹 구분할 거 있으면 여기에 넣기 */
 
 @media only screen and (max-width: 767px) {
     .container > .form_container {
@@ -49,7 +45,7 @@ p {
         padding: 1.5rem;
         display: flex;
         width: 600px;
-        height: 480px;
+        height: 580px;
         border: 1px solid var(--border-color);
         border-radius: 8px;
         flex-direction: column;
@@ -79,8 +75,6 @@ p {
     font-style: normal;
 }
 
-
-
 .container {
     display: flex;
     justify-content: center;
@@ -88,53 +82,73 @@ p {
     height: 100vh;
 }
 
-
-.form_container > .login_top {
+.form_container > .signup_top {
     text-align: center;
 }
 
-
-.login_logo {
+.signup_logo {
     height: 3rem;
 }
 
-.login_top > .login_question {
+.signup_top > .signup_question {
     width: 100%;
     display: flex;
     padding: 0.625em;
     font-family: var(--content-font);
 }
 
-.login_question h4 {
+.signup_question h4 {
     font-size: 16px;
     margin-right: 1.5rem;
 }
 
-.login_question > a {
+.signup_question > a {
     font-family: var(--btn-font);
     font-size: 16px;
     margin-right: 1.5rem;
-
 }
 
-.form_container > .login_middle {
+.signup_middle {
     display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.login_input {
+.signup_input {
     font-family: var(--content-font);
+    margin-bottom: 1.5rem;
+    text-align: center;
 }
 
-
-
-.login_input .input_label {
+.signup_input .input_label {
     font-family: var(--btn-font);
     font-size: 1rem;
-    color: var(--sand-color)
+    color: var(--sand-color);
+    padding-right: 10px;
 }
 
-.login_input input {
-    padding: 10px 22px;
+.signup_input input {
+    padding: 10px 40px;
     border-radius: var(--border-radius);
     border-color: var(--border-color);
+    border: 1px solid var(--border-color);
+}
+
+#id_password1 {
+    margin-right: 10px;
+}
+
+#id_password2 {
+    margin-right: 37px;
+}
+
+.signup_btn {
+    background-color: #FFF8CA;
+    color: #4E4E4E;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    width: 227px;
+    height: 37px;
+    margin-left: 100px;
+    margin-top: 35px;
 }
