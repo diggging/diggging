@@ -25,7 +25,7 @@
                 {{ form.error_message }}
                 {{ form.desc }}
                 <div class="code_box">
-                    <textarea name="code" id="ckeditor5" placeholder="코드를 입력해주세요."></textarea>
+                    <textarea name="code" id="ckeditor" placeholder="코드를 입력해주세요."></textarea>
                 </div>
                 
                 태그입력 {{ form.tag }}
@@ -45,32 +45,21 @@
             </div>
         </form>
     </div> -->
-    <script>
+    <!-- <script>
         var ckeditor;
             ClassicEditor
                 .create( document.querySelector( '#editor' ), {
                     codeBlock: {
                         languages: [
                             { language: 'css', label: 'CSS' },
-                            { language: 'html', label: 'HTML' }
+                            { language: 'html', label: 'HTML' },
+
                         ]
                     }
                 } )
                 .catch( error => {
                     console.error( error );
-                } );
-            DecoupledEditor
-                .create( document.querySelector( '#editor' ) )
-                .then( editor => {
-                    const toolbarContainer = document.querySelector( '#toolbar-container' );
-
-                    toolbarContainer.appendChild( editor.ui.view.toolbar.element );
-                } )
-                .catch( error => {
-                    console.error( error );
-                } );
-
-                
+                } );                
     </script>
 </body>
-</html>
+</html> -->
