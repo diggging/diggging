@@ -16,14 +16,11 @@ def post_list(request):
     return render(request, "posts/post_list.html", ctx)
 
 
-# 프론트에서 해당 포스트 id 넘겨주면 
-def post_detail(request, pk):
-    details = Post.objects.get(pk=pk)
+# 프론트에서 해당 포스트 id 넘겨주면
+def post_detail(request, user_id, post_id):
+    details = Post.objects.get(pk=post_id)
     # 댓글기능도 끌어와야함.
-    ctx = {
-        "details": details
-        # 여기에도 댓글 넣어주어야함.
-    }
+    ctx = {"details": details}
     # html added by 종권
     return render(request, "posts/post_detail.html", ctx)
 
@@ -156,15 +153,16 @@ def get_post(request, post_pk):
     # url: 저장 후 post_detail 페이지에 남아있음.
     return render(request, template_name="posts/post_detail.html")
 
+
 # 도움이 되었어요, 스크랩 개수 count 하기 위한 axios
 def count_like_scrap(request):
     # json 문자열을 json.loads를 통해서 json 형태에서 파이썬 객체 형태로 parsing
     # front 단에서 request.body를 통해서 넘어와야 하는 것들
     # 1) 'id' (post의 id값)
     # 2) 'type' (button이 도움이 되었어요 버튼인지 스크랩 개수 버튼인지의 여부)
-    req = json.loads(request.body) 
-    post_id = req['id']
-    button_type = req['type']
+    req = json.loads(request.body)
+    post_id = req["id"]
+    button_type = req["type"]
 
     post = get_object_or_404(id=post_id)
 
@@ -179,4 +177,4 @@ def count_like_scrap(request):
 
     # TODO: 굳이 JsonResponse 필요한가? (프론트엔드 단에서는 도움이 되었어요 or 스크랩 개수가 표현이 되지 않는 듯)
     # if 전달할 내용이 없다면 Httpresponse로 가도 됨.
-    return JsonResponse({'id': post_id, 'type': button_type})
+    return JsonResponse({"id": post_id, "type": button_type})
