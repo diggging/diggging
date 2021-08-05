@@ -20,7 +20,8 @@ class PostAdmin(admin.ModelAdmin):
         "is_public",
         "is_friend",
         "folder",
-        
+        "scrap_num", 
+        "helped_num",
     )
     list_display = ["pk", "title", "desc", "is_public", "is_friend", "folder","scrap_num", "helped_num"]
     list_filter = ("is_public",)
@@ -31,10 +32,17 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(models.Folder)
 class FolderAdmin(admin.ModelAdmin):
-    list_display = ["pk", "folder_name"]
+    #inlines = [PostAdmin]
+    #fields = ("id", "folder_name", "posts")
+    list_display = ["pk", "folder_name", "posts"]
     list_display_links = ["folder_name"]
+    
+
+    def posts(self,obj):
+        return ",".join([k.title for k in obj.related_posts.all()])
 
 @admin.register(models.CustomFolder)
 class CustomFolderAdmin(admin.ModelAdmin):
+    
     list_display = ["pk", "name", "custom_folder_posts_count"]
     list_display_links = ["name"]

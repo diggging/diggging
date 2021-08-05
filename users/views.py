@@ -65,6 +65,7 @@ def my_page(request, pk):
 # 한번 누르면 follow, 두번 누르면 unfollow
 def follow(request, host_pk):
     # 여기서 오는 pk는 내가 follow하려는 사람의 pk임
+    # TODO post 상황과 get 상황 나눠야함!!!
     me = request.user
     host = get_object_or_404(User,pk=host_pk)
 

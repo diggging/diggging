@@ -1,3 +1,4 @@
+from users.models import User
 from django.http.response import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
@@ -9,19 +10,35 @@ import json
 
 # Create your views here.
 
+# main 페이지
+def main(request):
+    # 모든 전체 글에서 스크랩 순위대로 추천
+    all_posts_scrap = Post.objects.all().order_by('-scrap_num')
+    # 모든 전체 글에서 도움 순위대로 추천
+    all_posts_helped = Post.objects.all().order_by('-helped_num')
 
-def post_list(request):
-    posts = Post.objects.all()
-    ctx = {"posts": posts}
-    return render(request, "posts/post_list.html", ctx)
+    ctx = {
+        'posts_scrap' : all_posts_scrap,
+        'posts_helped' : all_posts_helped,
+    }
+
+    return render(request, template_name="posts/main.html", context = ctx)
+
+# ! 변경되었슴당
+# def post_list(request):
+#     posts = Post.objects.all()
+#     ctx = {"posts": posts}
+#     return render(request, "posts/post_list.html", ctx)
 
 
 # 프론트에서 해당 포스트 id 넘겨주면 
-def post_detail(request, pk):
-    details = Post.objects.get(pk=pk)
+def post_detail(request, user_id, post_id):
+    post_details = Post.objects.get(pk=post_id)
+    me = get_object_or_404(User, pk = user_id)
     # 댓글기능도 끌어와야함.
     ctx = {
-        "details": details
+        "post": post_details,
+        "host": me,
         # 여기에도 댓글 넣어주어야함.
     }
     # html added by 종권
@@ -58,7 +75,7 @@ def post_create(request):
                 posts.folder = new_folder
                 posts.save()
 
-            return redirect("posts:post_list")
+            return redirect("posts:main")
     else:
         form = PostForm()
         ctx = {
@@ -116,7 +133,7 @@ def search(request):
 #     return render(request, "posts/base.html",ctx)
 
 # 삽질 기록 퍼오기
-def get_post(request, post_pk):
+def get_post(request, user_id, post_id):
     # attach action in frontend
     # how to attach action
     # ex> <... href="{% url '...' ... %}?action=remove">
@@ -124,7 +141,7 @@ def get_post(request, post_pk):
     #     <... href={% url '...' ... %}?action=add">
     # action = request.GET.get("action", None)
     # post = Post.objects.get(pk=post_pk)
-    post = get_object_or_404(Post, pk=post_pk)
+    post = get_object_or_404(Post, pk=post_id)
     target_language = post.language
     folder = Folder.objects.filter(folder_name=target_language)
 
@@ -145,7 +162,7 @@ def get_post(request, post_pk):
     # 폴더가 이미 존재시에 해당 폴더에 포스트 추가
     if folder:
         existing_folder = Folder.objects.get(folder_name=target_language)
-        existing_folder.add(post)
+        existing_folder.related_posts.add(post)
         existing_folder.save()
     else:
         # 없으면 folder 형성
@@ -153,9 +170,16 @@ def get_post(request, post_pk):
         post.folder = new_folder
         new_folder.save()
 
-    # url: 저장 후 post_detail 페이지에 남아있음.
-    return render(request, template_name="posts/post_detail.html")
+    #if request.method == "POST":
 
+
+    #else:
+
+
+
+    # url: 저장 후 post_detail 페이지에 남아있음.
+    return redirect('posts:post_detail', user_id, post_id)
+    
 # 도움이 되었어요, 스크랩 개수 count 하기 위한 axios
 def count_like_scrap(request):
     # json 문자열을 json.loads를 통해서 json 형태에서 파이썬 객체 형태로 parsing
@@ -180,3 +204,5 @@ def count_like_scrap(request):
     # TODO: 굳이 JsonResponse 필요한가? (프론트엔드 단에서는 도움이 되었어요 or 스크랩 개수가 표현이 되지 않는 듯)
     # if 전달할 내용이 없다면 Httpresponse로 가도 됨.
     return JsonResponse({'id': post_id, 'type': button_type})
+
+

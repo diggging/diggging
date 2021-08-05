@@ -1,7 +1,11 @@
-{% extends 'base.html'%}
-{% block content%}
+
 <h1>{{post.title}}</h1>
 <h4>작성자 : {{post.user.user_nickname}}</h4>
+{{post.language}}
+{{post.folder}}
+{{post.scrap_num}}
+{{post.helped_num}}
 
-<span><a href="{% url " posts:get_post" post.user.id post.id %}">퍼가기</a></span>
-{% endblock %}
+{% if me.pk == request.user.pk %}
+<span><a href="{% url 'posts:get_post' user_id=post.user.id post_id=post.id %}">퍼가기</a></span>
+{% endif %}
