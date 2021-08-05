@@ -19,17 +19,29 @@
     font-style: normal;
 }
 
+$border_color: #CEC4B3;
+$sand_color: #D1AF00;
+
+@media (max-width:767px) {}
+@media (min-width:768px) {}
+@media (min-width:992px) {}
+
+
+
+
+
 h1, h2, h3, h4, h5 {
     margin: 0
 }
 
 .container {
     border-radius: 5px;
-    border-color: #CEC4B3;
+    border-color: $border_color;
+    text-align: center;
 }
 
 .input_label{
     font-family: 'Pretendard-SemiBold';
     font-size: 22px;
-    color: #D1AF00;
+    color: $sand_color;
 }

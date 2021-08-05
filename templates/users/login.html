@@ -1,17 +1,13 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="./login.scss">
 </head>
 <body>
     
-</body>
-</html>
-
 <form method="POST" action="{% url 'users:login' %}">
     <!--  form 쓸땐 이걸 꼭 추가해줘야함  -->
 
@@ -19,30 +15,32 @@
         <div class="login_top">
             <a href="#">
                 <img class="login-logo" src="../../static/logo.png">
+                <!-- 이미지가 안 뜬다.... -->
             </a>
-
             <span>
-            회원이 아닌가요? <a href="{% url "users:signup" %}">회원가입하기</a>
+            회원이 아닌가요? <a href="{% url 'users:signup' %}">회원가입하기</a>
             </span>
             <span><a href="">비밀번호 변경하기</a></span>
         </div>
         <div class="login-middle">
             <form action="" method="post" autocomplete="off">
                 {% csrf_token %}
-                <div class="login_input" aria-autocomplete="none">
+                <div class="login_input">
                     <span class="input_label">아이디</span>
                     {{ form.username }}
                 </div>
                 <div class="login_input">
                     <span class="input_label">비밀번호</span>
-                    {{ form.password1 }}
+                    {{ form.password }}
                 </div>
 
-                <button class="login_btn" type="submit">Login</button>
+                <button class="login_btn" type="submit">로그인하기</button>
             </form>
         </div>
         <div class="login-bottom">
-
+            <!-- sns로그인자리 -->
         </div>
     </div>
 </form>
+</body>
+</html>
