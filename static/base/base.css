@@ -1,0 +1,77 @@
+@font-face {
+    font-family: 'GmarketSansMedium';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard-SemiBold';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-SemiBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+}
+
+
+.nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #F1EFEF;
+}
+
+.nav_search {
+
+}
+
+.nav_main_title {
+    font-family: 'GmarketSansMedium';
+    font-size: 42px;
+    color: #CEC4B3;
+}
+
+.nav_right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav_vertical {
+    text-align: center;
+}
+
+.nav_vertical div {
+    width: 50px;
+    height: 50px;
+    padding: 0.5rem 1rem;
+    margin: 0.5rem 0.5rem;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.nav_vertical h6 {
+    font-family: 'GmarketSansMedium';
+    font-size: 12px;
+    color: #707070;
+}

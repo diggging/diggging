@@ -120,3 +120,17 @@ def change_pw(request):
         context.update({'error':"현재 비밀번호가 일치하지 않습니다."})
     
     return redirect('users:login')
+
+
+
+
+
+
+##test
+def main(requrest):
+    user = User.objects.all()
+
+    ctx = {
+        'user': user,
+    }
+    return render(requrest, template_name="base.html", context=ctx)
