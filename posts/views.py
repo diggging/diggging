@@ -178,4 +178,5 @@ def count_like_scrap(request):
     post.save()
 
     # TODO: 굳이 JsonResponse 필요한가? (프론트엔드 단에서는 도움이 되었어요 or 스크랩 개수가 표현이 되지 않는 듯)
+    # if 전달할 내용이 없다면 Httpresponse로 가도 됨.
     return JsonResponse({'id': post_id, 'type': button_type})
