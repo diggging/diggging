@@ -18,7 +18,7 @@ class User(AbstractUser):
         verbose_name="personal description", blank=True)
     user_profile_image = models.ImageField(
         verbose_name="대표 사진", upload_to="images/", blank=True, null=True)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(verbose_name="active", default=True)
     email = models.EmailField(blank=True, max_length=254, verbose_name='email address', null=False)
 
     def __str__(self):

@@ -141,3 +141,10 @@ MEDIA_URL = "/media/"
 
 TAGGIT_CASE_INSENSITIVE = True
 TAGGIT_LIMIT = 50
+
+# 이메일 보내기 위한 settings(google 기준)
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'TeamDiggging@gmail.com'
+EMAIL_HOST_PASSWORD = 'teamdigggingfighting55'
+EMAIL_USE_TLS = True
