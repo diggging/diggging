@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-ka8ldery2i8!8u7-y_gb0s53!7ij^+dr-j*s75z$@+kmh8mr3l"
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -148,6 +148,6 @@ TAGGIT_LIMIT = 50
 # 이메일 보내기 위한 settings(google 기준)
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'TeamDiggging@gmail.com'
-EMAIL_HOST_PASSWORD = 'teamdigggingfighting55'
+EMAIL_HOST_USER = os.environ.get("USER_EMAIL_HOST")
+EMAIL_HOST_PASSWORD = os.environ.get("USER_EMAIL_PASSWORD")
 EMAIL_USE_TLS = True
