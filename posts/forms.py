@@ -32,6 +32,8 @@ class PostForm(forms.ModelForm):
         }
 
 
-class LanguageForm(forms.Form):
+class selectForm(forms.Form):
 
-    language_field = forms.ChoiceField(choices=Post.language_choices)
+    field = forms.ChoiceField(choices=Post.language_choices)
+    field2 = forms.ChoiceField(choices=Post.os_choices)
+    # field3 = forms.BooleanField(choices=Post.problem_solving)

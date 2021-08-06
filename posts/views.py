@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Post, Folder
 from . import models
-from .forms import LanguageForm, PostForm
+from .forms import selectForm, PostForm
 import json
 
 # Create your views here.
@@ -93,19 +93,15 @@ def search(request):
     language = request.POST.get("post")
     free_post = Post.objects.all().order_by("-id")
     post = request.POST.get("post", "")
-    form = LanguageForm()
-    print(form)
-    if post:
-        free_post = free_post.filter(language=language)
+    form = selectForm()
 
-        ctx = {
-            "free_post": free_post,
-            "post": post,
-            "form": form,
-        }
-        return render(request, "posts/search.html", ctx)
-    else:
-        return render(request, "posts/search.html")
+    free_post = free_post.filter(language=language)
+    ctx = {
+        "free_post": free_post,
+        "post": post,
+        "form": form,
+    }
+    return render(request, "posts/search.html", ctx)
 
 
 # 삽질 기록 퍼오기

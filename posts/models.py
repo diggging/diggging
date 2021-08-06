@@ -16,7 +16,16 @@ class Post(core_models.TimeStampModel):
         "users.User", related_name="user", on_delete=models.CASCADE
     )
     title = models.CharField(verbose_name="제목", max_length=50)
-    problem_solving = models.BooleanField(verbose_name="문제해결 여부", default=False)
+    problem_choices = (
+        ("해결", "해결"),
+        (
+            "미해결",
+            "미해결",
+        ),
+    )
+    problem_solving = models.CharField(
+        verbose_name="해결/미해결", max_length=10, choices=problem_choices, blank=False
+    )
     os_choices = (
         ("window", "window"),
         ("linux", "linux"),
@@ -105,9 +114,9 @@ class Post(core_models.TimeStampModel):
         verbose_name="게시물 사진", upload_to="images/posts", blank=True, null=True
     )
     # desc = models.TextField(verbose_name="설명", blank=False)
-    desc = RichTextUploadingField(verbose_name="설명", blank=False, config_name='default')
+    desc = RichTextUploadingField(verbose_name="설명", blank=False, config_name="default")
     # code = models.TextField(verbose_name="코드", blank=True)
-    code = RichTextField(verbose_name="코드", blank=True, config_name='default')
+    code = RichTextField(verbose_name="코드", blank=True, config_name="default")
 
     tag = TagField(verbose_name="태그", blank=False)
     folder = models.ForeignKey(
