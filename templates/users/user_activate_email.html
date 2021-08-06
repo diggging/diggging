@@ -1,10 +1,8 @@
-{% load i18n %}
-
 {% autoescape off %}
 
 Hi {{user.username}},
 
 Please click on the link to confirm your registration,
 
-http://{{ domain }}{% url 'account:activate' uidb64=uid token=token %}
+http://{{ domain }}{% url 'users:activate' uidb64=uid token=token %}
 {% endautoescape %}

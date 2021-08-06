@@ -6,9 +6,9 @@ app_name="users"
 
 urlpatterns = [
     # path('signup/', view=views.signup, name="signup"),   # 회원가입하는 페이지
-    url(r'^signup/$', views.signup, name='signup'), # 회원가입하는 페이지
+    url(r'^signup/$', views.signup, name='signup'),
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-        views.activate, name='activate'), # 이메일 인증 후 회원 활성화 페이지
+        views.activate, name='activate'),
     path('login/', view=views.log_in, name="login"),   # login
     path("logout/", views.log_out, name="logout"),  # logout   
 
