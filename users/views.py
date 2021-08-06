@@ -59,7 +59,8 @@ def signup(request):
             to_email = user_form.cleaned_data.get('email')
             email = EmailMessage(mail_subject, message, to=[to_email])
             email.send()
-            return HttpResponse('Please confirm your email address to complete the registration')
+            return redirect('users:login')
+            # return HttpResponse('Please confirm your email address to complete the registration')
     else:
         user_form = UserCustomCreationForm()
     ctx={'signup_form' : user_form}
@@ -75,7 +76,7 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        log_in(request)
+        login(request, user)
         return HttpResponse('Thank you for your email confirmation. Now you can login your account')
     else:
         return HttpResponse('Activation link is invalid!')
