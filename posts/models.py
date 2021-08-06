@@ -137,9 +137,6 @@ class Post(core_models.TimeStampModel):
     scrap_num = models.IntegerField(default=0)
     helped_num = models.IntegerField(default=0)
 
-    def getname(self):
-        return self.user.user_nickname
-
 
 class Folder(core_models.TimeStampModel):
     folder_name = models.CharField(max_length=100)
