@@ -1,6 +1,10 @@
-<p>sand: {{ request.user.user_point }} </p>
-<p>닉네임: {{ request.user.user_nickname }}</p>
-<p>이메일: {{ request.user.email }}</p>
+<p>닉네임: {{ host.user_nickname }}</p>
+<p>레벨: {{ host.user_level }}</p>
+<p>sand: {{ host.user_point }} </p>
+<p>이미지: {{ host.user_profile_image }} </p>
+
+
+<p>이메일: {{ host.email }}</p>
 <hr/>
 <h3>닉네임 변경</h3>
 <form method="POST" action="{% url 'users:change_nickname' %}">

@@ -84,13 +84,17 @@ def follow(request, host_pk):
 
 
 def account_detail(request, pk):
-    return render(request, template_name = "users/account_detail.html")
+    host = get_object_or_404(User,pk=pk)
+    ctx={
+        'host':host,
+    }
+    return render(request, template_name = "users/account_detail.html", context= ctx)
 
 def change_nickname(request):
     context = {}
     if request.method == "POST":
         new_nickname = request.POST.get("new_nickname")
-        user = request.user
+        user = request.user     # 내 계정 고치기는 페이지가 host = 접속한 사람이여야만 보이게 해야함! (front)
         if User.objects.filter(user_nickname=new_nickname):
             context.update({'error':"이미 존재하는 별명입니다."})
         
