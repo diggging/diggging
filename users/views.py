@@ -5,8 +5,9 @@ from .forms import UserCustomCreationForm
 from .models import User
 from django.views import View
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, Password
 from django.contrib.auth.hashers import check_password
+import os
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
@@ -41,10 +42,14 @@ def log_in(request):
 
 
 # 로그아웃
-@login_required    
+@login_required
 def log_out(request):
     logout(request)
     return redirect('user:login')
+
+# 비밀번호 재설정 기능
+#class MyPasswordResetView(PasswordResetView):
+
 
 
 # ________________________________________________ mypage ________________________________________________
@@ -53,7 +58,6 @@ def my_page(request, pk):
     host = get_object_or_404(User,pk=pk)
     host_following = host.user_following.all()
     host_follower = host.user_followed.all()
-    print(host_follower)
     ctx = {
         'host': host,
         'host_follower' : host_follower,
@@ -90,11 +94,11 @@ def account_detail(request, pk):
     }
     return render(request, template_name = "users/account_detail.html", context= ctx)
 
-def change_nickname(request):
+def change_nickname(request, pk):
     context = {}
     if request.method == "POST":
         new_nickname = request.POST.get("new_nickname")
-        user = request.user     # 내 계정 고치기는 페이지가 host = 접속한 사람이여야만 보이게 해야함! (front)
+        user = get_object_or_404(User,pk=pk)     # 내 계정 고치기는 페이지가 host = 접속한 사람이여야만 보이게 해야함! (front)
         if User.objects.filter(user_nickname=new_nickname):
             context.update({'error':"이미 존재하는 별명입니다."})
         
@@ -104,18 +108,18 @@ def change_nickname(request):
             return redirect('users:account_detail', user.id)
     return redirect('users:account_detail', user.id)
 
-def change_pw(request):
+def change_pw(request, pk):
     context = {}
     if request.method == "POST":
         current_password = request.POST.get("origin_password")
-        user = request.user
+        user = get_object_or_404(User,pk=pk)
         if check_password(current_password, user.password):
             new_password = request.POST.get("password1")
             password_confirm = request.POST.get("password2")
             if new_password == password_confirm:
                 user.set_password(new_password)
                 user.save()
-                login(request, request.user)
+                login(request, user)
                 return redirect('users:login')
             else:
                 context.update({'error':"새로운 비밀번호를 다시 확인해주세요."})
@@ -123,6 +127,20 @@ def change_pw(request):
         context.update({'error':"현재 비밀번호가 일치하지 않습니다."})
     
     return redirect('users:login')
+
+def change_img(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    if request.method == "POST":
+        new_img = request.FILES.get("new_img",None)
+        if new_img:
+            # 원래 이미지 삭제
+            user.user_profile_image.delete()
+            # 새이미지로 바꿈
+            user.user_profile_image = new_img
+            user.save()
+    return redirect('users:account_detail', user.id)
+    
+
 
 
 # ________________________________________________ point ________________________________________________

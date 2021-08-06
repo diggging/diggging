@@ -103,7 +103,6 @@ def post_delete(request, pk):
 def search(request):
 
     language = request.POST.get("post")
-    print(language)
     free_post = Post.objects.all().order_by("-id")
     post = request.POST.get("post", "")
     if post:

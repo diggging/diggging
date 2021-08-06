@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.conf import settings
+import os
 # Create your models here.
 
 
@@ -31,6 +32,11 @@ class User(AbstractUser):
     @property
     def following_count(self):
         return self.user_following.all().count()
+
+    def delete(self, *args, **kargs):
+        if self.upload_files:
+            os.remove(os.path.join(settings.MEDIA_ROOT, self.upload_files.path))
+        super(User, self).delete(*args, **kargs)
 
 
 class Sand(models.Model):
