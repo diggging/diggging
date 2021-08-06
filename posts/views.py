@@ -153,18 +153,20 @@ def get_post(request, user_id, post_id):
     post = get_object_or_404(Post, pk=post_id)
     target_language = post.language
     me = request.user
-    folder = Folder.objects.filter(folder_name=target_language, folder_user=me)
+    
+    # get: object-없는걸 가져오면 오류 , filter: queryset- 없어도 빈 queryset 오류 x
+    folder = Folder.objects.filter(folder_name=target_language, folder_user=me) 
     
     # 만약 나, language로 된 폴더 있으면 
     if folder:
         # 그 폴더에 포스트 그냥 추가하기
-        folder = Folder.objects.get(folder_name=target_language, folder_user=me)
-        folder.related_posts.add(post)
+        folder = Folder.objects.get(folder_name=target_language, folder_user=me) # query set은 object가 아니므로 object 다시 가져옴
+        folder.related_posts.add(post)  # add 는 저장 x 명시적 저장 필요
         folder.save()
     # 없으면
     else:
         # 폴더를 생성한 뒤, 거기에 추가하기
-        new_folder = Folder.objects.create(folder_name=target_language, folder_user=me)
+        new_folder = Folder.objects.create(folder_name=target_language, folder_user=me) # create - 자동저장
         post.folder.add(new_folder)
     post.save()
 
