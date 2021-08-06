@@ -1,3 +1,4 @@
+import os
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.shortcuts import render, redirect, get_object_or_404
@@ -106,7 +107,9 @@ def log_out(request):
 # _______________________________________________social login____________________________________________
 # github login
 def github_login(request):
-    pass
+    client_id = os.environ.get("GITHUB_ID")
+    redirect_uri = "http://127.0.0.1:8000/user/login/github/callback"
+    return redirect(f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope=read:user")
 
 def github_callback(request):
     pass

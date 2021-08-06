@@ -6,6 +6,11 @@ from django.conf import settings
 
 
 class User(AbstractUser):
+    LOGIN_EMAIL = "email"
+    LOGIN_GITHUB = "github"
+    LOGIN_KAKAO = "kakao"
+
+    LOGIN_CHOICES = ((LOGIN_EMAIL, "Email"), (LOGIN_GITHUB, "Github"), (LOGIN_KAKAO, "Kakao"))
     user_nickname = models.CharField(
         verbose_name="nickname", max_length=8, blank=True)
     user_level = models.IntegerField(verbose_name="level", default=0)
@@ -21,6 +26,7 @@ class User(AbstractUser):
     is_staff = models.BooleanField(verbose_name="staff status", default=False, help_text="Designates whther the user can log into admin site")
     is_active = models.BooleanField(verbose_name="active", default=False) # 이메일 인증 완료되기 전까지 False로 설정
     email = models.EmailField(blank=True, max_length=254, verbose_name='email address', null=False)
+    login_method = models.CharField(max_length=50, choices=LOGIN_CHOICES, default=LOGIN_EMAIL)
 
     def __str__(self):
         return self.username
