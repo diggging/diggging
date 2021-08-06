@@ -69,6 +69,33 @@
         };      
     };
 
+    const requestDelComment = new XMLHttpRequest();
+
+    const onClickDelete = (id,comment_id) =>{
+        const url ='/comments/delete_comment/';
+        requestDelComment.open('POST',url,true);
+        requestDelComment.setRequestHeader(
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
+        
+        requestDelComment.send(JSON.stringify({id:id, comment_id:comment_id}));
+    };
+
+    const commentdelHandleResponse = () =>{
+        if(requestDelComment.status<400){
+            const {id} = JSON.parse(requestDelComment.response);
+            const {comment_id} = JSON.parse(requestDelComment.response);
+            const element = document.querySelector(`.comment_id_${comment_id}`);
+            element.innerHTML = "";
+        };
+    };
+
+    requestDelComment.onreadystatechange = () =>{
+        if(requestDelComment.readyState  === XMLHttpRequest.DONE){
+            commentdelHandleResponse();
+        };      
+    };
     
 
     </script>

@@ -17,3 +17,8 @@ class PostForm(forms.ModelForm):
             "image",
             "desc",
         }
+
+
+class LanguageForm(forms.Form):
+
+    language_field = forms.ChoiceField(choices=Post.language_choices)

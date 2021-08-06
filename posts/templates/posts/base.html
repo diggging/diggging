@@ -7,11 +7,20 @@
     <title>Document</title>
 </head>
 <body>
-    <form method="POST" >
+    <form method="POST" action="{% url 'posts:search' %}">
         {%csrf_token%}
         <input type="search" placeholder="검색어를 입력하세요." name="post" value="{{post}}">
         <button type="submit">Search</button>
     </form>
+    <form method="POST" action="{% url 'posts:search' %}">
+        {%csrf_token%}
+        <select>
+            {% for forms in form %}
+                <option value="{{forms}}">{{forms}}</option>
+            {% endfor %}
+        </select>
+    </form>
+    
     {% block content%}
     {% endblock %}    
 

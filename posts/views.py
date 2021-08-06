@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Post, Folder
 from . import models
-from .forms import PostForm
+from .forms import LanguageForm, PostForm
 import json
 
 # Create your views here.
@@ -91,28 +91,23 @@ def post_delete(request, pk):
 def search(request):
 
     language = request.POST.get("post")
-    print(language)
     free_post = Post.objects.all().order_by("-id")
     post = request.POST.get("post", "")
+    form = LanguageForm()
+    print(form)
+
     if post:
-        print("aaa")
         free_post = free_post.filter(language=language)
 
         ctx = {
             "free_post": free_post,
             "post": post,
+            "form": form,
         }
         return render(request, "posts/search.html", ctx)
     else:
         return render(request, "posts/search.html")
 
-
-# def make_folder(request):
-#     folder = Post.objects.filter(request.language)
-#     ctx = {
-#         "folder":folder
-#     }
-#     return render(request, "posts/base.html",ctx)
 
 # 삽질 기록 퍼오기
 def get_post(request, post_pk):
