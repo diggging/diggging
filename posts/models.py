@@ -5,6 +5,8 @@ from django.urls import reverse
 from users.models import User
 from core import models as core_models
 from tagging.fields import TagField
+from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 
 # Create your models here.
 
@@ -102,8 +104,10 @@ class Post(core_models.TimeStampModel):
     image = models.ImageField(
         verbose_name="게시물 사진", upload_to="images/posts", blank=True, null=True
     )
-    desc = models.TextField(verbose_name="설명", blank=False)
-    code = models.TextField(verbose_name="코드", blank=True)
+    # desc = models.TextField(verbose_name="설명", blank=False)
+    desc = RichTextUploadingField(verbose_name="설명", blank=False, config_name='default')
+    # code = models.TextField(verbose_name="코드", blank=True)
+    code = RichTextField(verbose_name="코드", blank=True, config_name='default')
 
     tag = TagField(verbose_name="태그", blank=False)
     folder = models.ForeignKey(

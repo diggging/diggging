@@ -95,7 +95,6 @@ def search(request):
     post = request.POST.get("post", "")
     form = LanguageForm()
     print(form)
-
     if post:
         free_post = free_post.filter(language=language)
 
