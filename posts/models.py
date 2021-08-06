@@ -12,16 +12,14 @@ from ckeditor_uploader.fields import RichTextUploadingField
 
 
 class Post(core_models.TimeStampModel):
+
     user = models.ForeignKey(
         "users.User", related_name="user", on_delete=models.CASCADE
     )
     title = models.CharField(verbose_name="제목", max_length=50)
     problem_choices = (
         ("해결", "해결"),
-        (
-            "미해결",
-            "미해결",
-        ),
+        ("미해결", "미해결"),
     )
     problem_solving = models.CharField(
         verbose_name="해결/미해결", max_length=10, choices=problem_choices, blank=False
@@ -138,6 +136,9 @@ class Post(core_models.TimeStampModel):
     is_friend = models.BooleanField(verbose_name="이웃공개", default=False)  # 나를 팔로잉 하는 사람.
     scrap_num = models.IntegerField(default=0)
     helped_num = models.IntegerField(default=0)
+
+    def getname(self):
+        return self.user.user_nickname
 
 
 class Folder(core_models.TimeStampModel):

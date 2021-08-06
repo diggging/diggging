@@ -1,15 +1,15 @@
 {% block content%}
     
-    <h1>{{detail.title}}</h1>
-    <h4>작성자 : {{detail.user.user_nickname}}</h4>
+    <h1>{{details.title}}</h1>
+    <h4>작성자 : {{details.user}}</h4>
     {% comment %} 
     <span><a href="{% url "posts:get_post" post.user.id post.id %}">퍼가기</a></span>
     {%endcomment%}
-            {% if detail.image %}
-            <img src="{{detail.image.url}}" alt="" width="50px">
+            {% if details.image %}
+            <img src="{{details.image.url}}" alt="" width="50px">
             {% endif %}
-            {{detail.title}}
-            {{detail.content}}
+            {{details.title}}
+            {{details.content}}
             <div>
                 댓글
                 

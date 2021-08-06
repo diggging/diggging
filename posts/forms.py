@@ -10,7 +10,6 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = {
-            "user",
             "title",
             "problem_solving",
             "os",
@@ -36,4 +35,4 @@ class selectForm(forms.Form):
 
     field = forms.ChoiceField(choices=Post.language_choices)
     field2 = forms.ChoiceField(choices=Post.os_choices)
-    # field3 = forms.BooleanField(choices=Post.problem_solving)
+    field3 = forms.ChoiceField(choices=Post.problem_choices)

@@ -11,7 +11,7 @@ import json
 # Create your views here.
 
 
-def post_list(request):
+def post_list(request):  # main-page
     posts = Post.objects.all()
     ctx = {"posts": posts}
     return render(request, "posts/post_list.html", ctx)
@@ -31,7 +31,10 @@ def post_create(request):
     if request.method == "POST":
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            posts = form.save()
+            posts = form.save(commit=False)
+
+            posts.user = request.user
+
             posts.save()
 
             # 폴더 분류해주기
@@ -64,7 +67,7 @@ def post_create(request):
             "form": form,
         }
 
-        return render(request, template_name="posts/post_create.html", context=ctx)
+        return render(request, "posts/post_create.html", context=ctx)
 
 
 def post_update(request, pk):
