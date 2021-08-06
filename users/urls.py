@@ -16,4 +16,8 @@ urlpatterns = [
     path('<int:pk>/account_detail', view=views.account_detail, name = "account_detail"),
     path('change_nickname/', view=views.change_nickname, name="change_nickname"),
     path('change_pw/', view=views.change_pw, name="change_pw"),
+
+    #github login
+    path('login/github', views.github_login, name="github_login"),
+    path('login/github/callback', views.github_callback, name="github_callback"),
 ] 
