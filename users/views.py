@@ -75,7 +75,7 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        login(request, user)
+        log_in(request)
         return HttpResponse('Thank you for your email confirmation. Now you can login your account')
     else:
         return HttpResponse('Activation link is invalid!')
@@ -84,7 +84,7 @@ def activate(request, uidb64, token):
 def log_in(request):
     if request.method == "POST":
         form = AuthenticationForm(request, request.POST)
-        if form.is_valid():
+        if form.is_valid() :
             login(request, form.get_user())
             user = form.get_user()
             return redirect('users:my_page', user.pk)

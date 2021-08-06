@@ -5,10 +5,8 @@ from . import views
 app_name="users"
 
 urlpatterns = [
-    # path('signup/', view=views.signup, name="signup"),   # 회원가입하는 페이지
     url(r'^signup/$', views.signup, name='signup'),
-    url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-        views.activate, name='activate'),
+    path('activate/<slug:uidb64>/<slug:token>/', views.activate, name="activate"),
     path('login/', view=views.log_in, name="login"),   # login
     path("logout/", views.log_out, name="logout"),  # logout   
 
@@ -19,19 +17,3 @@ urlpatterns = [
     path('change_nickname/', view=views.change_nickname, name="change_nickname"),
     path('change_pw/', view=views.change_pw, name="change_pw"),
 ] 
-
-# url(
-#         r'^register/$',
-#         UserCreateView.as_view(),
-#         name='register'
-#     ),
-#     url(
-#         r'^register/done/$',
-#         UserCreateDoneTemplateView.as_view(),
-#         name='register-done'
-#     ),
-#     url(
-#         r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-#         UserActivateView.as_view(),
-#         name='activate'
-#     )
