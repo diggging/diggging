@@ -1,4 +1,5 @@
 import os
+import requests
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.shortcuts import render, redirect, get_object_or_404
@@ -10,6 +11,7 @@ from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.hashers import check_password
+from . import models
 # 이메일 인증 관련 import
 import logging
 from django.http import HttpResponse
@@ -112,7 +114,44 @@ def github_login(request):
     return redirect(f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope=read:user")
 
 def github_callback(request):
-    pass
+    try:
+        client_id = os.environ.get("GITHUB_ID")
+        client_secret = os.environ.get("GITHUB_SECRET")
+        code = request.GET.get("code", None)
+        if code is not None:
+            result = requests.post(f"https://github.com/login/oauth/access_token?client_id={client_id}&client_secret={client_secret}&code={code}",
+            headers = {"Accept": "application/json"}
+            )
+            result_json = result.json()
+            error = result_json.get("error", None)
+            if error is not None:
+                raise Exception()
+            else:
+                access_token = result_json.get("access_token")
+                profile_request = requests.get("https://api.github.com/user", 
+                headers={
+                    "Authorization": f"token {access_token}",
+                    "Accept": "application/json",
+                })
+                
+                profile_json = profile_request.json()
+                username = profile_json.get('login', None)
+                if username is not None:
+                    username = profile_json.get('login')
+                    name = profile_json.get('name')
+                    email = profile_json.get('email')
+                    try:
+                        user = models.User.objects.get(email=email)
+                    except models.User.DoesNotExist:
+                        new_user = models.User.objects.create(username=name, email=email, user_nickname=name)
+                else:
+                    raise Exception()
+        else:
+            raise Exception()
+    
+    except Exception:
+        return redirect("user:login")
+    
 
 # ________________________________________________ mypage ________________________________________________
 # my page
