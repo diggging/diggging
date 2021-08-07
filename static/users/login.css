@@ -117,24 +117,45 @@ p {
 
 }
 
-.form_container > .login_middle {
+.login_middle {
     display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .login_input {
     font-family: var(--content-font);
+    margin-top: 1.5rem;
+    text-align: center;
 }
-
-
 
 .login_input .input_label {
     font-family: var(--btn-font);
     font-size: 1rem;
-    color: var(--sand-color)
+    color: var(--sand-color);
+    padding-right: 10px;
 }
 
 .login_input input {
-    padding: 10px 22px;
+    padding: 10px 10px;
+    width: 250px;
+    height: 40px;
     border-radius: var(--border-radius);
-    border-color: var(--border-color);
+    border: 1px solid var(--border-color);
+}
+
+#id_password {
+    margin-right: 10px;
+}
+
+.login_btn {
+    background-color: #FFF8CA;
+    color: #4E4E4E;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-family: var(--btn-font);
+    width: 250px;
+    height: 40px;
+    margin-left: 70px;
+    margin-top: 20px;
 }
