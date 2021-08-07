@@ -12,7 +12,7 @@ import json
 # axios 통신
 # create comment
 @csrf_exempt
-def comment(request):
+def comment(request):        #! 이름 바꿈!
     req = json.loads(request.body)
     post_id = req["id"]
     comment_content = req["text"]

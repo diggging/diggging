@@ -1,0 +1,23 @@
+
+<h1> 스크랩 순 </h1>
+
+{% for post_scrap in posts_scrap %}
+
+<a href="{% url 'posts:post_detail' user_id=post_scrap.user.id post_id=post_scrap.id %}">{{post_scrap.title}}</a>
+{{post_scrap.language}}
+{{post_scrap.scrap_num}}
+{{post_scrap.helped_num}}
+<br/>
+{% endfor %}
+
+<hr/>
+
+
+<h1> 도움 순 </h1>
+{% for post_helped in posts_helped %}
+{{ post_helped.title}}
+{{ post_helped.language}}
+{{ post_helped.scrap_num}}
+{{ post_helped.helped_num}}
+<br/>
+{% endfor %}

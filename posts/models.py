@@ -117,11 +117,9 @@ class Post(core_models.TimeStampModel):
     code = RichTextField(verbose_name="코드", blank=True, config_name="default")
 
     tag = TagField(verbose_name="태그", blank=False)
-    folder = models.ForeignKey(
+    folder = models.ManyToManyField(
         "Folder",
         related_name="related_posts",
-        on_delete=models.SET_NULL,
-        null=True,
         blank=True,
     )
     custom_folder = models.ForeignKey(
@@ -140,7 +138,9 @@ class Post(core_models.TimeStampModel):
 
 class Folder(core_models.TimeStampModel):
     folder_name = models.CharField(max_length=100)
-
+    folder_user = models.ForeignKey("users.User", related_name="folder_user", on_delete=models.CASCADE)
+    
+    #user = models.ForeignKey("users.User", related_name="user", on_delete=models.CASCADE)
     def __str__(self):
         return self.folder_name
 

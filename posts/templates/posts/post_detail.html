@@ -1,102 +1,104 @@
-{% block content%}
-    
-    <h1>{{details.title}}</h1>
-    <h4>작성자 : {{details.user}}</h4>
-    {% comment %} 
-    <span><a href="{% url "posts:get_post" post.user.id post.id %}">퍼가기</a></span>
-    {%endcomment%}
-            {% if details.image %}
-            <img src="{{details.image.url}}" alt="" width="50px">
-            {% endif %}
-            {{details.title}}
-            {{details.content}}
-            <div>
-                댓글
-                
-                {% for comment in comments %}
-                    <div class='addComment'>
-                        <div class='comment_id_{{comment.id}}'>
-                            {{comment.text}}
-                            <button onclick="onClickDelete({{details.id}},{{comment.id}})">삭제</button> <!--comment 별로 id 준당-->
-                        </div>
-                        
-                    </div>
-                    {% endfor %}
-                    <div>
-                        <input class="sibal" type="text" placeholder="댓글달기"/>
-    
-                        <button onclick="onClickComment({{ details.id }})">게시</button> 
-                        <!--comment 별로 id 준당-->
-                    </div>
+지금 나는 : {{request.user.username}}
+
+<h1>{{post.title}}</h1>
+<h4>작성자 : {{post.user.username}}</h4>
+<p> 언어 : {{post.language}} </p>
+<p> 폴더 명: {{folder.folder_name}}</p>
+<p> 폴더 주인: {{folder.folder_user}}</p>
+<p> 스크랩: {{post.scrap_num}}</p>
+<p> 도움이 되었어요 : {{post.helped_num}}</p>
+{% if request.user.id == post.user.id %}
+
+{% else %}
+<span><a href="{% url 'posts:get_post' user_id=post.user.id post_id=post.id %}">퍼가기</a></span>
+
+{% endif %}
+
+
+
+<div>
+    댓글
+    {% for comment in comments %}
+        <div class='addComment'>
+            <div class='comment_id_{{comment.id}}'>
+                {{comment.text}}
+                <button onclick="onClickDelete({{post.id}},{{comment.id}})">삭제</button> <!--comment 별로 id 준당-->
             </div>
-        </div>   
-{% endblock %}
+            
+        </div>
+        {% endfor %}
+        <div>
+            <input class="sibal" type="text" placeholder="댓글달기"/>
 
-{% block extra %}
-    <script>
-        const requestComment = new XMLHttpRequest();
+            <button onclick="onClickComment({{ post.id }})">게시</button> 
+            <!--comment 별로 id 준당-->
+        </div>
+</div>
 
-    const onClickComment = (id) =>{
-        const url = '/comments/comment/';
-        requestComment.open('POST',url,true);
-        requestComment.setRequestHeader(
-            'Content-Type',
-            'application/x-www-form-urlencoded'
-        );
-        const text = document.querySelector(`.sibal`).value;
-        requestComment.send(JSON.stringify({id:id, text:text}));
+
+<script>
+    const requestComment = new XMLHttpRequest();
+
+const onClickComment = (id) =>{
+    const url = '/comments/comment/';
+    requestComment.open('POST',url,true);
+    requestComment.setRequestHeader(
+        'Content-Type',
+        'application/x-www-form-urlencoded'
+    );
+    const text = document.querySelector(`.sibal`).value;
+    requestComment.send(JSON.stringify({id:id, text:text}));
+};
+
+const commentHandleResponse = () =>{
+    if(requestComment.status < 400){
+    const {id} = JSON.parse(requestComment.response);
+    const {text} = JSON.parse(requestComment.response);
+    const {comment_id} = JSON.parse(requestComment.response);
+    const addComment= document.querySelector(`.addComment`)
+    addComment.innerHTML += `
+        <div class='comment_id_${comment_id}'>
+            ${text}
+            <button onclick="onClickDelete(${id},${comment_id})">삭제</button>
+        </div>
+    `
     };
     
-    const commentHandleResponse = () =>{
-        if(requestComment.status < 400){
-        const {id} = JSON.parse(requestComment.response);
-        const {text} = JSON.parse(requestComment.response);
-        const {comment_id} = JSON.parse(requestComment.response);
-        const addComment= document.querySelector(`.addComment`)
-        addComment.innerHTML += `
-            <div class='comment_id_${comment_id}'>
-                ${text}
-                <button onclick="onClickDelete(${id},${comment_id})">삭제</button>
-            </div>
-        `
-        };
-        
-    };
+};
 
-    requestComment.onreadystatechange = () =>{
-        if(requestComment.readyState  === XMLHttpRequest.DONE){
-            commentHandleResponse();
-        };      
-    };
+requestComment.onreadystatechange = () =>{
+    if(requestComment.readyState  === XMLHttpRequest.DONE){
+        commentHandleResponse();
+    };      
+};
 
-    const requestDelComment = new XMLHttpRequest();
+const requestDelComment = new XMLHttpRequest();
 
-    const onClickDelete = (id,comment_id) =>{
-        const url ='/comments/delete_comment/';
-        requestDelComment.open('POST',url,true);
-        requestDelComment.setRequestHeader(
-            'Content-Type',
-            'application/x-www-form-urlencoded'
-        );
-        
-        requestDelComment.send(JSON.stringify({id:id, comment_id:comment_id}));
-    };
-
-    const commentdelHandleResponse = () =>{
-        if(requestDelComment.status<400){
-            const {id} = JSON.parse(requestDelComment.response);
-            const {comment_id} = JSON.parse(requestDelComment.response);
-            const element = document.querySelector(`.comment_id_${comment_id}`);
-            element.innerHTML = "";
-        };
-    };
-
-    requestDelComment.onreadystatechange = () =>{
-        if(requestDelComment.readyState  === XMLHttpRequest.DONE){
-            commentdelHandleResponse();
-        };      
-    };
+const onClickDelete = (id,comment_id) =>{
+    const url ='/comments/delete_comment/';
+    requestDelComment.open('POST',url,true);
+    requestDelComment.setRequestHeader(
+        'Content-Type',
+        'application/x-www-form-urlencoded'
+    );
     
+    requestDelComment.send(JSON.stringify({id:id, comment_id:comment_id}));
+};
 
-    </script>
-{% endblock%}
+const commentdelHandleResponse = () =>{
+    if(requestDelComment.status<400){
+        const {id} = JSON.parse(requestDelComment.response);
+        const {comment_id} = JSON.parse(requestDelComment.response);
+        const element = document.querySelector(`.comment_id_${comment_id}`);
+        element.innerHTML = "";
+    };
+};
+
+requestDelComment.onreadystatechange = () =>{
+    if(requestDelComment.readyState  === XMLHttpRequest.DONE){
+        commentdelHandleResponse();
+    };      
+};
+
+
+</script>
