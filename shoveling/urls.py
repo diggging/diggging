@@ -22,9 +22,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('ckeditor/', include('ckeditor_uploader.urls')),
+    path("ckeditor/", include("ckeditor_uploader.urls")),
     path("admin/", admin.site.urls),
     path("posts/", include("posts.urls")),
     path("user/", include("users.urls", namespace="user")),
     path("comments/", include("comments.urls", namespace="comments")),
+    path("accounts/", include("allauth.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

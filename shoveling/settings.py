@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "tagging.apps.TaggingConfig",
+    # t소셜로그인
+    "django.contrib.sites",
     # apps
     "core",
     "users",
@@ -46,39 +48,52 @@ INSTALLED_APPS = [
     "comments",
     "ckeditor",
     "ckeditor_uploader",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.naver",
 ]
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 
 CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'full',
-        'width': 1000,
-        'height': 700
-    },
+    "default": {"toolbar": "full", "width": 1000, "height": 700},
 }
 CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'Custom',
-        'toolbar_Custom': [
-            ['Font', 'FontSize', 'Bold', 'Strike', 'Underline'],
-            ['TextColor', 'BGColor'],
-            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-            ['Link', 'Source', 'Image', 'Table'],
-            ['codeBlock'],
+    "default": {
+        "toolbar": "Custom",
+        "toolbar_Custom": [
+            ["Font", "FontSize", "Bold", "Strike", "Underline"],
+            ["TextColor", "BGColor"],
+            [
+                "NumberedList",
+                "BulletedList",
+                "-",
+                "Outdent",
+                "Indent",
+                "-",
+                "JustifyLeft",
+                "JustifyCenter",
+                "JustifyRight",
+                "JustifyBlock",
+            ],
+            ["Link", "Source", "Image", "Table"],
+            ["codeBlock"],
         ],
-        'filebrowserWindowHeight': 725,
-        'filebrowserWindowWidth': 940,
-        'toolbarCanCollapse': True,
-        'extraPlugins': 'justify, liststyle, indent',
-        'extraPlugins': ','.join([
-            'uploadimage',
-            'div',
-            'autolink',
-            'autoembed',
-            'embedsemantic',
-            'autogrow',
-         ]),
+        "filebrowserWindowHeight": 725,
+        "filebrowserWindowWidth": 940,
+        "toolbarCanCollapse": True,
+        "extraPlugins": "justify, liststyle, indent",
+        "extraPlugins": ",".join(
+            [
+                "uploadimage",
+                "div",
+                "autolink",
+                "autoembed",
+                "embedsemantic",
+                "autogrow",
+            ]
+        ),
     }
 }
 
@@ -165,9 +180,9 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-STATIC_ROOT ="os.path.join(BASE_DIR, 'static')"
+STATIC_ROOT = "os.path.join(BASE_DIR, 'static')"
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, "static"),
 ]
 
 AUTH_USER_MODEL = "users.User"
@@ -182,3 +197,10 @@ MEDIA_URL = "/media/"
 
 TAGGIT_CASE_INSENSITIVE = True
 TAGGIT_LIMIT = 50
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+SITE_ID = 1
+LOGIN_REDIRECT_URL = "/"
