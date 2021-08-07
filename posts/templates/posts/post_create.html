@@ -6,8 +6,20 @@
     <title>Document</title>
     <script src="../../../static/js/ckeditor5/build/ckeditor.js"></script>
     <link rel="stylesheet" href="./post_create.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/vs2015.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script> 
+    <!-- highlight code  -->
+    <!-- <link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
+    <script type="application/javascript">
+        function $init() {return true;}
+    </script> -->
+    <!-- highlight download package -->
+    <link rel="stylesheet" href="{ static }../../../highlight/styles/base16/framer.min.css">
+    <link href="ckeditor/plugins/codesnippet/lib/highlight/styles/default.css" rel="stylesheet">
+    <script src="ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js"></script>
+    <!-- ckeditor codeblock -->
+    <link href="ckeditor/plugins/codesnippet/lib/highlight/styles/default.css" rel="stylesheet">
+    <script src="../../../highlight/highlight.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body>
@@ -24,42 +36,10 @@
                 {{ form.problem_solving }}
                 {{ form.error_message }}
                 {{ form.desc }}
-                <div class="code_box">
-                    <textarea name="code" id="ckeditor" placeholder="코드를 입력해주세요."></textarea>
-                </div>
-                
-                태그입력 {{ form.tag }}
+                태그:{{ form.tag }}
             </span>
             <input type="submit" value="기록 남기기"/>
         </form>
     </div>
-    <!-- <div id="toolbar-container"></div>
-    <div id="editor">
-        <form action="" method="POST">
-            <div>
-                <input type="text" class="title_input" placeholder="제목을 입력해주세요.">
-            </div>
-            <textarea name="content" id="editor" placeholder="내용을 입력해주세요."></textarea>
-            <div>
-                <input type="submit" class="btn_submit">
-            </div>
-        </form>
-    </div> -->
-    <!-- <script>
-        var ckeditor;
-            ClassicEditor
-                .create( document.querySelector( '#editor' ), {
-                    codeBlock: {
-                        languages: [
-                            { language: 'css', label: 'CSS' },
-                            { language: 'html', label: 'HTML' },
-
-                        ]
-                    }
-                } )
-                .catch( error => {
-                    console.error( error );
-                } );                
-    </script>
 </body>
-</html> -->
+</html>

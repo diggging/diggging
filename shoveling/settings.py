@@ -65,7 +65,6 @@ CKEDITOR_CONFIGS = {
             ['TextColor', 'BGColor'],
             ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
             ['Link', 'Source', 'Image', 'Table'],
-            ['codeBlock'],
         ],
         'filebrowserWindowHeight': 725,
         'filebrowserWindowWidth': 940,
@@ -78,6 +77,7 @@ CKEDITOR_CONFIGS = {
             'autoembed',
             'embedsemantic',
             'autogrow',
+            'uploadwidget',
          ]),
     }
 }
