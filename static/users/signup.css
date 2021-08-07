@@ -116,7 +116,7 @@ p {
 
 .signup_input {
     font-family: var(--content-font);
-    margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
     text-align: center;
 }
 
@@ -127,8 +127,19 @@ p {
     padding-right: 10px;
 }
 
+.password_format {
+    font-family: var(--btn-font);
+    font-size: 0.75rem;
+    color: red;
+    padding-right: 10px;
+    text-align: center;
+    margin: 2px 100px 0 0;
+}
+
 .signup_input input {
-    padding: 10px 40px;
+    padding: 10px 10px;
+    width: 300px;
+    height: 40px;
     border-radius: var(--border-radius);
     border-color: var(--border-color);
     border: 1px solid var(--border-color);
@@ -147,8 +158,8 @@ p {
     color: #4E4E4E;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
-    width: 227px;
-    height: 37px;
+    width: 300px;
+    height: 40px;
     margin-left: 100px;
     margin-top: 35px;
 }

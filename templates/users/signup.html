@@ -40,13 +40,27 @@
                             <span class="input_label">비밀번호</span>
                             {{ signup_form.password1 }}
                         </div>
+                        <div class="password_format">
+                            <span>* 6자 이상 입력해주세요</span>
+                        </div>
                         <div class="signup_input">
                             <span class="input_label">비밀번호 확인</span>
                             {{ signup_form.password2 }}
                         </div>
-                        {% if signup_form.errors %}
-                            <span>{{signup_form.errors}}</span>
-                        {% endif %}
+                        <div class="signup_input">
+                            {% if signup_form.username.errors %}
+                                <span>{{signup_form.username.errors}}</span>
+                            {% endif %}
+                            {% if signup_form.email.errors %}
+                                <span>{{signup_form.email.errors}}</span>
+                            {% endif %}
+                            {% if signup_form.user_nickname.errors %}
+                                <span>{{signup_form.user_nickname.errors}}</span>
+                            {% endif %}
+                            {% if signup_form.password2.errors %}
+                                <span>{{signup_form.password2.errors}}</span>
+                            {% endif %}
+                        </div>
                     <button type="submit" class="signup_btn">회원가입하기</button>
                 </form>
             </div>
