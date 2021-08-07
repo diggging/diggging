@@ -3,4 +3,5 @@
     {% csrf_token %}
     {{signup_form.as_p}}
     <button type="submit">SignUp</button>
+    {% include 'users/github_login.html' %}
 </form>
