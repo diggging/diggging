@@ -4,8 +4,9 @@ from django.db.models import fields
 from .models import User
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import get_user, get_user_model
+from django.contrib.auth import get_user, get_user_model, authenticate
 from django.contrib.auth.forms import UserChangeForm
+from django.utils.text import capfirst
 import re
 
 # 회원 가입을 위한 form
@@ -84,5 +85,43 @@ class UserCustomCreationForm(UserCreationForm):
                     code='password_format_error',
                 )
         return password2
-    
-    
+
+#로그인 custom
+class AuthenticationCustomForm(AuthenticationForm):
+
+    username= forms.CharField(widget=forms.TextInput
+                        (attrs={'placeholder':'아이디를 입력해 주세요'}))
+    password = forms.CharField(widget=forms.TextInput
+                        (attrs={'placeholder': '비밀번호를 입력해주세요'}))
+
+    error_messages = {
+        'invalid_login': "로그인을 다시 확인해주세요",
+        'inactive': "이메일 인증을 확인해주세요.",
+    }
+
+    #아이디, 비밀번호 검증
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+
+        if username and password:
+            self.user_cache = authenticate(username=username, password=password)
+            if self.user_cache is None:
+                raise forms.ValidationError(
+                    self.error_messages['invalid_login'],
+                    code='invalid_login',
+                    params={'username': self.username_field.verbose_name},
+                )
+            else:
+                self.confirm_login_allowed(self.user_cache)
+
+        return self.cleaned_data
+
+    #이메일 검증
+    def confirm_login_allowed(self, user):
+
+        if not user.is_active:
+            raise forms.ValidationError(
+                self.error_messages['inactive'],
+                code='inactive',
+            )

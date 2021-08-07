@@ -1,5 +1,9 @@
 * {
     box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
 }
 
 
@@ -146,6 +150,13 @@ p {
 
 #id_password {
     margin-right: 10px;
+}
+
+.error_message {
+    font-family: var(--content-font);
+    font-size: 0.75rem;
+    color: red;
+    text-align: center;
 }
 
 .login_btn {

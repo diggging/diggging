@@ -36,7 +36,14 @@
                             {{ form.password }}
                         </div>
                     </div>
-                    {{ context }}
+                    <div class="error_message">
+                        {% if form.non_field_errors %}
+                            <span>{{form.non_field_errors}}</span>
+                        {% endif %}
+                        <!-- {% if form.password.errors %}
+                            <span>{{form.password.errors}}</span>
+                        {% endif %} -->
+                    </div>
                     <button class="login_btn" type="submit">로그인하기</button>
                 </form>
             </div>
