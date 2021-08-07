@@ -8,9 +8,8 @@ from django.conf import settings
 class User(AbstractUser):
     LOGIN_EMAIL = "email"
     LOGIN_GITHUB = "github"
-    LOGIN_KAKAO = "kakao"
 
-    LOGIN_CHOICES = ((LOGIN_EMAIL, "Email"), (LOGIN_GITHUB, "Github"), (LOGIN_KAKAO, "Kakao"))
+    LOGIN_CHOICES = ((LOGIN_EMAIL, "Email"), (LOGIN_GITHUB, "Github"))
     user_nickname = models.CharField(
         verbose_name="nickname", max_length=8, blank=True)
     user_level = models.IntegerField(verbose_name="level", default=0)
