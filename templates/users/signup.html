@@ -47,7 +47,7 @@
                             <span class="input_label">비밀번호 확인</span>
                             {{ signup_form.password2 }}
                         </div>
-                        <div class="signup_input">
+                        <div class="error_message">
                             {% if signup_form.username.errors %}
                                 <span>{{signup_form.username.errors}}</span>
                             {% endif %}

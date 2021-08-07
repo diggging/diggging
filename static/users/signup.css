@@ -2,6 +2,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    list-style-type: none;
 }
 
 :root {
@@ -128,7 +129,7 @@ p {
 }
 
 .password_format {
-    font-family: var(--btn-font);
+    font-family: var(--content-font);
     font-size: 0.75rem;
     color: red;
     padding-right: 10px;
@@ -153,6 +154,13 @@ p {
     margin-right: 37px;
 }
 
+.error_message {
+    font-family: var(--content-font);
+    font-size: 0.75rem;
+    color: red;
+    text-align: center;
+}
+
 .signup_btn {
     background-color: #FFF8CA;
     color: #4E4E4E;
@@ -161,5 +169,5 @@ p {
     width: 300px;
     height: 40px;
     margin-left: 100px;
-    margin-top: 35px;
+    margin-top: 20px;
 }
