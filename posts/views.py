@@ -1,4 +1,5 @@
 from users.models import User
+from comments.models import Comment
 from django.http.response import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
@@ -24,6 +25,10 @@ def main(request):
 
     return render(request, template_name="posts/main.html", context = ctx)
 
+# 프론트에서 해당 포스트 id 넘겨주면
+def post_detail(request, user_id, post_id):
+    details = Post.objects.get(pk=post_id)
+    comments = details.comments.all()
 # ! 변경되었슴당
 # def post_list(request):
 #     posts = Post.objects.all()
@@ -37,6 +42,7 @@ def post_detail(request, user_id, post_id):
     me = get_object_or_404(User, pk = user_id)
     folder = post_details.folder.get(folder_name=post_details.language, folder_user=post_details.user)
     # 댓글기능도 끌어와야함.
+    ctx = {"details": details, "comments": comments}
     ctx = {
         "post": post_details,
         "host": me,
@@ -178,9 +184,9 @@ def count_like_scrap(request):
     # front 단에서 request.body를 통해서 넘어와야 하는 것들
     # 1) 'id' (post의 id값)
     # 2) 'type' (button이 도움이 되었어요 버튼인지 스크랩 개수 버튼인지의 여부)
-    req = json.loads(request.body) 
-    post_id = req['id']
-    button_type = req['type']
+    req = json.loads(request.body)
+    post_id = req["id"]
+    button_type = req["type"]
 
     post = get_object_or_404(id=post_id)
 
@@ -195,6 +201,4 @@ def count_like_scrap(request):
 
     # TODO: 굳이 JsonResponse 필요한가? (프론트엔드 단에서는 도움이 되었어요 or 스크랩 개수가 표현이 되지 않는 듯)
     # if 전달할 내용이 없다면 Httpresponse로 가도 됨.
-    return JsonResponse({'id': post_id, 'type': button_type})
-
-
+    return JsonResponse({"id": post_id, "type": button_type})

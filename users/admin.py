@@ -10,4 +10,4 @@ class CustomUserAdmin(admin.ModelAdmin):
     fields = ("username", "password", "last_login", "email", "user_nickname",
               "user_profile_content", "user_profile_image", "user_following")
     list_display = ("username", "user_nickname",
-                    "user_level", "user_point",  "following_count","id")
+                    "user_level", "user_point",  "following_count","id", "is_active")

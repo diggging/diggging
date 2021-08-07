@@ -1,3 +1,4 @@
+from django.conf.urls import url
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
@@ -5,7 +6,8 @@ from django.contrib.auth import views as auth_views
 app_name="users"
 
 urlpatterns = [
-    path('signup/', view=views.signup, name="signup"),   # 회원가입하는 페이지
+    url(r'^signup/$', views.signup, name='signup'),
+    path('activate/<slug:uidb64>/<slug:token>/', views.activate, name="activate"),
     path('login/', view=views.log_in, name="login"),   # login
     path("logout/", view=views.log_out, name="logout"),  # logout   
 
