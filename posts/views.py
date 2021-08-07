@@ -25,15 +25,6 @@ def main(request):
 
     return render(request, template_name="posts/main.html", context = ctx)
 
-# 프론트에서 해당 포스트 id 넘겨주면
-def post_detail(request, user_id, post_id):
-    details = Post.objects.get(pk=post_id)
-    comments = details.comments.all()
-# ! 변경되었슴당
-# def post_list(request):
-#     posts = Post.objects.all()
-#     ctx = {"posts": posts}
-#     return render(request, "posts/post_list.html", ctx)
 
 
 # 프론트에서 해당 포스트 id 넘겨주면 
@@ -41,13 +32,13 @@ def post_detail(request, user_id, post_id):
     post_details = Post.objects.get(pk=post_id)
     me = get_object_or_404(User, pk = user_id)
     folder = post_details.folder.get(folder_name=post_details.language, folder_user=post_details.user)
+    comments = post_details.comments.all()
     # 댓글기능도 끌어와야함.
-    ctx = {"details": details, "comments": comments}
     ctx = {
         "post": post_details,
         "host": me,
         "folder": folder,
-        # 여기에도 댓글 넣어주어야함.
+        "comments": comments,
     }
     # html added by 종권
     return render(request, "posts/post_detail.html", ctx)
