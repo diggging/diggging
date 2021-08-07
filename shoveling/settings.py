@@ -50,37 +50,30 @@ INSTALLED_APPS = [
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 
-CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'full',
-        'width': 1000,
-        'height': 700
-    },
-}
+
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'Custom',
+        'height': 500,
         'toolbar_Custom': [
-            ['Font', 'FontSize', 'Bold', 'Strike', 'Underline'],
+            ['Bold', 'Link', 'Image'],
+        ],         
+    },
+    'default': {
+        'toolbar': 'Default',
+        'toolbar_Default': [
+            ['Bold', 'Font', 'FontSize', 'Bold', 'Strike', 'Underline'],
             ['TextColor', 'BGColor'],
-            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-            ['Link', 'Source', 'Image', 'Table'],
-        ],
-        'filebrowserWindowHeight': 725,
-        'filebrowserWindowWidth': 940,
-        'toolbarCanCollapse': True,
-        'extraPlugins': 'justify, liststyle, indent',
-        'extraPlugins': ','.join([
-            'uploadimage',
-            'div',
-            'autolink',
-            'autoembed',
-            'embedsemantic',
-            'autogrow',
-            'uploadwidget',
-         ]),
+            ['NumberedList', 'BulletedList','-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            '/',
+            {'name': 'insert',
+            'items': ['Image', 'Table','CodeSnippet', 'UploadWidget']},
+            ],
+        'extraPlugins': 'codesnippet, uploadwidget'
     }
 }
+
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -165,7 +158,8 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-STATIC_ROOT ="os.path.join(BASE_DIR, 'static')"
+STATIC_ROOT ="/static/"
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]

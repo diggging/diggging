@@ -114,7 +114,7 @@ class Post(core_models.TimeStampModel):
     # desc = models.TextField(verbose_name="설명", blank=False)
     desc = RichTextUploadingField(verbose_name="설명", blank=False, config_name="default")
     # code = models.TextField(verbose_name="코드", blank=True)
-    code = RichTextField(verbose_name="코드", blank=True, config_name="default")
+    code = RichTextUploadingField(verbose_name="코드", blank=True, config_name="default")
 
     tag = TagField(verbose_name="태그", blank=False)
     folder = models.ForeignKey(
