@@ -148,6 +148,17 @@ p {
     border: 1px solid var(--border-color);
 }
 
+/* .login_input input:valid {
+    width: 250px;
+    height: 40px;
+}
+
+.login_input input:invalid {
+    width: 250px;
+    height: 40px;
+} */
+
+
 #id_password {
     margin-right: 10px;
 }
