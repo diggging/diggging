@@ -5,7 +5,7 @@ from .forms import UserCustomCreationForm
 from .models import User
 from django.views import View
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, Password
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.hashers import check_password
 import os
 

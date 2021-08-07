@@ -2,7 +2,9 @@
 <p>레벨: {{ host.user_level }}</p>
 <p>sand: {{ host.user_point }} </p>
 <p>이미지: {{ host.user_profile_image }} </p>
+{% if host.user_profile_image %}
 <img src="{{ host.user_profile_image.url }}" width="200">
+{% endif %}
 
 <p>이메일: {{ host.email }}</p>
 <hr/>
