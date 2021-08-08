@@ -1,4 +1,5 @@
 {% load static %}
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -66,14 +67,14 @@
                 </form>
             </div>
             <div class="login_bottom">
-                <!-- sns로그인자리 -->
+                <a href=" {% provider_login_url 'naver' %}">네이버 로그인</a>
+                {% include 'users/github_login.html' %}
+            
+                <a href="{% url 'users:password_reset' %}">비밀번호를 까먹었나여?</a>
             </div>
         </div>
     </div>
+
 </body>
 </html>
 
-    <a href=" {% provider_login_url 'naver' %}">네이버 로그인</a>
-    {% include 'users/github_login.html' %}
-
-    <a href="{% url 'users:password_reset' %}">비밀번호를 까먹었나여?</a>
