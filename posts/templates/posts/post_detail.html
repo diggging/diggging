@@ -1,37 +1,49 @@
-{% block content%}
-    
-    <h1>{{details.title}}</h1>
-    <h4>작성자 : {{details.user}}</h4>
-    {% comment %} 
-    <span><a href="{% url "posts:get_post" post.user.id post.id %}">퍼가기</a></span>
-    {%endcomment%}
-            {% if details.image %}
-            <img src="{{details.image.url}}" alt="" width="50px">
-            {% endif %}
-            {{details.title}}
-            {{details.content}}
-            <div>
-                댓글
-                
-                {% for comment in comments %}
-                    <div class='addComment'>
-                        <div class='comment_id_{{comment.id}}'>
-                            {{comment.text}}
-                            <button onclick="onClickDelete({{details.id}},{{comment.id}})">삭제</button> <!--comment 별로 id 준당-->
-                        </div>
-                        
-                    </div>
-                    {% endfor %}
-                    <div>
-                        <input class="sibal" type="text" placeholder="댓글달기"/>
-    
-                        <button onclick="onClickComment({{ details.id }})">게시</button> 
-                        <!--comment 별로 id 준당-->
-                    </div>
-            </div>
-        </div>   
-{% endblock %}
+{% extends 'posts/base.html'%}
+{% load static %}
 
+{% block script %}
+<link rel="stylesheet" href="{% static 'posts/post_detail.css' %}" />
+{% endblock script %}
+
+    {% block content%}
+    <div class="container">
+        <div class="form-container">
+            <div class="post_area">
+                <h1>{{details.title}}</h1>
+                <h4>작성자 : {{details.user}}</h4>
+
+                {% comment %} 
+                <span><a href="{% url "posts:get_post" post.user.id post.id %}">퍼가기</a></span>
+                {% endcomment %}
+
+                    {% if details.image %}
+                    <img src="{{details.image.url}}" alt="" width="50px">
+                    {% endif %}
+                    {{details.title}}
+                    {{details.content}}
+                    <div>
+                        댓글
+                        
+                        {% for comment in comments %}
+                            <div class='addComment'>
+                                <div class='comment_id_{{comment.id}}'>
+                                    {{comment.text}}
+                                    <button onclick="onClickDelete({{details.id}},{{comment.id}})">삭제</button> <!--comment 별로 id 준당-->
+                                </div>
+                                
+                            </div>
+                            {% endfor %}
+                            <div>
+                                <input class="sibal" type="text" placeholder="댓글달기"/>
+            
+                                <button onclick="onClickComment({{ details.id }})">게시</button> 
+                                <!--comment 별로 id 준당-->
+                            </div>
+                    </div> 
+            </div>
+        </div>
+        
+    {% endblock %}
 {% block extra %}
     <script>
         const requestComment = new XMLHttpRequest();

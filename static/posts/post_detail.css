@@ -1,0 +1,26 @@
+.container {
+    display:flex;
+    justify-content: center;
+}
+
+.post_container {
+    width: 80em;
+    padding: 50px;
+    display: flex;
+    width: 90%;
+    justify-content: center;
+    border: solid 1px var(--border-color); 
+}
+
+.post_area {
+    border: solid 1px --border-color;
+    border-radius: 8px;
+
+}
+
+.post_area h1 {
+    font-size: 2em;
+    color: var(--text-color);
+    font-family: var(--title-font);
+
+}

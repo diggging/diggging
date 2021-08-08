@@ -45,16 +45,7 @@ form {
     flex-direction: column;
 }
 
-.create_title {
-    display:flex;
-    margin-top: 30px;
-    margin-bottom: 10px;
-    justify-content: center;
-}
 
-.create_title h1 {
-    font-size: 3em;
-}
 .container {
     display:flex;
     justify-content: center;
@@ -65,6 +56,17 @@ form {
     display: flex;
     width: 90%;
     justify-content: center;
+}
+
+.create_title {
+    display:flex;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    justify-content: center;
+}
+
+.create_title h1 {
+    font-size: 3em;
 }
 
 .thumbnail_area {
@@ -170,16 +172,14 @@ form {
 
 .btn_control a {
     text-decoration: none;
+    
 }
 
-.btn_control a:hover {
+.btn_control a:active {
     color:whitesmoke;
+    background-color: var(--hover-color);
 }
 
 .btn_control a:visited {
     color: var(--sand-color)
-}
-
-.btn_control:hover {
-    background-color: var(--hover-color);
 }
