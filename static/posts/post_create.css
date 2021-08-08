@@ -117,10 +117,13 @@ form {
     width: 12em;
     height: 44px;
     border: solid 1px var(--border-color);
-    margin: 10px;
     font-family: var(--content-font);
     font-size: 1em;
     color: var(--text-color);
+}
+
+.choice_area :not(:first-child) {
+    margin-left: 20px;
 }
 
 #id_desc {
@@ -136,7 +139,15 @@ form {
 
 #id_tag {
     width: 20em;
-    height: 32px;
+    height: 44px;
+    margin-left: 20px;
     border: solid 1px var(--border-color);
     border-radius: 4px;
+}
+
+.btn_area button{
+    border: solid 1px var(--sand-color);
+    background-color: var(var(--border-color));
+    color: var(--sand-color);
+    font-family: var(--btn-font);
 }
