@@ -24,9 +24,9 @@ class UserCustomCreationForm(UserCreationForm):
                         (attrs={'placeholder': '사용할 이메일을 입력해 주세요'}))
     user_nickname = forms.CharField(widget=forms.TextInput
                         (attrs={'placeholder': '사용할 닉네임을 입력해주세요(최대8자)'}))
-    password1 = forms.CharField(widget=forms.TextInput
+    password1 = forms.CharField(widget=forms.PasswordInput
                         (attrs={'placeholder': '사용할 비밀번호를 입력해주세요'}))
-    password2 = forms.CharField(widget=forms.TextInput
+    password2 = forms.CharField(widget=forms.PasswordInput
                         (attrs={'placeholder': '비밀번호를 재입력해주세요'}))
 
     #eror_messages custom
@@ -57,7 +57,7 @@ class UserCustomCreationForm(UserCreationForm):
     def clean_email(self):
         valided_email = re.compile('^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
         input_email = self.cleaned_data.get("email")
-        if input_email and valided_email.match(input_email) != False:
+        if input_email and valided_email.match(input_email) == False:
             raise forms.ValidationError(
                 self.error_messages['email_format_error'],
                 code='email_format_error'
@@ -97,7 +97,7 @@ class AuthenticationCustomForm(AuthenticationForm):
 
     username= forms.CharField(widget=forms.TextInput
                         (attrs={'placeholder':'아이디를 입력해 주세요'}))
-    password = forms.CharField(widget=forms.TextInput
+    password = forms.CharField(widget=forms.PasswordInput
                         (attrs={'placeholder': '비밀번호를 입력해주세요'}))
 
     error_messages = {
