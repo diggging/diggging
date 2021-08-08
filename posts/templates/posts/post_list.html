@@ -1,48 +1,50 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang=“en”>
+<html lang="en">
 <head>
-    <meta charset=“UTF-8">
-    <meta http-equiv=“X-UA-Compatible” content=“IE=edge”>
-    <meta name=“viewport” content=“width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel=“stylesheet” href=“{% static ‘post_list.css’ %}“>
-    <script type=“text/javascript” src=“{% static ‘posts.js’ %}“></script>
+    <link rel="stylesheet" href="{% static 'post_list.css' %}">
+    <script type="text/javascript" src="{% static 'posts.js' %}"></script>
 </head>
 <body>
-    <div class=“main_container”>
-        <div class=“post_container”>
+    <div class="main_container">
+        <div class="post_container">
             {% for post in posts %}
-            <div class=“post_card”>
-                <a href=“{% url ‘posts:post_detail’ user_id=post.user.id post_id=post.id %}” class=“post_image”>
-                    <div class=“post_image_container”>
+            <div class="post_card">
+                <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_image">
+                    <div class="post_image_container">
                         {{ post.image }}
                     </div>
                 </a>
-                <div class=“post_element”>
-                    <a href=“{% url ‘posts:post_detail’ user_id=post.user.id post_id=post.id %}” class=“post_link”>
-                        <div class=“post_title”>
+                <div class="post_element">
+                    <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_link">
+                        <div class="post_title">
                             {{ post.title|truncatechars:26 }}
                         </div>
-                        <div class=“post_tag”>
+                        <div class="post_tag">
                             # {{ post.tag }}
                         </div>
-                        <p class=“post_desc”>
-                            {{ post.desc|safe|escape|truncatechars:80|striptags|cut:“&nbsp;” }}
+                        <p class="post_desc">
+                            {{ post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;" }}
                         </p>
                     </a>
                 </div>
-                <div class=“post_user”>
-                    <a href=“{% url ‘user:my_page’ post.user.id %}” class=“user_info”>
-                        <div class=“user_info_image”>
+                <div class="post_user">
+                    <a href="{% url 'user:my_page' post.user.id %}" class="user_info">
+                        <div class="user_info_image">
+
                         </div>
                         <span>
                             by {{post.user}}
                         </span>
                     </a>
-                    <div class=“likes”>
-                        :+1:
-                        <div class=“likes_count”>
+
+                    <div class="likes">
+                        👍
+                        <div class="likes_count">
                             24
                         </div>
                     </div>
