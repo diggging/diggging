@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="{% static 'post_list.css' %}">
+    <script type="text/javascript" src="{% static 'posts.js' %}"></script>
 </head>
 <body>
     <div class="main_container">
@@ -21,18 +22,18 @@
                 <div class="post_element">
                     <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_link">
                         <div class="post_title">
-                            {{ post.title }}
+                            {{ post.title|truncatechars:26 }}
                         </div>
                         <div class="post_tag">
-                            #{{ post.tag }}
+                            # {{ post.tag }}
                         </div>
-                        <div class="post_desc">
-                            {{ post.desc }}
-                        </div>
+                        <p class="post_desc">
+                            {{ post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;" }}
+                        </p>
                     </a>
                 </div>
                 <div class="post_user">
-                    <a href="#" class="user_info">
+                    <a href="{% url 'user:my_page' post.user.id %}" class="user_info">
                         <div class="user_info_image">
 
                         </div>
@@ -42,10 +43,10 @@
                     </a>
 
                     <div class="likes">
-                        <svg width="24" height="24" viewBox="0 0 24 24">
-                            <path fill="currentColor" d="M18 1l-6 4-6-4-6 5v7l12 10 12-10v-7z">
-                            </path>
-                        </svg>
+                        👍
+                        <div class="likes_count">
+                            24
+                        </div>
                     </div>
                 </div>
             </div>
