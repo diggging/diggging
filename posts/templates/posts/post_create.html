@@ -1,31 +1,64 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="./post_create.css" />
+    <link rel="stylesheet" href="{% static 'posts/post_create.css' %}" />
     <!-- <link rel="stylesheet" href="../../../highlight/styles/base16/framer.min.css"> -->
 
 </head>
 <body>
-    <h1>삽질기록 남기기</h1>
-    <br>
-    <div class="container">
-        <form method="POST" enctype="multipart/form-data" autocomplete="off">
-            {% csrf_token %}
-            {{ form.media }}
-            {{ form.title }}
-            <span>
-                {{ form.language }}
-                <label>운영체제{{ form.os }}</label>
-                {{ form.problem_solving }}
-                {{ form.error_message }}
-                {{ form.desc }}
-                태그:{{ form.tag }}
-            </span>
-            <input type="submit" value="기록 남기기"/>
-        </form>
+    <div class="create_title">
+        <h1>삽질기록 남기기</h1>
+        <br>
     </div>
+
+    <div class="container">
+        <div class="form_container">
+            <form method="POST" enctype="multipart/form-data" autocomplete="off">
+                {% csrf_token %}
+                {{ form.media }}
+                <div class="thumbnail_area">
+                    <label for="id_image">
+                      <img src="{% static 'posts/thumbnail_image.svg' %}" />
+                    </label>
+                    {{ form.image }}
+                </div>
+                {{ form.title }}
+                <div class="choice_area">
+                    {{ form.language }}
+                    <label for="id_os">운영체제    {{ form.os }}</label>
+                    {{ form.problem_solving }}
+                </div>
+                <div class="error_area">
+                    {{ form.error_message }}
+                </div>
+                <div class="desc_area">
+                    {{ form.desc }}
+                </div>
+                <div class="tag_area">
+                    공개설정 <input type="radio" id="id_is_public1" />
+                    <label for="id_is_public1">전체공개</label>
+                    <input type="radio" id="id_is_public2" />
+                    <label for="id_is_public2">비공개</label>
+                    <label class="tag_label" for="id_tag">태그</label>{{ form.tag }}
+                </div>
+                <div class="btn_area">
+                    <button class="btn_control">임시저장</button>                   
+                        <input type="submit" value="기록 남기기" class="btn_control"/>
+                    <button  class="btn_control">
+                        <a href="{% url 'posts:post_list' %}">나가기</a>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        config.width = 500;
+        config.height = 800;
+    </script>
 </body>
 </html>
