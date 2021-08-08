@@ -1,33 +1,61 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="./post_create.css" />
+    <link rel="stylesheet" href="{% static 'posts/post_create.css' %}" />
     <!-- <link rel="stylesheet" href="../../../highlight/styles/base16/framer.min.css"> -->
 
 </head>
 <body>
-    <h1>삽질기록 남기기</h1>
-    <br>
+    <div class="create_title">
+        <h1>삽질기록 남기기</h1>
+        <br>
+    </div>
+
     <div class="container">
         <div class="form_container">
             <form method="POST" enctype="multipart/form-data" autocomplete="off">
                 {% csrf_token %}
                 {{ form.media }}
+                <div class="thumbnail_area">
+                    <label for="id_image">
+                      <img src="{% static 'posts/thumbnail_image.svg' %}" />
+                    </label>
+                    {{ form.image }}
+                </div>
                 {{ form.title }}
-                <span>
+                <div class="choice_area">
                     {{ form.language }}
-                    <label>운영체제{{ form.os }}</label>
+                    <label for="id_os">운영체제    {{ form.os }}</label>
                     {{ form.problem_solving }}
+                </div>
+                <div class="error_area">
                     {{ form.error_message }}
+                </div>
+                <div class="desc_area">
                     {{ form.desc }}
-                    태그:{{ form.tag }}
-                </span>
-                <input type="submit" value="기록 남기기"/>
+                </div>
+                <div class="tag_area">
+                    공개설정 <input type="radio" id="id_is_public1" />
+                    <label for="id_is_public1">전체공개</label>
+                    <input type="radio" id="id_is_public2" />
+                    <label for="id_is_public2">비공개</label>
+                    태그   {{ form.tag }}
+                </div>
+                <div class="btn_area">
+                    <btn>임시저장</btn>
+                    <input type="submit" value="기록 남기기"/>
+                    <a href="{% url 'posts:post_list' %}">나가기</a>
+                </div>
             </form>
         </div>
     </div>
+    <script>
+        editor.resize( '100%', '700' );
+    </script>
 </body>
 </html>

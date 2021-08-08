@@ -21,10 +21,10 @@ class PostForm(forms.ModelForm):
         }
         widgets = {
             "title": forms.TextInput(
-                attrs={"class": "title_input", "style": "width: 90%", "placeholder": "제목을 입력하세요."}
+                attrs={"class": "title_input", "placeholder": "제목을 입력하세요."}
             ),
             "error_message": forms.TextInput(
-                attrs={"class": "title_input", "sytle": "width: 90%", "placeholder": "발견한 에러메시지를 기록하세요."},
+                attrs={"class": "title_input", "placeholder": "발견한 에러메시지를 기록하세요."},
             ),
             "desc": forms.CharField(widget=CKEditorUploadingWidget()),
         }

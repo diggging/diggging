@@ -55,6 +55,7 @@ CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'Custom',
         'height': 500,
+        'width': '100em',
         'toolbar_Custom': [
             ['Bold', 'Link', 'Image'],
         ],         
@@ -65,9 +66,8 @@ CKEDITOR_CONFIGS = {
             ['Bold', 'Font', 'FontSize', 'Bold', 'Strike', 'Underline'],
             ['TextColor', 'BGColor'],
             ['NumberedList', 'BulletedList','-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-            '/',
             {'name': 'insert',
-            'items': ['Image', 'Table','CodeSnippet', 'UploadWidget']},
+            'items': ['Image', 'Table','CodeSnippet']},
             ],
         'extraPlugins': 'codesnippet',
         # 'extraPlugins': 'codesnippet, uploadwidget, codesnippetgeshi',
