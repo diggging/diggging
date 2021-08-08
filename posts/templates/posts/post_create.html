@@ -12,20 +12,22 @@
     <h1>삽질기록 남기기</h1>
     <br>
     <div class="container">
-        <form method="POST" enctype="multipart/form-data" autocomplete="off">
-            {% csrf_token %}
-            {{ form.media }}
-            {{ form.title }}
-            <span>
-                {{ form.language }}
-                <label>운영체제{{ form.os }}</label>
-                {{ form.problem_solving }}
-                {{ form.error_message }}
-                {{ form.desc }}
-                태그:{{ form.tag }}
-            </span>
-            <input type="submit" value="기록 남기기"/>
-        </form>
+        <div class="form_container">
+            <form method="POST" enctype="multipart/form-data" autocomplete="off">
+                {% csrf_token %}
+                {{ form.media }}
+                {{ form.title }}
+                <span>
+                    {{ form.language }}
+                    <label>운영체제{{ form.os }}</label>
+                    {{ form.problem_solving }}
+                    {{ form.error_message }}
+                    {{ form.desc }}
+                    태그:{{ form.tag }}
+                </span>
+                <input type="submit" value="기록 남기기"/>
+            </form>
+        </div>
     </div>
 </body>
 </html>

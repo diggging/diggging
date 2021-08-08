@@ -69,10 +69,11 @@ CKEDITOR_CONFIGS = {
             {'name': 'insert',
             'items': ['Image', 'Table','CodeSnippet', 'UploadWidget']},
             ],
-        'extraPlugins': 'codesnippet, uploadwidget'
+        'extraPlugins': 'codesnippet',
+        # 'extraPlugins': 'codesnippet, uploadwidget, codesnippetgeshi',
+        # 'codeSnippetGeshi_url': '../lib/colorize.php',
     }
 }
-
 
 
 MIDDLEWARE = [
