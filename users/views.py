@@ -71,10 +71,11 @@ def signup(request):
     else:
         user_form = UserCustomCreationForm()
     ctx={'signup_form' : user_form}
-    return render(request, template_name="users/signup.html", context=ctx)
+    return render(request, "users/signup.html", context=ctx)
 
 # 이메일 인증 후 계정 활성화
 def activate(request, uidb64, token):
+    print("sdfsdf")
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
@@ -138,16 +139,12 @@ def password_reset(request):
         if User.objects.filter(email = email).exists():
             #있으면 메일 보내기
             user = User.objects.get(email=email)
-            my_site = Site.objects.get(pk=1)
-            my_site.domain = '127.0.0:8000'
-            my_site.name = "digging_main"
-            my_site.save()
             current_site = get_current_site(request)
             print(current_site)
             message = render_to_string('users/password_reset_email.html', {
                 'user': user,
                 #'domain': current_site.domain,
-                'domain': my_site.domain,
+                #'domain': my_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': password_reset_token.make_token(user),
             })
