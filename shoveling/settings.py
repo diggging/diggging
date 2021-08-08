@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     "users",
     "posts",
     "comments",
-
     # Third party apps
     "six",
     "ckeditor",
@@ -202,11 +201,12 @@ TAGGIT_CASE_INSENSITIVE = True
 TAGGIT_LIMIT = 50
 
 # 이메일 보내기 위한 settings(google 기준)
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get("USER_EMAIL_HOST")
 EMAIL_HOST_PASSWORD = os.environ.get("USER_EMAIL_PASSWORD")
 EMAIL_USE_TLS = True
+
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
