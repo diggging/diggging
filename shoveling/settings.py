@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-ka8ldery2i8!8u7-y_gb0s53!7ij^+dr-j*s75z$@+kmh8mr3l"
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -39,13 +39,22 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "tagging.apps.TaggingConfig",
+    # t소셜로그인
+    "django.contrib.sites",
     # apps
     "core",
     "users",
     "posts",
     "comments",
+    "questions",
+    # Third party apps
+    "six",
     "ckeditor",
     "ckeditor_uploader",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.naver",
 ]
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
@@ -163,7 +172,7 @@ STATIC_URL = "/static/"
 STATIC_ROOT ="/static/"
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, "static"),
 ]
 
 STATICFILES_DIRS = ( os.path.join(BASE_DIR, 'static'), )
@@ -180,3 +189,19 @@ MEDIA_URL = "/media/"
 
 TAGGIT_CASE_INSENSITIVE = True
 TAGGIT_LIMIT = 50
+
+# 이메일 보내기 위한 settings(google 기준)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get("USER_EMAIL_HOST")
+EMAIL_HOST_PASSWORD = os.environ.get("USER_EMAIL_PASSWORD")
+EMAIL_USE_TLS = True
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SITE_ID = 1
+LOGIN_REDIRECT_URL = "/"

@@ -1,17 +1,29 @@
-<p>sand: {{ request.user.user_point }} </p>
-<p>닉네임: {{ request.user.user_nickname }}</p>
-<p>이메일: {{ request.user.email }}</p>
+<p>닉네임: {{ host.user_nickname }}</p>
+<p>레벨: {{ host.user_level }}</p>
+<p>sand: {{ host.user_point }} </p>
+<p>이미지: {{ host.user_profile_image }} </p>
+{% if host.user_profile_image %}
+<img src="{{ host.user_profile_image.url }}" width="200">
+{% endif %}
+
+<p>이메일: {{ host.email }}</p>
 <hr/>
+<form method="POST" action="{% url 'users:change_img' host.id %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="new_img" accept="image/*"> 
+    <button type="submit"> 이미지 변경하기 </button>
+</form>
+
 <h3>닉네임 변경</h3>
-<form method="POST" action="{% url 'users:change_nickname' %}">
+<form method="POST" action="{% url 'users:change_nickname' host.id %}">
     {% csrf_token %}
         Change_nickname
-        <input name="new_nickname">
+        <input name="new_nickname" >
     <button type="submit"> 닉네임 변경하기 </button>
 </form>
 <hr/>
 <h3>비밀번호 변경</h3>
-<form method="POST" action="{% url 'users:change_pw' %}">
+<form method="POST" action="{% url 'users:change_pw' host.id %}">
     {% csrf_token %}
         Origin Password
         <input name="origin_password" type="password">

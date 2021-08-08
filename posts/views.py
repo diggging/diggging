@@ -1,3 +1,4 @@
+from users.models import User
 from comments.models import Comment
 from django.http.response import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -10,19 +11,36 @@ import json
 
 # Create your views here.
 
+# main 페이지
+def main(request):
+    # 모든 전체 글에서 스크랩 순위대로 추천
+    all_posts_scrap = Post.objects.all().order_by("-scrap_num")
+    # 모든 전체 글에서 도움 순위대로 추천
+    all_posts_helped = Post.objects.all().order_by("-helped_num")
 
-def post_list(request):  # main-page
-    posts = Post.objects.all()
-    ctx = {"posts": posts}
-    return render(request, "posts/post_list.html", ctx)
+    ctx = {
+        "posts_scrap": all_posts_scrap,
+        "posts_helped": all_posts_helped,
+    }
+
+    return render(request, template_name="posts/main.html", context=ctx)
 
 
 # 프론트에서 해당 포스트 id 넘겨주면
 def post_detail(request, user_id, post_id):
-    details = Post.objects.get(pk=post_id)
-    comments = details.comments.all()
+    post_details = Post.objects.get(pk=post_id)
+    me = get_object_or_404(User, pk=user_id)
+    folder = post_details.folder.get(
+        folder_name=post_details.language, folder_user=post_details.user
+    )
+    comments = post_details.comments.all()
     # 댓글기능도 끌어와야함.
-    ctx = {"details": details, "comments": comments}
+    ctx = {
+        "post": post_details,
+        "host": me,
+        "folder": folder,
+        "comments": comments,
+    }
     # html added by 종권
     return render(request, "posts/post_detail.html", ctx)
 
@@ -38,29 +56,24 @@ def post_create(request):
             posts.save()
 
             # 폴더 분류해주기
+            me = posts.user  # folder 주인 가져오기
             language = request.POST.get("language")  # language 가져옴
-            print(language)
-            print(type(language))
-            folder = Folder.objects.filter(folder_name=language)
+            folder = Folder.objects.filter(folder_name=language, folder_user=me)
 
             if folder:
-                print(
-                    "___________________ 있음 __________________________________________________________________"
-                )
                 # 있으면 foriegn key 연결
-                existed_folder = Folder.objects.get(folder_name=language)
-                posts.folder = existed_folder
-                posts.save()
+                existed_folder = Folder.objects.get(
+                    folder_name=language, folder_user=me
+                )
+                posts.folder.add(existed_folder)
             else:
                 # 없으면 folder 만들어서
-                print(
-                    "___________________ 없슴 __________________________________________________________________"
-                )
-                new_folder = Folder.objects.create(folder_name=language)
-                posts.folder = new_folder
-                posts.save()
+                new_folder = Folder.objects.create(folder_name=language, folder_user=me)
+                posts.folder.add(new_folder)
 
-            return redirect("posts:post_list")
+            posts.save()
+
+            return redirect("posts:main")
     else:
         form = PostForm()
         ctx = {
@@ -108,7 +121,7 @@ def search(request):
 
 
 # 삽질 기록 퍼오기
-def get_post(request, post_pk):
+def get_post(request, user_id, post_id):
     # attach action in frontend
     # how to attach action
     # ex> <... href="{% url '...' ... %}?action=remove">
@@ -116,9 +129,6 @@ def get_post(request, post_pk):
     #     <... href={% url '...' ... %}?action=add">
     # action = request.GET.get("action", None)
     # post = Post.objects.get(pk=post_pk)
-    post = get_object_or_404(Post, pk=post_pk)
-    target_language = post.language
-    folder = Folder.objects.filter(folder_name=target_language)
 
     # if action == "add":
     #     # 폴더가 이미 존재시에 해당 폴더에 포스트 추가
@@ -134,19 +144,32 @@ def get_post(request, post_pk):
     # elif action == "remove":
     #     folder.delete(post)
 
-    # 폴더가 이미 존재시에 해당 폴더에 포스트 추가
+    post = get_object_or_404(Post, pk=post_id)
+    target_language = post.language
+    me = request.user
+
+    # get: object-없는걸 가져오면 오류 , filter: queryset- 없어도 빈 queryset 오류 x
+    folder = Folder.objects.filter(folder_name=target_language, folder_user=me)
+
+    # 만약 나, language로 된 폴더 있으면
     if folder:
-        existing_folder = Folder.objects.get(folder_name=target_language)
-        existing_folder.add(post)
-        existing_folder.save()
+        # 그 폴더에 포스트 그냥 추가하기
+        folder = Folder.objects.get(
+            folder_name=target_language, folder_user=me
+        )  # query set은 object가 아니므로 object 다시 가져옴
+        folder.related_posts.add(post)  # add 는 저장 x 명시적 저장 필요
+        folder.save()
+    # 없으면
     else:
-        # 없으면 folder 형성
-        new_folder = Folder.objects.create(folder_name=target_language)
-        post.folder = new_folder
-        new_folder.save()
+        # 폴더를 생성한 뒤, 거기에 추가하기
+        new_folder = Folder.objects.create(
+            folder_name=target_language, folder_user=me
+        )  # create - 자동저장
+        post.folder.add(new_folder)
+    post.save()
 
     # url: 저장 후 post_detail 페이지에 남아있음.
-    return render(request, template_name="posts/post_detail.html")
+    return redirect("posts:post_detail", user_id, post_id)
 
 
 # 도움이 되었어요, 스크랩 개수 count 하기 위한 axios

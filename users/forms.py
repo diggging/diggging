@@ -1,6 +1,12 @@
 from django import forms
 from django.forms.utils import ErrorList
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail.message import EmailMessage
 from django.db.models import fields
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from .models import User
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
