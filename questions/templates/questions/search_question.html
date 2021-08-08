@@ -1,0 +1,6 @@
+<form action="" method="post">
+    {% for obj in objects %}
+        <input id="selected" type="checkbox" name="selected" value="{{ obj.id }}">
+    {% endfor %}
+    <button type="submit">저장</button>
+</form>

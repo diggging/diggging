@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "users",
     "posts",
     "comments",
+    "questions",
     # Third party apps
     "six",
     "ckeditor",
