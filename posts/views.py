@@ -14,24 +14,25 @@ import json
 # main 페이지
 def main(request):
     # 모든 전체 글에서 스크랩 순위대로 추천
-    all_posts_scrap = Post.objects.all().order_by('-scrap_num')
+    all_posts_scrap = Post.objects.all().order_by("-scrap_num")
     # 모든 전체 글에서 도움 순위대로 추천
-    all_posts_helped = Post.objects.all().order_by('-helped_num')
+    all_posts_helped = Post.objects.all().order_by("-helped_num")
 
     ctx = {
-        'posts_scrap' : all_posts_scrap,
-        'posts_helped' : all_posts_helped,
+        "posts_scrap": all_posts_scrap,
+        "posts_helped": all_posts_helped,
     }
 
-    return render(request, template_name="posts/main.html", context = ctx)
+    return render(request, template_name="posts/main.html", context=ctx)
 
 
-
-# 프론트에서 해당 포스트 id 넘겨주면 
+# 프론트에서 해당 포스트 id 넘겨주면
 def post_detail(request, user_id, post_id):
     post_details = Post.objects.get(pk=post_id)
-    me = get_object_or_404(User, pk = user_id)
-    folder = post_details.folder.get(folder_name=post_details.language, folder_user=post_details.user)
+    me = get_object_or_404(User, pk=user_id)
+    folder = post_details.folder.get(
+        folder_name=post_details.language, folder_user=post_details.user
+    )
     comments = post_details.comments.all()
     # 댓글기능도 끌어와야함.
     ctx = {
@@ -55,19 +56,21 @@ def post_create(request):
             posts.save()
 
             # 폴더 분류해주기
-            me = posts.user # folder 주인 가져오기
+            me = posts.user  # folder 주인 가져오기
             language = request.POST.get("language")  # language 가져옴
-            folder = Folder.objects.filter(folder_name=language, folder_user = me)
+            folder = Folder.objects.filter(folder_name=language, folder_user=me)
 
             if folder:
                 # 있으면 foriegn key 연결
-                existed_folder = Folder.objects.get(folder_name=language, folder_user = me)
+                existed_folder = Folder.objects.get(
+                    folder_name=language, folder_user=me
+                )
                 posts.folder.add(existed_folder)
             else:
                 # 없으면 folder 만들어서
                 new_folder = Folder.objects.create(folder_name=language, folder_user=me)
                 posts.folder.add(new_folder)
-                
+
             posts.save()
 
             return redirect("posts:main")
@@ -144,26 +147,31 @@ def get_post(request, user_id, post_id):
     post = get_object_or_404(Post, pk=post_id)
     target_language = post.language
     me = request.user
-    
+
     # get: object-없는걸 가져오면 오류 , filter: queryset- 없어도 빈 queryset 오류 x
-    folder = Folder.objects.filter(folder_name=target_language, folder_user=me) 
-    
-    # 만약 나, language로 된 폴더 있으면 
+    folder = Folder.objects.filter(folder_name=target_language, folder_user=me)
+
+    # 만약 나, language로 된 폴더 있으면
     if folder:
         # 그 폴더에 포스트 그냥 추가하기
-        folder = Folder.objects.get(folder_name=target_language, folder_user=me) # query set은 object가 아니므로 object 다시 가져옴
+        folder = Folder.objects.get(
+            folder_name=target_language, folder_user=me
+        )  # query set은 object가 아니므로 object 다시 가져옴
         folder.related_posts.add(post)  # add 는 저장 x 명시적 저장 필요
         folder.save()
     # 없으면
     else:
         # 폴더를 생성한 뒤, 거기에 추가하기
-        new_folder = Folder.objects.create(folder_name=target_language, folder_user=me) # create - 자동저장
+        new_folder = Folder.objects.create(
+            folder_name=target_language, folder_user=me
+        )  # create - 자동저장
         post.folder.add(new_folder)
     post.save()
 
     # url: 저장 후 post_detail 페이지에 남아있음.
-    return redirect('posts:post_detail', user_id, post_id)
-    
+    return redirect("posts:post_detail", user_id, post_id)
+
+
 # 도움이 되었어요, 스크랩 개수 count 하기 위한 axios
 def count_like_scrap(request):
     # json 문자열을 json.loads를 통해서 json 형태에서 파이썬 객체 형태로 parsing
