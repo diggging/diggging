@@ -13,7 +13,7 @@ def my_view(request):
         selected = request.POST.getlist("selected")
         print(selected)
 
-    return redirect("question:search_question")
+    return "question:my_view"
 
 
 # def search_question(reqeust):
