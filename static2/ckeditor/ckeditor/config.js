@@ -1,12 +1,12 @@
-/**
- * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
- * For licensing, see https://ckeditor.com/legal/ckeditor-oss-license
- */
-
-CKEDITOR.editorConfig = function( config ) {
-	// Define changes to default configuration here. For example:
-	// config.language = 'fr';
-	// config.uiColor = '#AADC6E';
-    config.height = 400;
-    config.uiColor = #CEC4B3;
+CKEDITOR.editorConfig = function( config ) 
+{ 
+    CKEDITOR.dtd.$removeEmpty['i'] = false;
+    config.enterMode = CKEDITOR.ENTER_BR;
+    config.fillEmptyBlocks = false;
 };
+
+config.fillEmptyBlocks = function( element )
+{
+    if ( element.name == 'div' )
+        return false;
+}

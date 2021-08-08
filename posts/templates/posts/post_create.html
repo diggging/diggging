@@ -44,12 +44,14 @@
                     <label for="id_is_public1">전체공개</label>
                     <input type="radio" id="id_is_public2" />
                     <label for="id_is_public2">비공개</label>
-                    <label for="id_tag">태그</label>{{ form.tag }}
+                    <label class="tag_label" for="id_tag">태그</label>{{ form.tag }}
                 </div>
                 <div class="btn_area">
-                    <button>임시저장</button>
-                    <input type="submit" value="기록 남기기"/>
-                    <a href="{% url 'posts:post_list' %}">나가기</a>
+                    <button class="btn_control">임시저장</button>                   
+                        <input type="submit" value="기록 남기기" class="btn_control"/>
+                    <button  class="btn_control">
+                        <a href="{% url 'posts:post_list' %}">나가기</a>
+                    </button>
                 </div>
             </form>
         </div>

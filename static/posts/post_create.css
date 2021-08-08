@@ -4,11 +4,13 @@
 }
 :root {
     --border-color: #CEC4B3;
+    --btn-color: #FFF8CA;
     --sand-color: #D1AF00;
     --text-color: #4E4E4E;
     --title-font: 'Pretendard-ExtraBold';
     --content-font: 'Pretendard-Regular';
     --btn-font: 'Pretendard-SemiBold';
+    --hover-color: #FFEF9C;
 }
 @font-face {
     font-family: 'Pretendard-Regular';
@@ -45,7 +47,8 @@ form {
 
 .create_title {
     display:flex;
-    margin: 20px;
+    margin-top: 30px;
+    margin-bottom: 10px;
     justify-content: center;
 }
 
@@ -133,21 +136,50 @@ form {
 }
 
 .tag_area {
-    margin: 10px 0px;
+    margin: 20px 0px;
     font-family: var(--btn-font);
 }
 
 #id_tag {
-    width: 20em;
+    width: 30em;
     height: 44px;
-    margin-left: 20px;
     border: solid 1px var(--border-color);
     border-radius: 4px;
 }
 
-.btn_area button{
+.tag_label {
+    margin: 0 20px;
+}
+
+.btn_area {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 20px;
+}
+
+.btn_control {
     border: solid 1px var(--sand-color);
-    background-color: var(var(--border-color));
+    background-color: var(--btn-color);
+    font-size: 1.25em;
+    border-radius: 8px;
+    padding: 15px 40px;
     color: var(--sand-color);
     font-family: var(--btn-font);
+    text-decoration: none;
+}
+
+.btn_control a {
+    text-decoration: none;
+}
+
+.btn_control a:hover {
+    color:whitesmoke;
+}
+
+.btn_control a:visited {
+    color: var(--sand-color)
+}
+
+.btn_control:hover {
+    background-color: var(--hover-color);
 }

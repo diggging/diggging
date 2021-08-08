@@ -51,6 +51,8 @@ INSTALLED_APPS = [
 CKEDITOR_UPLOAD_PATH = "uploads/"
 
 
+
+
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'Custom',
@@ -69,7 +71,6 @@ CKEDITOR_CONFIGS = {
             {'name': 'insert',
             'items': ['Image', 'Table','CodeSnippet']},
             ],
-        'extraPlugins': 'codesnippet',
         # 'extraPlugins': 'codesnippet, uploadwidget, codesnippetgeshi',
         # 'codeSnippetGeshi_url': '../lib/colorize.php',
     }
