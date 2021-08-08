@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, get_object_or_404
 #from .forms import SignUpForm
-from .forms import UserCustomCreationForm
+from .forms import UserCustomCreationForm, AuthenticationCustomForm
 from .models import User
 from django.views import View
 from django.contrib.auth.decorators import login_required
@@ -26,16 +26,19 @@ def signup(request):
 
 # 로그인
 def log_in(request):
+    context = {}
     if request.method == "POST":
-        form = AuthenticationForm(request, request.POST)
+        form = AuthenticationCustomForm(request, request.POST)
         if form.is_valid():
             login(request, form.get_user())
             user = form.get_user()
             return redirect('users:my_page', user.pk)
-        else:
-            print("_________________________________ 외않되 __________________________________________")
+        # else:
+        #     context.update({"error:해당하는 유저 정보가 없습니다."})
+        #     return render(request, template_name="users/login.html")
+        
     else:
-        form = AuthenticationForm()
+        form = AuthenticationCustomForm()
     ctx = {'form' : form}
     return render(request, template_name="users/login.html", context=ctx)
 

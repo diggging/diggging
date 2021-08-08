@@ -1,6 +1,74 @@
-<form method="POST" action="{% url 'users:login' %}">
-    <!--  form 쓸땐 이걸 꼭 추가해줘야함  -->
-    {% csrf_token %}
-    {{form.as_p}}
-    <button>Login</button>
-</form>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'users/login.css' %}">
+</head>
+<!-- html required custom -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const elements = document.getElementsByTagName("INPUT");
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].oninvalid = function(e) {
+                e.target.setCustomValidity("빈칸 없이 모두 입력해주세욧!");
+                if (!e.target.validity.valid) {
+                    e.target.
+                    e.target.setCustomValidity("");
+                }
+            };
+            elements[i].oninput = function(e) {
+                e.target.setCustomValidity("");
+            };
+        }
+    })
+</script>
+<body>
+    <div class="container">
+        <div class="form_container">
+            <div class="login_top">
+                <a href="#" class="login_logo">
+                    <img class="login_logo" src="{% static 'users/login_logo.png' %}">
+                </a>
+                <div class="login_question">
+                    <h4>회원이 아닌가요?</h4>
+                    <a href="{% url 'users:signup' %}">회원가입하기</a>
+                    <a href="">비밀번호 찾기</a>
+                </div>
+            </div>
+
+            <div class="login_middle">
+                <form action="" method="post" autocomplete="off" required>
+                    {% csrf_token %}
+                    <div class="login_input">
+                        <div class="input_id">
+                            <span class="input_label">아이디</span>
+                            {{ form.username }}
+                        </div>
+                    </div>
+                    <div class="login_input">
+                        <div class="input_password">
+                            <span class="input_label">비밀번호</span>
+                            {{ form.password }}
+                        </div>
+                    </div>
+                    <div class="error_message">
+                        {% if form.non_field_errors %}
+                            <span>{{form.non_field_errors}}</span>
+                        {% endif %}
+                        <!-- {% if form.password.errors %}
+                            <span>{{form.password.errors}}</span>
+                        {% endif %} -->
+                    </div>
+                    <button class="login_btn" type="submit">로그인하기</button>
+                </form>
+            </div>
+            <div class="login_bottom">
+                <!-- sns로그인자리 -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>
