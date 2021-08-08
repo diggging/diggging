@@ -7,7 +7,9 @@ class Comment(core_models.TimeStampModel):
         "posts.Post", on_delete=models.CASCADE, related_name="comments"
     )
     question = models.ForeignKey(
-        "questions.Post", on_delete=models.CASCADE, related_name="question_comments"
+        "questions.Question_post",
+        on_delete=models.CASCADE,
+        related_name="question_comments",
     )
     user = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, related_name="comments"
