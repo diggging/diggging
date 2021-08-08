@@ -131,11 +131,10 @@ def password_reset(request):
     # email 받으면
     if request.method == 'POST':
         email  = request.POST.get("email")
-        user = request.user
         # email 이 존재하는 이메일인지 확인
         if User.objects.filter(email = email).exists():
             #있으면 메일 보내기
-            
+            user = User.objects.get(email=email)
             my_site = Site.objects.get(pk=1)
             my_site.domain = '127.0.0:8000'
             my_site.name = "digging_main"
@@ -168,6 +167,7 @@ def password_reset(request):
 
 # 이메일 인증
 def password_reset_email(request, uidb64, token):
+    print("aaa")
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
@@ -180,7 +180,10 @@ def password_reset_email(request, uidb64, token):
         }
         return redirect('users:password_reset_form', user.id)
     else:
-        return HttpResponse('Activation link is invalid!')
+        ctx={
+            'user': user
+        }
+        return render(request, template_name="password_email_fail.html", context=ctx)
 
 def password_reset_form(request, pk):
     context = {}

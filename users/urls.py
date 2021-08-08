@@ -20,7 +20,7 @@ urlpatterns = [
     #path('password_reset_confirm/<uidb64>/<token>/', views.MyPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     #path('password_reset_done/', views.MyPasswordResetDoneView.as_view(), name='password_reset_done'),
     path('password_reset/', view=views.password_reset, name='password_reset'),
-    path('password_reset_email/<slug:uidb64>/<slug:token>/', views.activate, name="password_reset_email"),
+    path('password_reset_email/<slug:uidb64>/<slug:token>/', views.password_reset_email, name="password_reset_email"),
     path('<int:pk>/password_reset_form/', view=views.password_reset_form, name="password_reset_form"),
 
     path('<int:pk>/my_page/', view=views.my_page, name="my_page"),   # my page

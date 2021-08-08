@@ -20,4 +20,4 @@ class MyPasswordResetTokenGenerator(PasswordResetTokenGenerator):
         )
 
 # 그냥 있는거 쓰면 왜 안대지?
-password_reset_token = PasswordResetTokenGenerator()
+password_reset_token = MyPasswordResetTokenGenerator()
