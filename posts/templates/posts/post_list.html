@@ -1,6 +1,56 @@
-{% for post in posts %}
-{{ post.title }}
-{{ post.folder }}
-{{post.user}}
-<hr/>
-{% endfor %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'post_list.css' %}">
+</head>
+<body>
+    <div class="main_container">
+        <div class="post_container">
+            {% for post in posts %}
+            <div class="post_card">
+                <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_image">
+                    <div class="post_image_container">
+                        {{ post.image }}
+                    </div>
+                </a>
+                <div class="post_element">
+                    <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_link">
+                        <div class="post_title">
+                            {{ post.title }}
+                        </div>
+                        <div class="post_tag">
+                            #{{ post.tag }}
+                        </div>
+                        <div class="post_desc">
+                            {{ post.desc }}
+                        </div>
+                    </a>
+                </div>
+                <div class="post_user">
+                    <a href="#" class="user_info">
+                        <div class="user_info_image">
+
+                        </div>
+                        <span>
+                            by {{post.user}}
+                        </span>
+                    </a>
+
+                    <div class="likes">
+                        <svg width="24" height="24" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M18 1l-6 4-6-4-6 5v7l12 10 12-10v-7z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
