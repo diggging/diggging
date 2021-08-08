@@ -202,6 +202,7 @@ TAGGIT_CASE_INSENSITIVE = True
 TAGGIT_LIMIT = 50
 
 # 이메일 보내기 위한 settings(google 기준)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get("USER_EMAIL_HOST")
@@ -211,5 +212,6 @@ AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 )
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SITE_ID = 1
 LOGIN_REDIRECT_URL = "/"
