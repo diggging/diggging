@@ -9,9 +9,9 @@ from .forms import UserCustomCreationForm
 from .models import User
 from django.views import View
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, PasswordResetForm
 from django.contrib.auth.hashers import check_password
-from . import models
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView
 import os
 # 이메일 인증 관련 import
 import logging
@@ -23,7 +23,10 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from django.core.mail import EmailMessage
 from django.utils.encoding import force_bytes, force_text
-from .tokens import account_activation_token
+from .tokens import account_activation_token, password_reset_token
+from django.urls import reverse_lazy
+from django.contrib import messages
+from django.contrib.sites.models import Site
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
@@ -69,7 +72,7 @@ def signup(request):
         user_form = UserCustomCreationForm()
     ctx={'signup_form' : user_form}
     return render(request, template_name="users/signup.html", context=ctx)
-    
+
 # 이메일 인증 후 계정 활성화
 def activate(request, uidb64, token):
     try:
@@ -100,12 +103,102 @@ def log_in(request):
     ctx = {'form' : form}
     return render(request, template_name="users/login.html", context=ctx)
 
-
 # 로그아웃
 @login_required
 def log_out(request):
     logout(request)
     return redirect('user:login')
+
+# 비밀번호 찾기
+# class UserPasswordResetView(PasswordResetView):
+#     template_name = 'password_reset.html'
+#     success_url = reverse_lazy('password_reset_done')
+#     form_class = PasswordResetForm
+
+#     # 존재하는 이메일인지 확인하기
+#     def form_valid(self, form):
+#         if User.objects.filter(email=self.request.POST.get("email")).exists():
+#             return super().form_valid(form)
+#         else:
+#             return render(self.request, 'password_reset_done_fail.html')
+
+# class UserPasswordResetDoneView(PasswordResetDoneView):
+#     template_name = 'password_reset_done.html' #템플릿을 변경하려면 이와같은 형식으로 입력
+
+
+# 비밀번호를 모르겠을때, email을 작성하는 부분
+def password_reset(request):
+    # email 받으면
+    if request.method == 'POST':
+        email  = request.POST.get("email")
+        user = request.user
+        # email 이 존재하는 이메일인지 확인
+        if User.objects.filter(email = email).exists():
+            #있으면 메일 보내기
+            
+            my_site = Site.objects.get(pk=1)
+            my_site.domain = '127.0.0:8000'
+            my_site.name = "digging_main"
+            my_site.save()
+            current_site = get_current_site(request)
+            print(current_site)
+            message = render_to_string('users/password_reset_email.html', {
+                'user': user,
+                #'domain': current_site.domain,
+                'domain': my_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': password_reset_token.make_token(user),
+            })
+            # sending mail to future user
+            mail_subject = 'Change your Password.'
+            email = EmailMessage(mail_subject, message, to=[email])
+            email.send()
+            return HttpResponse(
+                '<div style="font-size: 40px; width: 100%; height:100%; display:flex; text-align:center; '
+                'justify-content: center; align-items: center;">'
+                '입력하신 이메일<span>로 인증 링크가 전송되었습니다.</span>'
+                '</div>'
+            )
+        else:
+            # 없으면 없는 메일ㅇ이라고 하고 다시 redirect
+            return redirect('users:password_reset')
+    else:
+        return render(request, template_name="users/password_reset.html")
+
+
+# 이메일 인증
+def password_reset_email(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    # 잘 넘어오면
+    if user is not None and password_reset_token.check_token(user, token):
+        ctx={
+            'user': user,
+        }
+        return redirect('users:password_reset_form', user.id)
+    else:
+        return HttpResponse('Activation link is invalid!')
+
+def password_reset_form(request, pk):
+    context = {}
+    if request.method == "POST":
+        user = get_object_or_404(User,pk=pk)
+        new_password = request.POST.get("password1")
+        password_confirm = request.POST.get("password2")
+        if new_password == password_confirm:
+            user.set_password(new_password)
+            user.save()
+            login(request, user)
+            return redirect('users:login')
+        else:
+            context.update({'error':"새로운 비밀번호를 다시 확인해주세요."})
+    else:
+        context.update({'error':"현재 비밀번호가 일치하지 않습니다."})
+    
+    return redirect('users:login')
 
 # _______________________________________________social login____________________________________________
 # github login
@@ -142,10 +235,10 @@ def github_callback(request):
                     email = profile_json.get("email")
                     try:
                         user = User.objects.get(email=email)
-                        if user.login_method != models.User.LOGIN_GITHUB:
+                        if user.login_method != User.LOGIN_GITHUB:
                             raise Exception()
                     except User.DoesNotExist:
-                        user = models.User.objects.create(username=name, email=email, user_nickname=name, login_method=models.User.LOGIN_GITHUB,)
+                        user = User.objects.create(username=name, email=email, user_nickname=name, login_method=User.LOGIN_GITHUB,)
                         user.set_unusable_password()
                         user.save()
                     login(request, user)
@@ -246,8 +339,6 @@ def change_img(request, pk):
             user.user_profile_image = new_img
             user.save()
     return redirect('users:account_detail', user.id)
-    
-
 
 
 # ________________________________________________ point ________________________________________________
