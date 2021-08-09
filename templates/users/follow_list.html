@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block script %}
+<link rel="stylesheet" href="{% static css/my_page.css %}">
+{% endblock script %}
+
+{% block content %}
+<div>팔로잉 
+    {% for following in host_following %}
+        {{ following.username }}
+    {% endfor %}
+</div>
+<div>팔로워 
+    {% for follower in host_follower %}
+        {{ follower.username }}
+    {% endfor %}
+</div>
+
+{% endblcok content %}
