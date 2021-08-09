@@ -12,13 +12,16 @@ def question_main(request):
     for post in posts:
         if post.answer_selection_count() > 0:
             selected_answer_posts.append(post)
-    ctx = {
-        "selected_answer_posts": selected_answer_posts,
-    }
+        elif post.answers.count() == 0:
+            selected_answer_posts.append(post)
     languages = [langs[0] for langs in Question_post.language_choices]
     search = request.POST.getlist("answers[]")
     print(search)
-    ctx = {"posts": posts, "language": languages}
+    ctx = {
+        "selected_answer_posts": selected_answer_posts,
+        "posts": posts, 
+        "language": languages,
+    }
     return render(request, "questions/main.html", ctx)
 
 
