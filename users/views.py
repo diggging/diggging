@@ -336,6 +336,21 @@ def follow(request, host_pk):
     
     return redirect('users:my_page', host_pk)
 
+#follow_list 확인
+def follow_list(request, pk):
+    host = get_object_or_404(User,pk=pk)
+    host_following = host.user_following.all()
+    host_follower = host.user_followed.all()
+
+    ctx = {
+        'host': host,
+        'host_follower' : host_follower,
+        'host_following' : host_following,
+    }
+
+    return render(request, template_name="users/follow_list.html", context=ctx)
+
+
 
 def account_detail(request, pk):
     host = get_object_or_404(User,pk=pk)
@@ -369,7 +384,8 @@ def change_pw(request, pk):
             if new_password == password_confirm:
                 user.set_password(new_password)
                 user.save()
-                login(request, user)
+                # backend 인자 추가
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return redirect('users:login')
             else:
                 context.update({'error':"새로운 비밀번호를 다시 확인해주세요."})
