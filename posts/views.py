@@ -90,7 +90,7 @@ def post_update(request, pk):
         form = PostForm(request.POST, instance=posts)
         if form.is_valid():
             form.save()
-            return redirect("posts:main")
+            return redirect("posts:main") #수정
     else:
         form = PostForm(instance=posts)
         ctx = {

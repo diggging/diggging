@@ -1,38 +1,119 @@
-<p>닉네임: {{ host.user_nickname }}</p>
-<p>레벨: {{ host.user_level }}</p>
-<p>sand: {{ host.user_point }} </p>
-<p>이미지: {{ host.user_profile_image }} </p>
-{% if host.user_profile_image %}
-<img src="{{ host.user_profile_image.url }}" width="200">
-{% endif %}
+{% extends 'base.html' %}
+{% load static %}
 
-<p>이메일: {{ host.email }}</p>
-<hr/>
-<form method="POST" action="{% url 'users:change_img' host.id %}" enctype="multipart/form-data">
-    {% csrf_token %}
-    <input type="file" name="new_img" accept="image/*"> 
-    <button type="submit"> 이미지 변경하기 </button>
-</form>
+{% block script %}
+<link rel="stylesheet" href="{% static 'css/account_detail.css' %}">
+{% endblock %}
 
-<h3>닉네임 변경</h3>
-<form method="POST" action="{% url 'users:change_nickname' host.id %}">
-    {% csrf_token %}
-        Change_nickname
-        <input name="new_nickname" >
-    <button type="submit"> 닉네임 변경하기 </button>
-</form>
-<hr/>
-<h3>비밀번호 변경</h3>
-<form method="POST" action="{% url 'users:change_pw' host.id %}">
-    {% csrf_token %}
-        Origin Password
-        <input name="origin_password" type="password">
+{% block content %}
+<body>
+    <div class="container">
+        <div class="account_container">
+            <div class="user_profile">
 
-        New Password
-        <input class="login_input" name="password1" type="password">
+                <div class="flex_col profile_image">
+                    {% if host.user_profile_image %}
+                        <img class="user_profile_image" src="{{ host.user_profile_image.url }}" width="200">
+                    {% endif %}
+                    <form method="POST" action="{% url 'users:change_img' host.id %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="file" name="new_img" accept="image/*"> 
+                        <button type="submit"> 이미지 변경하기 </button>
+                    </form>
+                </div>
+                
+                <div class="flex_col profile_name">
+                    <p>{{ host.user_nickname }}</p>
+                    <p>뱃지: {{ host.user_level }}</p>
+                </div>
 
-        Confirm Password
-        <input class="login_input" name="password2" type="password">
+                <div class="flex_col profile_level">
+                    <!-- <p>레벨: {{ host.user_level }}</p> -->
+                    <p>레벨: {{ host.user_level }}</p>
+                    <div class="level">
+                        10,000
+                    </div>
+                </div>
+            </div>
 
-    <button type="submit"> 비밀번호 변경하기 </button>
-</form>
+            <div class="user_email">
+                <h3>이메일</h3>
+                <p>{{ host.email }}</p>
+            </div>
+
+
+            <div class="user_nickname_change">
+                <h3>닉네임 변경</h3>
+                <form method="POST" action="{% url 'users:change_nickname' host.id %}">
+                    {% csrf_token %}
+                    <input name="new_nickname" >
+                    <button type="submit"> 닉네임 변경하기 </button>
+                </form>
+            </div>
+
+            <div class="user_password_change flex_col">
+                <h3>비밀번호 변경</h3>
+                <div class="password_input">
+                    <form method="POST" action="{% url 'users:change_pw' host.id %}">
+                        {% csrf_token %}
+                            <input name="origin_password" type="password" placeholder="Origin Password">
+                
+                            <input class="login_input" name="password1" type="password" placeholder="New Password">
+
+                            <input class="login_input" name="password2" type="password" placeholder="Confirm Password">
+                
+                        <button type="submit"> 비밀번호 변경하기 </button>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <!-- <div class="a">
+        <p>닉네임: {{ host.user_nickname }}</p>
+        <p>레벨: {{ host.user_level }}</p>
+        <p>sand: {{ host.user_point }} </p>
+        <p>이미지: {{ host.user_profile_image }} </p>
+        <p>{{host.user_profile_content}}</p>
+        {% if host.user_profile_image %}
+        <img src="{{ host.user_profile_image.url }}" width="200">
+        {% endif %}
+    
+        <p>이메일: {{ host.email }}</p>
+        <hr/>
+        <form method="POST" action="{% url 'users:change_img' host.id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="new_img" accept="image/*"> 
+            <button type="submit"> 이미지 변경하기 </button>
+        </form>
+    
+        <h3>닉네임 변경</h3>
+        <form method="POST" action="{% url 'users:change_nickname' host.id %}">
+            {% csrf_token %}
+                Change_nickname
+                <input name="new_nickname" >
+            <button type="submit"> 닉네임 변경하기 </button>
+        </form>
+        <hr/>
+        <h3>비밀번호 변경</h3>
+        <form method="POST" action="{% url 'users:change_pw' host.id %}">
+            {% csrf_token %}
+                Origin Password
+                <input name="origin_password" type="password">
+    
+                New Password
+                <input class="login_input" name="password1" type="password">
+    
+                Confirm Password
+                <input class="login_input" name="password2" type="password">
+    
+            <button type="submit"> 비밀번호 변경하기 </button>
+        </form>
+    </div>
+</body> -->
+{% endblock %}
+
+
+
+
+
