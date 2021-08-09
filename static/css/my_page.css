@@ -30,7 +30,7 @@ body {
     padding: 1rem;
     border: solid 1px var(--border-color);
     border-radius: 8px;
-    justify-content: space-between;
+    justify-content: flex-start;
 
 }
 
@@ -38,6 +38,14 @@ body {
     flex-direction: column
 }
 
+.profile_username {
+    display: flex;
+    align-items: center;
+}
+
+.user_nickname {
+    margin-left: 10px;
+}
 
 .profile_container {
     display: flex;
@@ -46,6 +54,7 @@ body {
 }
 
 .profile_area {
+    width: 300px;
     display: flex;
     height: 14em;
     flex-direction: column;
@@ -80,6 +89,8 @@ body {
 
 .follow_btn_area {
     display: flex;
+    margin: 20px 0;
+    justify-content: space-evenly;
 }
 
 .list_btn {
@@ -90,6 +101,10 @@ body {
     margin: 10px;
     display: block;
     margin: 20px auto;
+    border-radius: 2px;
+    font-family: var(--btn-font);
+    font-size: 1.25rem;
+    color: var(--text-color);
 }
 
 .list_btn:hover {
@@ -115,13 +130,7 @@ body {
 
 
 .list_btn {
-    padding: 10px 80px;
-    border: solid 1px var(--border-color);
-    border-radius: 2px;
-    font-family: var(--btn-font);
-    font-size: 1.25rem;
-    color: var(--text-color);
-    margin-top: 20px;
+    
 }
 
 .list_btn a {

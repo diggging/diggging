@@ -104,6 +104,9 @@ body {
     flex-direction: row;
 }
 
+.user_nickname {
+    margin-left: 20px;
+}
 
 .post_user_info img {
     width: 44px;
