@@ -21,9 +21,10 @@ def main(request):
     ctx = {
         "posts_scrap": all_posts_scrap,
         "posts_helped": all_posts_helped,
+        "user": request.user,
     }
 
-    return render(request, template_name="posts/main.html", context=ctx)
+    return render(request, "posts/post_list.html", context=ctx)
 
 
 # 프론트에서 해당 포스트 id 넘겨주면

@@ -1,15 +1,11 @@
+{% extends 'base.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="{% static 'posts/post_create.css' %}" />
-    <!-- <link rel="stylesheet" href="../../../highlight/styles/base16/framer.min.css"> -->
+{% block script %}
+<link rel="stylesheet" href="{% static 'css/post_create.css' %}">
+{% endblock %}
 
-</head>
+{% block content %}
 <body>
     <div class="create_title">
         <h1>삽질기록 남기기</h1>
@@ -23,7 +19,7 @@
                 {{ form.media }}
                 <div class="thumbnail_area">
                     <label for="id_image">
-                      <img src="{% static 'posts/thumbnail_image.svg' %}" />
+                        <img src="{% static 'posts/thumbnail_image.svg' %}" />
                     </label>
                     {{ form.image }}
                 </div>
@@ -61,4 +57,4 @@
         config.height = 800;
     </script>
 </body>
-</html>
+{% endblock %}
