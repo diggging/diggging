@@ -12,26 +12,71 @@
     <div class="main_container">
 
         <div class="input_container">
-            <form class="input_form">
-                <input type="text" class="search" placeholder="뭐라고 할까요?">
-                <svg width="17" height="17" viewBox="0 0 17 17">
+            <form class="input_form" action="{% url 'posts:search' %}" method="post">
+                {% csrf_token %}
+                <input type="text" class="search" placeholder="뭐라고 할까요?" name="q" value="{{q}}">
+                <button type="submit">검색</button>
+                <!-- <svg width="17" height="17" viewBox="0 0 17 17">
                     <path fill-rule="evenodd" d="M13.66 7.36a6.3 6.3 0 1 1-12.598 0 6.3 6.3 0 0 1 12.598 0zm-1.73 5.772a7.36 7.36 0 1 1 1.201-1.201l3.636 3.635c.31.31.31.815 0 1.126l-.075.075a.796.796 0 0 1-1.126 0l-3.636-3.635z" clip-rule="evenodd">
                     </path>
-                </svg>
+                </svg> -->
             </form>
             
         <div class="choice_container">
             <div class="choice_box">
                 <div class="choice_select">
-                    {{form.field}}
+                    {{select_form.field}}
                 </div>
                 <div class="choice_select">
-                    {{form.field2}}
+                    {{select_form.field2}}
                 </div>
                 <div class="choice_select">
-                    {{form.field3}}
+                    {{select_form.field3}}
                 </div>
-                {{post}}
+            </div>
+        </div>
+
+        <div class="search_container">
+            <div class="post_container">
+                {% for post in posts %}
+                <div class="post_card">
+                    <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_image">
+                        <div class="post_image_container">
+                            <img src="{{post.image.url}}" alt="" class="post_image_container">
+                        </div>
+                    </a>
+                    <div class="post_element">
+                        <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_link">
+                            <div class="post_title">
+                                {{ post.title|truncatechars:26 }}
+                            </div>
+                            <div class="post_tag">
+                                # {{ post.tag }}
+                            </div>
+                            <p class="post_desc">
+                                {{ post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;" }}
+                            </p>
+                        </a>
+                    </div>
+                    <div class="post_user">
+                        <a href="{% url 'users:my_page' post.user.id %}" class="user_info">
+                            <!-- <div class="user_info_image"> -->
+                            <img src="{{post.user.user_profile_image.url}}" class="user_info_image">
+                            <!-- </div> -->
+                            <span>
+                                by {{post.user}}
+                            </span>
+                        </a>
+    
+                        <div class="likes">
+                            👍
+                            <div class="likes_count">
+                                24
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
         </div>
 

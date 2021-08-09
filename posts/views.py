@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Post, Folder
 from . import models
-from .forms import selectForm, PostForm
+from .forms import SelectForm, PostForm, SearchForm
 import json
 
 # Create your views here.
@@ -106,19 +106,41 @@ def post_delete(request, pk):
 
 
 def search(request):
+    # select_form = SelectForm()
+    # search_form = SearchForm()
+    # text = search_form.search_text
+    # post_list = Post.objects.filter(Q(title__icontains=text) | Q(desc__icontains=text)).distinct()
+    
+    # ctx = {
+    #     "select_form": select_form,
+    #     "search_form": search_form,
+    #     "post_list": post_list,
+    #     "text": text,
+    # }
+    select_form = SelectForm()
+    posts = Post.objects.all()
+    q = request.POST.get('q', "")
+    if q: 
+        c = posts.filter(title__icontains=q)
+        a = posts.filter(desc__icontains=q)
+        b = c.union(a)
+        
+        print(b)
+        ctx = {
+            'posts': b,
+            'q': q,
+            'select_form': select_form,
+        }
 
-    language = request.POST.get("post")
-    free_post = Post.objects.all().order_by("-id")
-    post = request.POST.get("post", "")
-    form = selectForm()
+        return render(request, "posts/search.html", ctx)
+        
+    else:
 
-    free_post = free_post.filter(language=language)
-    ctx = {
-        "free_post": free_post,
-        "post": post,
-        "form": form,
-    }
-    return render(request, "posts/search.html", ctx)
+        ctx = {
+            'select_form': select_form,
+        }
+
+        return render(request, "posts/search.html", ctx)
 
 @csrf_exempt
 def search_axios(request):
