@@ -18,6 +18,8 @@ class PostForm(forms.ModelForm):
             "image",
             "desc",
             "tag",
+            "is_public",
+            "is_friend",
         }
         widgets = {
             "title": forms.TextInput(

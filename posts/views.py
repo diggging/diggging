@@ -88,19 +88,19 @@ def post_update(request, pk):
         form = PostForm(request.POST, instance=posts)
         if form.is_valid():
             form.save()
-            return redirect("post:post_detail", pk)
+            return redirect("posts:post_detail", pk)
     else:
         form = PostForm(instance=posts)
         ctx = {
             "form": form,
         }
-        return render(request, """'html 넣어주세요'""", ctx)
+        return render(request, "posts/post_update.html", ctx)
 
 
 def post_delete(request, pk):
     posts = Post.objects.get(pk=pk)
     posts.delete()
-    return redirect("""'url 넣어주세요'""")
+    return redirect("posts:post_delete", pk)
 
 
 def search(request):
@@ -189,13 +189,13 @@ def count_like_scrap(request):
     req = json.loads(request.body)
     post_id = req["id"]
     button_type = req["type"]
-    post = Post.object.get(id=post_id)
+    post = Post.objects.get(id=post_id)
 
     # 만약에 button type이 도움이 되었어요 버튼이면 도움이 되었어요 개수 + 1
     # 만약에 button type이 퍼오기이라면 스크랩 개수 + 1
     if button_type == "like":
         post.helped_num += 1
-    elif button_type == "scrap":
+    else :
         post.scrap_num += 1
     post.save()
 

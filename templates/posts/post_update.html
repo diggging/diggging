@@ -13,7 +13,7 @@
 
     <div class="container">
         <div class="form_container">
-            <form method="POST" enctype="multipart/form-data" autocomplete="off">
+            <form action="{% url 'posts:post_update' post.id %}" method="POST" enctype="multipart/form-data" autocomplete="off">
                 {% csrf_token %}
                 {{ form.media }}
                 <div class="thumbnail_area">
@@ -46,7 +46,7 @@
                 </div>
                 <div class="btn_area">
                     <button class="btn_control">임시저장</button>                   
-                        <input type="submit" value="기록 남기기" class="btn_control"/>
+                        <input type="submit" value="수정하기" class="btn_control"/>
                     <button  class="btn_control">
                         <a href="{% url 'posts:main' %}">나가기</a>
                     </button>

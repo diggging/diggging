@@ -22,7 +22,7 @@ from django.conf.urls import include
 urlpatterns = [
     path("ckeditor/", include("ckeditor_uploader.urls")),
     path("admin/", admin.site.urls),
-    path("posts/", include("posts.urls")),
+    path("posts/", include("posts.urls", namespace="posts")),
     path("users/", include("users.urls", namespace="users")),
     path("comments/", include("comments.urls", namespace="comments")),
     path("accounts/", include("allauth.urls")),

@@ -9,12 +9,16 @@
 
 {% block content %}
 <div class="container">
-    <img src="{{ post.image.url }}" class="thumbnail_area">
+    {% if post.image %}
+        <img src="{{ post.image.url }}" class="thumbnail_area">
+    {% endif %}
     <div class="post_container">
         <div class="title_area">
             <h1>{{post.title}}</h1>
             <div class="post_user_info">
+                {% if post.user.user_profile_image %}
                 <img src="{{post.user.user_profile_image.url}}">
+                {% endif %}
                 <span>{{post.user.username}}</span>
             </div>
 
@@ -28,14 +32,19 @@
         <div class="desc_area">
             {{ post.desc|safe|escape }}
         </div>
-        <div class="post_footer">
+        <div class="post_{{post.id}}">
             <div class="tag_area">{{post.tag}}</div>
-            {% if request.user.id == post.user.id %}
-            {% else %}
-            <button class="like_button" onclick="onClickLikeScrap({{ post.id }}, 'like')">도움이 되었어요 {{ post.helped_num }}</button>
-            <span><a href="{% url 'posts:get_post' user_id=post.user.id post_id=post.id %}"><button onclick="onClickLikeScrap({{ post.id }}, 'scrap')">퍼가기 {{post.scrap_num}}</button></a></span>
-            {% endif %}
+            <button class="like_button post__like" onclick="onClickLikeScrap({{ post.id }}, 'like')">도움이되었어요 {{ post.helped_num }}</button>
+            <span><a href="{% url 'posts:get_post' user_id=post.user.id post_id=post.id %}"><button class="post__scrap" onclick="onClickLikeScrap({{ post.id }}, 'scrap')">퍼가기 {{post.scrap_num}}</button></a></span>
         </div>
+        <form method="post">
+            <div class="edit_btn">
+                <a href="{% url 'posts:post_update' post.id %}">수정하기</button>
+            </div>
+            <div class="delete_btn">
+                <a href="{% url 'posts:post_delete' post.id %}">삭제하기</button>
+            </div>
+        </form>
         <div class="comment_area">
             {% for comment in comments %}
                 <div class='addComment'>
@@ -88,60 +97,60 @@
 // })
 
 // 스크랩, 도움버튼 axios 실습따라하기
-const onClickLikeScrap = async(id, type) => { 
-        const url = '/like_ajax/';
-        const {data} = await axios.post(url, {   //axios.method(url {JSON안해줘도됨 넘겨줄 인자}) {data}-? : axios다큐먼트 찾아보면 .. 하나의 약속 axios.post는 method=='POST'와 같다.
-            id, type
-        }); // {'id': 1, 'type': 'like'}로 처리  data.id로 접근 가능 data.type : 'like'
-        likeHandleResponse(data.id, data.type)
-    }
+// const onClickLikeScrap = async(id, type) => { 
+//         const url = '/posts/count_like_scrap/';
+//         const {data} = await axios.post(url, {   //axios.method(url {JSON안해줘도됨 넘겨줄 인자}) {data}-? : axios다큐먼트 찾아보면 .. 하나의 약속 axios.post는 method=='POST'와 같다.
+//             id, type
+//         }); // {'id': 1, 'type': 'like'}로 처리  data.id로 접근 가능 data.type : 'like'
+//         likeHandleResponse(data.id, data.type)
+//     }
 
-const likeHandleResponse = (id, type) => {
-        const element = document.querySelector(`.post-id-${id} .post__${type}`); //id와 버튼type을 받아서
-        const originHTML = element.innerHTML;
-        const [buttonType, num] = originHTML.split(', ');  // ['Like', '0'] 쪼개서 변수에 저장
-        const count = Number(num) + 1;//+1한 값을 count에 저장
-        element.innerHTML = `${buttonType} ${count}`;
-    }
+// const likeHandleResponse = (id, type) => {
+//         const element = document.querySelector(`.post-id-${id} .post__${type}`); //id와 버튼type을 받아서
+//         const originHTML = element.innerHTML;
+//         const [buttonType, num] = originHTML.split(', ');  // ['Like', '0'] 쪼개서 변수에 저장
+//         const count = Number(num) + 1;//+1한 값을 count에 저장
+//         element.innerHTML = `${buttonType} ${count}`;
+//     }
 
 
 // ajax로 다시시도
 
-// const requestLike = new XMLHttpRequest();
+const requestLike = new XMLHttpRequest();
 
-// const onClickLikeScrap = (id, type) => { //함수정의 : 어떤 게시글인지 . 버튼 타입을 받아온다.
-//     const url = '/like_ajax/'; //어느 url로 요청할 것인지.
-//     requestLike.open('POST', url, true); //post방식으로 이 url에 ajax방식으로 요청을보내는데, 
-//     requestLike.setRequestHeader( // requestheader로 이 요청을 보낸다. 자세한건 나중에
-//         'Content-Type',
-//         'application/x-www-form-urlencoded'
-//     );
-//     requestLike.send(JSON.stringify({id: id, type: type})); //요청할 때 필요한 정보들. ajax방식으로 할 땐 무.조.건 JSON방식으로 보내야함.
-// };
+const onClickLikeScrap = (id, type) => { //함수정의 : 어떤 게시글인지 . 버튼 타입을 받아온다.
+    const url = '/posts/count_like_scrap/'; //어느 url로 요청할 것인지.
+    requestLike.open('POST', url, true); //post방식으로 이 url에 ajax방식으로 요청을보내는데, 
+    requestLike.setRequestHeader( // requestheader로 이 요청을 보낸다. 자세한건 나중에
+        'Content-Type',
+        'application/x-www-form-urlencoded'
+    );
+    requestLike.send(JSON.stringify({id: id, type: type})); //요청할 때 필요한 정보들. ajax방식으로 할 땐 무.조.건 JSON방식으로 보내야함.
+};
 
-// const likeHandleResponse = () => {  //응답 처리해주는 함수 ( 숫자 +1되는 처리)
-//     if (requestLike.status < 400) {
-//         const {id, type} = JSON.parse(requestLike.response);    // {'id': 1, 'type': 'like'}
-//         const element = document.querySelector(`.post-id-${id} .post__${type}`);
-//         const originHTML = element.innerHTML;
-//         const [buttonType, num] = originHTML.split(', ');  // ['Like', '0']
-//         const count = Number(num) + 1;
+const likeHandleResponse = () => {  //응답 처리해주는 함수 ( 숫자 +1되는 처리)
+    if (requestLike.status < 400) {
+        const {id, type} = JSON.parse(requestLike.response);    // {'id': 1, 'type': 'like'}
+        const element = document.querySelector(`.post_${id} .post__${type}`);
+        const originHTML = element.innerHTML;
+        const [buttonType, helped_num] = originHTML.split(' ');  // ['Like', '0']
+        const count = Number(helped_num) + 1;
 
-//         element.innerHTML = `${buttonType} ${count}`;
-//     }
-// };
+        element.innerHTML = `${buttonType} ${count}`;
+    }
+};
 
-// requestLike.onreadystatechange = () => {
-//     if (requestLike.readyState === XMLHttpRequest.DONE) {
-//         likeHandleResponse();
-//     }
-// };
+requestLike.onreadystatechange = () => {
+    if (requestLike.readyState === XMLHttpRequest.DONE) {
+        likeHandleResponse();
+    }
+};
 
 const requestComment = new XMLHttpRequest();
 
 const onClickComment = (id) =>{
     const url = '/comments/comment/';
-    requestComment.open('POST',url,true);
+    requestComment.open('POST', url, true);
     requestComment.setRequestHeader(
         'Content-Type',
         'application/x-www-form-urlencoded'
