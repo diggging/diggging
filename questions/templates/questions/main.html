@@ -12,3 +12,11 @@
     {%endfor%}
     <button type="submit">제출</button>
 </form>
+{% for post in posts%}
+    {%if str_search == post.language %}
+        {{post.title}}
+        {{post.desc}}
+    {%endif%}
+{% endfor %}
+
+

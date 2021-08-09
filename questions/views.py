@@ -10,8 +10,8 @@ def question_main(request):
     posts = Question_post.objects.all()
     languages = [langs[0] for langs in Question_post.language_choices]
     search = request.POST.getlist("answers[]")
-    print(search)
-    ctx = {"posts": posts, "language": languages}
+    str_search = "".join(search)
+    ctx = {"posts": posts, "language": languages, "str_search": str_search}
     return render(request, "questions/main.html", ctx)
 
 
