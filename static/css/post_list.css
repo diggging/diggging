@@ -89,12 +89,12 @@ html, body {
     position: absolute;
     top: 0px;
     left: 0px;
-    width: 100%;
+    width: 320px;
     height: 167px;
     /* height: 100%; */
     display: block;
     object-fit: cover;
-    background-color: #D1AF00;
+    /* background-color: #D1AF00; */
 }
 
 .post_element {
@@ -159,7 +159,6 @@ html, body {
     height: 1.5rem;
     display: block;
     margin-right: 0.5rem;
-    border: 1px solid gray;
 }
 
 .likes {

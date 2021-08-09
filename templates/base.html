@@ -7,21 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> 
-    {% block script %}
-    {% endblock script %}
 </head>
 <body>
     <nav class="nav">
-        <a href="" class="nav_search"><img src="" alt="">🔎 검색</a>
-        <a href="{% url 'posts:main' %}">
-            <h2 class="nav_main_title">삽질모음.TXT</h2>
-        </a>
+        <a href="{% url 'posts:search' %}" class="nav_search"><img src="" alt="">🔎 검색</a>
+        <h2 class="nav_main_title">삽질모음.TXT</h2>
         <div class="nav_right">
             {% if user.is_authenticated %}
                 <div class="nav_vertical">
                     <div>
-                        <a href="">💡</a>
+                        <a href="#">💡</a>
                     </div>
                     <h6>알림</h6>
                 </div>
@@ -33,7 +28,7 @@
                 </div>
                 <div class="nav_vertical">
                     <div>
-                        <a href="">❓</a>
+                        <a href="#">❓</a>
                     </div>
                     <h6>질문광장</h6>
                 </div>
@@ -71,9 +66,9 @@
             {% endif %}
         </div>
     </nav>
-    {% block content %}
-    {% endblock content %}
-    {% block script2 %}
-    {% endblock script2 %}
+    {% block content%}
+    {% endblock %}
+    {% block script %}
+    {% endblock %}    
 </body>
 </html>

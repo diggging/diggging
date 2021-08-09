@@ -1,23 +1,19 @@
 {% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="{% static 'css/post_list.css' %}">
-    <script type="text/javascript" src="{% static 'posts.js' %}"></script>
-</head>
+
+{% block script %}
+<link rel="stylesheet" href="{% static 'css/post_list.css' %}">
+{% endblock %}
+
+{% block content %}
 <body>
     <div class="main_container">
         <div class="post_container">
-            {% for post in posts %}
+            {% for post in posts_scrap %}
             <div class="post_card">
                 <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_image">
                     <div class="post_image_container">
-                        {{ post.image }}
+                        <img src="{{post.image.url}}" alt="" class="post_image_container">
                     </div>
                 </a>
                 <div class="post_element">
@@ -34,10 +30,10 @@
                     </a>
                 </div>
                 <div class="post_user">
-                    <a href="{% url 'user:my_page' post.user.id %}" class="user_info">
-                        <div class="user_info_image">
-
-                        </div>
+                    <a href="{% url 'users:my_page' post.user.id %}" class="user_info">
+                        <!-- <div class="user_info_image"> -->
+                        <img src="{{post.user.user_profile_image.url}}" class="user_info_image">
+                        <!-- </div> -->
                         <span>
                             by {{post.user}}
                         </span>
@@ -55,4 +51,4 @@
         </div>
     </div>
 </body>
-</html>
+{% endblock %}

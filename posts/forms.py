@@ -31,9 +31,10 @@ class PostForm(forms.ModelForm):
             "desc": forms.CharField(widget=CKEditorUploadingWidget()),
         }
 
-
-class selectForm(forms.Form):
-
+class SelectForm(forms.Form):
     field = forms.ChoiceField(choices=Post.language_choices)
     field2 = forms.ChoiceField(choices=Post.os_choices)
     field3 = forms.ChoiceField(choices=Post.problem_choices)
+
+class SearchForm(forms.Form):
+    search_text = forms.CharField(label='검색어를 입력해주세요')
