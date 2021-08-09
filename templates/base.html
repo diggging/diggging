@@ -11,7 +11,7 @@
 <body>
     <nav class="nav">
         <a href="{% url 'posts:search' %}" class="nav_search"><img src="" alt="">🔎 검색</a>
-        <h2 class="nav_main_title">삽질모음.TXT</h2>
+        <a class="nav_main_title" href="{% url 'posts:main' %}">삽질모음.TXT</a>
         <div class="nav_right">
             {% if user.is_authenticated %}
                 <div class="nav_vertical">
