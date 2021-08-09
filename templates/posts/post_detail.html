@@ -5,117 +5,7 @@
 <link rel="stylesheet" href="{% static 'css/post_detail.css' %}">
 <!-- axios cdn -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> 
-{% endblock %}
-
-{% block content %}
-<div class="container">
-    {% if post.image %}
-        <img src="{{ post.image.url }}" class="thumbnail_area">
-    {% endif %}
-    <div class="post_container">
-        <div class="title_area">
-            <h1>{{post.title}}</h1>
-            <div class="post_user_info">
-                {% if post.user.user_profile_image %}
-                <img src="{{post.user.user_profile_image.url}}">
-                {% endif %}
-                <span>{{post.user.username}}</span>
-            </div>
-
-        </div>
-        <div class="category_area">
-            <span class="post_language">언어|{{post.language}}</span>
-            <span class="folder_name">폴더|{{folder.folder_name}}</span>
-            <span class="post_os">운영체제|{{post.os}}}</span>
-            <div class="post_os">에러메시지|{{post.error_message}}</div>
-        </div>
-        <div class="desc_area">
-            {{ post.desc|safe|escape }}
-        </div>
-        <div class="post_{{post.id}}">
-            <div class="tag_area">{{post.tag}}</div>
-            <button class="like_button post__like" onclick="onClickLikeScrap({{ post.id }}, 'like')">도움이되었어요 {{ post.helped_num }}</button>
-            <span><a href="{% url 'posts:get_post' user_id=post.user.id post_id=post.id %}"><button class="post__scrap" onclick="onClickLikeScrap({{ post.id }}, 'scrap')">퍼가기 {{post.scrap_num}}</button></a></span>
-        </div>
-        <form method="post">
-            <div class="edit_btn">
-                <a href="{% url 'posts:post_update' post.id %}">수정하기</button>
-            </div>
-            <div class="delete">
-                <a href="{% url 'posts:post_delete' post.id %}">삭제하기</button>
-            </div>
-        </form>
-        <div class="comment_area">
-            {% for comment in comments %}
-                <div class='addComment'>
-                    <div class='comment_id_{{comment.id}}'>
-                        <div class="comment_text">
-                            {{comment.text}}
-                        </div>
-                        <div class="delete_btn">
-                            <button onclick="onClickDelete({{post.id}},{{comment.id}})">삭제</button> <!--comment 별로 id 준당-->
-                        </div>
-
-                    </div>
-                </div>
-            {% endfor %}
-                <div class="comment_input_area">
-                    <input class="comment_input" type="text" placeholder="댓글달기"/>
-                    <button onclick="onClickComment({{ post.id }})">게시</button> 
-                    <!--comment 별로 id 준당-->
-                </div>
-            </div>
-    </div>
-</div>        
-
-{% endblock %}
-
-{% block script2 %}
 <script>
-//     // axios try
-// const likeButton = document.querySelector('.like_button')
-// likeButton.forEach(button => {
-//     button.addEventListener('click', function(event){
-//         const articleld = event.target.dataset.id
-//         const likeCount = document.querySelector(`.like_count-${articledId}`)
-
-//         $httpProvider.defaults.xsrfCookieName = 'csrftoken',
-//         $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken'
-
-//         axios.post(`/posts/${articled}/like/`)
-//         .then(response) => {
-//             likeCount.innerText = response.data.likeCount
-//             if(request.data.liked){
-//                 event.target.className = 'like_button'
-//                 event.target.style.color = '#FFEF9C'
-//             } else {
-//                 event.target.className = 'like_button'
-//                 event.target.style.color = '#FFF8CA'
-//             }
-//         }
-//     })
-// })
-
-// 스크랩, 도움버튼 axios 실습따라하기
-// const onClickLikeScrap = async(id, type) => { 
-//         const url = '/posts/count_like_scrap/';
-//         const {data} = await axios.post(url, {   //axios.method(url {JSON안해줘도됨 넘겨줄 인자}) {data}-? : axios다큐먼트 찾아보면 .. 하나의 약속 axios.post는 method=='POST'와 같다.
-//             id, type
-//         }); // {'id': 1, 'type': 'like'}로 처리  data.id로 접근 가능 data.type : 'like'
-//         likeHandleResponse(data.id, data.type)
-//     }
-
-// const likeHandleResponse = (id, type) => {
-//         const element = document.querySelector(`.post-id-${id} .post__${type}`); //id와 버튼type을 받아서
-//         const originHTML = element.innerHTML;
-//         const [buttonType, num] = originHTML.split(', ');  // ['Like', '0'] 쪼개서 변수에 저장
-//         const count = Number(num) + 1;//+1한 값을 count에 저장
-//         element.innerHTML = `${buttonType} ${count}`;
-//     }
-
-
-// ajax로 다시시도
-
 const requestLike = new XMLHttpRequest();
 
 const onClickLikeScrap = (id, type) => { //함수정의 : 어떤 게시글인지 . 버튼 타입을 받아온다.
@@ -208,6 +98,111 @@ requestDelComment.onreadystatechange = () =>{
         commentdelHandleResponse();
     };      
 };
-
 </script>
-{% endblock script2 %}
+{% endblock %}
+
+{% block content %}
+<div class="container_detail">
+    {% if post.image %}
+        <img src="{{ post.image.url }}" class="thumbnail_area">
+    {% endif %}
+    <div class="post_container">
+        <div class="title_area">
+            <h1>{{post.title}}</h1>
+            <div class="post_user_info">
+                {% if post.user.user_profile_image %}
+                <img src="{{post.user.user_profile_image.url}}">
+                {% endif %}
+                <span>{{post.user.username}}</span>
+            </div>
+
+        </div>
+        <div class="category_area">
+            <span class="post_language">언어|{{post.language}}</span>
+            <span class="folder_name">폴더|{{folder.folder_name}}</span>
+            <span class="post_os">운영체제|{{post.os}}}</span>
+            <div class="post_os">에러메시지|{{post.error_message}}</div>
+        </div>
+        <div class="desc_area">
+            {{ post.desc|safe|escape }}
+        </div>
+        <div class="post_{{post.id}}">
+            <div class="tag_area">{{post.tag}}</div>
+            <button class="like_button post__like" onclick="onClickLikeScrap({{ post.id }}, 'like')">도움이되었어요 {{ post.helped_num }}</button>
+            <span><a href="{% url 'posts:get_post' user_id=post.user.id post_id=post.id %}"><button class="post__scrap" onclick="onClickLikeScrap({{ post.id }}, 'scrap')">퍼가기 {{post.scrap_num}}</button></a></span>
+        </div>
+            <div class="edit_btn">
+                <a href="{% url 'posts:post_update' post.id %}">수정하기</button>
+            </div>
+            <div class="delete">
+                <a href="{% url 'posts:post_delete' post.id %}">삭제하기</button>
+            </div>
+        <div class="comment_area">
+            {% for comment in comments %}
+                <div class='addComment'>
+                    <div class='comment_id_{{comment.id}}'>
+                        <div class="comment_text">
+                            {{comment.text}}
+                        </div>
+                        <div class="delete_btn">
+                            <button onclick="onClickDelete({{post.id}},{{comment.id}})">삭제</button> <!--comment 별로 id 준당-->
+                        </div>
+
+                    </div>
+                </div>
+            {% endfor %}
+                <div class="comment_input_area">
+                    <input class="comment_input" type="text" placeholder="댓글달기"/>
+                    <button onclick="onClickComment({{ post.id }})">게시</button> 
+                    <!--comment 별로 id 준당-->
+                </div>
+            </div>
+    </div>
+</div>        
+
+{% endblock %}
+
+<script>
+//     // axios try
+// const likeButton = document.querySelector('.like_button')
+// likeButton.forEach(button => {
+//     button.addEventListener('click', function(event){
+//         const articleld = event.target.dataset.id
+//         const likeCount = document.querySelector(`.like_count-${articledId}`)
+
+//         $httpProvider.defaults.xsrfCookieName = 'csrftoken',
+//         $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken'
+
+//         axios.post(`/posts/${articled}/like/`)
+//         .then(response) => {
+//             likeCount.innerText = response.data.likeCount
+//             if(request.data.liked){
+//                 event.target.className = 'like_button'
+//                 event.target.style.color = '#FFEF9C'
+//             } else {
+//                 event.target.className = 'like_button'
+//                 event.target.style.color = '#FFF8CA'
+//             }
+//         }
+//     })
+// })
+
+// 스크랩, 도움버튼 axios 실습따라하기
+// const onClickLikeScrap = async(id, type) => { 
+//         const url = '/posts/count_like_scrap/';
+//         const {data} = await axios.post(url, {   //axios.method(url {JSON안해줘도됨 넘겨줄 인자}) {data}-? : axios다큐먼트 찾아보면 .. 하나의 약속 axios.post는 method=='POST'와 같다.
+//             id, type
+//         }); // {'id': 1, 'type': 'like'}로 처리  data.id로 접근 가능 data.type : 'like'
+//         likeHandleResponse(data.id, data.type)
+//     }
+
+// const likeHandleResponse = (id, type) => {
+//         const element = document.querySelector(`.post-id-${id} .post__${type}`); //id와 버튼type을 받아서
+//         const originHTML = element.innerHTML;
+//         const [buttonType, num] = originHTML.split(', ');  // ['Like', '0'] 쪼개서 변수에 저장
+//         const count = Number(num) + 1;//+1한 값을 count에 저장
+//         element.innerHTML = `${buttonType} ${count}`;
+//     }
+
+
+// ajax로 다시시도

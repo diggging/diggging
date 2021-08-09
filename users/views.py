@@ -347,8 +347,7 @@ def follow_list(request, pk):
         'host_follower' : host_follower,
         'host_following' : host_following,
     }
-
-    return render(request, template_name="users/follow_list.html", context=ctx)
+    return render(request, "users/follow_list.html", context=ctx)
 
 
 
