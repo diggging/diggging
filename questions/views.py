@@ -8,6 +8,13 @@ from .models import Question_post, Answer, QuestionFolder
 
 def question_main(request):
     posts = Question_post.objects.all()
+    selected_answer_posts = []
+    for post in posts:
+        if post.answer_selection_count() > 0:
+            selected_answer_posts.append(post)
+    ctx = {
+        "selected_answer_posts": selected_answer_posts,
+    }
     languages = [langs[0] for langs in Question_post.language_choices]
     search = request.POST.getlist("answers[]")
     print(search)
