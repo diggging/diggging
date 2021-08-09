@@ -22,7 +22,7 @@
                 </div>
                 <div class="nav_vertical">
                     <div>
-                        <a href="">🖋</a>
+                        <a href="{% url 'posts:post_create' %}">🖋</a>
                     </div>
                     <h6>기록하기</h6>
                 </div>
@@ -34,7 +34,7 @@
                 </div>
                 <div class="nav_vertical">
                     <div>
-                        <a href="">😎</a>
+                        <a href="{% url 'users:my_page' user.id %}">😎</a>
                     </div>
                     <h6>{{user.username}}</h6>
                 </div>

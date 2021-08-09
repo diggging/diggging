@@ -120,6 +120,13 @@ def search(request):
     }
     return render(request, "posts/search.html", ctx)
 
+@csrf_exempt
+def search_axios(request):
+    req = json.loads(request.body)
+    post_id = []
+
+    return JsonResponse({'post': post})
+
 
 # 삽질 기록 퍼오기
 def get_post(request, user_id, post_id):
