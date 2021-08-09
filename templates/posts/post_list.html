@@ -1,18 +1,15 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="{% static 'post_list.css' %}">
-    <script type="text/javascript" src="{% static 'posts.js' %}"></script>
-</head>
+
+{% block script %}
+<link rel="stylesheet" href="{% static 'css/post_list.css' %}">
+{% endblock %}
+
+{% block content %}
 <body>
     <div class="main_container">
         <div class="post_container">
-            {% for post in posts %}
+            {% for post in posts_scrap %}
             <div class="post_card">
                 <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_image">
                     <div class="post_image_container">
@@ -33,19 +30,19 @@
                     </a>
                 </div>
                 <div class="post_user">
-                    <a href="{% url 'user:my_page' post.user.id %}" class="user_info">
+                    <a href="{% url 'users:my_page' post.user.id %}" class="user_info">
                         <div class="user_info_image">
 
                         </div>
                         <span>
-                            by {{post.user}}
+                            by {{post.user.username}}
                         </span>
                     </a>
 
                     <div class="likes">
                         👍
                         <div class="likes_count">
-                            24
+                            {{post.scrap_num}}
                         </div>
                     </div>
                 </div>
@@ -53,5 +50,17 @@
             {% endfor %}
         </div>
     </div>
+    {% comment %}
+    이거 현주가 following들 post 나오는지 test할라고 만든 html!
+    
+    <div>
+        {% for post in followings_posts%}
+        <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" >{{ post.title }}
+        </a>
+        {% endfor %}
+    </div>
+    {% endcomment %}
+    
+    
 </body>
-</html>
+{% endblock %}

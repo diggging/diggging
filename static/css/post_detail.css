@@ -1,0 +1,73 @@
+
+* {
+    box-sizing: border-box;
+}
+:root {
+    --border-color: #CEC4B3;
+    --btn-color: #FFF8CA;
+    --sand-color: #D1AF00;
+    --text-color: #4E4E4E;
+    --title-font: 'Pretendard-ExtraBold';
+    --content-font: 'Pretendard-Regular';
+    --btn-font: 'Pretendard-SemiBold';
+    --hover-color: #FFEF9C;
+}
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Pretendard-SemiBold';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-SemiBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Pretendard-ExtraBold';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-ExtraBold.woff') format('woff');
+    font-weight: 800;
+    font-style: normal;
+}
+
+h1, h2, h3, h4, h5 {
+    color: var(--text-color);
+    font-family: var(--title-font);
+}
+
+body {
+    color: var(--text-color);
+}
+
+.container {
+    display:flex;
+    justify-content: center;
+    margin-top : 50px;
+}
+
+.post_container {
+    width: 80em;
+    padding: 50px;
+    display: flex;
+    width: 90%;
+    justify-content: center;
+    border: solid 1px var(--border-color); 
+}
+
+.post_area {
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+    display: flex;
+    padding: 20rem;
+}
+
+.post_area h1 {
+    font-size: 2em;
+    color: var(--text-color);
+    font-family: var(--title-font);
+}
+
+.post_footer {
+    
+}

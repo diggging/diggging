@@ -18,12 +18,27 @@ def main(request):
     # 모든 전체 글에서 도움 순위대로 추천
     all_posts_helped = Post.objects.all().order_by("-helped_num")
 
+    # 이웃들의 최신 글을 긁어오는 코드
+    me = request.user
+    followings = me.user_following.all()
+    all_followings_posts = Post.objects.filter(user=followings[0])
+    for following in followings[1:]:
+        following_posts = Post.objects.filter(user=following)
+        all_followings_posts.union(following_posts)     # queryset append
+    all_followings_posts = all_followings_posts.order_by("-created")    # 생성 기준으로 listing
+    
+    # 내 최신 포스트
+    my_recent_post = Post.objects.filter(user=me).order_by("-created")
+
     ctx = {
-        "posts_scrap": all_posts_scrap,
-        "posts_helped": all_posts_helped,
+        "posts_scrap": all_posts_scrap,     # 스크랩 순
+        "posts_helped": all_posts_helped,   # helped 순
+        "user": request.user,               # 나
+        "followings_posts":all_followings_posts,    # 내가 follow하는 사람들의 최신순 포스트
+        "my_recent_post":my_recent_post,    # 내 글 최신순
     }
 
-    return render(request, template_name="posts/main.html", context=ctx)
+    return render(request, "posts/post_list.html", context=ctx)
 
 
 # 프론트에서 해당 포스트 id 넘겨주면
