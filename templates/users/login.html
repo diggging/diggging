@@ -2,6 +2,7 @@
 {% load socialaccount %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,22 +11,23 @@
 </head>
 <!-- html required custom -->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const elements = document.getElementsByTagName("INPUT");
         for (var i = 0; i < elements.length; i++) {
-            elements[i].oninvalid = function(e) {
+            elements[i].oninvalid = function (e) {
                 e.target.setCustomValidity("빈칸 없이 모두 입력해주세욧!");
                 if (!e.target.validity.valid) {
                     e.target.
-                    e.target.setCustomValidity("");
+                        e.target.setCustomValidity("");
                 }
             };
-            elements[i].oninput = function(e) {
+            elements[i].oninput = function (e) {
                 e.target.setCustomValidity("");
             };
         }
     })
 </script>
+
 <body>
     <div class="container">
         <div class="form_container">
@@ -57,33 +59,30 @@
                     </div>
                     <div class="error_message">
                         {% if form.non_field_errors %}
-                            <span>{{form.non_field_errors}}</span>
+                        <span>{{form.non_field_errors}}</span>
                         {% endif %}
-                        <!-- {% if form.password.errors %}
-                            <span>{{form.password.errors}}</span>
-                        {% endif %} -->
+                        {% comment %}
+                        {% if form.password.errors %}
+                        <span>{{form.password.errors}}</span>
+                        {% endif %}
+                        {% endcomment %}
                     </div>
                     <button class="login_btn" type="submit">로그인하기</button>
                 </form>
             </div>
             <div class="login_bottom">
-<<<<<<< HEAD
-                <!-- sns로그인자리 -->
+                {% comment %}
+                sns로그인자리
+                {% endcomment %}
                 <a href=" {% provider_login_url 'naver' %}">네이버 로그인</a>
-=======
                 <a href=" {% provider_login_url 'naver' %}">네이버 로그인</a>
                 {% include 'users/github_login.html' %}
-            
->>>>>>> first-merge
+
                 <a href="{% url 'users:password_reset' %}">비밀번호를 까먹었나여?</a>
             </div>
         </div>
     </div>
 
 </body>
-<<<<<<< HEAD
-</html>
-=======
-</html>
 
->>>>>>> first-merge
+</html>
