@@ -64,7 +64,9 @@
         <div class="sand_pour_area"></div>
     </div>
     <div class="second_container container">
-        {{language_folders}}
+        {% for folder in language_folders %}
+            {{folder}}
+        {% endfor %}
     </div>
     <div class="third_container container"></div>
 
