@@ -292,6 +292,21 @@ def follow(request, host_pk):
     
     return redirect('users:my_page', host_pk)
 
+#follow_list 확인
+def follow_list(request, pk):
+    host = get_object_or_404(User,pk=pk)
+    host_following = host.user_following.all()
+    host_follower = host.user_followed.all()
+
+    ctx = {
+        'host': host,
+        'host_follower' : host_follower,
+        'host_following' : host_following,
+    }
+
+    return render(request, template_name="users/follow_list.html", context=ctx)
+
+
 
 def account_detail(request, pk):
     host = get_object_or_404(User,pk=pk)
