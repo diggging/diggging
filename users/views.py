@@ -340,7 +340,8 @@ def change_pw(request, pk):
             if new_password == password_confirm:
                 user.set_password(new_password)
                 user.save()
-                login(request, user)
+                # backend 인자 추가
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return redirect('users:login')
             else:
                 context.update({'error':"새로운 비밀번호를 다시 확인해주세요."})
