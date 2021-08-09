@@ -30,12 +30,12 @@
                     </a>
                 </div>
                 <div class="post_user">
-                    <a href="{% url 'user:my_page' post.user.id %}" class="user_info">
+                    <a href="{% url 'users:my_page' post.user.id %}" class="user_info">
                         <div class="user_info_image">
 
                         </div>
                         <span>
-                            by {{post.user}}
+                            by {{post.tag}}
                         </span>
                     </a>
 
