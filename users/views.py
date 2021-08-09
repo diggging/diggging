@@ -7,6 +7,7 @@ from django.views.generic.base import TemplateView
 #from .forms import SignUpForm
 from .forms import UserCustomCreationForm, AuthenticationCustomForm
 from .models import User
+from posts.models import Folder
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, PasswordResetForm
@@ -261,15 +262,20 @@ def github_callback(request):
 # ________________________________________________ mypage ________________________________________________
 # my page
 def my_page(request, pk):
+    # 왼쪽 상단 - host의 상태를 위한 변수들
     host = get_object_or_404(User,pk=pk)
     host_following = host.user_following.all()
     host_follower = host.user_followed.all()
+
+    # 폴더 보여주기위한 변수
+    language_folders = Folder.objects.filter(folder_user=host)
     ctx = {
+        # 왼쪽 상단을 위한 변수
         'host': host,
         'host_follower' : host_follower,
         'host_following' : host_following,
+        'language_folders' : language_folders,
     }
-
     return render(request, template_name="users/my_page.html", context=ctx)
 
 # 한번 누르면 follow, 두번 누르면 unfollow
