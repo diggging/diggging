@@ -266,8 +266,8 @@ def my_page(request, pk):
     language_folders = Folder.objects.filter(folder_user=host)
     
     # 질문 모음
-    my_questions = Question_post.objects.filter(user=host)
-
+    # my_questions = Question_post.objects.filter(user=host)
+    # questions_folder = Question_post.folder
 
     # 최근에 남긴 질문
     my_recent_questions = Question_post.objects.filter(user=host).order_by("-created")
@@ -278,7 +278,7 @@ def my_page(request, pk):
         'host_follower' : host_follower,
         'host_following' : host_following,
         'language_folders' : language_folders,
-        'my_questions': my_questions,
+        #'my_questions': my_questions,
         'my_recent_questions' : my_recent_questions,
     }
     return render(request, template_name="users/my_page.html", context=ctx)

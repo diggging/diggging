@@ -10,7 +10,11 @@ class Question_post(posts_models.Post):
 
     # def sand_point_count(self):
     #   return self.sand_point.count()
-
+    question_folder = models.ManyToManyField(
+        "Folder",
+        related_name="question_folder",
+        blank=True,
+    )
 
 # sand_point_count.short_description = "current sand point"
 

@@ -134,7 +134,6 @@ class Folder(core_models.TimeStampModel):
     folder_user = models.ForeignKey(
         "users.User", related_name="folder_user", on_delete=models.CASCADE
     )
-
     # user = models.ForeignKey("users.User", related_name="user", on_delete=models.CASCADE)
     def __str__(self):
         return self.folder_name
