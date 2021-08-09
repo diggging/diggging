@@ -26,26 +26,8 @@ urlpatterns = [
     path("ckeditor/", include("ckeditor_uploader.urls")),
     path("admin/", admin.site.urls),
     path("posts/", include("posts.urls")),
-    path("users/", include("users.urls", namespace="user")),
+    path("users/", include("users.urls", namespace="users")),
     path("comments/", include("comments.urls", namespace="comments")),
     path("accounts/", include("allauth.urls")),
-    path(
-        "password_reset/", auth_views.PasswordResetView.as_view(), name="password_reset"
-    ),
-    path(
-        "password_reset_done/",
-        auth_views.PasswordResetDoneView.as_view(),
-        name="password_reset_done",
-    ),
-    path(
-        "password_reset_confirm/<uidb64>/<token>/",
-        auth_views.PasswordResetConfirmView.as_view(),
-        name="password_reset_confirm",
-    ),
-    path(
-        "password_reset_complete/",
-        auth_views.PasswordResetCompleteView.as_view(),
-        name="password_reset_complete",
-    ),
     path("questions/", include("questions.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
