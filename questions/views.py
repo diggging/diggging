@@ -52,7 +52,7 @@ def question_create(request):
         return render(request, "questions/question_create.html", ctx)
 
 
-def post_detail(requst, user_id, post_id):
+def question_post_detail(requst, user_id, post_id):
     post_details = Question_post.objects.get(pk=post_id)
     me = get_object_or_404(User, pk=user_id)
     folder = post_details.folder.get(
@@ -65,7 +65,7 @@ def post_detail(requst, user_id, post_id):
         "folder": folder,
         "comments": comments,
     }
-    return render(request, "question/quesiton_detail.html", ctx)
+    return render(requst, "question/quesiton_detail.html", ctx)
 
 
 def search_question(request):  # 선택해서 정보 넘겨주는거
