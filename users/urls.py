@@ -24,6 +24,7 @@ urlpatterns = [
     path('<int:pk>/password_reset_form/', view=views.password_reset_form, name="password_reset_form"),
 
     path('<int:pk>/my_page/', view=views.my_page, name="my_page"),   # my page
+    path('<int:pk>/my_page_folder/', view=views.my_page_folder, name="my_page_folder"),
     path('<int:host_pk>/follow', view=views.follow, name = "follow"),
     path('<int:host_pk>/follow_list', view=views.follow, name = "follow_list"),
 

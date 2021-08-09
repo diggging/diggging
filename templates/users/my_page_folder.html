@@ -56,7 +56,7 @@
         </div>
         <hr>
         <div class="btn_list_area">
-            <a href = '{% url "users:my_page_folder" host.id %}'><button class="list_btn">삽질 기록 모음 > </button></a>
+            <a href = '#'><button class="list_btn">삽질 기록 모음 > </button></a>
             <a href = '#'><button class="list_btn">질문 모음 > </button></a>
             <a href = '#}'><button class="list_btn">내가 남긴 답변 목록 > </button></a>
             <a href = '{% url "users:account_detail" host.id%}'><button class="list_btn">계정 관리 > </button></a>
@@ -64,7 +64,7 @@
         <div class="sand_pour_area"></div>
     </div>
     <div class="second_container container">
-
+        {{language_folders}}
     </div>
     <div class="third_container container"></div>
 
