@@ -72,10 +72,11 @@ def signup(request):
     else:
         user_form = UserCustomCreationForm()
     ctx={'signup_form' : user_form}
-    return render(request, template_name="users/signup.html", context=ctx)
+    return render(request, "users/signup.html", context=ctx)
 
 # 이메일 인증 후 계정 활성화
 def activate(request, uidb64, token):
+    print("sdfsdf")
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
@@ -139,16 +140,12 @@ def password_reset(request):
         if User.objects.filter(email = email).exists():
             #있으면 메일 보내기
             user = User.objects.get(email=email)
-            my_site = Site.objects.get(pk=1)
-            my_site.domain = '127.0.0:8000'
-            my_site.name = "digging_main"
-            my_site.save()
             current_site = get_current_site(request)
             print(current_site)
             message = render_to_string('users/password_reset_email.html', {
                 'user': user,
                 #'domain': current_site.domain,
-                'domain': my_site.domain,
+                #'domain': my_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': password_reset_token.make_token(user),
             })
@@ -190,22 +187,19 @@ def password_reset_email(request, uidb64, token):
         return render(request, template_name="password_email_fail.html", context=ctx)
 
 def password_reset_form(request, pk):
-    context = {}
+    user = get_object_or_404(User,pk=pk)
     if request.method == "POST":
-        user = get_object_or_404(User,pk=pk)
         new_password = request.POST.get("password1")
         password_confirm = request.POST.get("password2")
         if new_password == password_confirm:
             user.set_password(new_password)
             user.save()
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend' )
             return redirect('users:login')
-        else:
-            context.update({'error':"새로운 비밀번호를 다시 확인해주세요."})
-    else:
-        context.update({'error':"현재 비밀번호가 일치하지 않습니다."})
-    
-    return redirect('users:login')
+    ctx={
+        'user': user
+    }
+    return render(request, template_name = "users/password_reset_form.html", context= ctx)
 
 # _______________________________________________social login____________________________________________
 # github login
@@ -297,7 +291,6 @@ def follow(request, host_pk):
         host.user_followed.add(me)
     
     return redirect('users:my_page', host_pk)
-
 
 def account_detail(request, pk):
     host = get_object_or_404(User,pk=pk)

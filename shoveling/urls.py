@@ -26,6 +26,5 @@ urlpatterns = [
     path("users/", include("users.urls", namespace="users")),
     path("comments/", include("comments.urls", namespace="comments")),
     path("accounts/", include("allauth.urls")),
-    
     path("questions/", include("questions.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
