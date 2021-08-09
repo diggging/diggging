@@ -34,7 +34,6 @@ def post_detail(request, user_id, post_id):
         folder_name=post_details.language, folder_user=post_details.user
     )
     comments = post_details.comments.all()
-    # 댓글기능도 끌어와야함.
     ctx = {
         "post": post_details,
         "host": me,
