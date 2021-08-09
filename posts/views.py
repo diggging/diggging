@@ -8,6 +8,7 @@ from .models import Post, Folder
 from . import models
 from .forms import SelectForm, PostForm, SearchForm
 import json
+
 # Create your views here.
 
 # main 페이지
@@ -89,7 +90,7 @@ def post_update(request, pk):
         form = PostForm(request.POST, instance=posts)
         if form.is_valid():
             form.save()
-            return redirect("posts:post_detail", pk)
+            return redirect("posts:main")
     else:
         form = PostForm(instance=posts)
         ctx = {
@@ -219,6 +220,7 @@ def count_like_scrap(request):
     req = json.loads(request.body)
     post_id = req["id"]
     button_type = req["type"]
+
     post = Post.objects.get(id=post_id)
 
     # 만약에 button type이 도움이 되었어요 버튼이면 도움이 되었어요 개수 + 1
@@ -227,6 +229,7 @@ def count_like_scrap(request):
         post.helped_num += 1
     else :
         post.scrap_num += 1
+
     post.save()
 
     # TODO: 굳이 JsonResponse 필요한가? (프론트엔드 단에서는 도움이 되었어요 or 스크랩 개수가 표현이 되지 않는 듯)
