@@ -11,17 +11,25 @@
         <div class="profile_container">
             {% if request.user.pk == host.pk %}
                 <div class="profile_area">
-                    {% if host.user_profile_image %}
-                        <img src="{{ request.user.user_profile_image.url}}">
-                    {% else %}
-                        <div class="empty_img"></div>
-                    {% endif %}
-                    <h1>{{request.user.user_nickname}}님의 모래상자</h1>
-                    레벨 | {{user.user_level}} 단계
-                    현재 모래 | {{user.user_point}} 포인트
-                    <div class="proflie_text">
-                    {% if request.user_profile_content %}    
-                        {{request.user_profile_content}}
+                    <div class="profile_username">
+                        {% if host.user_profile_image %}
+                        <span class="profile_image">
+                            <img src="{{ request.user.user_profile_image.url}}">
+                        </span>
+                        {% else %}
+                            <div class="empty_img"></div>
+                        {% endif %}
+                        <span class="user_nickname">{{ request.user.username }}님의 모래상자<span>
+                        <h4>
+                    </div>
+                        레벨 | {{user.user_level}} 단계
+                    </h4>
+                    <h4>
+                        현재 모래 | {{user.user_point}} 포인트
+                    </h4>
+                    <div class="proflie_text">    
+                    {% if request.user.user_profile_content %}    
+                        {{request.user.user_profile_content}}
                     {% else %}
                         <p>
                             아직 자기소개가 없습니다.
@@ -29,8 +37,10 @@
                     {% endif %}
                     </div>
                     <div class="follow_area">
-                        <a href="{% url 'users:follow_list' user.id %}"><button class="follow_btn">팔로잉 {{request.user.user_following|length}}</button></a>
-                        <a href="{% url 'users:follow_list' user.id %}"><button class="follow_btn">팔로워 {{request.user.user_followed|length}}</button></a>
+                        <div class="follow_btn_area">
+                            <a href="{% url 'users:follow_list' user.id %}"><button class="follow_btn">팔로잉 {{request.user.user_following|length}}</button></a>
+                            <a href="{% url 'users:follow_list' user.id %}"><button class="follow_btn">팔로워 {{request.user.user_followed|length}}</button></a>
+                        </div>
                     </div>
                 </div>
             {% else %}    
@@ -46,11 +56,12 @@
         </div>
         <hr>
         <div class="btn_list_area">
-            <a href = '{% url "users:account_detail" host.id%}'><button class="list_btn">삽질 기록 모음 > </button></a>
-            <a href = '{% url "users:account_detail" host.id%}'><button class="list_btn">계정 관리 > </button></a>
-            <a href = '{% url "users:account_detail" host.id%}'><button class="list_btn">계정 관리 > </button></a>
+            <a href = '#'><button class="list_btn">삽질 기록 모음 > </button></a>
+            <a href = '#'><button class="list_btn">질문 모음 > </button></a>
+            <a href = '#}'><button class="list_btn">내가 남긴 답변 목록 > </button></a>
             <a href = '{% url "users:account_detail" host.id%}'><button class="list_btn">계정 관리 > </button></a>
         </div>
+        <div class="sand_pour_area"></div>
     </div>
     <div class="second_container container">
     </div>

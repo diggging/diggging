@@ -47,6 +47,7 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 4rem;
+    width: 32%;
 }
 
 .post_container {
@@ -98,9 +99,20 @@ body {
     align-items: center;
 }
 
+.profile_username {
+    display: flex;
+    flex-direction: row;
+}
+
+
 .post_user_info img {
-    width: 40px;
-    border-radius: 20px;
+    width: 44px;
+    border-radius: 16px;
+}
+
+.user_nickname {
+    display: flex;
+    align-items: center;
 }
 
 .category_area {
