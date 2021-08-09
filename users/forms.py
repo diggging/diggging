@@ -130,4 +130,4 @@ class AuthenticationCustomForm(AuthenticationForm):
             raise forms.ValidationError(
                 self.error_messages['inactive'],
                 code='inactive',
-            )
+            )   

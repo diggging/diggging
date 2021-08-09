@@ -141,7 +141,7 @@ class Post(core_models.TimeStampModel):
 class Folder(core_models.TimeStampModel):
     folder_name = models.CharField(max_length=100)
     folder_user = models.ForeignKey(
-        "users.User", related_name="folder_user", on_delete=models.CASCADE
+        "users.User", related_name="folder_user", null=True, on_delete=models.CASCADE
     )
 
     # user = models.ForeignKey("users.User", related_name="user", on_delete=models.CASCADE)
