@@ -100,7 +100,7 @@ def post_update(request, pk):
 def post_delete(request, pk):
     posts = Post.objects.get(pk=pk)
     posts.delete()
-    return redirect("posts:post_delete", pk)
+    return redirect("posts:main")
 
 
 def search(request):
