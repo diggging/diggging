@@ -18,19 +18,19 @@ class QuestionPostAdmin(admin.ModelAdmin):
         "is_public",
         "is_friend",
         "folder",
-        "scrap_num", 
+        "scrap_num",
         "helped_num",
     )
     list_display = [
-        "pk", 
-        "title", 
-        "desc", 
-        "is_public", 
-        "is_friend", 
+        "pk",
+        "title",
+        "desc",
+        "is_public",
+        "is_friend",
         "get_folders",
-        "scrap_num", 
+        "scrap_num",
         "helped_num",
-        "sand_point_count",
+        # "sand_point_count",
     ]
     list_filter = ("is_public",)
 
@@ -39,6 +39,7 @@ class QuestionPostAdmin(admin.ModelAdmin):
 
     def get_folders(self, obj):
         return "\n".join([f.folder_name for f in obj.folder.all()])
+
 
 @admin.register(models.Answer)
 class AnswerAdmin(admin.ModelAdmin):
@@ -51,7 +52,7 @@ class AnswerAdmin(admin.ModelAdmin):
         "selection",
         "desc",
     ]
-    list_filter=("selection",)
+    list_filter = ("selection",)
 
     def short_content(self, Answer):
         return Answer.content[:20]
@@ -61,7 +62,6 @@ class AnswerAdmin(admin.ModelAdmin):
 class QuestionFolder(admin.ModelAdmin):
     list_display = ["pk", "folder_name", "posts", "folder_user"]
     list_display_links = ["folder_name"]
-    
 
-    def posts(self,obj):
+    def posts(self, obj):
         return ",".join([r.title for r in obj.related_posts.all()])

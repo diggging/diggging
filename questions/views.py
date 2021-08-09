@@ -1,5 +1,5 @@
 from users.models import User
-from posts.forms import PostForm
+from .forms import QuestionPostForm
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Question_post, Answer, QuestionFolder
 
@@ -8,13 +8,16 @@ from .models import Question_post, Answer, QuestionFolder
 
 def question_main(request):
     posts = Question_post.objects.all()
-    ctx = {"posts": posts}
+    languages = [langs[0] for langs in Question_post.language_choices]
+    search = request.POST.getlist("answers[]")
+    print(search)
+    ctx = {"posts": posts, "language": languages}
     return render(request, "questions/main.html", ctx)
 
 
 def question_create(request):
     if request.method == "POST":
-        form = PostForm(request.POST, request.FILES)
+        form = QuestionPostForm(request.POST, request.FILES)
         if form.is_valid():
             posts = form.save(commit=False)
 
@@ -44,7 +47,7 @@ def question_create(request):
 
             return redirect("question:question_main")
     else:
-        form = PostForm()
+        form = QuestionPostForm()
         ctx = {
             "form": form,
         }
@@ -66,17 +69,3 @@ def question_post_detail(requst, user_id, post_id):
         "comments": comments,
     }
     return render(requst, "question/quesiton_detail.html", ctx)
-
-
-def search_question(request):  # 선택해서 정보 넘겨주는거
-    languages = [langs[0] for langs in Question_post.language_choices]
-    ctx = {"language": languages}
-    return render(request, "questions/main.html", ctx)
-
-
-def filter_question(request):
-    search = request.POST.getlist("answers[]")
-    print(search)
-
-
-# 내가 관심이있는 언어 -
