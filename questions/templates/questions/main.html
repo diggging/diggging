@@ -3,3 +3,11 @@
     <!--for 문 돌리고-->
     <!--채택이 false인거만 나오게 한다.-->
 <h1> 내가 관심있는 :  </h1>  
+
+<form action="" method="POST">
+    {%csrf_token%}
+    {% for languages in language %}<!--이거 잘 생각해야할듯... language들을 여기다가 어떻게 넣을건지를 생각해야함.-->
+        <input type="checkbox" name="answers[]" id="answer1" value={{languages}}>{{languages}}</input>
+    {%endfor%}
+    <button type="submit">제출</button>
+</form>

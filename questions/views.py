@@ -15,7 +15,7 @@ def question_main(request):
 def question_create(request):
     if request.method == "POST":
         form = PostForm(request.POST, request.FILES)
-        if form.is_vaild():
+        if form.is_valid():
             posts = form.save(commit=False)
 
             posts.user = request.user
@@ -24,7 +24,7 @@ def question_create(request):
 
             me = posts.user
             language = request.POST.get("language")
-            folder = QuestionFolder.object.filter(folder_name=language, folder_user=me)
+            folder = QuestionFolder.objects.filter(folder_name=language, folder_user=me)
 
             if folder:
 
@@ -42,7 +42,7 @@ def question_create(request):
 
             posts.save()
 
-            return redirect("question:main")
+            return redirect("question:question_main")
     else:
         form = PostForm()
         ctx = {
@@ -69,9 +69,14 @@ def question_post_detail(requst, user_id, post_id):
 
 
 def search_question(request):  # 선택해서 정보 넘겨주는거
+    languages = [langs[0] for langs in Question_post.language_choices]
+    ctx = {"language": languages}
+    return render(request, "questions/main.html", ctx)
+
+
+def filter_question(request):
     search = request.POST.getlist("answers[]")
-    print(search)  # 정보 잘 넘어갔는지 확인하기 위해서 print 찍어놓은거임
-    return render(request, "questions/search_question.html")
+    print(search)
 
 
 # 내가 관심이있는 언어 -
