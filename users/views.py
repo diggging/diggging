@@ -84,7 +84,7 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        login(request, user)
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
         return HttpResponse('Thank you for your email confirmation. Now you can login your account')
     else:
         return HttpResponse('Activation link is invalid!')
@@ -186,22 +186,19 @@ def password_reset_email(request, uidb64, token):
         return render(request, template_name="password_email_fail.html", context=ctx)
 
 def password_reset_form(request, pk):
-    context = {}
+    user = get_object_or_404(User,pk=pk)
     if request.method == "POST":
-        user = get_object_or_404(User,pk=pk)
         new_password = request.POST.get("password1")
         password_confirm = request.POST.get("password2")
         if new_password == password_confirm:
             user.set_password(new_password)
             user.save()
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend' )
             return redirect('users:login')
-        else:
-            context.update({'error':"새로운 비밀번호를 다시 확인해주세요."})
-    else:
-        context.update({'error':"현재 비밀번호가 일치하지 않습니다."})
-    
-    return redirect('users:login')
+    ctx={
+        'user': user
+    }
+    return render(request, template_name = "users/password_reset_form.html", context= ctx)
 
 # _______________________________________________social login____________________________________________
 # github login
@@ -288,7 +285,6 @@ def follow(request, host_pk):
         host.user_followed.add(me)
     
     return redirect('users:my_page', host_pk)
-
 
 def account_detail(request, pk):
     host = get_object_or_404(User,pk=pk)
