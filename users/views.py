@@ -110,7 +110,7 @@ def log_in(request):
 @login_required
 def log_out(request):
     logout(request)
-    return redirect('user:login')
+    return redirect('users:login')
 
 # 비밀번호 찾기
 # class UserPasswordResetView(PasswordResetView):
@@ -255,7 +255,7 @@ def github_callback(request):
             raise Exception()
     
     except Exception:
-        return redirect("user:login")
+        return redirect("users:login")
     
 
 # ________________________________________________ mypage ________________________________________________

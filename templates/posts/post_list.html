@@ -35,14 +35,14 @@
 
                         </div>
                         <span>
-                            by {{post.tag}}
+                            by {{post.user.username}}
                         </span>
                     </a>
 
                     <div class="likes">
                         👍
                         <div class="likes_count">
-                            24
+                            {{post.scrap_num}}
                         </div>
                     </div>
                 </div>
@@ -50,5 +50,17 @@
             {% endfor %}
         </div>
     </div>
+    {% comment %}
+    이거 현주가 following들 post 나오는지 test할라고 만든 html!
+    
+    <div>
+        {% for post in followings_posts%}
+        <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" >{{ post.title }}
+        </a>
+        {% endfor %}
+    </div>
+    {% endcomment %}
+    
+    
 </body>
 {% endblock %}
