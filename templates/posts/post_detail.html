@@ -119,7 +119,7 @@ requestDelComment.onreadystatechange = () =>{
             <h1>{{post.title}}</h1>
             <div class="post_user_info">
                 {% if post.user.user_profile_image %}
-                <img src="{{post.user.user_profile_image.url}}">
+                    <img src="{{post.user.user_profile_image.url}}">
                 {% endif %}
                 <span>{{post.user.username}}</span>
             </div>

@@ -96,7 +96,9 @@ def log_in(request):
     if request.method == "POST":
         form = AuthenticationCustomForm(request, request.POST)
         if form.is_valid():
-            login(request, form.get_user())
+            # login(request, form.get_uer())
+            print(form.get_user())
+            login(request, form.get_user(), backend='django.contrib.auth.backends.ModelBackend') # 추가
             user = form.get_user()
             return redirect('users:my_page', user.pk)
         # else:
