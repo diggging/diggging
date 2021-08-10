@@ -15,14 +15,13 @@ import json
 def comment(request):        #! 이름 바꿈!
     req = json.loads(request.body)
     post_id = req["id"]
-    comment_content = req["text"]
-
     post = Post.objects.get(id=post_id)
-    comment = Comment.objects.create(post=post, text=comment_content, user=request.user)
 
-    post.save()
+    text = req["text"]
+    comment = Comment.objects.create(post=post, text=text, user=request.user)
+    comment.save()
 
-    return JsonResponse({"id": post_id, "comment_content": comment_content})
+    return JsonResponse({"id": post_id, "text": text, "comment_id":comment.id})
 
 
 # delete comment

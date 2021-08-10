@@ -51,17 +51,23 @@ const onClickComment = (id) =>{
 
 const commentHandleResponse = () =>{
     if(requestComment.status < 400){
-    const {id} = JSON.parse(requestComment.response);
-    const {text} = JSON.parse(requestComment.response);
-    const {comment_id} = JSON.parse(requestComment.response);
-    const addComment= document.querySelector(`.addComment`)
-
+        const {id} = JSON.parse(requestComment.response);
+        const {text} = JSON.parse(requestComment.response);
+        const {comment_id} = JSON.parse(requestComment.response);
+        const addComment= document.querySelector(`.addComment`)
+        console.log(addComment)
     addComment.innerHTML += `
         <div class='comment_id_${comment_id}'>
-            ${text}
-            <button onclick="onClickDelete(${id},${comment_id})">삭제</button>
+            <div class="comment_text">
+                ${text}
+            </div>
+            <div class="delete_btn">
+                <button onclick="onClickDelete(${id}, ${comment_id})">삭제</button>
+            </div>
         </div>
     `
+    const cmt_input = document.querySelector('.comment_input');
+    cmt_input.value = null
     };
     
 };
@@ -89,8 +95,9 @@ const commentdelHandleResponse = () =>{
     if(requestDelComment.status<400){
         const {id} = JSON.parse(requestDelComment.response);
         const {comment_id} = JSON.parse(requestDelComment.response);
+        console.log(comment_id)
         const element = document.querySelector(`.comment_id_${comment_id}`);
-        element.innerHTML = "";
+        element.remove();
     };
 };
 
