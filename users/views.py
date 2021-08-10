@@ -291,27 +291,14 @@ def my_page(request, pk):
 
 def my_page_folder(request, pk):
     host = get_object_or_404(User,pk=pk)
-    host_following = host.user_following.all()
-    host_follower = host.user_followed.all()
-
     # 폴더 보여주기위한 변수
     language_folders = Folder.objects.filter(folder_user=host)
     
-    # 질문 모음
-    # my_questions = Question_post.objects.filter(user=host)
-    # questions_folder = Question_post.folder
-
-    # 최근에 남긴 질문
-    my_recent_questions = Question_post.objects.filter(user=host).order_by("-created")
-
     ctx = {
         # 왼쪽 상단을 위한 변수
         'host': host,
-        'host_follower' : host_follower,
-        'host_following' : host_following,
         'language_folders' : language_folders,
         #'my_questions': my_questions,
-        'my_recent_questions' : my_recent_questions,
     }
     return render(request, template_name="users/my_page_folder.html", context=ctx)
 
