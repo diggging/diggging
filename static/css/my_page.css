@@ -21,16 +21,17 @@ body {
     flex-direction: row;
     justify-content: space-around;
     margin-top: 140px;
+    padding: 2rem;
 }
 
 .container {
-    display: flex;
     width: 33%;
     height: 90vh;
     padding: 1rem;
     border: solid 1px var(--border-color);
     border-radius: 8px;
     justify-content: flex-start;
+    margin: 10px;
 
 }
 
@@ -95,7 +96,7 @@ body {
 
 .list_btn {
     border: solid 1px var(--border-color);
-    width: 300px;
+    width: 19rem;
     height: 60px;
     background: floralwhite;
     margin: 10px;
@@ -129,10 +130,36 @@ body {
 }
 
 
-.list_btn {
-    
-}
 
 .list_btn a {
     display: block;
+}
+
+
+.second_container {
+    display: flex;
+}
+
+.folder_area {
+    height: 250px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    font-family: var(--btn-font);
+}
+
+.folder_icon {
+    color: var(--text-color);
+}
+
+.folder_name {
+    font-family: var(--btn-font);
+    text-align: center;
+    color: var(--text-color);
+    margin-top: 4px;
+}
+
+.folder_space {
+    margin: 4px;
+    margin: 1rem;
 }

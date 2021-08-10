@@ -3,6 +3,7 @@
 
 {% block script %}
 <link rel="stylesheet" href="{% static 'css/my_page.css' %}">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
 {% endblock script %}
 
 {% block content %}
@@ -64,13 +65,15 @@
         <div class="sand_pour_area"></div>
     </div>
     <div class="second_container container">
-        {% for folder in language_folders %}
-        <i class="far fa-folder folder_icon">
-            {{folder}}
-        </i>
-        {% endfor %}
+        <div class="folder_area">
+            {% for folder in language_folders %}
+            <div class="folder_space">
+                <i class="far fa-folder folder_icon fa-4x"></i>  
+                <div class="folder_name">{{folder}}</div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
     <div class="third_container container"></div>
-
 </div>
 {% endblock %}
