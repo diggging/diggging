@@ -98,11 +98,65 @@ class Post(core_models.TimeStampModel):
         ("XML", "XML"),
         ("YAML", "YAML"),
     )
+    framework_choices = (
+        ('AIOHTTP', 'AIOHTTP'), 
+        ('Angular.js', 'Angular.js'), 
+        ('Backbone.js', 'Backbone.js'), 
+        ('Bootstrap', 'Bootstrap'), 
+        ('Bottle', 'Bottle'), 
+        ('Bulma', 'Bulma'), 
+        ('CakePHP', 'CakePHP'), 
+        ('CherryPy', 'CherryPy'), 
+        ('CodeIgniter', 'CodeIgniter'), 
+        ('CubicWeb', 'CubicWeb'), 
+        ('Dash', 'Dash'), 
+        ('Django', 'Django'), 
+        ('Express.js', 'Express.js'), 
+        ('Falcon', 'Falcon'), 
+        ('Flask', 'Flask'), 
+        ('Foundation', 'Foundation'), 
+        ('FuelPHP', 'FuelPHP'), 
+        ('Giotto', 'Giotto'), 
+        ('Growler', 'Growler'), 
+        ('Hug', 'Hug'), 
+        ('Laravel', 'Laravel'), 
+        ('Materialize', 'Materialize'), 
+        ('MeteorJS', 'MeteorJS'), 
+        ('Miligram', 'Miligram'), 
+        ('Next.js', 'Next.js'), 
+        ('Node.js', 'Node.js'), 
+        ('Nuxt.js', 'Nuxt.js'), 
+        ('PHPixie', 'PHPixie'), 
+        ('Phalcon', 'Phalcon'), 
+        ('Pure', 'Pure'), 
+        ('Pylons', 'Pylons'), 
+        ('Pyramid', 'Pyramid'), 
+        ('Rails', 'Rails'), 
+        ('React', 'React'), 
+        ('STRUTS', 'STRUTS'), 
+        ('Sails.js', 'Sails.js'), 
+        ('Sanic', 'Sanic'), 
+        ('Semantic UI', 'Semantic UI'), 
+        ('Skeleton', 'Skeleton'), 
+        ('Slim', 'Slim'), 
+        ('Spring', 'Spring'), 
+        ('Symfony', 'Symfony'), 
+        ('Tailwind', 'Tailwind'), 
+        ('Tornado', 'Tornado'), 
+        ('TurboGears', 'TurboGears'), 
+        ('Vue.js', 'Vue.js'), 
+        ('Web2Py', 'Web2Py'), 
+        ('Yii 2', 'Yii 2'), 
+        ('Zend', 'Zend')
+    )
     os = models.CharField(
         verbose_name="운영체제", max_length=10, choices=os_choices, blank=False
     )
     language = models.CharField(
         verbose_name="언어", max_length=20, choices=language_choices, blank=False
+    )
+    framework = models.CharField(
+        verbose_name="프레임워크", max_length=20, choices=framework_choices, blank=False 
     )
     error_message = models.TextField(verbose_name="에러메세지", blank=True)
     image = models.ImageField(
