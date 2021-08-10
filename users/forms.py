@@ -38,6 +38,7 @@ class UserCustomCreationForm(UserCreationForm):
         'nickname_format': '8자 이하로 입력해주세요.',
         'discorded_password': '비밀번호가 불일치 합니다.',
         'password_format_error': '8자 이상 입력해 주세요.',
+        'common_password': '단순해요',
     }
 
     class Meta:
@@ -105,7 +106,18 @@ class UserCustomCreationForm(UserCreationForm):
                     self.error_messages['password_format_error'],
                     code='password_format_error',
                 )
+
+        if password1 and password2 and password1 == password2:
+            if password1.lower().strip() and password2.lower().strip():
+                raise forms.ValidationError(
+                    self.error_messages['common_password'],
+                    code='common_password',
+                )
+        
+
         return password2
+
+
 
 #로그인 custom
 class AuthenticationCustomForm(AuthenticationForm):
