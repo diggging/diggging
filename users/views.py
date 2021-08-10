@@ -97,12 +97,11 @@ def log_in(request):
         form = AuthenticationCustomForm(request, request.POST)
         if form.is_valid():
             # login(request, form.get_uer())
-            print(form.get_user())
             login(request, form.get_user(), backend='django.contrib.auth.backends.ModelBackend') # 추가
             user = form.get_user()
             return redirect('users:my_page', user.pk)
         # else:
-        #     context.update({"error:해당하는 유저 정보가 없습니다."})
+        #     context.update({"error_messages:해당하는 유저 정보가 없습니다."})
         #     return render(request, template_name="users/login.html")
         
     else:

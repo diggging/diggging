@@ -118,17 +118,25 @@ class AuthenticationCustomForm(AuthenticationForm):
     error_messages = {
         'invalid_login': "로그인을 다시 확인해주세요",
         'inactive': "이메일 인증을 확인해주세요.",
+        'not_exist': "가입된 회원정보가 없습니다.",
     }
 
     def get_invalid_login_error(self):
-        user = User.objects.get(username=self.cleaned_data.get('username'))
+        #회원정보 검사
+        try:
+            user = User.objects.get(username=self.cleaned_data.get('username'))
+        except User.DoesNotExist:
+            raise forms.ValidationError(
+                self.error_messages['not_exist'],
+                code='not_exist',
+            )
 
         #is_active 검사
         if not user.is_active and user:
             raise forms.ValidationError(
                 self.error_messages['inactive'],
-                code='inactive',)
-                
+                code='inactive',
+            )
         # user, password 검사
         elif not user or user.password:
             return forms.ValidationError(
