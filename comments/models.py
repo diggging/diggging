@@ -24,3 +24,7 @@ class Question_comment(core_models.TimeStampModel):
     user = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, related_name="question_comments"
     )
+    text = models.TextField()
+
+    def __str__(self):
+        return f"{self.id} {self.text}"
