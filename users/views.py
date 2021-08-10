@@ -206,10 +206,11 @@ def password_reset_form(request, pk):
 # github login
 def github_login(request):
     client_id = os.environ.get("GITHUB_ID")
-    redirect_uri = "http://127.0.0.1:8000/user/login/github/callback"
+    redirect_uri = "http://127.0.0.1:8000/users/login/github/callback"
     return redirect(f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope=read:user")
 
 def github_callback(request):
+    print(request.GET) # for test
     try:
         client_id = os.environ.get("GITHUB_ID")
         client_secret = os.environ.get("GITHUB_SECRET")
@@ -229,16 +230,19 @@ def github_callback(request):
                     "Authorization": f"token {access_token}",
                     "Accept": "application/json",
                 })
+                print(profile_request.json()) # for test
                 
                 profile_json = profile_request.json()
                 username = profile_json.get("login", None)
                 if username is not None:
-                    name = profile_json.get("name")
+                    # name = profile_json.get("name")
                     email = profile_json.get("email")
                     try:
-                        user = User.objects.get(email=email)
+                        user = User.objects.get(username=username)
                         if user.login_method != User.LOGIN_GITHUB:
-                            raise Exception()
+                            raise Exception(
+                                f"Please log in with: {user.login_method}"
+                            )
                     except User.DoesNotExist:
                         user = User.objects.create(username=name, email=email, user_nickname=name, login_method=User.LOGIN_GITHUB,)
                         user.set_unusable_password()
