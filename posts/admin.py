@@ -44,8 +44,8 @@ class FolderAdmin(admin.ModelAdmin):
     def posts(self,obj):
         return ",".join([r.title for r in obj.related_posts.all()])
 
-@admin.register(models.CustomFolder)
-class CustomFolderAdmin(admin.ModelAdmin):
+# @admin.register(models.CustomFolder)
+# class CustomFolderAdmin(admin.ModelAdmin):
     
-    list_display = ["pk", "name", "custom_folder_posts_count"]
-    list_display_links = ["name"]
+#     list_display = ["pk", "name", "custom_folder_posts_count"]
+#     list_display_links = ["name"]

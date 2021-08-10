@@ -17,7 +17,7 @@ class User(AbstractUser):
     user_point = models.IntegerField(verbose_name="point", default=0)
     user_register_datetime = models.DateTimeField(
         verbose_name="date_joined", default=timezone.now)
-    user_following = models.ManyToManyField("self", symmetrical=False, blank=True, default=0, related_name ='user_followed')
+    user_following = models.ManyToManyField("self", symmetrical=False, blank=True, default=[0], related_name ='user_followed')
     #user_followed = models.ManyToManyField("self", symmetrical=False, blank=True, default=0)
     user_profile_content = models.TextField(
         verbose_name="personal description", blank=True)

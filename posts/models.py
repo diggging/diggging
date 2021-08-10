@@ -8,11 +8,8 @@ from tagging.fields import TagField
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
 
-# Create your models here.
-
-
+# Create your models here
 class Post(core_models.TimeStampModel):
-
     user = models.ForeignKey(
         "users.User", related_name="user", on_delete=models.CASCADE
     )
@@ -101,11 +98,65 @@ class Post(core_models.TimeStampModel):
         ("XML", "XML"),
         ("YAML", "YAML"),
     )
+    framework_choices = (
+        ('AIOHTTP', 'AIOHTTP'), 
+        ('Angular.js', 'Angular.js'), 
+        ('Backbone.js', 'Backbone.js'), 
+        ('Bootstrap', 'Bootstrap'), 
+        ('Bottle', 'Bottle'), 
+        ('Bulma', 'Bulma'), 
+        ('CakePHP', 'CakePHP'), 
+        ('CherryPy', 'CherryPy'), 
+        ('CodeIgniter', 'CodeIgniter'), 
+        ('CubicWeb', 'CubicWeb'), 
+        ('Dash', 'Dash'), 
+        ('Django', 'Django'), 
+        ('Express.js', 'Express.js'), 
+        ('Falcon', 'Falcon'), 
+        ('Flask', 'Flask'), 
+        ('Foundation', 'Foundation'), 
+        ('FuelPHP', 'FuelPHP'), 
+        ('Giotto', 'Giotto'), 
+        ('Growler', 'Growler'), 
+        ('Hug', 'Hug'), 
+        ('Laravel', 'Laravel'), 
+        ('Materialize', 'Materialize'), 
+        ('MeteorJS', 'MeteorJS'), 
+        ('Miligram', 'Miligram'), 
+        ('Next.js', 'Next.js'), 
+        ('Node.js', 'Node.js'), 
+        ('Nuxt.js', 'Nuxt.js'), 
+        ('PHPixie', 'PHPixie'), 
+        ('Phalcon', 'Phalcon'), 
+        ('Pure', 'Pure'), 
+        ('Pylons', 'Pylons'), 
+        ('Pyramid', 'Pyramid'), 
+        ('Rails', 'Rails'), 
+        ('React', 'React'), 
+        ('STRUTS', 'STRUTS'), 
+        ('Sails.js', 'Sails.js'), 
+        ('Sanic', 'Sanic'), 
+        ('Semantic UI', 'Semantic UI'), 
+        ('Skeleton', 'Skeleton'), 
+        ('Slim', 'Slim'), 
+        ('Spring', 'Spring'), 
+        ('Symfony', 'Symfony'), 
+        ('Tailwind', 'Tailwind'), 
+        ('Tornado', 'Tornado'), 
+        ('TurboGears', 'TurboGears'), 
+        ('Vue.js', 'Vue.js'), 
+        ('Web2Py', 'Web2Py'), 
+        ('Yii 2', 'Yii 2'), 
+        ('Zend', 'Zend')
+    )
     os = models.CharField(
         verbose_name="운영체제", max_length=10, choices=os_choices, blank=False
     )
     language = models.CharField(
         verbose_name="언어", max_length=20, choices=language_choices, blank=False
+    )
+    framework = models.CharField(
+        verbose_name="프레임워크", max_length=20, choices=framework_choices, blank=False 
     )
     error_message = models.TextField(verbose_name="에러메세지", blank=True)
     image = models.ImageField(
@@ -122,12 +173,6 @@ class Post(core_models.TimeStampModel):
         related_name="related_posts",
         blank=True,
     )
-    custom_folder = models.ForeignKey(
-        "CustomFolder",
-        related_name="custom_selected_posts",
-        on_delete=models.SET_NULL,
-        null=True,
-    )
     is_public = models.BooleanField(
         verbose_name="전체공개", default=True
     )  # 해당코드 false로 변경시 비공개
@@ -143,7 +188,6 @@ class Folder(core_models.TimeStampModel):
     folder_user = models.ForeignKey(
         "users.User", related_name="folder_user", on_delete=models.CASCADE
     )
-
     # user = models.ForeignKey("users.User", related_name="user", on_delete=models.CASCADE)
     def __str__(self):
         return self.folder_name
@@ -155,15 +199,3 @@ class Folder(core_models.TimeStampModel):
     #    return self.related_posts.count()
 
     # post_count.short_description = "number of posts saved"
-
-
-class CustomFolder(Folder):
-    name = CharField(max_length=150, blank=False)
-
-    def __str__(self):
-        return self.name
-
-    def custom_folder_posts_count(self):
-        return self.custom_selected_posts.count()
-
-    custom_folder_posts_count.short_description = "number of posts saved"

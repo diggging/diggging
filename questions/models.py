@@ -10,10 +10,15 @@ class Question_post(posts_models.Post):
 
     # def sand_point_count(self):
     #   return self.sand_point.count()
-
+    question_folder = models.ManyToManyField(
+        "QuestionFolder",
+        related_name="question_folder",
+        blank=True,
+    )
 
 # sand_point_count.short_description = "current sand point"
 
+# 채택된 답변의 개수 세는 함수 이걸로 답변 채택 여부 확인 할 것임.
     def answer_selection_count(self):
         answer_selection_count = 0
         for answer_selected in self.answers.all():

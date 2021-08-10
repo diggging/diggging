@@ -8,12 +8,21 @@ from .models import Question_post, Answer, QuestionFolder
 
 def question_main(request):
     posts = Question_post.objects.all()
+    # 답변 채택 안되거나 답변이 아직 달리지 않은 질문들을 모아두는 list
     selected_answer_posts = []
     for post in posts:
+        # Question_Post에 정의된 answer_selection_count() 함수 이용하여 개수 파악
         if post.answer_selection_count() > 0:
             selected_answer_posts.append(post)
+        elif post.answers.count() == 0:
+            selected_answer_posts.append(post)
+    languages = [langs[0] for langs in Question_post.language_choices]
+    search = request.POST.getlist("answers[]")
+    print(search)
     ctx = {
         "selected_answer_posts": selected_answer_posts,
+        "posts": posts, 
+        "language": languages,
     }
     languages = [langs[0] for langs in Question_post.language_choices]
     search = request.POST.getlist("answers[]")

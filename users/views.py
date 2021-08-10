@@ -7,6 +7,8 @@ from django.views.generic.base import TemplateView
 #from .forms import SignUpForm
 from .forms import UserCustomCreationForm, AuthenticationCustomForm
 from .models import User
+from posts.models import Folder
+from questions.models import Question_post, Answer
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, PasswordResetForm
@@ -71,10 +73,11 @@ def signup(request):
     else:
         user_form = UserCustomCreationForm()
     ctx={'signup_form' : user_form}
-    return render(request, template_name="users/signup.html", context=ctx)
+    return render(request, "users/signup.html", context=ctx)
 
 # 이메일 인증 후 계정 활성화
 def activate(request, uidb64, token):
+    print("sdfsdf")
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
@@ -110,7 +113,7 @@ def log_in(request):
 @login_required
 def log_out(request):
     logout(request)
-    return redirect('user:login')
+    return redirect('users:login')
 
 # 비밀번호 찾기
 # class UserPasswordResetView(PasswordResetView):
@@ -138,16 +141,12 @@ def password_reset(request):
         if User.objects.filter(email = email).exists():
             #있으면 메일 보내기
             user = User.objects.get(email=email)
-            my_site = Site.objects.get(pk=1)
-            my_site.domain = '127.0.0:8000'
-            my_site.name = "digging_main"
-            my_site.save()
             current_site = get_current_site(request)
             print(current_site)
             message = render_to_string('users/password_reset_email.html', {
                 'user': user,
                 #'domain': current_site.domain,
-                'domain': my_site.domain,
+                #'domain': my_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': password_reset_token.make_token(user),
             })
@@ -189,22 +188,19 @@ def password_reset_email(request, uidb64, token):
         return render(request, template_name="password_email_fail.html", context=ctx)
 
 def password_reset_form(request, pk):
-    context = {}
+    user = get_object_or_404(User,pk=pk)
     if request.method == "POST":
-        user = get_object_or_404(User,pk=pk)
         new_password = request.POST.get("password1")
         password_confirm = request.POST.get("password2")
         if new_password == password_confirm:
             user.set_password(new_password)
             user.save()
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend' )
             return redirect('users:login')
-        else:
-            context.update({'error':"새로운 비밀번호를 다시 확인해주세요."})
-    else:
-        context.update({'error':"현재 비밀번호가 일치하지 않습니다."})
-    
-    return redirect('users:login')
+    ctx={
+        'user': user
+    }
+    return render(request, template_name = "users/password_reset_form.html", context= ctx)
 
 # _______________________________________________social login____________________________________________
 # github login
@@ -255,21 +251,36 @@ def github_callback(request):
             raise Exception()
     
     except Exception:
-        return redirect("user:login")
+        return redirect("users:login")
     
 
 # ________________________________________________ mypage ________________________________________________
 # my page
 def my_page(request, pk):
+    # 왼쪽 상단 - host의 상태를 위한 변수들
     host = get_object_or_404(User,pk=pk)
     host_following = host.user_following.all()
     host_follower = host.user_followed.all()
+
+    # 폴더 보여주기위한 변수
+    language_folders = Folder.objects.filter(folder_user=host)
+    
+    # 질문 모음
+    # my_questions = Question_post.objects.filter(user=host)
+    # questions_folder = Question_post.folder
+
+    # 최근에 남긴 질문
+    my_recent_questions = Question_post.objects.filter(user=host).order_by("-created")
+
     ctx = {
+        # 왼쪽 상단을 위한 변수
         'host': host,
         'host_follower' : host_follower,
         'host_following' : host_following,
+        'language_folders' : language_folders,
+        #'my_questions': my_questions,
+        'my_recent_questions' : my_recent_questions,
     }
-
     return render(request, template_name="users/my_page.html", context=ctx)
 
 # 한번 누르면 follow, 두번 누르면 unfollow
@@ -291,7 +302,6 @@ def follow(request, host_pk):
         host.user_followed.add(me)
     
     return redirect('users:my_page', host_pk)
-
 
 def account_detail(request, pk):
     host = get_object_or_404(User,pk=pk)

@@ -1,0 +1,115 @@
+{% extends 'posts/base.html' %}
+{% load static %}
+
+{% block script %}
+<link rel="stylesheet" href="{% static 'posts/post_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+현재유저: {{request.user.username}}
+
+<div class="container">
+    <div class="post_container">
+        <div class="title_area">
+            <h1>{{post.title}}</h1>
+            <h4>작성자 : {{post.user.username}}</h4>
+        </div>
+        <div class="category_area">
+            <p> 언어 : {{post.language}} </p>
+            <p> 폴더 명: {{folder.folder_name}}</p>
+
+            <p> 폴더 주인: {{folder.folder_user}}</p>
+        </div>
+        <div class="post_footer">
+            <p> 스크랩: {{post.scrap_num}}</p>
+            <p> 도움이 되었어요 : {{post.helped_num}}</p>
+            {% if request.user.id == post.user.id %}
+            {% else %}
+            <span><a href="{% url 'posts:get_post' user_id=post.user.id post_id=post.id %}">퍼가기</a></span>
+            {% endif %}
+        </div>
+    </div>
+</div>        
+<div class="comment_area">
+{% for comment in comments %}
+    <div class='addComment'>
+        <div class='comment_id_{{comment.id}}'>
+            {{comment.text}}
+            <button onclick="onClickDelete({{post.id}},{{comment.id}})">삭제</button> <!--comment 별로 id 준당-->
+        </div>
+    </div>
+{% endfor %}
+    <div class="comment_input_area">
+        <input class="sibal" type="text" placeholder="댓글달기"/>
+        <button onclick="onClickComment({{ post.id }})">게시</button> 
+        <!--comment 별로 id 준당-->
+    </div>
+</div>
+
+<script>
+    const requestComment = new XMLHttpRequest();
+
+const onClickComment = (id) =>{
+    const url = '/comments/comment/';
+    requestComment.open('POST',url,true);
+    requestComment.setRequestHeader(
+        'Content-Type',
+        'application/x-www-form-urlencoded'
+    );
+    const text = document.querySelector(`.sibal`).value;
+    requestComment.send(JSON.stringify({id:id, text:text}));
+};
+
+const commentHandleResponse = () =>{
+    if(requestComment.status < 400){
+    const {id} = JSON.parse(requestComment.response);
+    const {text} = JSON.parse(requestComment.response);
+    const {comment_id} = JSON.parse(requestComment.response);
+    const addComment= document.querySelector(`.addComment`)
+    addComment.innerHTML += `
+        <div class='comment_id_${comment_id}'>
+            ${text}
+            <button onclick="onClickDelete(${id},${comment_id})">삭제</button>
+        </div>
+    `
+    };
+    
+};
+
+requestComment.onreadystatechange = () =>{
+    if(requestComment.readyState  === XMLHttpRequest.DONE){
+        commentHandleResponse();
+    };      
+};
+
+const requestDelComment = new XMLHttpRequest();
+
+const onClickDelete = (id,comment_id) =>{
+    const url ='/comments/delete_comment/';
+    requestDelComment.open('POST',url,true);
+    requestDelComment.setRequestHeader(
+        'Content-Type',
+        'application/x-www-form-urlencoded'
+    );
+    
+    requestDelComment.send(JSON.stringify({id:id, comment_id:comment_id}));
+};
+
+const commentdelHandleResponse = () =>{
+    if(requestDelComment.status<400){
+        const {id} = JSON.parse(requestDelComment.response);
+        const {comment_id} = JSON.parse(requestDelComment.response);
+        const element = document.querySelector(`.comment_id_${comment_id}`);
+        element.innerHTML = "";
+    };
+};
+
+requestDelComment.onreadystatechange = () =>{
+    if(requestDelComment.readyState  === XMLHttpRequest.DONE){
+        commentdelHandleResponse();
+    };      
+};
+
+
+</script>
+{% endblock %}

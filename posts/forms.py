@@ -14,10 +14,12 @@ class PostForm(forms.ModelForm):
             "problem_solving",
             "os",
             "language",
+            "framework",    # framework 추가
             "error_message",
             "image",
             "desc",
             "tag",
+            
         }
         widgets = {
             "title": forms.TextInput(
@@ -31,7 +33,7 @@ class PostForm(forms.ModelForm):
 
 
 class selectForm(forms.Form):
-
     field = forms.ChoiceField(choices=Post.language_choices)
     field2 = forms.ChoiceField(choices=Post.os_choices)
     field3 = forms.ChoiceField(choices=Post.problem_choices)
+    field4 = forms.ChoiceField(choices=Post.framework_choices)     # 현주가 FRAMEWORK 추가 

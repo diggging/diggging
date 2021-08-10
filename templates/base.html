@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="{% static 'base/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
 </head>
 <body>
     <nav class="nav">
@@ -66,5 +66,9 @@
             {% endif %}
         </div>
     </nav>
+    {% block content%}
+    {% endblock %}
+    {% block script %}
+    {% endblock %}    
 </body>
 </html>
