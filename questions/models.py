@@ -11,7 +11,7 @@ class Question_post(posts_models.Post):
     # def sand_point_count(self):
     #   return self.sand_point.count()
     question_folder = models.ManyToManyField(
-        "Folder",
+        "QuestionFolder",
         related_name="question_folder",
         blank=True,
     )
