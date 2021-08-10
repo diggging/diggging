@@ -57,20 +57,21 @@
         </div>
         <hr>
         <div class="btn_list_area">
-            <a href = '#'><button class="list_btn">삽질 기록 모음 > </button></a>
-            <a href = '#'><button class="list_btn">질문 모음 > </button></a>
-            <a href = '#}'><button class="list_btn">내가 남긴 답변 목록 > </button></a>
-            <a href = '{% url "users:account_detail" host.id%}'><button class="list_btn">계정 관리 > </button></a>
+            <a href = '#'><button class="list_btn">삽질 기록 모음  </button></a>
+            <a href = '#'><button class="list_btn">질문 모음  </button></a>
+            <a href = '#}'><button class="list_btn">내가 남긴 답변 목록  </button></a>
+            <a href = '{% url "users:account_detail" host.id%}'><button class="list_btn">계정 관리 </button></a>
         </div>
         <div class="sand_pour_area"></div>
     </div>
+    <!-- end first container -->
     <div class="second_container container">
         <div class="folder_area">
             {% for folder in language_folders %}
-            <div class="folder_space">
-                <i class="far fa-folder folder_icon fa-4x"></i>  
-                <div class="folder_name">{{folder}}</div>
-            </div>
+                <div class="folder_space">
+                    <i class="far fa-folder folder_icon fa-4x"></i>  
+                    <div class="folder_name"> {{folder}} </div>
+                </div>
             {% endfor %}
         </div>
     </div>
