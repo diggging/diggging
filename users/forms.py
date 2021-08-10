@@ -65,11 +65,11 @@ class UserCustomCreationForm(UserCreationForm):
                 code='email_format_error'
             )
         
-        # if input_email and User.objects.filter(email=input_email):
-        #     raise forms.ValidationError(
-        #         self.error_messages['existed_email'],
-        #         code='existed_email'
-        #     )
+        if input_email and User.objects.filter(email=input_email):
+            raise forms.ValidationError(
+                self.error_messages['existed_email'],
+                code='existed_email'
+            )
         return input_email
     
     #이미 존재하는 닉네임 검사
