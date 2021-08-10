@@ -7,7 +7,8 @@ from .models import Question_post, Answer, QuestionFolder
 
 
 def question_main(request):
-    posts = Question_post.objects.all()
+    # 질문 최신순으로 정렬
+    posts = Question_post.objects.all().order_by("-created")
     # 답변 채택 안되거나 답변이 아직 달리지 않은 질문들을 모아두는 list
     selected_answer_posts = []
     for post in posts:
@@ -19,17 +20,14 @@ def question_main(request):
     languages = [langs[0] for langs in Question_post.language_choices]
     search = request.POST.getlist("answers[]")
     print(search)
+    str_search = "".join(search)
     ctx = {
         "selected_answer_posts": selected_answer_posts,
         "posts": posts, 
         "language": languages,
+        "str_search": str_search
     }
-    languages = [langs[0] for langs in Question_post.language_choices]
-    search = request.POST.getlist("answers[]")
-    str_search = "".join(search)
-    ctx = {"posts": posts, "language": languages, "str_search": str_search}
     return render(request, "questions/main.html", ctx)
-
 
 def question_create(request):
     if request.method == "POST":

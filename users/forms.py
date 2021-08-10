@@ -108,23 +108,23 @@ class AuthenticationCustomForm(AuthenticationForm):
     }
 
     #아이디, 비밀번호 검증
-    def clean(self):
-        username = self.cleaned_data.get('username')
-        password = self.cleaned_data.get('password')
+    # def clean(self):
+    #     username = self.cleaned_data.get('username')
+    #     password = self.cleaned_data.get('password')
 
-        if username and password:
-            self.user_cache = authenticate(username=username, password=password)
-            print(self.user_cache)
-            if self.user_cache is None:
-                raise forms.ValidationError(
-                    self.error_messages['invalid_login'],
-                    code='invalid_login',
-                    params={'username': self.username_field.verbose_name},
-                )
-            else:
-                self.confirm_login_allowed(self.user_cache)
+    #     if username and password:
+    #         self.user_cache = authenticate(username=username, password=password)
+    #         print(self.user_cache)
+    #         if self.user_cache is None:
+    #             raise forms.ValidationError(
+    #                 self.error_messages['invalid_login'],
+    #                 code='invalid_login',
+    #                 params={'username': self.username_field.verbose_name},
+    #             )
+    #         else:
+    #             self.confirm_login_allowed(self.user_cache)
 
-        return self.cleaned_data
+    #     return self.cleaned_data
 
     #이메일 검증
     def confirm_login_allowed(self, user):
