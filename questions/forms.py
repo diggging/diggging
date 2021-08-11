@@ -28,5 +28,14 @@ class QuestionPostForm(forms.ModelForm):
         }
 
 # 답변도 질문과 같은 폼에서 작업할 수 있도록 질문폼 상속
-class AnswerPostForm(QuestionPostForm):
-    model = Answer
+class AnswerPostForm(forms.ModelForm):
+    class Meta:
+        model = Answer
+        fields = '__all__'
+        # {
+        #     "user",
+        #     "question",
+        #     "selection",
+        #     "desc",
+        # }
+    

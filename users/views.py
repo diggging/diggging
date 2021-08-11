@@ -15,7 +15,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, PasswordResetForm
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView
-import os
 # 이메일 인증 관련 import
 import logging
 from django.http import HttpResponse
@@ -57,9 +56,16 @@ def signup(request):
             email = EmailMessage(mail_subject, message, to=[to_email])
             email.send()
             # return HttpResponse('Please confirm your email address to complete the registration') -> 이메일 인증 성공 확인 가능 메세지
+            # user가 생기자마자 바로 해결, 미해결 폴더 만들기
+            solved = Folder.objects.create(folder_user=user, folder_name="해결")
+            not_solved = Folder.objects.create(folder_user=user, folder_name="미해결")
+
             return redirect('users:login')
     else:
         user_form = UserCustomCreationForm()
+
+    
+    
     ctx={'signup_form' : user_form}
     return render(request, "users/signup.html", context=ctx)
 

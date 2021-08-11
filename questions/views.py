@@ -6,6 +6,8 @@ from .forms import AnswerPostForm, QuestionPostForm
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Question_post, Answer, QuestionFolder
 from users.models import Sand, Alarm
+from django.core.serializers.json import DjangoJSONEncoder
+from django.http import HttpResponse, JsonResponse
 
 # Create your views here.
 def question_main(request):
@@ -131,17 +133,17 @@ def answer_create(request, question_post_id):
             answers = form.save(commit=False)
             answers.user = request.user
             answers.save()
-            question_host = question.user.id
+            question_host = question.user
 
             # 질문에 답변이 달렸다는 알람 넣어주기
             new_alarm = Alarm.objects.create(user=question_host, reason="내가 남긴 질문"+question.title+"에 답변이 달렸어요. 확인해보세요!")
-            return redirect("question:question_post_detail", question_host, question_post_id)
+            return redirect("question:question_post_detail", question_host.id, question_post_id)
     else:
         form = AnswerPostForm()
         ctx = {
             'form': form,
         }
-        return render(request, 'questions/question_create.html', ctx)
+        return render(request, 'questions/answer_create.html', ctx)
 
 #----------------------------------------------------------------------------------------------------------
 # 질문 기록 퍼오기
@@ -225,9 +227,11 @@ def count_like_scrap_question(request):
     button_type = req["type"]
     question_post = Question_post.objects.get(id=question_post_id)
     question_host = question_post.user
+    print(question_host)
     me = request.user
     if button_type == "like":
         question_post.helped_num += 1
+        print(question_host)
         new_sand = Sand.objects.create(user=question_host, amount=20, reason="도움이 되었어요") # 이거 하는지 안하는지 모름
         new_alarm = Alarm.objects.create(user=question_host, reason="내가 남긴 질문 "+question_post.title+"이 "+me.user_nickname+" 님께 도움이 되었어요.")
     
@@ -236,3 +240,14 @@ def count_like_scrap_question(request):
     question_post.save()
 
     return JsonResponse({"id": question_post_id, "type": button_type})
+
+
+@csrf_exempt
+def answer_ajax(request):
+    req = json.loads(request.body)
+    user_id = req["id"]
+    users = User.objects.get(id=user_id)
+    answer = list(Answer.objects.filter(user=users).values())
+    print(answer)
+
+    return JsonResponse(answer, safe=False)

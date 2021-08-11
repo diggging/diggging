@@ -1,0 +1,24 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'posts/post_create.css' %}" />
+    <!-- <link rel="stylesheet" href="../../../highlight/styles/base16/framer.min.css"> -->
+
+</head>
+<body>
+    <div class="create_title">
+        <h1>답변 남기기</h1>
+        <br>
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        {{form}}
+        <button type="submit" >제출</button>
+    </form>
+</body>
+</html>
