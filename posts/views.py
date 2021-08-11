@@ -27,9 +27,7 @@ def main(request):
         for following in followings[1:]:
             following_posts = Post.objects.filter(user=following)
             all_followings_posts.union(following_posts)  # queryset append
-        all_followings_posts = all_followings_posts.order_by(
-            "-created"
-        )  # 생성 기준으로 listing
+        all_followings_posts = all_followings_posts.order_by("-created")  # 생성 기준으로 listing
     else:
         all_followings_posts = None
     # 내 최신 포스트
@@ -145,29 +143,36 @@ def post_delete(request, pk):
 def search(request):
     language = request.POST.get("post")
     framework = request.POST.get("framework")  # frmae work 현주가 추가
-    free_post = Post.objects.all().order_by("-id")
     post = request.POST.get("post", "")
-    form = selectForm()
-
-    free_post = free_post.filter(language=language)
+    select_languages = request.POST.get("field")
+    print(select_languages)
+    select_os = request.POST.get("field2")
+    select_solve = request.POST.get("field3")
+    select_framwork = request.POST.get("field4")
+    free_post = Post.objects.filter(language=language).order_by("-id")
     frame_post = Post.objects.filter(framework=framework).order_by("-id")
-    languages = request.POST.get("language[].language")
-    print(languages)
-    oss = request.POST.getlist("os[]")
-    print(oss)
-    solves = request.POST.getlist("solve[]")
-    frameworks = request.POST.getlist("framework[]")
-    ctx = {"free_post": free_post, "post": post, "form": form, "frame_post": frame_post}
+    all_post = Post.objects.filter(
+        select_languages=select_languages,
+        select_os=select_os,
+        select_solve=select_solve,
+        select_framwork=select_framwork,
+    ).order_by("-id")
+    form = SelectForm()
+    ctx = {
+        "free_post": free_post,
+        "post": post,
+        "form": form,
+        "frame_post": frame_post,
+        "all_post": all_post,
+    }
     return render(request, "posts/search.html", ctx)
 
-        return render(request, "posts/search.html", ctx)
+# @csrf_exempt
+# def search_axios(request):
+#     req = json.loads(request.body)
+#     post_id = []
 
-@csrf_exempt
-def search_axios(request):
-    req = json.loads(request.body)
-    post_id = []
-
-    return JsonResponse({'post': post})
+#     return JsonResponse({'post': post})
 
 
 # 삽질 기록 퍼오기

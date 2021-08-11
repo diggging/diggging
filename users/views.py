@@ -35,20 +35,6 @@ from django.contrib.sites.models import Site
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
-# # 회원가입
-# def signup(request):
-#     #if request.user.is_authenticated:
-#     #    return redirect('users:my_page')
-#     if request.method == "POST":
-#         user_form = UserCustomCreationForm(request.POST)
-#         if user_form.is_valid():
-#             user = user_form.save()
-#             return redirect('users:login')
-#     else:
-#         user_form = UserCustomCreationForm()
-#     ctx={'signup_form' : user_form}
-#     return render(request, template_name="users/signup.html", context=ctx)
-
 # 회원가입
 def signup(request):
     #if request.user.is_authenticated:
@@ -118,22 +104,6 @@ def log_in(request):
 def log_out(request):
     logout(request)
     return redirect('users:login')
-
-# 비밀번호 
-# class UserPasswordResetView(PasswordResetView):
-#     template_name = 'password_reset.html'
-#     success_url = reverse_lazy('password_reset_done')
-#     form_class = PasswordResetForm
-
-#     # 존재하는 이메일인지 확인하기
-#     def form_valid(self, form):
-#         if User.objects.filter(email=self.request.POST.get("email")).exists():
-#             return super().form_valid(form)
-#         else:
-#             return render(self.request, 'password_reset_done_fail.html')
-
-# class UserPasswordResetDoneView(PasswordResetDoneView):
-#     template_name = 'password_reset_done.html' #템플릿을 변경하려면 이와같은 형식으로 입력
 
 
 # 비밀번호를 모르겠을때, email을 작성하는 부분
@@ -401,11 +371,12 @@ def change_img(request, pk):
 
 # ________________________________________________ alarm ________________________________________________
 def alarm(request, pk):
+    if 
     me = User.objects.get(id=pk)
     my_alarm = Alarm.objects.filter(user=me)
     
     ctx = {
-        'alarms' : my_alarm
+        'alarms' : my_alarm,
     }
     return render(request, template_name="users/alarm.html", context=ctx)
 
