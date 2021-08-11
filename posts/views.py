@@ -21,12 +21,14 @@ def main(request):
     # 이웃들의 최신 글을 긁어오는 코드
     me = request.user
     followings = me.user_following.all()
-    all_followings_posts = Post.objects.filter(user=followings[0])
-    for following in followings[1:]:
-        following_posts = Post.objects.filter(user=following)
-        all_followings_posts.union(following_posts)     # queryset append
-    all_followings_posts = all_followings_posts.order_by("-created")    # 생성 기준으로 listing
-    
+    if followings:
+        all_followings_posts = Post.objects.filter(user=followings[0])
+        for following in followings[1:]:
+            following_posts = Post.objects.filter(user=following)
+            all_followings_posts.union(following_posts)     # queryset append
+        all_followings_posts = all_followings_posts.order_by("-created")    # 생성 기준으로 listing
+    else:
+        all_followings_posts = None
     # 내 최신 포스트
     my_recent_post = Post.objects.filter(user=me).order_by("-created")
 
@@ -64,17 +66,16 @@ def post_create(request):
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             posts = form.save(commit=False)
-
             posts.user = request.user
-
             posts.save()
 
             # 폴더 분류해주기
             me = posts.user  # folder 주인 가져오기
             language = request.POST.get("language")  # language 가져옴
-            folder = Folder.objects.filter(folder_name=language, folder_user=me)
-
-            if folder:
+            framework = request.POST.get("framework")   # framework 가져옴
+            lang_folder = Folder.objects.filter(folder_name=language, folder_user=me)   # lang folder 가져옴
+            frame_folder = Folder.objects.filter(folder_name=framework, folder_user=me)    # frameworkd folder 가져옴
+            if lang_folder.exists():
                 # 있으면 foriegn key 연결
                 existed_folder = Folder.objects.get(
                     folder_name=language, folder_user=me
@@ -83,6 +84,17 @@ def post_create(request):
             else:
                 # 없으면 folder 만들어서
                 new_folder = Folder.objects.create(folder_name=language, folder_user=me)
+                posts.folder.add(new_folder)
+
+            if frame_folder.exists():
+                # 있으면 foriegn key 연결
+                existed_folder = Folder.objects.get(
+                    folder_name=framework, folder_user=me
+                )
+                posts.folder.add(existed_folder)
+            else:
+                # 없으면 folder 만들어서
+                new_folder = Folder.objects.create(folder_name=framework, folder_user=me)
                 posts.folder.add(new_folder)
 
             posts.save()
@@ -119,54 +131,36 @@ def post_delete(request, pk):
 
 
 def search(request):
-
     language = request.POST.get("post")
+    framework = request.POST.get("framework")   # frmae work 현주가 추가
     free_post = Post.objects.all().order_by("-id")
     post = request.POST.get("post", "")
     form = selectForm()
 
     free_post = free_post.filter(language=language)
+    frame_post = Post.objects.filter(framework=framework).order_by("-id")
     ctx = {
         "free_post": free_post,
         "post": post,
         "form": form,
+        "frame_post" : frame_post
     }
     return render(request, "posts/search.html", ctx)
 
 
 # 삽질 기록 퍼오기
 def get_post(request, user_id, post_id):
-    # attach action in frontend
-    # how to attach action
-    # ex> <... href="{% url '...' ... %}?action=remove">
-    #                     or
-    #     <... href={% url '...' ... %}?action=add">
-    # action = request.GET.get("action", None)
-    # post = Post.objects.get(pk=post_pk)
-
-    # if action == "add":
-    #     # 폴더가 이미 존재시에 해당 폴더에 포스트 추가
-    #     if folder:
-    #         existing_folder = Folder.objects.get(folder_name=target_language)
-    #         existing_folder.add(post)
-    #         existing_folder.save()
-    #     else:
-    #         # 없으면 folder 형성
-    #         new_folder = Folder.objects.create(folder_name=target_language)
-    #         post.folder = new_folder
-    #         new_folder.save()
-    # elif action == "remove":
-    #     folder.delete(post)
-
-    post = get_object_or_404(Post, pk=post_id)
-    target_language = post.language
-    me = request.user
+    post = get_object_or_404(Post, pk=post_id)  # 어떤 post인지 가져오기
+    target_language = post.language # 어떤 language인지 - 폴더 생성용
+    target_framework = post.framework   # 어떤 framework인지 - 프레임워크 생성용
+    me = request.user   # 누구의 폴더를 만들것인지
 
     # get: object-없는걸 가져오면 오류 , filter: queryset- 없어도 빈 queryset 오류 x
-    folder = Folder.objects.filter(folder_name=target_language, folder_user=me)
+    lang_folder = Folder.objects.filter(folder_name=target_language, folder_user=me)
+    frame_folder = Folder.objects.filter(folder_name=target_framework, folder_user=me)
 
     # 만약 나, language로 된 폴더 있으면
-    if folder:
+    if lang_folder.exists():
         # 그 폴더에 포스트 그냥 추가하기
         folder = Folder.objects.get(
             folder_name=target_language, folder_user=me
@@ -178,6 +172,23 @@ def get_post(request, user_id, post_id):
         # 폴더를 생성한 뒤, 거기에 추가하기
         new_folder = Folder.objects.create(
             folder_name=target_language, folder_user=me
+        )  # create - 자동저장
+        post.folder.add(new_folder)
+    post.save()
+
+    # framework 동일
+    if frame_folder.exists():
+        # 그 폴더에 포스트 그냥 추가하기
+        folder = Folder.objects.get(
+            folder_name=target_framework, folder_user=me
+        )  # query set은 object가 아니므로 object 다시 가져옴
+        folder.related_posts.add(post)  # add 는 저장 x 명시적 저장 필요
+        folder.save()
+    # 없으면
+    else:
+        # 폴더를 생성한 뒤, 거기에 추가하기
+        new_folder = Folder.objects.create(
+            folder_name=target_framework, folder_user=me
         )  # create - 자동저장
         post.folder.add(new_folder)
     post.save()
