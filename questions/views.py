@@ -90,7 +90,7 @@ def question_post_detail(request, user_id, post_id):
     )
     # comments = post_details.comments.all() comments는 ajax로 따로 띄워준다고 해서 지웠습니다
     # post_answers: 질문 포스트에 해당 되는 답변들
-    post_answers = post_details.answers.all()
+    post_answers = post_details.answers.all().order_by("-created")
     ctx = {
         "post": post_details,
         "host": me,
