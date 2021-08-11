@@ -2,9 +2,9 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.conf import settings
+from core import models as core_models
 import os
 # Create your models here.
-
 
 class User(AbstractUser):
     LOGIN_EMAIL = "email"
@@ -45,8 +45,7 @@ class User(AbstractUser):
         super(User, self).delete(*args, **kargs)
 
 
-class Sand(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+class Sand(core_models.TimeStampModel):
+    user = models.ForeignKey(User, related_name="sand", on_delete=models.CASCADE)
     amount = models.IntegerField(default=0)
-    create_time = models.DateTimeField()
-    reason = models.TextField()
+    reason = models.CharField(max_length=50)
