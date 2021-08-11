@@ -221,11 +221,13 @@ def count_like_scrap(request):
     button_type = req["type"]
 
     post = get_object_or_404(id=post_id)
+    post_host = post.user
 
     # 만약에 button type이 도움이 되었어요 버튼이면 도움이 되었어요 개수 + 1
     # 만약에 button type이 퍼오기이라면 스크랩 개수 + 1
     if button_type == "도움이 되었어요":
         post.helped_num += 1
+        post_host.sand = Sand.objects.create()
     elif button_type == "퍼오기":
         post.scrap_num += 1
 
