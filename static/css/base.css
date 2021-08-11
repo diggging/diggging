@@ -5,6 +5,14 @@
     font-style: normal;
 
 }
+
+@font-face {
+    font-family: 'GmarketSansBold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 @font-face {
     font-family: 'Pretendard-Regular';
     src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
@@ -45,8 +53,8 @@
 }
 
 .nav_main_title {
-    font-family: 'GmarketSansMedium';
-    font-size: 42px;
+    font-family: 'GmarketSansBold';
+    font-size: 40px;
     color: #CEC4B3;
 }
 
@@ -68,6 +76,7 @@
     background-color: #FFFFFF;
     border-radius: 10px;
     text-align: center;
+    line-height: 34px;
 }
 
 .nav_vertical h6 {

@@ -11,12 +11,16 @@
         <div class="follow_container">
             <div class="follower">
                 <div class="follow_count">
-                    <h3>{{request.user.username}}'s following : </h3>
-                    <h3>{{ host_follower|length }}</h3>
+                    <h3>{{request.user.username}}님을 팔로우하는 사람 </h3>
+                    <h3>{{ host_follower|length }}명</h3>
                 </div>
                 {% for follower in host_follower %}
                 <div class="follow_list">
-                    <img class="follow_image" src="{{ follower.user_profile_image.url }}" width="200">
+                    {% if follower.user_profile_image.url %}
+                        <img class="follow_image" src="{{ follower.user_profile_image.url }}" width="200">
+                    {% else %}
+                        <div class="follow_image" ></div>
+                    {% endif %}
                     <div class="flex_col">
                         <h3>{{follower.user_level}}</h3>
                         <h3>{{ follower.username }}</h3>
@@ -24,18 +28,23 @@
                     <div class="follow_desc">
                         <h3>{{ follower.email }}</h3>
                     </div>
+
                 </div>
                 {% endfor %}
             </div>
 
             <div class="following">
                 <div class="follow_count">
-                    <h3>{{request.user.username}}'s following : </h3>
-                    <h3>{{ host_following|length }}</h3>
+                    <h3>{{request.user.username}}님이 팔로우하는 사람 </h3>
+                    <h3>{{ host_following|length }}명</h3>
                 </div>
                 {% for following in host_following %}
                 <div class="follow_list">
-                    <img class="follow_image" src="{{ following.user_profile_image.url }}" width="200">
+                    {% if follower.user_profile_image.url %}
+                        <img class="follow_image" src="{{ following.user_profile_image.url }}" width="200">
+                    {% else %}
+                        <div class="follow_image" ></div>
+                    {% endif %}
                     <div class="flex_col">
                         <h3>{{following.user_level}}</h3>
                         <h3>{{ following.username }}</h3>
