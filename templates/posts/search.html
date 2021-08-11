@@ -41,9 +41,11 @@
                 {% for post in posts %}
                 <div class="post_card">
                     <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_image">
-                        <div class="post_image_container">
-                            <img src="{{post.image.url}}" alt="" class="post_image_container">
-                        </div>
+                        {% if post.image %}
+                            <div class="post_image_container">
+                                <img src="{{post.image.url}}" alt="" class="post_image_container">
+                            </div>
+                        {% endif %}
                     </a>
                     <div class="post_element">
                         <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_link">
