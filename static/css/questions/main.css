@@ -71,20 +71,22 @@ p {
     justify-content: center;
 }
 
-.right_container {
-    display: flex;
-    margin-right: 10px;
-    flex-direction: column;
-    width: 60em;
-}
-
-.right_container h2 {
+.left_container h2 {
     font-family: var(--title-font);
     color:var(--text-color);
 }
 
 .left_container {
     display: flex;
+    flex-direction: column;
+    width: 70%;
+}
+
+.right_container {
+    display: flex;
+    margin-left: 20px;
+    flex-direction: column;
+    width: 30%
 }
 
 .no_answer_container {
@@ -117,4 +119,11 @@ p {
 
 .recommend_list_box {
     margin-top: 18px;
+}
+
+.search_input {
+    width: 100%;
+    height: 40px;
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
 }
