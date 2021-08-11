@@ -1,0 +1,165 @@
+
+:root {
+    --border-color: #CEC4B3;
+    --btn-color: #FFF8CA;
+    --sand-color: #D1AF00;
+    --text-color: #4E4E4E;
+    --title-font: 'Pretendard-ExtraBold';
+    --content-font: 'Pretendard-Regular';
+    --btn-font: 'Pretendard-SemiBold';
+    --hover-color: #FFEF9C;
+}
+
+body {
+    padding: 3rem
+}
+
+
+
+.container_box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: 140px;
+    padding: 2rem;
+}
+
+.container {
+    width: 33%;
+    height: 90vh;
+    padding: 1rem;
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+    justify-content: flex-start;
+    margin: 10px;
+
+}
+
+.first_container {
+    flex-direction: column
+}
+
+.profile_username {
+    display: flex;
+    align-items: center;
+}
+
+.user_nickname {
+    margin-left: 10px;
+}
+
+.profile_container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.profile_area {
+    width: 300px;
+    display: flex;
+    height: 14em;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.profile_image {
+    margin-left: 10px;
+    font-size: 0.825rem;
+    color: var(--text-color);
+    font-family: var(--content-font);
+    display: flex;
+    align-items: center;
+}
+
+.profile_image img {
+    width: 40px;
+    border-radius: 20px;
+}
+
+
+
+.follow_area button {
+    font-family: var(--btn-font);
+    color: var(--text-color);
+    border: solid 1px var(--border-color);
+    border-radius: 4px;
+    background: white;
+    width: 10em;
+    height: 32px;
+}
+
+.follow_btn_area {
+    display: flex;
+    margin: 20px 0;
+    justify-content: space-evenly;
+}
+
+.list_btn {
+    border: solid 1px var(--border-color);
+    width: 19rem;
+    height: 60px;
+    background: floralwhite;
+    margin: 10px;
+    display: block;
+    margin: 20px auto;
+    border-radius: 2px;
+    font-family: var(--btn-font);
+    font-size: 1.25rem;
+    color: var(--text-color);
+}
+
+.list_btn:hover {
+    border: solid 1px var(--border-color);
+    width: 300px;
+    height: 60px;
+    background: var(--btn-color);    
+    margin: 20px auto;
+}
+.list_btn:active {
+    border: solid 1px var(--border-color);
+    width: 300px;
+    height: 60px;
+    background: var(--hover-color);
+    margin: 20px auto;
+}
+
+.empty_img {
+    border-radius: 10px;
+    width: 40px;
+    background-color: bisque;
+}
+
+
+
+.list_btn a {
+    display: block;
+}
+
+
+.second_container {
+    display: flex;
+}
+
+.folder_area {
+    height: 250px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    font-family: var(--btn-font);
+}
+
+.folder_icon {
+    color: var(--text-color);
+}
+
+.folder_name {
+    font-family: var(--btn-font);
+    text-align: center;
+    color: var(--text-color);
+    margin-top: 4px;
+}
+
+.folder_space {
+    margin: 4px;
+    margin: 1rem;
+}

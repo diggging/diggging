@@ -10,31 +10,31 @@
 </head>
 <body>
     <nav class="nav">
-        <a href="#" class="nav_search"><img src="" alt="">🔎 검색</a>
-        <h2 class="nav_main_title">삽질모음.TXT</h2>
+        <a href="{% url 'posts:search' %}" class="nav_search"><img src="" alt="">🔎 검색</a>
+        <a class="nav_main_title" href="{% url 'posts:main' %}">삽질모음.TXT</a>
         <div class="nav_right">
             {% if user.is_authenticated %}
                 <div class="nav_vertical">
                     <div>
-                        <a href="">💡</a>
+                        <a href="#">💡</a>
                     </div>
                     <h6>알림</h6>
                 </div>
                 <div class="nav_vertical">
                     <div>
-                        <a href="">🖋</a>
+                        <a href="{% url 'posts:post_create' %}">🖋</a>
                     </div>
                     <h6>기록하기</h6>
                 </div>
                 <div class="nav_vertical">
                     <div>
-                        <a href="">❓</a>
+                        <a href="#">❓</a>
                     </div>
                     <h6>질문광장</h6>
                 </div>
                 <div class="nav_vertical">
                     <div>
-                        <a href="">😎</a>
+                        <a href="{% url 'users:my_page' user.id %}">😎</a>
                     </div>
                     <h6>{{user.username}}</h6>
                 </div>

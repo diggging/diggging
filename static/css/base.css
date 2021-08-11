@@ -54,7 +54,7 @@
 
 .nav_main_title {
     font-family: 'GmarketSansBold';
-    font-size: 42px;
+    font-size: 40px;
     color: #CEC4B3;
 }
 
@@ -76,6 +76,7 @@
     background-color: #FFFFFF;
     border-radius: 10px;
     text-align: center;
+    line-height: 34px;
 }
 
 .nav_vertical h6 {

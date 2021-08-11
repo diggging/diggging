@@ -1,31 +1,72 @@
-내이름 : {{request.user.username}}
+{% extends 'base.html' %}
+{% load static %}
 
-{% if request.user.pk == host.pk %}
-    <h1>{{request.user.username}} my page</h1>
-    내 페이지임
-    <a href = '{% url "users:account_detail" host.id%}'> 내정보 수정 </a>
+{% block script %}
+<link rel="stylesheet" href="{% static 'css/my_page.css' %}">
+{% endblock script %}
 
+{% block content %}
+<div class="container_box">
+    <div class="first_container container">
+        <div class="profile_container">
+            {% if request.user.pk == host.pk %}
+                <div class="profile_area">
+                    <div class="profile_username">
+                        {% if host.user_profile_image %}
+                        <span class="profile_image">
+                            <img src="{{ request.user.user_profile_image.url}}">
+                        </span>
+                        {% else %}
+                            <div class="empty_img"></div>
+                        {% endif %}
+                        <span class="user_nickname">{{ request.user.username }}님의 모래상자<span>
+                        <h4>
+                    </div>
+                        레벨 | {{user.user_level}} 단계
+                    </h4>
+                    <h4>
+                        현재 모래 | {{user.user_point}} 포인트
+                    </h4>
+                    <div class="proflie_text">    
+                    {% if request.user.user_profile_content %}    
+                        {{request.user.user_profile_content}}
+                    {% else %}
+                        <p>
+                            아직 자기소개가 없습니다.
+                        </p>
+                    {% endif %}
+                    </div>
+                    <div class="follow_area">
+                        <div class="follow_btn_area">
+                            <a href="{% url 'users:follow_list' user.id %}"><button class="follow_btn">팔로잉 {{request.user.user_following|length}}</button></a>
+                            <a href="{% url 'users:follow_list' user.id %}"><button class="follow_btn">팔로워 {{request.user.user_followed|length}}</button></a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}    
+                <div class="profile_area">
+                    <h1> {{ host.user_nickname}}님의 모래상자 </h1>
+                </div>
+                <a href = '{% url "users:follow" host.id %}'><button class="follow_btn">팔로우하기</button></a>
+                <div class="follow_area">
+                    <a href="{% url 'users:follow_list' host.id %}"><button class="follow_btn">팔로잉 {{ host_following|length }}</button></a>
+                    <a href="{% url 'users:follow_list' host.id %}"><button class="follow_btn">팔로워 {{ host_follower|length }}</button></a>
+                </div>
+            {% endif %}
+        </div>
+        <hr>
+        <div class="btn_list_area">
+            <a href = '{% url "users:my_page_folder" host.id %}'><button class="list_btn">삽질 기록 모음 > </button></a>
+            <a href = '#'><button class="list_btn">질문 모음 > </button></a>
+            <a href = '#}'><button class="list_btn">내가 남긴 답변 목록 > </button></a>
+            <a href = '{% url "users:account_detail" host.id %}'><button class="list_btn">계정 관리 > </button></a>
+        </div>
+        <div class="sand_pour_area"></div>
+    </div>
+    <div class="second_container container">
 
-{% else %}    
-    <h1> {{ host.username }} 의 홈페이지 입니다. </h1>
-    남의 페이지임
-    <a href = '{% url "users:follow" host.id%}'>  follow 하기 </a>
-{% endif %}
-
-<h3>follower</h3>
-follower 수: {{ host_follower|length }}
-<hr/>
-{% for follower in host_follower %}
-    {{ follower.username }}
-{% endfor %}
-<hr/>
-<h3>following</h3>
-following 수: {{ host_following|length }}
-<hr/>
-{% for following in host_following %}
-    {{ following.username }}
-{% endfor %}
-
+    </div>
+    <div class="third_container container"></div>
 
 {% for sand in my_all_sands%}
 <p>{{sand.user}}</p>

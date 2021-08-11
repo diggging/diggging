@@ -13,7 +13,9 @@
             <div class="post_card">
                 <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_image">
                     <div class="post_image_container">
-                        {{ post.image }}
+                    {% if post.image %}
+                        <img src="{{post.image.url}}" alt="" class="post_image_container">
+                    {% endif %}
                     </div>
                 </a>
                 <div class="post_element">
@@ -31,9 +33,9 @@
                 </div>
                 <div class="post_user">
                     <a href="{% url 'users:my_page' post.user.id %}" class="user_info">
-                        <div class="user_info_image">
-
-                        </div>
+                    {% if post.user.user_profile_image %}    
+                        <img src="{{post.user.user_profile_image.url}}" class="user_info_image">
+                    {% endif %}
                         <span>
                             by {{post.user.username}}
                         </span>

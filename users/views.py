@@ -100,11 +100,12 @@ def log_in(request):
     if request.method == "POST":
         form = AuthenticationCustomForm(request, request.POST)
         if form.is_valid():
-            login(request, form.get_user())
+            # login(request, form.get_uer())
+            login(request, form.get_user(), backend='django.contrib.auth.backends.ModelBackend') # 추가
             user = form.get_user()
             return redirect('users:my_page', user.pk)
         # else:
-        #     context.update({"error:해당하는 유저 정보가 없습니다."})
+        #     context.update({"error_messages:해당하는 유저 정보가 없습니다."})
         #     return render(request, template_name="users/login.html")
         
     else:
@@ -118,7 +119,7 @@ def log_out(request):
     logout(request)
     return redirect('users:login')
 
-# 비밀번호 찾기
+# 비밀번호 
 # class UserPasswordResetView(PasswordResetView):
 #     template_name = 'password_reset.html'
 #     success_url = reverse_lazy('password_reset_done')
@@ -294,6 +295,20 @@ def my_page(request, pk):
     }
     return render(request, template_name="users/my_page.html", context=ctx)
 
+def my_page_folder(request, pk):
+    host = get_object_or_404(User,pk=pk)
+    # 폴더 보여주기위한 변수
+    language_folders = Folder.objects.filter(folder_user=host)
+    
+    ctx = {
+        # 왼쪽 상단을 위한 변수
+        'host': host,
+        'language_folders' : language_folders,
+        #'my_questions': my_questions,
+    }
+    return render(request, template_name="users/my_page_folder.html", context=ctx)
+
+
 # 한번 누르면 follow, 두번 누르면 unfollow
 def follow(request, host_pk):
     # 여기서 오는 pk는 내가 follow하려는 사람의 pk임
@@ -313,6 +328,21 @@ def follow(request, host_pk):
         host_alarm = Alarm.objects.create(user=host, reason=me.username+"님이 나를 팔로우합니다.")
     
     return redirect('users:my_page', host_pk)
+
+#follow_list 확인
+def follow_list(request, pk):
+    host = get_object_or_404(User,pk=pk)
+    host_following = host.user_following.all()
+    host_follower = host.user_followed.all()
+
+    ctx = {
+        'host': host,
+        'host_follower' : host_follower,
+        'host_following' : host_following,
+    }
+    return render(request, "users/follow_list.html", context=ctx)
+
+
 
 def account_detail(request, pk):
     host = get_object_or_404(User,pk=pk)
@@ -346,7 +376,8 @@ def change_pw(request, pk):
             if new_password == password_confirm:
                 user.set_password(new_password)
                 user.save()
-                login(request, user)
+                # backend 인자 추가
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return redirect('users:login')
             else:
                 context.update({'error':"새로운 비밀번호를 다시 확인해주세요."})

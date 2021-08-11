@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block script %}
+<link rel="stylesheet" href="{% static 'css/follow_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<body>
+    <div class="container">
+        <div class="follow_container">
+            <div class="follower">
+                <div class="follow_count">
+                    <h3>{{request.user.username}}님을 팔로우하는 사람 </h3>
+                    <h3>{{ host_follower|length }}명</h3>
+                </div>
+                {% for follower in host_follower %}
+                <div class="follow_list">
+                    {% if follower.user_profile_image.url %}
+                        <img class="follow_image" src="{{ follower.user_profile_image.url }}" width="200">
+                    {% else %}
+                        <div class="follow_image" ></div>
+                    {% endif %}
+                    <div class="flex_col">
+                        <h3>{{follower.user_level}}</h3>
+                        <h3>{{ follower.username }}</h3>
+                    </div>
+                    <div class="follow_desc">
+                        <h3>{{ follower.email }}</h3>
+                    </div>
+
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="following">
+                <div class="follow_count">
+                    <h3>{{request.user.username}}님이 팔로우하는 사람 </h3>
+                    <h3>{{ host_following|length }}명</h3>
+                </div>
+                {% for following in host_following %}
+                <div class="follow_list">
+                    {% if follower.user_profile_image.url %}
+                        <img class="follow_image" src="{{ following.user_profile_image.url }}" width="200">
+                    {% else %}
+                        <div class="follow_image" ></div>
+                    {% endif %}
+                    <div class="flex_col">
+                        <h3>{{following.user_level}}</h3>
+                        <h3>{{ following.username }}</h3>
+                    </div>
+                    <div class="follow_desc">
+                        <h3>{{ following.email }}</h3>
+                    </div>
+                </div>
+                {% endfor %}
+        
+            </div>
+        </div>
+    </div>
+
+    <div class="a">
+        {% if request.user.pk == host.pk %}
+            <h1>{{request.user.username}} my page</h1>
+            내 페이지임
+            <a href = '{% url "users:account_detail" host.id%}'> 내정보 수정 </a>
+        {% else %}
+        <h1> {{ host.username }} 의 홈페이지 입니다. </h1>
+        남의 페이지임
+        <a href = '{% url "users:follow" host.id%}'>  follow 하기 </a>
+        {% endif %}
+        <h3>follower</h3>
+        follower 수: {{ host_follower|length }}
+        <hr/>
+        {% for follower in host_follower %}
+            {{ follower.username }}
+        {% endfor %}
+        <hr/>
+        <h3>following</h3>
+        following 수: {{ host_following|length }}
+        <hr/>
+        {% for following in host_following %}
+            {{ following.username }}
+        {% endfor %}
+    </div>
+</body>
+{% endblock %}
