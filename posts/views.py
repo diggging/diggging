@@ -109,8 +109,8 @@ def post_create(request):
             # 포스팅 시에 sand 추가해주기
             new_sand = Sand.objects.create(user=me, amount=100, reason="삽질 기록 작성")
 
-            return redirect("posts:main")
-    else:
+            # 지수언니가 말한대로 고침!
+            return redirect("posts:post_detail", posts.user.id, posts.id)
         form = PostForm()
         ctx = {
             "form": form,

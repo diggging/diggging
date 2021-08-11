@@ -205,7 +205,7 @@ def chosen_answer(request, question_answer_id):
             new_sand1 = Sand.objects.create(user=is_answer_chosen.user, amount=300, reason="내 답변 채택")
             new_sand2 = Sand.objects.create(user=questioin.user, amount=50, reason="내 질문의 답변 채택")
 
-            new_alarm = Alarm.objects.create(user=is_answer_chosen.user, reason=is_answer_chosen.user.user_nickname+" 님의 답변을 채택했어요.")
+            new_alarm = Alarm.objects.create(user=is_answer_chosen.user, reason="질문 " + questioin.title + " 에 남긴 답변이 채택되었어요.")
 
         ctx = {
             'is_answer_chosen': is_answer_chosen
@@ -228,7 +228,7 @@ def count_like_scrap_question(request):
     me = request.user
     if button_type == "like":
         question_post.helped_num += 1
-        #new_sand = Sand.objects.create(user=question_host, amount=20, reason="도움이 되었어요") # 이거 하는지 안하는지 모름
+        new_sand = Sand.objects.create(user=question_host, amount=20, reason="도움이 되었어요") # 이거 하는지 안하는지 모름
         new_alarm = Alarm.objects.create(user=question_host, reason="내가 남긴 질문 "+question_post.title+"이 "+me.user_nickname+" 님께 도움이 되었어요.")
     
     elif button_type == "퍼오기":
