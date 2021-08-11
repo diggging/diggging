@@ -63,15 +63,12 @@ def add_question_comment(request):
     # TODO: 삽질 기록 부분 comment 부분과 마찬가지로 잘 작동하는지 봐주세요.
     question_comment.save()
 
-    # 추가사항: 코드 개수 출력을 위한 코드
-    total_num_comments = question_post.comments.count()
-
     new_alarm = Alarm.objects.create(user=question_post.user, reason="내가 남긴 질문"+question_post.title+'에'+request.user.user_nickname+'님이 댓글을 남겼어요.')
 
     return JsonResponse({
         "question_post_id": question_post_id, 
         "question_comment_content": question_comment_content,
-        "total_num_comments": total_num_comments
+        "comment_id": question_comment.id,
     })
 
 # 질문광장 부분 posts의 댓글창에서 댓글 삭제 파트
@@ -85,13 +82,9 @@ def delete_question_comment(request):
 
     question_comment.delete()
 
-    # 추가사항: 코드 개수 출력을 위한 코드
-    total_num_comments = question_post.comments.count()
-
     return JsonResponse({
         "question_post_id":question_post_id,
-        "question_comment_id":question_comment_id,
-        "total_num_comments": total_num_comments,    
+        "question_comment_id":question_comment_id,    
     })
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------
@@ -107,15 +100,12 @@ def add_question_comment(request):
 
     answer_comment.save()
 
-    # 추가사항: 코드 개수 출력을 위한 코드
-    total_num_comments = answer.comments.count()
-
     new_alarm = Alarm.objects.create(user=answer.user, reason="내가 남긴 답변"+ answer.title+'에' + request.user.user_nickname+'님이 댓글을 남겼어요.')
 
     return JsonResponse({
         "answer_id": answer_id,
         "answer_comment_content": answer_comment_content,
-        "total_num_comments": total_num_comments,
+        "comment_id": answer_comment.id,
     })
 
 @csrf_exempt
@@ -128,13 +118,9 @@ def delete_question_comment(request):
 
     answer_comment.delete()
 
-    # 추가사항: 코드 개수 출력을 위한 코드
-    total_num_comments = answer.comments.count()
-
     return JsonResponse({
         'answer_id': answer_id,
         "answer_comment_id": answer_comment_id,
-        "total_num_comments": total_num_comments,
     })
 #------------------------------------------------------------------------------------------------------------------------------------------------#
 # 질문광장 부분 posts detail 내부 댓글 보기 ajax
