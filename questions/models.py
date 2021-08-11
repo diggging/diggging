@@ -35,6 +35,5 @@ class Answer(core_models.TimeStampModel):
     selection = models.BooleanField(verbose_name="채택", default=False)
     desc = models.TextField(blank=False)
 
-
 class QuestionFolder(posts_models.Folder):
     pass
