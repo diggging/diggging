@@ -24,6 +24,11 @@
         <div class="desc_area">
             {{ post.desc|safe|escape }}
         </div>
+        <div class="post_{{post.id}}">
+            <div class="tag_area">{{post.tag}}</div>
+            <button class="like_button post__like" onclick="onClickLikeScrap({{ post.id }}, 'like')">도움이되었어요 {{ post.helped_num }}</button>
+            <span><a href="{% url 'posts:get_post' user_id=post.user.id post_id=post.id %}"><button class="post__scrap" onclick="onClickLikeScrap({{ post.id }}, 'scrap')">퍼가기 {{post.scrap_num}}</button></a></span>
+        </div>
         {% if request.user.id == post.user.id %}
             <div class="edit_btn">
                 <a href="{% url 'question:question_update' post.id %}">수정하기</button>
@@ -42,19 +47,20 @@
             </div> -->
         {% endif %}
         <!-- 댓글창열기버튼 -->
+        <a href="javascript:doDisplay();">댓글</a>
         <!-- 댓글창 영역 -->
-        <div>
+        <div id="comment_box">
             <div class='addComment'>
-                {% for comment in comments %}
-                <div class='comment_id_{{comment.id}}'>
+            {% for comment in comments %}
+                <div class='comment_id_{{comment_id}}'>
                     <div class="comment_text">
                         {{comment.text}}
                     </div>
                     <div class="delete_btn">
-                        <button onclick="onClickDelete({{post.id}},{{comment.id}})">삭제</button> <!--comment 별로 id 준당-->
+                        <button onclick="onClickDelete({{id}}, {{comment_id}})">삭제</button>
                     </div>
                 </div>
-                {% endfor %}
+            {% endfor %}
             </div>
             <div>
                 <input class="comment_input" type="text" placeholder="댓글달기"/>
@@ -71,8 +77,8 @@
 
 {% block script %}
 <link rel="stylesheet" href="{% static 'css/questions/question_detail.css' %}">
+<!-- 코멘트 댓글 -->
 <script>
-
     const requestComment = new XMLHttpRequest();
     const onClickComment = (id) =>{
         const url = '/comments/add_question_comment/';
@@ -134,4 +140,50 @@
         };      
     };
 </script>
+<!-- 코멘트 끝 -->
+<script type="text/javascript">
+    function doDisplay(){
+    var commentBox = document.getElementById("comment_box");
+    if(commentBox.style.display=='none') {
+        commentBox.style.display = 'block';
+    } else {
+        commentBox.style.display = 'none';
+    }
+}
+</script>
+
+
+<!-- 도움되었어요 스크랩버튼 기능 -->
+<script>
+    const requestLike = new XMLHttpRequest();
+    
+    const onClickLikeScrap = (id, type) => { //함수정의 : 어떤 게시글인지 . 버튼 타입을 받아온다.
+        const url = '/questions/count_like_scrap/'; //어느 url로 요청할 것인지.
+        requestLike.open('POST', url, true); //post방식으로 이 url에 ajax방식으로 요청을보내는데, 
+        requestLike.setRequestHeader( // requestheader로 이 요청을 보낸다. 자세한건 나중에
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
+        requestLike.send(JSON.stringify({id: id, type: type})); //요청할 때 필요한 정보들. ajax방식으로 할 땐 무.조.건 JSON방식으로 보내야함.
+    };
+    
+    const likeHandleResponse = () => {  //응답 처리해주는 함수 ( 숫자 +1되는 처리)
+        if (requestLike.status < 400) {
+            const {id, type} = JSON.parse(requestLike.response);    // {'id': 1, 'type': 'like'}
+            const element = document.querySelector(`.post_${id} .post__${type}`);
+            const originHTML = element.innerHTML;
+            const [buttonType, helped_num] = originHTML.split(' ');  // ['Like', '0']
+            const count = Number(helped_num) + 1;
+    
+            element.innerHTML = `${buttonType} ${count}`;
+        }
+    };
+    
+    requestLike.onreadystatechange = () => {
+        if (requestLike.readyState === XMLHttpRequest.DONE) {
+            likeHandleResponse();
+        }
+    };
+</script>    
+
 {% endblock %}
