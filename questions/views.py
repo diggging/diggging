@@ -3,9 +3,8 @@ from .forms import AnswerPostForm, QuestionPostForm
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Question_post, Answer, QuestionFolder
 from users.models import Sand
+
 # Create your views here.
-
-
 def question_main(request):
     # 질문 최신순으로 정렬
     posts = Question_post.objects.all().order_by("-created")
@@ -160,7 +159,7 @@ def get_question(request, question_post_id):
     question_post.save()
 
     # 퍼가기 할 때 sand 생성하기 - host꺼 생성해줘야함
-    new_sand = Sand.objects.create(user=question_post.user, amount=50, reason=me.username+"님의 내 질문 퍼가기")
+    new_sand = Sand.objects.create(user=question_post.user, amount=50, reason=me.user_nickname+"님의 내 질문 퍼가기")
 
     return redirect("question:question_post_detail", me.id, question_post_id)
 

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User
+from .models import Alarm, User
 
 # Register your models here.
 
@@ -11,3 +11,8 @@ class CustomUserAdmin(admin.ModelAdmin):
               "user_profile_content", "user_profile_image", "user_following", "login_method", "is_active")
     list_display = ("username", "user_nickname",
                     "user_level", "user_point",  "following_count","id", "is_active", "login_method")
+
+
+@admin.register(Alarm)
+class CustomAlarmAdmin(admin.ModelAdmin):
+    fields = ("reason", "is_checked")

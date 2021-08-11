@@ -214,7 +214,7 @@ def get_post(request, user_id, post_id):
     post.save()
 
     # 퍼가기 할 때 sand 생성하기 - host꺼 생성해줘야함
-    new_sand = Sand.objects.create(user=post.user, amount=50, reason=me.username+"님의 내 기록 퍼가기")
+    new_sand = Sand.objects.create(user=post.user, amount=50, reason=me.user_nickname+"님의 내 기록 퍼가기")
 
     # url: 저장 후 post_detail 페이지에 남아있음.
     return redirect("posts:post_detail", user_id, post_id)
