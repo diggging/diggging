@@ -62,18 +62,18 @@ def add_question_comment(request):
 def delete_question_comment(request):
     req = json.loads(request.body)
     question_post_id = req["id"]
-    question_comment_id = req["question_comment_id"]
+    comment_id = req["comment_id"]
     question_post = Question_post.objects.get(id=question_post_id)
-    question_comment = Comment.objects.get(id=question_comment_id)
+    question_comment = Comment.objects.get(id=comment_id)
     question_comment.delete()
     return JsonResponse({
         "question_post_id":question_post_id,
-        "question_comment_id":question_comment_id,    
+        "question_comment_id":comment_id,    
     })
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 # 답글에 달리는 댓글 부분 
 @csrf_exempt
-def add_question_comment(request):
+def add_answer_comment(request):
     req = json.loads(request.body)
     answer_id = req['id']
     answer_comment_content = req['text']
@@ -87,7 +87,7 @@ def add_question_comment(request):
         "comment_id": answer_comment.id,
     })
 @csrf_exempt
-def delete_question_comment(request):
+def delete_answer_comment(request):
     req = json.loads(request.body)
     answer_id = req['id']
     answer_comment_id = req["answer_comment_id"]
