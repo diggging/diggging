@@ -20,6 +20,7 @@ import os
 import logging
 from django.http import HttpResponse
 from django.db.models import Sum
+from core.models import Alarm, alarm
 
 # SMTP 관련 인증
 from django.contrib.sites.shortcuts import get_current_site
@@ -307,9 +308,9 @@ def follow(request, host_pk):
     else:
         # 나의 following에 pk 추가
         me.user_following.add(host)
-
         # host의 follower에 나 추가
         host.user_followed.add(me)
+        host_alarm = Alarm.objects.create(user=host, reason=me.username+"님이 나를 팔로우합니다.")
     
     return redirect('users:my_page', host_pk)
 
@@ -367,5 +368,13 @@ def change_img(request, pk):
     return redirect('users:account_detail', user.id)
 
 
-# ________________________________________________ point ________________________________________________
-# def sand_create(request):
+# ________________________________________________ alarm ________________________________________________
+def alarm(request, pk):
+    me = User.objects.get(id=pk)
+    my_alarm = Alarm.objects.filter(user=me)
+    
+    ctx = {
+        'alarms' : my_alarm
+    }
+    return render(request, template_name="users/alarm.html", context=ctx)
+
