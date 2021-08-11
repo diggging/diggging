@@ -38,17 +38,16 @@
 
         <div class="search_container">
             <div class="post_container">
-                {% for post in posts %}
+            {% for post in posts %}
                 <div class="post_card">
                     <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_image">
                         <div class="post_image_container">
-                            {% if post.image.url %}
+                            {% if post.image %}
                                 <img src="{{post.image.url}}" alt="" class="post_image_container">
-                            {% else %}
-                                <div></div>
                             {% endif %}
                         </div>
                     </a>
+
                     <div class="post_element">
                         <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_link">
                             <div class="post_title">
@@ -62,15 +61,14 @@
                             </p>
                         </a>
                     </div>
+
                     <div class="post_user">
                         <a href="{% url 'users:my_page' post.user.id %}" class="user_info">
-                            <!-- <div class="user_info_image"> -->
-                            {% if post.user.user_profile_image.url %}
-                                <img src="{{posts.user.user_profile_image.url}}" class="user_info_image">
-                            {% else %}
-                                <div></div>
-                            {% endif %}
-                            <!-- </div> -->
+                            <div class="user_info_image">
+                                {% if post.user.user_profile_image %}
+                                    <img src="{{post.user.user_profile_image.url}}" class="user_info_image">
+                                {% endif %}
+                            </div>
                             <span>
                                 by {{post.user}}
                             </span>
@@ -84,7 +82,7 @@
                         </div>
                     </div>
                 </div>
-                {% endfor %}
+            {% endfor %}
             </div>
         </div>
 
