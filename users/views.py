@@ -20,7 +20,6 @@ import os
 import logging
 from django.http import HttpResponse
 from django.db.models import Sum
-from core.models import Alarm, alarm
 
 # SMTP 관련 인증
 from django.contrib.sites.shortcuts import get_current_site
@@ -371,12 +370,12 @@ def change_img(request, pk):
 
 # ________________________________________________ alarm ________________________________________________
 def alarm(request, pk):
-    if 
-    me = User.objects.get(id=pk)
-    my_alarm = Alarm.objects.filter(user=me)
+    pass
+#     me = User.objects.get(id=pk)
+#     my_alarm = Alarm.objects.filter(user=me)
     
-    ctx = {
-        'alarms' : my_alarm,
-    }
-    return render(request, template_name="users/alarm.html", context=ctx)
+#     ctx = {
+#         'alarms' : my_alarm,
+#     }
+#     return render(request, template_name="users/alarm.html", context=ctx)
 

@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.conf import settings
-from core import models as core_models
+from core import models as core_model
 import os
 # Create your models here.
 
@@ -45,10 +45,15 @@ class User(AbstractUser):
         super(User, self).delete(*args, **kargs)
 
 
-class Sand(core_models.TimeStampModel):
+class Sand(core_model.TimeStampModel):
     user = models.ForeignKey(User, related_name="sand", on_delete=models.CASCADE)
     amount = models.IntegerField(default=0)
     reason = models.CharField(max_length=50)
 
     def __str__(self):
         return self.reason
+
+class Alarm(core_model.TimeStampModel):
+    user = models.ForeignKey(User, related_name="alarm", on_delete=models.CASCADE)
+    reason = models.CharField(verbose_name="nickname", max_length=50, blank=True)
+    is_checked = models.BooleanField(verbose_name="확인 여부", default=False)
