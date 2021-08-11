@@ -1,3 +1,6 @@
+import json
+from django.http.response import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from users.models import User
 from .forms import AnswerPostForm, QuestionPostForm
 from django.shortcuts import get_object_or_404, render, redirect
@@ -30,6 +33,8 @@ def question_main(request):
     }
     return render(request, "questions/main.html", ctx)
 
+#-----------------------------------------------------------------------------------------------------
+# 질문 CRUD
 def question_create(request):
     if request.method == "POST":
         form = QuestionPostForm(request.POST, request.FILES)
@@ -81,7 +86,26 @@ def question_create(request):
 
         return render(request, "questions/question_create.html", ctx)
 
+def question_update(request, pk):
+    question_posts = get_object_or_404(Question_post, pk=pk)
+    if request.method == "POST":
+        form = QuestionPostForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect("question:question_post_detail", question_posts.user.id, question_posts.id)
+    else:
+        form = QuestionPostForm(instance=question_posts)
+        ctx = {
+            "form": form,
+        }
+        return render(request, "questions/question_update.html", ctx)
 
+def question_delete(request, pk):
+    question_post = Question_post.objects.get(pk=pk)
+    question_post.delete()
+    return redirect("question:main")
+
+#------------------------------------------------------------------------------------------------------------------
 def question_post_detail(request, user_id, post_id):
     post_details = Question_post.objects.get(pk=post_id)
     me = get_object_or_404(User, pk=user_id)
@@ -166,8 +190,8 @@ def get_question(request, question_post_id):
 
 # 질문 채택 관련 함수 (모달에서 사용자가 채택 or 채택 해제에 동의했을때 사용)
 def chosen_answer(request, question_answer_id):
+    is_answer_chosen = Answer.objects.get(pk=question_answer_id)
     if request.method == "POST":
-        is_answer_chosen = Answer.objects.get(pk=question_answer_id)
         # 채택 여부가 거짓이면 True로 바꿔주고 False이면 True로 바꿔줌.
         if is_answer_chosen.selection:
             is_answer_chosen.selection = False
@@ -182,3 +206,24 @@ def chosen_answer(request, question_answer_id):
         return render(request, 'questions/question_detail.html', ctx)
 
     # TODO: 의문점? else가 필요한가?
+    return redirect('questions:question_detail', is_answer_chosen.question.id)
+
+#--------------------------------------------------------------------------------------------------
+# 도움이 되었어요, 스크랩 개수 count 하기 위한 axios
+@csrf_exempt
+def count_like_scrap_question(request):
+    req = json.loads(request.body)
+    question_post_id = req["id"]
+    button_type = req["type"]
+
+    question_post = Question_post.objects.get(id=question_post_id)
+    question_host = question_post.user
+
+    if button_type == "like":
+        question_post.helped_num += 1
+    elif button_type == "퍼오기":
+        question_post.scrap_num += 1
+
+    question_post.save()
+
+    return JsonResponse({"id": question_post_id, "type": button_type})

@@ -6,6 +6,8 @@ app_name = "question"
 urlpatterns = [
     path("", views.question_main, name="question_main"),
     path("create/", views.question_create, name="question_create"),
+    path("<int:pk>/update", views.question_update, name="question_update"),
+    path("<int:pk>/delete", views.question_delete, name="question_delete"),
     path(
         "<int:user_id>/<int:post_id>/detail",
         views.question_post_detail,

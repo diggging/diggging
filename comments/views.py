@@ -16,19 +16,18 @@ import json
 def comment(request):        #! 이름 바꿈!
     req = json.loads(request.body)
     post_id = req["id"]
+    comment_content = req["text"]
+    
     post = Post.objects.get(id=post_id)
 
     # TODO: comment ajax 문제에서 comment.save()로 바꿔보았습니다. 잘 되는지 확인 부탁드려요
-    # post.save() (변경 이종권)
+    comment = Comment.objects.create(post=post, text=comment_content, user=request.user)
     comment.save() 
-
-    # 추가사항: 코드 개수 출력을 위한 코드
-    total_num_comments = post.comments.count()
 
     return JsonResponse({
         "id": post_id, 
-        "comment_content": comment_content,
-        "total_num_comments": total_num_comments
+        "text": comment_content,
+        "comment_id": comment.id,
     })
 
 
@@ -44,13 +43,9 @@ def delete_comment(request):
         comment = Comment.objects.get(id=comment_id)
         comment.delete()
 
-    # 추가사항: 코드 개수 출력을 위한 코드
-    total_num_comments = post.comments.count()
-
     return JsonResponse({
         "id": post_id, 
         "comment_id": comment_id,
-        "total_num_comments": total_num_comments
     })
 
 #------------------------------------------------------------------------------------------------------------------------------------------------#

@@ -25,122 +25,120 @@
             {{ post.desc|safe|escape }}
         </div>
         {% if request.user.id == post.user.id %}
-            <div class="edit_btn">
-                <a href="{% url 'posts:post_update' post.id %}">수정하기</button>
-            </div>
-            <div class="delete">
-                <a href="{% url 'posts:post_delete' post.id %}">삭제하기</a>
-            </div>
+        <div class="edit_btn">
+            <a href="{% url 'posts:post_update' post.id %}">수정하기</button>
+        </div>
+        <div class="delete">
+            <a href="{% url 'posts:post_delete' post.id %}">삭제하기</a>
+        </div>
         {% else %}
-            <!-- 종권오빠가 쓴 퍼가기 버튼 -->
-            <span><a href="{% url 'posts:get_post' user_id=post.user.id post_id=post.id %}">퍼가기</a></span>
-            <!-- 포스트디테일에서 가져온 버튼들 -->
-            <!-- <div class="post_{{post.id}}">
+        <!-- 종권오빠가 쓴 퍼가기 버튼 -->
+        <span><a href="{% url 'question:get_question' post.id %}">퍼가기</a></span>
+        <!-- 포스트디테일에서 가져온 버튼들 -->
+        <!-- <div class="post_{{post.id}}">
                 <div class="tag_area">{{post.tag}}</div>
                 <button class="like_button post__like" onclick="onClickLikeScrap({{ post.id }}, 'like')">도움이되었어요 {{ post.helped_num }}</button>
                 <span><a href="{% url 'posts:get_post' user_id=post.user.id post_id=post.id %}"><button class="post__scrap" onclick="onClickLikeScrap({{ post.id }}, 'scrap')">퍼가기 {{post.scrap_num}}</button></a></span>
             </div> -->
-            {% endif %}
-            <!-- 댓글창열기버튼 -->
-            <!-- 댓글창 영역 -->
-            <div>
-                {% for comment in comments %}
-                    <div class='addComment'>
-                        <div class='comment_id_{{comment.id}}'>
-                            {{comment.text}}
-                            <button onclick="onClickDelete({{post.id}},{{comment.id}})">삭제</button> <!--comment 별로 id 준당-->
-                        </div>
-                        
-                    </div>
-                    {% endfor %}
-                    <div>
-                        <input class="sibal" type="text" placeholder="댓글달기"/>
-            
-                        <button onclick="onClickComment({{ post.id }})">게시</button> 
-                        <!--comment 별로 id 준당-->
-                    </div>
-            </div>
+        {% endif %}
+        <!-- 댓글창열기버튼 -->
+        <!-- 댓글창 영역 -->
+        <div>
+            {% for comment in comments %}
+            <div class='addComment'>
+                <div class='comment_id_{{comment.id}}'>
+                    {{comment.text}}
+                    <button onclick="onClickDelete({{post.id}},{{comment.id}})">삭제</button>
+                    <!--comment 별로 id 준당-->
+                </div>
 
-    {% else %}
-    <span><a href="{% url 'question:get_question' post.id %}">퍼가기</a></span>
-    {% endif %}
+            </div>
+            {% endfor %}
+            <div>
+                <input class="sibal" type="text" placeholder="댓글달기" />
+
+                <button onclick="onClickComment({{ post.id }})">게시</button>
+                <!--comment 별로 id 준당-->
+            </div>
         </div>
+
+    </div>
 
     <!-- 답변 영역 -->
     <div class="anwer_container"></div>
 </div>
 <!-- 폴더주인 왜 필요? -->
-    <p> 폴더 주인: {{folder.folder_user}}</p>
+<p> 폴더 주인: {{folder.folder_user}}</p>
 
 {% endblock %}
 
 
 
 {% block script %}
-    <link rel="stylesheet" href="{% static 'css/questions/question_detail.css' %}">
+<link rel="stylesheet" href="{% static 'css/questions/question_detail.css' %}">
 
-    <script>
-        const requestComment = new XMLHttpRequest();
+<script>
+    const requestComment = new XMLHttpRequest();
 
-    const onClickComment = (id) =>{
+    const onClickComment = (id) => {
         const url = '/comments/comment/';
-        requestComment.open('POST',url,true);
+        requestComment.open('POST', url, true);
         requestComment.setRequestHeader(
             'Content-Type',
             'application/x-www-form-urlencoded'
         );
         const text = document.querySelector(`.sibal`).value;
-        requestComment.send(JSON.stringify({id:id, text:text}));
+        requestComment.send(JSON.stringify({ id: id, text: text }));
     };
 
-    const commentHandleResponse = () =>{
-        if(requestComment.status < 400){
-        const {id} = JSON.parse(requestComment.response);
-        const {text} = JSON.parse(requestComment.response);
-        const {comment_id} = JSON.parse(requestComment.response);
-        const addComment= document.querySelector(`.addComment`)
-        addComment.innerHTML += `
+    const commentHandleResponse = () => {
+        if (requestComment.status < 400) {
+            const { id } = JSON.parse(requestComment.response);
+            const { text } = JSON.parse(requestComment.response);
+            const { comment_id } = JSON.parse(requestComment.response);
+            const addComment = document.querySelector(`.addComment`)
+            addComment.innerHTML += `
             <div class='comment_id_${comment_id}'>
                 ${text}
                 <button onclick="onClickDelete(${id},${comment_id})">삭제</button>
             </div>
         `
         };
-        
+
     };
 
-    requestComment.onreadystatechange = () =>{
-        if(requestComment.readyState  === XMLHttpRequest.DONE){
+    requestComment.onreadystatechange = () => {
+        if (requestComment.readyState === XMLHttpRequest.DONE) {
             commentHandleResponse();
-        };      
+        };
     };
 
     const requestDelComment = new XMLHttpRequest();
 
-    const onClickDelete = (id,comment_id) =>{
-        const url ='/comments/delete_comment/';
-        requestDelComment.open('POST',url,true);
+    const onClickDelete = (id, comment_id) => {
+        const url = '/comments/delete_comment/';
+        requestDelComment.open('POST', url, true);
         requestDelComment.setRequestHeader(
             'Content-Type',
             'application/x-www-form-urlencoded'
         );
-        
-        requestDelComment.send(JSON.stringify({id:id, comment_id:comment_id}));
+
+        requestDelComment.send(JSON.stringify({ id: id, comment_id: comment_id }));
     };
 
-    const commentdelHandleResponse = () =>{
-        if(requestDelComment.status<400){
-            const {id} = JSON.parse(requestDelComment.response);
-            const {comment_id} = JSON.parse(requestDelComment.response);
+    const commentdelHandleResponse = () => {
+        if (requestDelComment.status < 400) {
+            const { id } = JSON.parse(requestDelComment.response);
+            const { comment_id } = JSON.parse(requestDelComment.response);
             const element = document.querySelector(`.comment_id_${comment_id}`);
             element.innerHTML = "";
         };
     };
 
-    requestDelComment.onreadystatechange = () =>{
-        if(requestDelComment.readyState  === XMLHttpRequest.DONE){
+    requestDelComment.onreadystatechange = () => {
+        if (requestDelComment.readyState === XMLHttpRequest.DONE) {
             commentdelHandleResponse();
-        };      
+        };
     };
 </script>
 {% endblock %}

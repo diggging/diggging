@@ -239,7 +239,7 @@ def count_like_scrap(request):
     post_id = req["id"]
     button_type = req["type"]
 
-    post = get_object_or_404(id=post_id)
+    post = Post.objects.get(id=post_id)
     post_host = post.user
 
     # 만약에 button type이 도움이 되었어요 버튼이면 도움이 되었어요 개수 + 1
