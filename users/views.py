@@ -326,6 +326,16 @@ def account_detail(request, pk):
     }
     return render(request, template_name = "users/account_detail.html", context= ctx)
 
+def change_desc(request, pk):
+    context = {}
+    user = get_object_or_404(User,pk=pk)
+    if request.method == "POST":
+        new_desc = request.POST.get("new_desc")
+        user.user_profile_content=new_desc
+        user.save()
+        return redirect('users:account_detail', user.id)
+    return redirect('users:account_detail', user.id)
+
 def change_nickname(request, pk):
     context = {}
     if request.method == "POST":

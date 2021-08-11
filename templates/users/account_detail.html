@@ -36,6 +36,17 @@
                 </div>
             </div>
 
+            <!-- desc 추가 -->
+            <div class="user_desc">
+                <h3>설명 변경</h3>
+                <p>{{ host.user_profile_content }}</p>
+                <form method="POST" action="{% url 'users:change_desc' host.id %}">
+                    {% csrf_token %}
+                    <input name="new_desc" >
+                    <button type="submit"> 설명 변경하기 </button>
+                </form>
+            </div>
+
             <div class="user_email">
                 <h3>이메일</h3>
                 <p>{{ host.email }}</p>
