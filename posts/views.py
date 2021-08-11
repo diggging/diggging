@@ -1,4 +1,4 @@
-from users.models import User
+from users.models import Alarm, User
 from comments.models import Comment
 from django.http.response import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -174,6 +174,7 @@ def get_post(request, user_id, post_id):
     target_language = post.language  # 어떤 language인지 - 폴더 생성용
     target_framework = post.framework  # 어떤 framework인지 - 프레임워크 생성용
     me = request.user  # 누구의 폴더를 만들것인지
+    post_host = User.objects.get(id=user_id)
 
     # get: object-없는걸 가져오면 오류 , filter: queryset- 없어도 빈 queryset 오류 x
     lang_folder = Folder.objects.filter(folder_name=target_language, folder_user=me)
@@ -216,6 +217,8 @@ def get_post(request, user_id, post_id):
     # 퍼가기 할 때 sand 생성하기 - host꺼 생성해줘야함
     new_sand = Sand.objects.create(user=post.user, amount=50, reason=me.user_nickname+"님의 내 기록 퍼가기")
 
+    # 퍼가기 -> host 에게 alarm감
+    new_alarm = Alarm.objects.create(user=post_host, reason=me.user_nickname+"님이 내 기록 "+post.title+"을 퍼갔어요.")
     # url: 저장 후 post_detail 페이지에 남아있음.
     return redirect("posts:post_detail", user_id, post_id)
 
@@ -241,12 +244,13 @@ def count_like_scrap(request):
 
     post = get_object_or_404(id=post_id)
     post_host = post.user
-
+    me = request.user
     # 만약에 button type이 도움이 되었어요 버튼이면 도움이 되었어요 개수 + 1
     # 만약에 button type이 퍼오기이라면 스크랩 개수 + 1
     if button_type == "like":
         post.helped_num += 1
-        #post_host.sand = Sand.objects.create()
+        new_sand = Sand.objects.create(user=post_host, amount=20, reason="도움이 되었어요") # 도움이 되었어요 누르면 sand 추가
+        new_alarm = Alarm.objects.create(user=post_host, reason="내가 남긴 기록 "+post.title+"이 "+me.user_nickname+" 님께 도움이 되었어요.")
     elif button_type == "퍼오기":
         post.scrap_num += 1
 

@@ -55,7 +55,7 @@ class Sand(core_model.TimeStampModel):
 
 class Alarm(core_model.TimeStampModel):
     user = models.ForeignKey(User, related_name="alarm", on_delete=models.CASCADE)
-    reason = models.CharField(verbose_name="nickname", max_length=50, blank=True)
+    reason = models.TextField(verbose_name="reason", max_length=100, blank=True)
     is_checked = models.BooleanField(verbose_name="확인 여부", default=False)
 
     def __str__(self):

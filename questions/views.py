@@ -1,8 +1,11 @@
+import json
+from django.http.response import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from users.models import User
 from .forms import AnswerPostForm, QuestionPostForm
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Question_post, Answer, QuestionFolder
-from users.models import Sand
+from users.models import Sand, Alarm
 
 # Create your views here.
 def question_main(request):
@@ -100,13 +103,17 @@ def question_post_detail(request, user_id, post_id):
 
 # 질문 답변 작성 폼 관련 함수
 def answer_create(request, question_post_id):
+    question = Question_post.objects.get(pk=question_post_id)
     if request.method == "POST":
         form = AnswerPostForm(request.POST, request.FILES)
         if form.is_valid():
             answers = form.save(commit=False)
             answers.user = request.user
             answers.save()
-            question_host = Question_post.objects.get(pk=question_post_id).user.id
+            question_host = question.user.id
+
+            # 질문에 답변이 달렸다는 알람 넣어주기
+            new_alarm = Alarm.objects.create(user=question_host, reason="내가 남긴 질문"+question.title+"에 답변이 달렸어요. 확인해보세요!")
             return redirect("question:question_post_detail", question_host, question_post_id)
     else:
         form = AnswerPostForm()
@@ -160,18 +167,24 @@ def get_question(request, question_post_id):
 
     # 퍼가기 할 때 sand 생성하기 - host꺼 생성해줘야함
     new_sand = Sand.objects.create(user=question_post.user, amount=50, reason=me.user_nickname+"님의 내 질문 퍼가기")
+    new_alarm = Alarm.objects.create(user=question_post.user, reason=request.user.user_nickname+" 님이 내 질문 " + question_post.title + "을 퍼갔어요.")
 
     return redirect("question:question_post_detail", me.id, question_post_id)
 
 # 질문 채택 관련 함수 (모달에서 사용자가 채택 or 채택 해제에 동의했을때 사용)
 def chosen_answer(request, question_answer_id):
+    is_answer_chosen = Answer.objects.get(pk=question_answer_id)
+    questioin = is_answer_chosen.question
     if request.method == "POST":
-        is_answer_chosen = Answer.objects.get(pk=question_answer_id)
         # 채택 여부가 거짓이면 True로 바꿔주고 False이면 True로 바꿔줌.
         if is_answer_chosen.selection:
             is_answer_chosen.selection = False
-        else:
+        else:   # 채택이 안된 경우 된걸로 바꿔줌
             is_answer_chosen.selection = True
+            new_sand1 = Sand.objects.create(user=is_answer_chosen.user, amount=300, reason="내 답변 채택")
+            new_sand2 = Sand.objects.create(user=questioin.user, amount=50, reason="내 질문의 답변 채택")
+
+            new_alarm = Alarm.objects.create(user=is_answer_chosen.user, reason=is_answer_chosen.user.user_nickname+" 님의 답변을 채택했어요.")
 
         ctx = {
             'is_answer_chosen': is_answer_chosen
@@ -179,5 +192,26 @@ def chosen_answer(request, question_answer_id):
 
         # 선택 후에는 다시 question detail 페이지로 돌아감.
         return render(request, 'questions/question_detail.html', ctx)
-
     # TODO: 의문점? else가 필요한가?
+    return redirect('questions:question_detail', is_answer_chosen.question.id)
+
+#--------------------------------------------------------------------------------------------------
+# 도움이 되었어요, 스크랩 개수 count 하기 위한 axios
+@csrf_exempt
+def count_like_scrap_question(request):
+    req = json.loads(request.body)
+    question_post_id = req["id"]
+    button_type = req["type"]
+    question_post = Question_post.objects.get(id=question_post_id)
+    question_host = question_post.user
+    me = request.user
+    if button_type == "like":
+        question_post.helped_num += 1
+        #new_sand = Sand.objects.create(user=question_host, amount=20, reason="도움이 되었어요") # 이거 하는지 안하는지 모름
+        new_alarm = Alarm.objects.create(user=question_host, reason="내가 남긴 질문 "+question_post.title+"이 "+me.user_nickname+" 님께 도움이 되었어요.")
+    
+    elif button_type == "퍼오기":
+        question_post.scrap_num += 1
+    question_post.save()
+
+    return JsonResponse({"id": question_post_id, "type": button_type})
