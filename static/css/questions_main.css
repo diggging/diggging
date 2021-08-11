@@ -59,7 +59,62 @@ p {
     }
 }
 
-
 .container {
     margin-top: 120px;
+}
+
+.box_container {
+    display: flex;
+    padding: 2em;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+.right_container {
+    display: flex;
+    margin-right: 10px;
+    flex-direction: column;
+    width: 60em;
+}
+
+.right_container h2 {
+    font-family: var(--title-font);
+    color:var(--text-color);
+}
+
+.left_container {
+    display: flex;
+}
+
+.no_answer_container {
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+    background-color: floralwhite;
+    height: 30em;
+    width: 100%;
+    padding: 28px;
+}
+
+.no_answer_list_box {
+    margin-top:30px;
+}
+
+.no_answer_list {
+    display: flex;
+}
+
+.recommend_container {
+    margin-top: 28px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 28px;
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+    height: 40em;
+}
+
+.recommend_list_box {
+    margin-top: 18px;
 }
