@@ -1,6 +1,8 @@
 from users.models import Alarm, User
 from comments.models import Comment
 from django.http.response import JsonResponse
+from django.http import HttpResponse
+from django.core import serializers
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
@@ -140,32 +142,54 @@ def post_delete(request, pk):
     return redirect("posts:main")
 
 
+# def search(request):
+#     language = request.POST.get("post")
+#     framework = request.POST.get("framework")  # frmae work 현주가 추가
+#     post = request.POST.get("post", "")
+#     select_languages = request.POST.get("field")
+#     print(select_languages)
+#     select_os = request.POST.get("field2")
+#     select_solve = request.POST.get("field3")
+#     select_framwork = request.POST.get("field4")
+#     free_post = Post.objects.filter(language=language).order_by("-id")
+#     frame_post = Post.objects.filter(framework=framework).order_by("-id")
+#     form = SelectForm()
+#     ctx = {
+#         "free_post": free_post,
+#         "post": post,
+#         "form": form,
+#         "frame_post": frame_post,
+#     }
+#     return render(request, "posts/search.html", ctx)
+
+@csrf_exempt
 def search(request):
-    language = request.POST.get("post")
-    framework = request.POST.get("framework")  # frmae work 현주가 추가
-    post = request.POST.get("post", "")
-    select_languages = request.POST.get("field")
-    print(select_languages)
-    select_os = request.POST.get("field2")
-    select_solve = request.POST.get("field3")
-    select_framwork = request.POST.get("field4")
-    free_post = Post.objects.filter(language=language).order_by("-id")
-    frame_post = Post.objects.filter(framework=framework).order_by("-id")
     form = SelectForm()
-    ctx = {
-        "free_post": free_post,
-        "post": post,
-        "form": form,
-        "frame_post": frame_post,
-    }
-    return render(request, "posts/search.html", ctx)
+    posts = Post.objects.all()
+    q = request.POST.get('q', "")
+    if q: 
+        search_title = posts.filter(title__icontains=q)
+        search_desc = posts.filter(desc__icontains=q)
+        post = search_desc.union(search_title)        
+        ctx = {
+            'posts': post,
+            'q': q,
+            'form': form,
+        }
+        return render(request, "posts/search.html", ctx)
+        
+    else:
+        ctx = {
+            'form': form,
+        }
+        return render(request, "posts/search.html", ctx)
 
-# @csrf_exempt
-# def search_axios(request):
-#     req = json.loads(request.body)
-#     post_id = []
-
-#     return JsonResponse({'post': post})
+@csrf_exempt
+def search_axios(request):
+    post = Post.objects.all()
+    post_list = serializers.serialize('json', post)
+    
+    return HttpResponse(post_list, content_type="text/json-comment-filtered")
 
 
 # 삽질 기록 퍼오기
