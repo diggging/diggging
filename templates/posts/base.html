@@ -7,7 +7,6 @@
     <title>Document</title>
     {% block script %}
     {% endblock %}
-
 </head>
 <body>
     <form method="POST" action="{% url 'posts:search' %}">
@@ -39,8 +38,7 @@
         </select>
         <button type="submit">제출</button>
     </form>
-
     {% block content%}
-    {% endblock %}    
+    {% endblock %}
 </body>
 </html>

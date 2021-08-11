@@ -151,19 +151,12 @@ def search(request):
     select_framwork = request.POST.get("field4")
     free_post = Post.objects.filter(language=language).order_by("-id")
     frame_post = Post.objects.filter(framework=framework).order_by("-id")
-    all_post = Post.objects.filter(
-        select_languages=select_languages,
-        select_os=select_os,
-        select_solve=select_solve,
-        select_framwork=select_framwork,
-    ).order_by("-id")
     form = SelectForm()
     ctx = {
         "free_post": free_post,
         "post": post,
         "form": form,
         "frame_post": frame_post,
-        "all_post": all_post,
     }
     return render(request, "posts/search.html", ctx)
 

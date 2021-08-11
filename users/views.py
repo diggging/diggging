@@ -378,4 +378,3 @@ def alarm(request, pk):
 #         'alarms' : my_alarm,
 #     }
 #     return render(request, template_name="users/alarm.html", context=ctx)
-
