@@ -25,19 +25,21 @@ def main(request):
         all_followings_posts = Post.objects.filter(user=followings[0])
         for following in followings[1:]:
             following_posts = Post.objects.filter(user=following)
-            all_followings_posts.union(following_posts)     # queryset append
-        all_followings_posts = all_followings_posts.order_by("-created")    # 생성 기준으로 listing
+            all_followings_posts.union(following_posts)  # queryset append
+        all_followings_posts = all_followings_posts.order_by(
+            "-created"
+        )  # 생성 기준으로 listing
     else:
         all_followings_posts = None
     # 내 최신 포스트
     my_recent_post = Post.objects.filter(user=me).order_by("-created")
 
     ctx = {
-        "posts_scrap": all_posts_scrap,     # 스크랩 순
-        "posts_helped": all_posts_helped,   # helped 순
-        "user": request.user,               # 나
-        "followings_posts":all_followings_posts,    # 내가 follow하는 사람들의 최신순 포스트
-        "my_recent_post":my_recent_post,    # 내 글 최신순
+        "posts_scrap": all_posts_scrap,  # 스크랩 순
+        "posts_helped": all_posts_helped,  # helped 순
+        "user": request.user,  # 나
+        "followings_posts": all_followings_posts,  # 내가 follow하는 사람들의 최신순 포스트
+        "my_recent_post": my_recent_post,  # 내 글 최신순
     }
 
     return render(request, "posts/post_list.html", context=ctx)
@@ -72,9 +74,13 @@ def post_create(request):
             # 폴더 분류해주기
             me = posts.user  # folder 주인 가져오기
             language = request.POST.get("language")  # language 가져옴
-            framework = request.POST.get("framework")   # framework 가져옴
-            lang_folder = Folder.objects.filter(folder_name=language, folder_user=me)   # lang folder 가져옴
-            frame_folder = Folder.objects.filter(folder_name=framework, folder_user=me)    # frameworkd folder 가져옴
+            framework = request.POST.get("framework")  # framework 가져옴
+            lang_folder = Folder.objects.filter(
+                folder_name=language, folder_user=me
+            )  # lang folder 가져옴
+            frame_folder = Folder.objects.filter(
+                folder_name=framework, folder_user=me
+            )  # frameworkd folder 가져옴
             if lang_folder.exists():
                 # 있으면 foriegn key 연결
                 existed_folder = Folder.objects.get(
@@ -94,7 +100,9 @@ def post_create(request):
                 posts.folder.add(existed_folder)
             else:
                 # 없으면 folder 만들어서
-                new_folder = Folder.objects.create(folder_name=framework, folder_user=me)
+                new_folder = Folder.objects.create(
+                    folder_name=framework, folder_user=me
+                )
                 posts.folder.add(new_folder)
 
             posts.save()
@@ -132,28 +140,29 @@ def post_delete(request, pk):
 
 def search(request):
     language = request.POST.get("post")
-    framework = request.POST.get("framework")   # frmae work 현주가 추가
+    framework = request.POST.get("framework")  # frmae work 현주가 추가
     free_post = Post.objects.all().order_by("-id")
     post = request.POST.get("post", "")
     form = selectForm()
 
     free_post = free_post.filter(language=language)
     frame_post = Post.objects.filter(framework=framework).order_by("-id")
-    ctx = {
-        "free_post": free_post,
-        "post": post,
-        "form": form,
-        "frame_post" : frame_post
-    }
+    languages = request.POST.get("language[].language")
+    print(languages)
+    oss = request.POST.getlist("os[]")
+    print(oss)
+    solves = request.POST.getlist("solve[]")
+    frameworks = request.POST.getlist("framework[]")
+    ctx = {"free_post": free_post, "post": post, "form": form, "frame_post": frame_post}
     return render(request, "posts/search.html", ctx)
 
 
 # 삽질 기록 퍼오기
 def get_post(request, user_id, post_id):
     post = get_object_or_404(Post, pk=post_id)  # 어떤 post인지 가져오기
-    target_language = post.language # 어떤 language인지 - 폴더 생성용
-    target_framework = post.framework   # 어떤 framework인지 - 프레임워크 생성용
-    me = request.user   # 누구의 폴더를 만들것인지
+    target_language = post.language  # 어떤 language인지 - 폴더 생성용
+    target_framework = post.framework  # 어떤 framework인지 - 프레임워크 생성용
+    me = request.user  # 누구의 폴더를 만들것인지
 
     # get: object-없는걸 가져오면 오류 , filter: queryset- 없어도 빈 queryset 오류 x
     lang_folder = Folder.objects.filter(folder_name=target_language, folder_user=me)

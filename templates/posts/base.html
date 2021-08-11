@@ -15,14 +15,32 @@
         <input type="search" placeholder="검색어를 입력하세요." name="post" value="{{post}}">
         <button type="submit">Search</button>
         <br/>
-        <p>{{form.field}}
-        {{form.field2}}
-        {{form.field3}}
-        {{form.field4}}</p>
     </form>
-    
+    <form action="",method="POST">
+        <select name="language[]">
+            {%for language in form.field %}
+                <option value = {{language}}></option>
+            {%endfor%}
+        </select>
+        <select name="os[]">
+            {%for os in form.field2 %}
+                <option value = {{os}}></option>
+            {%endfor%}
+        </select>
+        <select name="solve[]">
+            {%for solve in form.field3 %}
+                <option value = {{solve}}></option>
+            {%endfor%}
+        </select>
+        <select name="framework[]">
+            {%for framewordk in form.field4 %}
+                <option value = {{framewordk}}></option>
+            {%endfor%}
+        </select>
+        <button type="submit">제출</button>
+    </form>
+
     {% block content%}
     {% endblock %}    
-
 </body>
 </html>
