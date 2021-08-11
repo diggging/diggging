@@ -102,7 +102,7 @@ def question_update(request, pk):
 def question_delete(request, pk):
     question_post = Question_post.objects.get(pk=pk)
     question_post.delete()
-    return redirect("question:main")
+    return redirect("question:question_main")
 
 #------------------------------------------------------------------------------------------------------------------
 def question_post_detail(request, user_id, post_id):
