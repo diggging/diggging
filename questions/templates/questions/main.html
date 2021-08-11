@@ -3,6 +3,7 @@
 {% for selected_answer_post in selected_answer_posts %}
 <h4>작성자 이름:</h4>
 {{selected_answer_post.user.username}}
+{{selected_answer_post.created}}
 {{selected_answer_post.title}}
 {{selected_answer_post.desc}}
 {% endfor %}
@@ -18,10 +19,8 @@
     <button type="submit">제출</button>
 </form>
 {% for post in posts%}
-    {%if str_search == post.language %}
-        {{post.title}}
-        {{post.desc}}
-    {%endif%}
+{%if str_search == post.language %}
+{{post.title}}
+{{post.desc}}
+{%endif%}
 {% endfor %}
-
-

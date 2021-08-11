@@ -1,5 +1,5 @@
 from django import forms
-from .models import Question_post
+from .models import Answer, Question_post
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 
@@ -25,3 +25,7 @@ class QuestionPostForm(forms.ModelForm):
             ),
             "desc": forms.CharField(widget=CKEditorUploadingWidget()),
         }
+
+# 답변도 질문과 같은 폼에서 작업할 수 있도록 질문폼 상속
+class AnswerPostForm(QuestionPostForm):
+    model = Answer
