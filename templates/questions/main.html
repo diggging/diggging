@@ -17,11 +17,14 @@
         };
 
         const AnswerHandleResponse = () =>{
-            if(AnswerHandleResponse < 400){
-                const {id} = JSON.parse(requestAnswer.response);
-                const answer = document.querySelector('.my_answer_container .answer')
-                answer.innerHTML +=`
-                    <p>랄랄</p>
+            if(requestAnswer.status < 400){
+                const answer = requestAnswer.response;
+                const answerab = document.querySelector('.answerabc');
+                console.log(answer[0])
+                answerab.innerHTML +=`
+                <div >
+                    ${answer}
+                </div>
                 `
             };
         };
@@ -150,7 +153,7 @@
                     <div class="btn_my_answer">
                         <button onclick ="onClickAnswer({{ request.user.id }})">내가 남긴 답변</button>
                     </div>
-                    <div class ="answer">
+                    <div class ="answerabc">
                         {% for answers in answer %}
                             {{answers}}
                         {% endfor %}

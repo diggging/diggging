@@ -249,5 +249,4 @@ def answer_ajax(request):
     users = User.objects.get(id=user_id)
     answer = list(Answer.objects.filter(user=users).values())
     print(answer)
-
     return JsonResponse(answer, safe=False)
