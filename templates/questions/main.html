@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block script %}
-    <link rel="stylesheet" href="{% static 'css/questions_main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/questions/main.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -18,7 +18,7 @@
                         <div class="no_answer_list">
                             <!--for 문 돌리고-->
                             {% for selected_answer_post in selected_answer_posts %}
-                                {}
+                                
                                 <h4>작성자 이름:</h4>
                                 {{selected_answer_post.user.username}}
                                 {{selected_answer_post.title}}
@@ -54,7 +54,7 @@
                 </div>
             </div>
             <div class="right_container">
-                <div class="search_container"></div>
+                <input class="search_input">
                 <div class="profile_area">
                     <div class="profile_container">
             {% if request.user.pk == host.pk %}
@@ -86,8 +86,8 @@
                     </div>
                     <div class="follow_area">
                         <div class="follow_btn_area">
-                            <a href="{% url 'users:follow_list' user.id %}"><button class="follow_btn">팔로잉 {{request.user.user_following|length}}</button></a>
-                            <a href="{% url 'users:follow_list' user.id %}"><button class="follow_btn">팔로워 {{request.user.user_followed|length}}</button></a>
+                            <a href=""><button class="follow_btn">팔로잉 {{request.user.user_following|length}}</button></a>
+                            <a href=""><button class="follow_btn">팔로워 {{request.user.user_followed|length}}</button></a>
                         </div>
                     </div>
                 </div>
@@ -97,17 +97,17 @@
                 </div>
                 <a href = '{% url "users:follow" host.id %}'><button class="follow_btn">팔로우하기</button></a>
                 <div class="follow_area">
-                    <a href="{% url 'users:follow_list' host.id %}"><button class="follow_btn">팔로잉 {{ host_following|length }}</button></a>
-                    <a href="{% url 'users:follow_list' host.id %}"><button class="follow_btn">팔로워 {{ host_follower|length }}</button></a>
+                    <a href=""><button class="follow_btn">팔로잉 {{ host_following|length }}</button></a>
+                    <a href=""><button class="follow_btn">팔로워 {{ host_follower|length }}</button></a>
                 </div>
             {% endif %}
         </div>
         <hr>
         <div class="btn_list_area">
-            <a href = '{% url "users:my_page_folder" host.id %}'><button class="list_btn">삽질 기록 모음 > </button></a>
-            <a href = '#'><button class="list_btn">질문 모음 > </button></a>
-            <a href = '#}'><button class="list_btn">내가 남긴 답변 목록 > </button></a>
-            <a href = '{% url "users:account_detail" host.id %}'><button class="list_btn">계정 관리 > </button></a>
+            <a href = ''><button class="list_btn">삽질 기록 모음 > </button></a>
+            <a href = ''><button class="list_btn">질문 모음 > </button></a>
+            <a href = ''><button class="list_btn">내가 남긴 답변 목록 > </button></a>
+            <a href = ''><button class="list_btn">계정 관리 > </button></a>
         </div>
                     <div class="profile_info"></div>
                     <div class="follow_area"></div>
