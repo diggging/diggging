@@ -95,7 +95,7 @@
                 <div class="profile_area">
                     <h1> {{ host.user_nickname}}님의 모래상자 </h1>
                 </div>
-                <a href = '{% url "users:follow" host.id %}'><button class="follow_btn">팔로우하기</button></a>
+                <a href = '{% url "users:follow" host.id%}'>  follow 하기 </a>
                 <div class="follow_area">
                     <a href="{% url 'users:follow_list' host.id %}"><button class="follow_btn">팔로잉 {{ host_following|length }}</button></a>
                     <a href="{% url 'users:follow_list' host.id %}"><button class="follow_btn">팔로워 {{ host_follower|length }}</button></a>

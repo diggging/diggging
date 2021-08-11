@@ -11,6 +11,7 @@ class PostAdmin(admin.ModelAdmin):
         "title",
         "problem_solving",
         "language",
+        "framework",
         "os",
         "error_message",
         "image",

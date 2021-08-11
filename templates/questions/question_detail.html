@@ -10,8 +10,7 @@
     {% if request.user.id == post.user.id %}
 
     {% else %}
-    <span><a href="{% url 'posts:get_post' user_id=post.user.id post_id=post.id %}">퍼가기</a></span>
-
+    <span><a href="{% url 'question:get_question' post.id %}">퍼가기</a></span>
     {% endif %}
 
 

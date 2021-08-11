@@ -280,7 +280,6 @@ def my_page(request, pk):
     print(my_sand)
     print(my_sand_sum)
 
-
     ctx = {
         # 왼쪽 상단을 위한 변수
         'host': host,

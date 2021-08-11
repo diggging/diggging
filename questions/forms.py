@@ -10,6 +10,7 @@ class QuestionPostForm(forms.ModelForm):
             "title",
             "problem_solving",
             "os",
+            "framework",
             "language",
             "error_message",
             "image",

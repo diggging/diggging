@@ -14,6 +14,7 @@ class PostForm(forms.ModelForm):
             "problem_solving",
             "os",
             "language",
+            "framework",    # frame work 용 절대 지우지마 
             "error_message",
             "image",
             "desc",
