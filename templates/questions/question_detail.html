@@ -68,8 +68,23 @@
                 <!--comment 별로 id 준당-->
             </div>
         </div>
+    </div>
     <!-- 답변 영역 -->
-    <div class="anwer_container"></div>
+    <a href="{% url 'question:answer_create' post.id %}"><button>답변 남기기</button></a>
+    <div class="answer_area">
+        {% if post_answers %}
+            {% for answer in post_answers %}
+                <div class="answer_container">
+                    <div class="answer_info_box">
+                        <h3>{{answer.answer_user.user_nickname}}님의 답변</h3>
+                        <h3>채택여부 : {{answer.selection}}</h3>
+                    </div>
+                    <div class="answer_desc_box">
+                        {{answer.desc}}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
     </div>
 {% endblock %}
 

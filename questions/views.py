@@ -135,17 +135,16 @@ def answer_create(request, question_post_id):
             answers = form.save(commit=False)
             answers.user = request.user
             answers.save()
-            question_host = question.user.id
-
+            question_host = question.user
             # 질문에 답변이 달렸다는 알람 넣어주기
             new_alarm = Alarm.objects.create(user=question_host, reason="내가 남긴 질문"+question.title+"에 답변이 달렸어요. 확인해보세요!")
-            return redirect("question:question_post_detail", question_host, question_post_id)
+            return redirect("question:question_post_detail", question_host.id, question_post_id)
     else:
         form = AnswerPostForm()
         ctx = {
             'form': form,
         }
-        return render(request, 'questions/question_create.html', ctx)
+        return render(request, 'questions/answer_create.html', ctx)
 
 #----------------------------------------------------------------------------------------------------------
 # 질문 기록 퍼오기

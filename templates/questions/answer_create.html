@@ -1,0 +1,28 @@
+{% extends 'questions/base.html' %}
+{% load static %}
+
+{% block script %}
+<link rel="stylesheet" href="{% static 'css/questions/answer_create.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="form_container">
+            <div class="create_title">
+                <h1>답변 남기기</h1>
+            </div>
+            <form method="POST" enctype="multipart/form-data" autocomplete="off">
+                {% csrf_token %}
+                {{ form.media }}
+                <div class="desc_area">
+                    {{ form.title }}
+                    {{ form.desc }}
+                </div>
+                <input class="btn-control" type="submit" value="답변 남기기" />
+                <button class="btn_control">
+                    <a href="{% url 'posts:main' %}">나가기</a>
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
