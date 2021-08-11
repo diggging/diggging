@@ -1,4 +1,5 @@
 import os
+import users
 import requests
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -6,7 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.base import TemplateView
 #from .forms import SignUpForm
 from .forms import UserCustomCreationForm, AuthenticationCustomForm
-from .models import User
+from .models import User, Sand
 from posts.models import Folder
 from questions.models import Question_post, Answer
 from django.views import View
@@ -18,6 +19,7 @@ import os
 # 이메일 인증 관련 import
 import logging
 from django.http import HttpResponse
+from django.db.models import Sum
 
 # SMTP 관련 인증
 from django.contrib.sites.shortcuts import get_current_site
@@ -272,6 +274,13 @@ def my_page(request, pk):
     # 최근에 남긴 질문
     my_recent_questions = Question_post.objects.filter(user=host).order_by("-created")
 
+    # 모래
+    my_sand = Sand.objects.filter(user = host)
+    my_sand_sum = my_sand.aggregate(Sum('amount'))
+    print(my_sand)
+    print(my_sand_sum)
+
+
     ctx = {
         # 왼쪽 상단을 위한 변수
         'host': host,
@@ -280,6 +289,8 @@ def my_page(request, pk):
         'language_folders' : language_folders,
         #'my_questions': my_questions,
         'my_recent_questions' : my_recent_questions,
+        'my_all_sands': my_sand,    # sand 모든 object list
+        'my_sand_sum' : my_sand_sum,    # 현재까지 sand 총합
     }
     return render(request, template_name="users/my_page.html", context=ctx)
 

@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Post, Folder
+from users.models import Sand
 from . import models
 from .forms import selectForm, PostForm
 import json
@@ -64,9 +65,7 @@ def post_create(request):
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             posts = form.save(commit=False)
-
             posts.user = request.user
-
             posts.save()
 
             # 폴더 분류해주기
@@ -86,6 +85,9 @@ def post_create(request):
                 posts.folder.add(new_folder)
 
             posts.save()
+
+            # 포스팅 시에 sand 추가해주기
+            new_sand = Sand.objects.create(user=me, amount=100, reason="삽질 기록 작성")
 
             return redirect("posts:main")
     else:

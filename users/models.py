@@ -46,6 +46,6 @@ class User(AbstractUser):
 
 
 class Sand(core_models.TimeStampModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name="sand", on_delete=models.CASCADE)
     amount = models.IntegerField(default=0)
-    reason = models.TextField()
+    reason = models.CharField(max_length=50)
