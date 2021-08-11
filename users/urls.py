@@ -22,10 +22,11 @@ urlpatterns = [
     path('password_reset/', view=views.password_reset, name='password_reset'),
     path('password_reset_email/<slug:uidb64>/<slug:token>/', views.password_reset_email, name="password_reset_email"),
     path('<int:pk>/password_reset_form/', view=views.password_reset_form, name="password_reset_form"),
-
+    
+    # my_page
     path('<int:pk>/my_page/', view=views.my_page, name="my_page"),   # my page
     path('<int:host_pk>/follow', view=views.follow, name = "follow"),
-
+    
     path('<int:pk>/account_detail', view=views.account_detail, name = "account_detail"),
     path('<int:pk>/change_nickname/', view=views.change_nickname, name="change_nickname"),
     path('<int:pk>/change_pw/', view=views.change_pw, name="change_pw"),
@@ -33,4 +34,6 @@ urlpatterns = [
     #github login
     path('login/github', views.github_login, name="github_login"),
     path('login/github/callback', views.github_callback, name="github_callback"),
+
+    path('<int:pk>/alarm', view= views.alarm, name="alarm"),
 ] 
