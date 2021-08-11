@@ -11,15 +11,11 @@
 <body>
     <div class="main_container">
 
-        <div class="input_container">
+        <!-- <div class="input_container">
             <form class="input_form" action="{% url 'posts:search' %}" method="post">
                 {% csrf_token %}
                 <input type="text" class="search" placeholder="뭐라고 할까요?" name="q" value="{{q}}">
                 <button type="submit">검색</button>
-                <!-- <svg width="17" height="17" viewBox="0 0 17 17">
-                    <path fill-rule="evenodd" d="M13.66 7.36a6.3 6.3 0 1 1-12.598 0 6.3 6.3 0 0 1 12.598 0zm-1.73 5.772a7.36 7.36 0 1 1 1.201-1.201l3.636 3.635c.31.31.31.815 0 1.126l-.075.075a.796.796 0 0 1-1.126 0l-3.636-3.635z" clip-rule="evenodd">
-                    </path>
-                </svg> -->
             </form>
         </div>
         <div class="choice_container">
@@ -37,7 +33,14 @@
                     {{form.field4}}
                 </div>
             </div>
-        </div>
+        </div> -->
+        <form class="search-form">
+            <input type="text" class="search" placeholder="City or State">
+            <ul class="suggestions">
+                <li>Filter for a city</li>
+                <li>or a state</li>
+            </ul>
+        </form>
 
         <div class="search_container">
             <div class="post_container">
