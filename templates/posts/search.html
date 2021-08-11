@@ -21,17 +21,20 @@
                     </path>
                 </svg> -->
             </form>
-            
+        </div>
         <div class="choice_container">
             <div class="choice_box">
                 <div class="choice_select">
-                    {{select_form.field}}
+                    {{form.field}}
                 </div>
                 <div class="choice_select">
-                    {{select_form.field2}}
+                    {{form.field2}}
                 </div>
                 <div class="choice_select">
-                    {{select_form.field3}}
+                    {{form.field3}}
+                </div>
+                <div class="choice_select">
+                    {{form.field4}}
                 </div>
             </div>
         </div>
@@ -85,29 +88,6 @@
             {% endfor %}
             </div>
         </div>
-
-        </div>
     </div>
-    <!-- <form method="get" action="">
-        {%csrf_token%} 
-
-        {% if not free_post %} 
-        <h1>검색 결과가 없습니다.</h1>
-        {%else%} 
-            {%for post in free_post.all%}
-                {{post.title}}
-                {{post.desc}}
-                {{post.tag}}
-            {%endfor%}
-        {%endif%}
-        {% if not frame_post %} 
-        <h1>검색 결과가 없습니다.</h1>
-        {%else%} 
-            {%for post in frame_post.all%}
-                {{post.title}}
-                {{post.desc}}
-                {{post.tag}}
-            {%endfor%}
-        {%endif%}
-        </form>
 {% endblock %}
+
