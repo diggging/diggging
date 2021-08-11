@@ -29,7 +29,6 @@ def question_main(request):
     }
     return render(request, "questions/main.html", ctx)
 
-
 def question_create(request):
     if request.method == "POST":
         form = QuestionPostForm(request.POST, request.FILES)

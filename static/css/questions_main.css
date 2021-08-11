@@ -1,0 +1,120 @@
+* {
+    box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+
+:root {
+    --border-color: #CEC4B3;
+    --sand-color: #D1AF00;
+    --text-color: #4E4E4E;
+    --title-font: 'Pretendard-ExtraBold';
+    --content-font: 'Pretendard-Regular';
+    --btn-font: 'Pretendard-SemiBold';
+    --border-radius: 8px;
+}
+
+a {
+    color: var(--sand-color);
+    font-weight: 400;
+}
+
+h1, h2, h3, h4, h5 {
+    margin: 0;
+    color: var(--text-color);
+}
+
+
+p {
+    color:var(--text-color);
+}
+
+
+@media only screen and (max-width: 767px) {
+    .container > .form_container {
+        padding: 1.5rem;
+        display: flex;
+        width: 100%;
+        height: 100vh;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+    }
+}
+
+@media only screen and (min-width:768px) {
+    .container > .form_container {
+        padding: 1.5rem;
+        display: flex;
+        width: 600px;
+        height: 580px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+    }
+}
+
+.container {
+    margin-top: 120px;
+}
+
+.box_container {
+    display: flex;
+    padding: 2em;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+.right_container {
+    display: flex;
+    margin-right: 10px;
+    flex-direction: column;
+    width: 60em;
+}
+
+.right_container h2 {
+    font-family: var(--title-font);
+    color:var(--text-color);
+}
+
+.left_container {
+    display: flex;
+}
+
+.no_answer_container {
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+    background-color: floralwhite;
+    height: 30em;
+    width: 100%;
+    padding: 28px;
+}
+
+.no_answer_list_box {
+    margin-top:30px;
+}
+
+.no_answer_list {
+    display: flex;
+}
+
+.recommend_container {
+    margin-top: 28px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 28px;
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+    height: 40em;
+}
+
+.recommend_list_box {
+    margin-top: 18px;
+}
