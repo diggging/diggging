@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.base import TemplateView
 #from .forms import SignUpForm
 from .forms import UserCustomCreationForm, AuthenticationCustomForm
-from .models import User, Sand
+from .models import User, Sand, Alarm
 from posts.models import Folder
 from questions.models import Question_post, Answer
 from django.views import View
@@ -294,7 +294,7 @@ def follow(request, host_pk):
         me.user_following.add(host)
         # host의 follower에 나 추가
         host.user_followed.add(me)
-        host_alarm = Alarm.objects.create(user=host, reason=me.username+"님이 나를 팔로우합니다.")
+        host_alarm = Alarm.objects.create(user=host, reason=me.user_nickname+"님이 나를 팔로우합니다.")
     
     return redirect('users:my_page', host_pk)
 
@@ -370,11 +370,13 @@ def change_img(request, pk):
 
 # ________________________________________________ alarm ________________________________________________
 def alarm(request, pk):
-    pass
-#     me = User.objects.get(id=pk)
-#     my_alarm = Alarm.objects.filter(user=me)
-    
-#     ctx = {
-#         'alarms' : my_alarm,
-#     }
-#     return render(request, template_name="users/alarm.html", context=ctx)
+    me = User.objects.get(id=pk)    # 누구의 alarm인지
+    my_alarm = Alarm.objects.filter(user=me)    # 주인의 alarm 모두 가져오기
+    not_check_alarm = my_alarm.filter(is_checked = False)   # 그중 False인애들 가져와서
+    for alarm in not_check_alarm:
+        alarm.is_checked = True
+        alarm.save()
+    ctx = {
+        'alarms' : my_alarm,
+    }
+    return render(request, template_name="users/alarm.html", context=ctx)
