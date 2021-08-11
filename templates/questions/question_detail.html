@@ -46,10 +46,14 @@
         <div>
             <div class='addComment'>
                 {% for comment in comments %}
-                    <div class='comment_id_{{comment.id}}'>
+                <div class='comment_id_{{comment.id}}'>
+                    <div class="comment_text">
                         {{comment.text}}
-                        <button class='comment_id_{{comment.id}}' onclick="onClickDelete({{post.id}},{{comment.id}})">삭제</button> <!--comment 별로 id 준당-->
                     </div>
+                    <div class="delete_btn">
+                        <button onclick="onClickDelete({{post.id}},{{comment.id}})">삭제</button> <!--comment 별로 id 준당-->
+                    </div>
+                </div>
                 {% endfor %}
             </div>
             <div>
@@ -69,75 +73,65 @@
 <link rel="stylesheet" href="{% static 'css/questions/question_detail.css' %}">
 <script>
 
-const requestComment = new XMLHttpRequest();
-
-const onClickComment = (id) =>{
-    const url = '/comments/add_question_comment/';
-    requestComment.open('POST', url, true);
-    requestComment.setRequestHeader(
-        'Content-Type',
-        'application/x-www-form-urlencoded'
-    );
-    const text = document.querySelector(`.comment_input`).value;
-    requestComment.send(JSON.stringify({id:id, text:text}));
-};
-
-const commentHandleResponse = () =>{
-    if(requestComment.status < 400){
-        const {id} = JSON.parse(requestComment.response);
-        const {text} = JSON.parse(requestComment.response);
-        const {question_comment_id} = JSON.parse(requestComment.response);
-        const addComment= document.querySelector(`.addComment`)
-        console.log(addComment)
-    addComment.innerHTML += `
-        <div class='comment_id_${question_comment_id}'>
-            <div class="comment_text">
-                ${text}
-            </div>
-            <div class="delete_btn">
-                <button onclick="onClickDelete(${id}, ${question_comment_id})">삭제</button>
-            </div>
-        </div>
-    `
-    const cmt_input = document.querySelector('.comment_input');
-    cmt_input.value = null
+    const requestComment = new XMLHttpRequest();
+    const onClickComment = (id) =>{
+        const url = '/comments/add_question_comment/';
+        requestComment.open('POST', url, true);
+        requestComment.setRequestHeader(
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
+        const text = document.querySelector(`.comment_input`).value;
+        requestComment.send(JSON.stringify({id:id, text:text}));
     };
-    
-};
-
-requestComment.onreadystatechange = () =>{
-    if(requestComment.readyState  === XMLHttpRequest.DONE){
-        commentHandleResponse();
-    };      
-};
-
-const requestDelComment = new XMLHttpRequest();
-
-const onClickDelete = (id,comment_id) =>{
-    const url ='/comments/delete_question_comment/';
-    requestDelComment.open('POST',url,true);
-    requestDelComment.setRequestHeader(
-        'Content-Type',
-        'application/x-www-form-urlencoded'
-    );
-    
-    requestDelComment.send(JSON.stringify({id:id, comment_id:comment_id}));
-};
-
-const commentdelHandleResponse = () =>{
-    if(requestDelComment.status<400){
-        const {question_post_id} = JSON.parse(requestDelComment.response);
-        const {comment_id} = JSON.parse(requestDelComment.response);
-        console.log(comment_id);
-        const element = document.querySelector(`.comment_id_${comment_id}`);
-        element.remove();
+    const commentHandleResponse = () =>{
+        if(requestComment.status < 400){
+            const {id} = JSON.parse(requestComment.response);
+            const {text} = JSON.parse(requestComment.response);
+            const {comment_id} = JSON.parse(requestComment.response);
+            const addComment = document.querySelector(`.addComment`);
+            console.log(comment_id);
+        addComment.innerHTML += `
+            <div class='comment_id_${comment_id}'>
+                <div class="comment_text">
+                    ${text}
+                </div>
+                <div class="delete_btn">
+                    <button onclick="onClickDelete(${id}, ${comment_id})">삭제</button>
+                </div>
+            </div>
+        `
+        const cmt_input = document.querySelector('.comment_input');
+        cmt_input.value = null
+        };
     };
-};
-
-requestDelComment.onreadystatechange = () =>{
-    if(requestDelComment.readyState  === XMLHttpRequest.DONE){
-        commentdelHandleResponse();
-    };      
-};
+    requestComment.onreadystatechange = () =>{
+        if(requestComment.readyState  === XMLHttpRequest.DONE){
+            commentHandleResponse();
+        };      
+    };
+    const requestDelComment = new XMLHttpRequest();
+    const onClickDelete = (id, comment_id) =>{
+        const url ='/comments/delete_question_comment/';
+        requestDelComment.open('POST',url,true);
+        requestDelComment.setRequestHeader(
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
+        requestDelComment.send(JSON.stringify({id:id, comment_id:comment_id}));
+    };
+    const commentdelHandleResponse = () =>{
+        if(requestDelComment.status<400){
+            const {id} = JSON.parse(requestDelComment.response);
+            const {comment_id} = JSON.parse(requestDelComment.response);
+            const element = document.querySelector(`.comment_id_${comment_id}`);
+            element.remove();
+        };
+    };
+    requestDelComment.onreadystatechange = () =>{
+        if(requestDelComment.readyState  === XMLHttpRequest.DONE){
+            commentdelHandleResponse();
+        };      
+    };
 </script>
 {% endblock %}

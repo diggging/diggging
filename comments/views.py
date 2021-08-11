@@ -45,30 +45,34 @@ def delete_comment(request):
 @csrf_exempt
 def add_question_comment(request):
     req = json.loads(request.body)
-    question_post_id = req["id"]
-    question_comment_content = req["text"]
-    question_post = Question_post.objects.get(id=question_post_id)
-    question_comment = Comment.objects.create(question=question_post, text=question_comment_content, user=request.user)
+    post_id = req["id"]
+    comment_content = req["text"]
+    post = Question_post.objects.get(id=post_id)
+    comment = Comment.objects.create(question=post, text=comment_content, user=request.user)
+    comment.save()
+
     # TODO: 삽질 기록 부분 comment 부분과 마찬가지로 잘 작동하는지 봐주세요.
-    question_comment.save()
-    new_alarm = Alarm.objects.create(user=question_post.user, reason="내가 남긴 질문"+question_post.title+'에'+request.user.user_nickname+'님이 댓글을 남겼어요.')
+    new_alarm = Alarm.objects.create(user=post.user, reason="내가 남긴 질문"+post.title+'에'+request.user.user_nickname+'님이 댓글을 남겼어요.')
     return JsonResponse({
-        "question_post_id": question_post_id, 
-        "question_comment_content": question_comment_content,
-        "comment_id": question_comment.id,
+        "id": post_id, 
+        "text": comment_content,
+        "comment_id": comment.id,
     })
+
+
 # 질문광장 부분 posts의 댓글창에서 댓글 삭제 파트
 @csrf_exempt
 def delete_question_comment(request):
     req = json.loads(request.body)
-    question_post_id = req["id"]
+    post_id = req["id"]
     comment_id = req["comment_id"]
-    question_post = Question_post.objects.get(id=question_post_id)
-    question_comment = Comment.objects.get(id=comment_id)
-    question_comment.delete()
+    if request.method == "POST":
+        post = Question_post.objects.get(id=post_id)
+        comment = Comment.objects.get(id=comment_id)
+        comment.delete()
     return JsonResponse({
-        "question_post_id":question_post_id,
-        "question_comment_id":comment_id,    
+        "id": post_id, 
+        "comment_id": comment_id,
     })
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 # 답글에 달리는 댓글 부분 

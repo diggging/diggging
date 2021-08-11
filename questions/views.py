@@ -114,11 +114,15 @@ def question_post_detail(request, user_id, post_id):
     # comments = post_details.comments.all() comments는 ajax로 따로 띄워준다고 해서 지웠습니다
     # post_answers: 질문 포스트에 해당 되는 답변들
     post_answers = post_details.answers.all().order_by("-created")
+    # question_comments 역참조
+    comments = post_details.question_comments.all()
+    
     ctx = {
         "post": post_details,
         "host": me,
         "folder": folder,
-        "post_answers": post_answers
+        "post_answers": post_answers,
+        "comments": comments,
     }
     return render(request, "questions/question_detail.html", ctx)
 
