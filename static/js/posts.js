@@ -1,18 +1,17 @@
 const postList = [];
 const list = [];
+
 const getPost = async() => {
     const url = '/posts/search_axios/';
     const postData = await axios.get(url)
     list.push(postData.data);
-    // console.log(postList[0][0].fields.title);
-    // console.log(postList[0]);
 
     for (let i=0; i < list[0].length; i++) {
         postList.push(list[0][i].fields);
     }
     console.log(postList);
+    return postList
 }
-
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
@@ -20,7 +19,8 @@ function numberWithCommas(x) {
 function findMatches(wordToMatch, postList) {
     return postList.filter(post => {
         const regex = new RegExp(wordToMatch, 'gi') //패턴을 사용해 텍스트를 판별할 때 사용하는 정규 표현식 객체를 생성
-        return post.title.match(regex) || post.desc.match(regex);
+        // return post.title.match(regex) || post.desc.match(regex);
+        return post.title.match(regex)
     });
 }
 
@@ -41,7 +41,7 @@ function displayMatches(){
 }
 
 const searchInput = document.querySelector('.search');
-const suggestions = document.querySelector('.suggestions');
+const suggestions = document.querySelector('.search_container');
 
 // fetch('/posts/search_axios')
 //     .then(blob => blob.json())
@@ -55,4 +55,3 @@ function init() {
 init();
 
 // .then(response => postList.push(...response.data));
-

@@ -11,11 +11,10 @@
 <body>
     <div class="main_container">
 
-        <!-- <div class="input_container">
+        <div class="input_container">
             <form class="input_form" action="{% url 'posts:search' %}" method="post">
                 {% csrf_token %}
                 <input type="text" class="search" placeholder="뭐라고 할까요?" name="q" value="{{q}}">
-                <button type="submit">검색</button>
             </form>
         </div>
         <div class="choice_container">
@@ -33,14 +32,14 @@
                     {{form.field4}}
                 </div>
             </div>
-        </div> -->
-        <form class="search-form">
+        </div>
+        <!-- <form class="search-form">
             <input type="text" class="search" placeholder="City or State">
             <ul class="suggestions">
                 <li>Filter for a city</li>
                 <li>or a state</li>
             </ul>
-        </form>
+        </form> -->
 
         <div class="search_container">
             <div class="post_container">
