@@ -126,6 +126,7 @@ def question_post_detail(request, user_id, post_id):
     }
     return render(request, "questions/question_detail.html", ctx)
 
+#-------------------------------------------------------------------------------------------------------------------------------------------------------
 # 질문 답변 작성 폼 관련 함수
 def answer_create(request, question_post_id):
     question = Question_post.objects.get(pk=question_post_id)
@@ -134,8 +135,9 @@ def answer_create(request, question_post_id):
         if form.is_valid():
             answers = form.save(commit=False)
             answers.user = request.user
-            answers.save()
+            answers.question = question
             question_host = question.user
+            answers.save()
             # 질문에 답변이 달렸다는 알람 넣어주기
             new_alarm = Alarm.objects.create(user=question_host, reason="내가 남긴 질문"+question.title+"에 답변이 달렸어요. 확인해보세요!")
             return redirect("question:question_post_detail", question_host.id, question_post_id)
@@ -146,6 +148,28 @@ def answer_create(request, question_post_id):
         }
         return render(request, 'questions/answer_create.html', ctx)
 
+# 질문 답변 업데이트
+def answer_update(request, question_post_id, answer_id):
+    question_post = get_object_or_404(Question_post, pk= question_post_id)
+    answer = get_object_or_404(Answer, pk=answer_id)
+    if request.method == "POST":
+        form = AnswerPostForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect("question:question_post_detail", question_post.user.id, question_post_id)
+        else:
+            form = AnswerPostForm(instance=answer)
+            ctx = {
+                "form":form
+            }
+            return render(request, "questions/answer_update.html", ctx)
+
+# 질문 답변 삭제
+def answer_delete(request, question_post_id, answer_id):
+    question_post = Question_post.objects.get(pk=question_post_id)
+    answer = Answer.objects.get(pk=answer_id)
+    answer.delete()
+    return redirect("question:question_post_detail", question_post.user.id, question_post_id)
 #----------------------------------------------------------------------------------------------------------
 # 질문 기록 퍼오기
 def get_question(request, question_post_id):

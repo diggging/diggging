@@ -14,6 +14,8 @@ urlpatterns = [
         name="question_post_detail",
     ),
     path("<int:question_post_id>/answer_create/", views.answer_create, name="answer_create"),
+    path("<int:question_post_id>/<answer_id>/answer_update/", views.answer_update, name="answer_update"),
+    path("<int:question_post_id>/<answer_id>/answer_delete", views.answer_delete, name="answer_delete"),
     path("<int:question_post_id>/get_question", views.get_question, name="get_question"),
     path("<int:question_post_id>/chosen_answer", views.chosen_answer, name="chosen_answer"),
     path("count_like_scrap/", views.count_like_scrap_question, name="count_like_scrap"),
