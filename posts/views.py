@@ -49,31 +49,41 @@ def main(request):
 
 
 # 프론트에서 해당 포스트 id 넘겨주면
-@login_required
+
+
 def post_detail(request, user_id, post_id):
     post_details = Post.objects.get(pk=post_id)
     me = get_object_or_404(User, pk=user_id)
     folder = post_details.folder.get(
         folder_name=post_details.language, folder_user=post_details.user
     )
-    user = request.user
-    if post_details.likes_user.filter(id=user.id).exists():
-        post_details.likes_user.remove(user)
-        message = "좋아요 취소"
-    else:
-        post_details.likes_user.add(user)
-        message = "좋아요"
     comments = post_details.comments.all()
     ctx = {
         "post": post_details,
         "host": me,
         "folder": folder,
         "comments": comments,
-        "likes_count": post_details.count_likes_user(),
-        "message": message,
     }
     # html added by 종권
     return render(request, "posts/post_detail.html", ctx)
+
+
+@login_required
+@require_POST
+def post_like(request):
+    pk = request.POST.get("pk", None)
+    post = get_object_or_404(Post, pk=pk)
+    user = request.user
+
+    if post.likes_user.filter(id=user.id).exists():
+        post.likes_user.remove(user)
+        message = "좋아요 취소"
+    else:
+        post.likes_user.add(user)
+        message = "좋아요"
+
+    ctx = {"likes_count": post.count_likes_user(), "message": message}
+    return HttpResponse(json.dumps(ctx), content_type="application/json")
 
 
 def post_create(request):
