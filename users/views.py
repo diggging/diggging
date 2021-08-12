@@ -116,10 +116,11 @@ def password_reset(request):
     # email 받으면
     if request.method == 'POST':
         email  = request.POST.get("email")
+        username = request.POST.get("username")
         # email 이 존재하는 이메일인지 확인
-        if User.objects.filter(email = email).exists():
+        if User.objects.filter(email = email, username=username).exists():
             #있으면 메일 보내기
-            user = User.objects.get(email=email)
+            user = User.objects.get(email=email, username=username)
             current_site = get_current_site(request)
             print(current_site)
             message = render_to_string('users/password_reset_email.html', {
