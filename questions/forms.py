@@ -32,10 +32,3 @@ class AnswerPostForm(forms.ModelForm):
     class Meta:
         model = Answer
         fields = '__all__'
-        # {
-        #     "user",
-        #     "question",
-        #     "selection",
-        #     "desc",
-        # }
-    
