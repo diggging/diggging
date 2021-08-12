@@ -47,31 +47,31 @@ def question_create(request):
             me = posts.user
             language = request.POST.get("language")
             framework = request.POST.get("framework")  # framework 가져옴
-            lang_folder = QuestionFolder.objects.filter(folder_name=language, folder_user=me)
-            frame_folder = QuestionFolder.objects.filter(folder_name=framework, folder_user=me)  # frameworkd folder 가져옴
+            lang_folder = QuestionFolder.objects.filter(folder_name=language, folder_user=me, folder_kind="language")
+            frame_folder = QuestionFolder.objects.filter(folder_name=framework, folder_user=me, folder_kind="framework")  # frameworkd folder 가져옴
             
             if lang_folder.exists():
                 existed_folder = QuestionFolder.objects.get(
-                    folder_name=language, folder_user=me
+                    folder_name=language, folder_user=me, folder_kind="language"
                 )
                 posts.folder.add(existed_folder)
 
             else:
                 new_folder = QuestionFolder.objects.create(
-                    folder_name=language, folder_user=me
+                    folder_name=language, folder_user=me, folder_kind="language"
                 )
                 posts.folder.add(new_folder)
 
             if frame_folder.exists():
                 # 있으면 foriegn key 연결
                 existed_folder = QuestionFolder.objects.get(
-                    folder_name=framework, folder_user=me
+                    folder_name=framework, folder_user=me, folder_kind="framework"
                 )
                 posts.folder.add(existed_folder)
             else:
                 # 없으면 folder 만들어서
                 new_folder = QuestionFolder.objects.create(
-                    folder_name=framework, folder_user=me
+                    folder_name=framework, folder_user=me, folder_kind="framework"
                 )
                 posts.folder.add(new_folder)
 
@@ -153,20 +153,22 @@ def get_question(request, question_post_id):
     target_framework = question_post.framework  # 어떤 framework인지 - 프레임워크 생성용
     me = request.user
 
-    lang_folder = QuestionFolder.objects.filter(folder_name=target_language, folder_user=me)
-    frame_folder = QuestionFolder.objects.filter(folder_name=target_framework, folder_user=me)
+    lang_folder = QuestionFolder.objects.filter(folder_name=target_language, folder_user=me, folder_kind="language")
+    frame_folder = QuestionFolder.objects.filter(folder_name=target_framework, folder_user=me, folder_kind="framework")
 
     if lang_folder.exists():
         folder = QuestionFolder.objects.get(
             folder_name = target_language,
             folder_user = me,
+            folder_kind="language"
         )
         folder.related_posts.add(question_post)
         folder.save()
     else:
         new_folder = QuestionFolder.objects.create(
             folder_name = target_language,
-            folder_user = me
+            folder_user = me,
+            folder_kind="language"
         )
         question_post.folder.add(new_folder)
     question_post.save()
@@ -175,7 +177,7 @@ def get_question(request, question_post_id):
     if frame_folder.exists():
         # 그 폴더에 포스트 그냥 추가하기
         folder = QuestionFolder.objects.get(
-            folder_name=target_framework, folder_user=me
+            folder_name=target_framework, folder_user=me, folder_kind="framework"
         )  # query set은 object가 아니므로 object 다시 가져옴
         folder.related_posts.add(question_post)  # add 는 저장 x 명시적 저장 필요
         folder.save()
@@ -183,7 +185,7 @@ def get_question(request, question_post_id):
     else:
         # 폴더를 생성한 뒤, 거기에 추가하기
         new_folder = QuestionFolder.objects.create(
-            folder_name=target_framework, folder_user=me
+            folder_name=target_framework, folder_user=me, folder_kind="framework"
         )  # create - 자동저장
         question_post.folder.add(new_folder)
     question_post.save()

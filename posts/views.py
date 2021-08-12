@@ -248,14 +248,14 @@ def get_post(request, user_id, post_id):
     post_host = User.objects.get(id=user_id)
 
     # get: object-없는걸 가져오면 오류 , filter: queryset- 없어도 빈 queryset 오류 x
-    lang_folder = Folder.objects.filter(folder_name=target_language, folder_user=me)
-    frame_folder = Folder.objects.filter(folder_name=target_framework, folder_user=me)
+    lang_folder = Folder.objects.filter(folder_name=target_language, folder_user=me, folder_kind="language")
+    frame_folder = Folder.objects.filter(folder_name=target_framework, folder_user=me, folder_kind="framework")
 
     # 만약 나, language로 된 폴더 있으면
     if lang_folder.exists():
         # 그 폴더에 포스트 그냥 추가하기
         folder = Folder.objects.get(
-            folder_name=target_language, folder_user=me
+            folder_name=target_language, folder_user=me, folder_kind="language"
         )  # query set은 object가 아니므로 object 다시 가져옴
         folder.related_posts.add(post)  # add 는 저장 x 명시적 저장 필요
         folder.save()
@@ -263,7 +263,7 @@ def get_post(request, user_id, post_id):
     else:
         # 폴더를 생성한 뒤, 거기에 추가하기
         new_folder = Folder.objects.create(
-            folder_name=target_language, folder_user=me
+            folder_name=target_language, folder_user=me, folder_kind="language"
         )  # create - 자동저장
         post.folder.add(new_folder)
     post.save()
@@ -272,7 +272,7 @@ def get_post(request, user_id, post_id):
     if frame_folder.exists():
         # 그 폴더에 포스트 그냥 추가하기
         folder = Folder.objects.get(
-            folder_name=target_framework, folder_user=me
+            folder_name=target_framework, folder_user=me, folder_kind="framework"
         )  # query set은 object가 아니므로 object 다시 가져옴
         folder.related_posts.add(post)  # add 는 저장 x 명시적 저장 필요
         folder.save()
@@ -280,7 +280,7 @@ def get_post(request, user_id, post_id):
     else:
         # 폴더를 생성한 뒤, 거기에 추가하기
         new_folder = Folder.objects.create(
-            folder_name=target_framework, folder_user=me
+            folder_name=target_framework, folder_user=me, folder_kind="framework"
         )  # create - 자동저장
         post.folder.add(new_folder)
     post.save()
