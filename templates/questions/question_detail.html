@@ -2,60 +2,65 @@
 {% load static %}
 
 {% block content %}
-<div class="container_deatil">
+<div class="question_container">
     <div class="post_container">
         <!-- 제목영역 -->
-        <div class="title_area">
-            <h1>{{post.title}}</h1>
-            <div class="post_user_info">
-                {% if post.user.user_profile_image %}
-                <img src="{{post.user.user_profile_image.url}}">
-                {% endif %}
-                <span>{{post.user.username}}</span>
+        <div class="post_top">
+            <div class="title_area">
+                <h1>{{post.title}}</h1>
+                <div class="post_user_info">
+                    {% if post.user.user_profile_image %}
+                        <img src="{{post.user.user_profile_image.url}}">
+                    {% endif %}
+                    {%if post.user.user_nick_name%}
+                        <h3>{{ post.user.user_nickname }}님의 질문</h3>
+                    {%else%}
+                        <h3>{{ post.user.username }}님의 질문</h3>
+                    {%endif%}
+                </div>
             </div>
+            {% if request.user.id == post.user.id %}
+                <div class="auth_btn_area">
+                    <div class="edit_btn">
+                        <a href="{% url 'question:question_update' post.id %}">수정하기</a>
+                    </div>
+                    <div class="delete_btn">
+                        <a href="{% url 'question:question_delete' post.id %}">삭제하기</a>
+                    </div>
+                </div>
+            {% endif %}
         </div>
         <!-- 제목영역 끝 -->
         <div class="category_area">
             <span class="post_language">언어|{{post.language}}</span>
             <span class="folder_name">폴더|{{folder.folder_name}}</span>
-            <span class="post_os">운영체제|{{post.os}}}</span>
+            <span class="post_os">운영체제|{{post.os}}</span>
             <div class="post_os">에러메시지|{{post.error_message}}</div>
         </div>
         <div class="desc_area">
             {{ post.desc|safe|escape }}
         </div>
+        <div class="tag_area">{{post.tag}}</div>
+        <!-- 질문의 버튼 영역 -->
         <div class="post_{{post.id}}">
-            <div class="tag_area">{{post.tag}}</div>
-            <button class="like_button post__like" onclick="onClickLikeScrap({{ post.id }}, 'like')">도움이되었어요 {{
-                post.helped_num }}</button>
-            <span><a href="{% url 'posts:get_post' user_id=post.user.id post_id=post.id %}"><button class="post__scrap"
-                        onclick="onClickLikeScrap({{ post.id }}, 'scrap')">퍼가기 {{post.scrap_num}}</button></a></span>
+            <a class="like_button post__like" onclick="onClickLikeScrap({{ post.id }}, 'like')">도움이되었어요{{post.helped_num}}</a>
+            <a href="{% url 'posts:get_post' user_id=post.user.id post_id=post.id %}" 
+            class="post__scrap" onclick="onClickLikeScrap({{ post.id }}, 'scrap')">퍼가기 {{post.scrap_num}}</a>
+            <!-- 댓글창열기버튼 -->
+            <a href="javascript:doDisplay();" class="comment_btn">댓글 {{comments|length}}</a>
         </div>
-        {% if request.user.id == post.user.id %}
-        <div class="edit_btn">
-            <a href="{% url 'question:question_update' post.id %}">수정하기</button>
-        </div>
-        <div class="delete">
-            <a href="{% url 'question:question_delete' post.id %}">삭제하기</a>
-        </div>
-        {% else %}
-        <!-- 종권오빠가 쓴 퍼가기 버튼 -->
-        <span><a href="{% url 'question:get_question' post.id %}">퍼가기</a></span>
-        <!-- 포스트디테일에서 가져온 버튼들 -->
-        <!-- <div class="post_{{post.id}}">
-                <div class="tag_area">{{post.tag}}</div>
-                <button class="like_button post__like" onclick="onClickLikeScrap({{ post.id }}, 'like')">도움이되었어요 {{ post.helped_num }}</button>
-                <span><a href="{% url 'posts:get_post' user_id=post.user.id post_id=post.id %}"><button class="post__scrap" onclick="onClickLikeScrap({{ post.id }}, 'scrap')">퍼가기 {{post.scrap_num}}</button></a></span>
-            </div> -->
-        {% endif %}
-        <!-- 댓글창열기버튼 -->
-        <a href="javascript:doDisplay();">댓글</a>
         <!-- 질문-댓글창 영역 -->
         <div id="comment_box">
             <div class='addComment'>
                 {% for comment in comments %}
                 <div class='comment_id_{{comment_id}}'>
                     <div class="comment_text">
+                        <div class="post_user_info">
+                            {% if comment.user.user_profile_image %}
+                                <img src="{{comment.user.user_profile_image.url}}">
+                            {% endif %}
+                            <span>{{comment.user.user_nickname}}</span>
+                        </div>
                         {{comment.text}}
                     </div>
                     <div class="delete_btn">
@@ -64,61 +69,77 @@
                 </div>
                 {% endfor %}
             </div>
-            <div>
+            <div class="comment_input_area">
                 <input class="comment_input" type="text" placeholder="댓글달기" />
-                <button onclick="onClickComment({{ post.id }})">게시</button>
+                <button class="comment_input_btn" onclick="onClickComment({{ post.id }})">게시</button>
                 <!--comment 별로 id 준당-->
             </div>
         </div>
         <!-- 질문-댓글창영역 끝 -->
     </div>
-    <!-- 답변 영역 -->
-    <a href="{% url 'question:answer_create' post.id %}"><button>답변 남기기</button></a>
+    <!-- 질문에 대한 답변 영역 답변답변답변 -->
+    <a href="{% url 'question:answer_create' post.id %}" class="btn_control">답변 남기기</a>
     <div class="answer_area">
-        <div class="answer_box">
-            {% if post_answers %}
+        {% if post_answers %}
             {% for answer in post_answers %}
-            <div class="answer_container">
-                <div class="answer_info_box">
-                    <h3>{{ answer.user.user_nickname }}님의 답변</h3>
-                    <h3>채택여부 : {{answer.selection}}</h3>
-                    {{answer.title}}
-                </div>
-                <div class="answer_desc_box">
-                    {{answer.desc}}
-                </div>
-            </div>
-            <a href="javascript:answerCmtDisplay">댓글창 열기</a>
-            <!-- 답변의 댓글창영역 -->
-            <div id="answer_comment_box">
-                <div class='addAnswerComment'>
-                    {% for comment in answer.answer_comments.all %}
-                    <div class='answer_comment_id_{{comment_id}}'>
-                        <div class="answer_comment_text">
-                            {{comment.text}}
+                <div class="answer_container">
+                    <div class="post_top">
+                        <div class="answer_info_box">
+                            {%if answer.user.user_nick_name%}
+                                <h3>{{ answer.user.user_nickname }}님의 답변</h3>
+                            {%else%}
+                                <h3>{{ answer.user.username }}님의 답변</h3>
+                            {%endif%}
+                            <h3>채택여부 : {{answer.selection}}</h3>
+                            {{answer.title}}
                         </div>
-                        <div class="add_comment_delete_btn">
-                            <button onclick="onClickAnswerCmtDelete({{id}}, {{comment_id}})">삭제</button>
+                        {% if request.user.id == answer.user.id %}
+                            <div class="auth_btn_area">
+                                <div class="edit_btn">
+                                    <a href="{% url 'question:question_update' post.id %}">수정하기</a>
+                                </div>
+                                <div class="delete_btn">
+                                    <a href="{% url 'question:question_delete' post.id %}">삭제하기</a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="answer_desc_box">
+                        {{ answer.desc|safe|escape|linebreaks}}
+                    </div>
+                    <div class="btn_area">
+                        <a href="{% url 'question:get_answer_comments' answer.id %}" class="">댓글창 열기</a>
+                    </div>
+                    <!-- 답변의 댓글창영역 -->
+                    <div id="answer_comment_box">
+                        <div class='addAnswerComment'>
+                            {% for comment in answer.answer_comments.all %}
+                                <div class='answer_comment_id_{{comment_id}}'>
+                                    <div class="answer_comment_text">
+                                        {{comment.text}}
+                                    </div>
+                                    <div class="add_comment_delete_btn">
+                                        <button onclick="onClickAnswerCmtDelete({{id}}, {{comment_id}})">삭제</button>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div>
+                            <input class="answer_comment_input" type="text" placeholder="댓글달기" />
+                            <button onclick="onClickAnswerComment({{ post.id }})">게시</button>
+                            <!--comment 별로 id 준당-->
                         </div>
                     </div>
-                    {% endfor %}
                 </div>
-                <div>
-                    <input class="answer_comment_input" type="text" placeholder="댓글달기" />
-                    <button onclick="onClickAnswerComment({{ post.id }})">게시</button>
-                    <!--comment 별로 id 준당-->
-                </div>
-            </div>
             {% endfor %}
-            {% endif %}
-        </div>
+        {% endif %}
     </div>
 {% endblock %}
     
 
 
 
-    {% block script %}
+{% block script %}
     <link rel="stylesheet" href="{% static 'css/questions/question_detail.css' %}">
     <!-- 질문 코멘트 댓글 -->
     <script>

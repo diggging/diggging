@@ -1,31 +1,32 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block script %}
-    <link rel="stylesheet" href="{% static 'css/post_create.css' %}" />
-    <!-- <link rel="stylesheet" href="../../../highlight/styles/base16/framer.min.css"> -->
+    <link rel="stylesheet" href="{% static 'css/questions/question_create.css' %}" />
 {% endblock script %}
 
 {% block content %}
     <div class="create_title">
-        <h1>삽질기록 수정하기</h1>
+        <h1>질문 수정하기</h1>
         <br>
     </div>
 
     <div class="container">
         <div class="form_container">
-            <form action="" method="POST" enctype="multipart/form-data" autocomplete="off">
+            <form method="POST" enctype="multipart/form-data" autocomplete="off">
                 {% csrf_token %}
                 {{ form.media }}
                 <div class="thumbnail_area">
                     <label for="id_image">
-                        <img src="{% static 'image/thumbnail_image.svg' %}" />
+                      <img src="{% static 'image/thumbnail_image.svg' %}" />
                     </label>
                     {{ form.image }}
                 </div>
                 {{ form.title }}
                 <div class="choice_area">
                     {{ form.language }}
-                    <label for="id_os">운영체제   {{ form.os }}</label>
+                    {{ form.framework }}
+                    <label for="id_os">운영체제    {{ form.os }}</label>
+                    
                     {{ form.problem_solving }}
                 </div>
                 <div class="error_area">
@@ -35,23 +36,20 @@
                     {{ form.desc }}
                 </div>
                 <div class="tag_area">
-                    공개설정 | 
-                    <input type="radio" id="id_is_public" />
-                    <label for="id_is_public">전체공개</label>
-                    <input type="radio" id="id_is_public" />
-                    <label for="id_is_public">비공개</label>
-                    <input type="radio" id="id_is_public" />
-                    <label for="id_is_public">이웃공개</label>
+                    공개설정 <input type="radio" id="id_is_public1" />
+                    <label for="id_is_public1">전체공개</label>
+                    <input type="radio" id="id_is_public2" />
+                    <label for="id_is_public2">비공개</label>
                     <label class="tag_label" for="id_tag">태그</label>{{ form.tag }}
                 </div>
                 <div class="btn_area">
                     <button class="btn_control">임시저장</button>                   
-                        <input type="submit" value="수정하기" class="btn_control"/>
+                        <input type="submit" value="기록 수정" class="btn_control"/>
                     <button  class="btn_control">
-                        <a href="{% url 'posts:main' %}">나가기</a>
+                        <a href="{% url 'question:question_main' %}">나가기</a>
                     </button>
                 </div>
             </form>
         </div>
     </div>
-{% endblock %}
+{% endblock content %}

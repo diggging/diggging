@@ -85,6 +85,15 @@ def question_create(request):
 
         return render(request, "questions/question_create.html", ctx)
 
+def get_answer_comments (request, answer_id):
+    answer = Answer.objects.get(pk=answer_id)
+    answer_comments = answer.answer_comments.all()
+    ctx = {
+        "post": answer,
+        "comments": answer_comments,
+    }
+    return render(request, "questions/question_detail.html", ctx)
+
 def question_update(request, pk):
     question_posts = get_object_or_404(Question_post, pk=pk)
     if request.method == "POST":
