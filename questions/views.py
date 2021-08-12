@@ -116,7 +116,6 @@ def question_post_detail(request, user_id, post_id):
     post_answers = post_details.answers.all().order_by("-created")
     # question_comments 역참조
     comments = post_details.question_comments.all()
-    
     ctx = {
         "post": post_details,
         "host": me,

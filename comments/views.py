@@ -89,8 +89,8 @@ def add_answer_comment(request):
     answer_comment.save()
     new_alarm = Alarm.objects.create(user=answer.user, reason="내가 남긴 답변"+ answer.title+'에' + request.user.user_nickname+'님이 댓글을 남겼어요.')
     return JsonResponse({
-        "answer_id": answer_id,
-        "answer_comment_content": answer_comment_content,
+        "id": answer_id,
+        "text": answer_comment_content,
         "comment_id": answer_comment.id,
     })
 @csrf_exempt
@@ -102,8 +102,8 @@ def delete_answer_comment(request):
     answer_comment = Comment.objects.get(id=answer_id)
     answer_comment.delete()
     return JsonResponse({
-        'answer_id': answer_id,
-        "answer_comment_id": answer_comment_id,
+        'id': answer_id,
+        "comment_id": answer_comment_id,
     })
 #------------------------------------------------------------------------------------------------------------------------------------------------#
 # 질문광장 부분 posts detail 내부 댓글 보기 ajax
