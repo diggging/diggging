@@ -36,14 +36,14 @@ const getUser = async() => {
     }
 }
 
-function escapeRegExp (string) {
+function escapeRegExp (string) { // c++ 인식 해결
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
 // 검색어 match
 function findInput(wordToMatch, postList) {
     return postList.filter(post => {
-        const regex = new RegExp(escapeRegExp(wordToMatch), 'gi'); //패턴을 사용해 텍스트를 판별할 때 사용하는 정규 표현식 객체를 생성
+        const regex = new RegExp(wordToMatch, 'gi'); //패턴을 사용해 텍스트를 판별할 때 사용하는 정규 표현식 객체를 생성
         return post.title.match(regex) 
         || post.desc.match(regex) //p 인식의 주범,,,,,,,
         || post.tag.match(regex)
@@ -94,7 +94,14 @@ function displayInputMatches(){
 }
 
 function displayLanguageMatches(){
-    const matchArray = findSelect(this.value, postList);
+    let matchArray = findSelect(this.value, postList);
+
+    if (this.value === "전체") {
+        matchArray = postList
+    } else {
+        console.log("전체가 아니야!")
+    }
+
     const html = matchArray.map(post => {
 
         return `
@@ -116,9 +123,15 @@ function displayLanguageMatches(){
 }
 
 function displayOsMatches(){
-    const matchArray = findSelect(this.value, postList);
-    const html = matchArray.map(post => {
+    let matchArray = findSelect(this.value, postList);
 
+    if (this.value === "전체") {
+        matchArray = postList
+    } else {
+        console.log("전체가 아니야!")
+    }
+
+    const html = matchArray.map(post => {
         return `
             <div>
                 ${post.title}
@@ -138,9 +151,9 @@ function displayOsMatches(){
 }
 
 function displaySolveMatches(){
-    const matchArray = findSelect(this.value, postList);
-    const html = matchArray.map(post => {
+    let matchArray = findSelect(this.value, postList);
 
+    const html = matchArray.map(post => {
         return `
             <div>
                 ${post.title}
@@ -160,9 +173,15 @@ function displaySolveMatches(){
 }
 
 function displayFrameWorkMatches(){
-    const matchArray = findSelect(this.value, postList);
-    const html = matchArray.map(post => {
+    let matchArray = findSelect(this.value, postList);
 
+    if (this.value === "전체") {
+        matchArray = postList;
+    } else {
+        console.log("전체가 아니야!")
+    }
+
+    const html = matchArray.map(post => {
         return `
             <div>
                 ${post.title}
