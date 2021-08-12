@@ -184,13 +184,20 @@ def search(request):
         }
         return render(request, "posts/search.html", ctx)
 
+#post data 보내주기
 @csrf_exempt
-def search_axios(request):
+def search_post_axios(request):
     post = Post.objects.all()
     post_list = serializers.serialize('json', post)
-    
+
     return HttpResponse(post_list, content_type="text/json-comment-filtered")
 
+#user data 보내주기
+@csrf_exempt
+def search_user_axios(request):
+    user = User.objects.all()
+    user_list = serializers.serialize('json', user)
+    return HttpResponse(user_list, content_type="text/json-comment-filtered")
 
 # 삽질 기록 퍼오기
 def get_post(request, user_id, post_id):
