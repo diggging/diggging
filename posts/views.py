@@ -167,22 +167,27 @@ def search(request):
     form = SelectForm()
     posts = Post.objects.all()
     q = request.POST.get('q', "")
-    if q: 
-        search_title = posts.filter(title__icontains=q)
-        search_desc = posts.filter(desc__icontains=q)
-        post = search_desc.union(search_title)        
-        ctx = {
-            'posts': post,
+    # if q: 
+    #     search_title = posts.filter(title__icontains=q)
+    #     search_desc = posts.filter(desc__icontains=q)
+    #     post = search_desc.union(search_title)        
+    #     ctx = {
+    #         'posts': post,
+    #         'q': q,
+    #         'form': form,
+    #     }
+    #     return render(request, "posts/search.html", ctx)
+        
+    # else:
+    #     ctx = {
+    #         'form': form,
+    #     }
+    ctx = {
+            'posts': posts,
             'q': q,
             'form': form,
         }
-        return render(request, "posts/search.html", ctx)
-        
-    else:
-        ctx = {
-            'form': form,
-        }
-        return render(request, "posts/search.html", ctx)
+    return render(request, "posts/search.html", ctx)
 
 #post data 보내주기
 @csrf_exempt

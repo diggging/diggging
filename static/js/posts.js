@@ -36,37 +36,48 @@ const getUser = async() => {
     }
 }
 
-// 검색 관련 함수
-function numberWithCommas(x) { //숫자 3자리마다  ,
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+function escapeRegExp (string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
 // 검색어 match
-function findMatches(wordToMatch, postList) {
+function findInput(wordToMatch, postList) {
     return postList.filter(post => {
-        const regex = new RegExp(wordToMatch, 'gi') //패턴을 사용해 텍스트를 판별할 때 사용하는 정규 표현식 객체를 생성
+        const regex = new RegExp(escapeRegExp(wordToMatch), 'gi'); //패턴을 사용해 텍스트를 판별할 때 사용하는 정규 표현식 객체를 생성
         return post.title.match(regex) 
-        || post.desc.match(regex) 
+        || post.desc.match(regex) //p 인식의 주범,,,,,,,
         || post.tag.match(regex)
     });
 }
 
+function findSelect(wordToMatch, postList) {
+    return postList.filter(post => {
+        const regex = new RegExp(escapeRegExp(wordToMatch), 'gi');
+        return post.language.match(regex)
+        || post.framework.match(regex)
+        || post.os.match(regex)
+        || post.problem_solving.match(regex)
+    })
+}
+
 // matching된 검색 관련 글 출력
-function displayMatches(){
-    const matchArray = findMatches(this.value, postList);
+function displayInputMatches(){
+    const matchArray = findInput(this.value, postList);
     const html = matchArray.map(post => {
-        const regex = new RegExp(this.value, 'gi');
-        const title = post.title.replace(regex, `<span class="h1">${this.value}</span>`);
-        const desc = post.desc.replace(regex, `<span class="h1">${this.value}</span>`);
-        const tag = post.tag.replace(regex, `<span class="h1">${this.value}</span>`);
+        const regex = new RegExp(this.value, 'gi'); //대소문자 구별 없이!
+        const title = post.title.replace(regex, `${this.value}`);
+        const desc = post.desc.replace(regex, `${this.value}`);
+        const tag = post.tag.replace(regex, `${this.value}`);
 
         return `
             <div>
                 ${title}
+                ${desc}
+                ${tag}
+                ${post.username}
             </div>
                 `
     }).join('');
-
     // not empty
     if (checkEmpty.value && // if exist AND
         checkEmpty.value.length > 0 && // if value have one charecter at least
@@ -79,17 +90,113 @@ function displayMatches(){
     else if(!checkEmpty.value) {
         suggestions.innerHTML = "";
         console.log('No value!');
-    } 
+    }
+}
+
+function displayLanguageMatches(){
+    const matchArray = findSelect(this.value, postList);
+    const html = matchArray.map(post => {
+
+        return `
+            <div>
+                ${post.title}
+                ${post.desc}
+                ${post.tag}
+                ${post.username}
+            </div>
+                `
+    }).join('');
+
+    // not empty
+    if (selectField.value) // if exist AND
+    {   
+        suggestions.innerHTML = html;
+        console.log('select is:  ' + selectField.value);
+    }
+}
+
+function displayOsMatches(){
+    const matchArray = findSelect(this.value, postList);
+    const html = matchArray.map(post => {
+
+        return `
+            <div>
+                ${post.title}
+                ${post.desc}
+                ${post.tag}
+                ${post.username}
+            </div>
+                `
+    }).join('');
+
+    // not empty
+    if (selectField2.value) // if exist AND
+    {   
+        suggestions.innerHTML = html;
+        console.log('select is:  ' + selectField2.value);
+    }
+}
+
+function displaySolveMatches(){
+    const matchArray = findSelect(this.value, postList);
+    const html = matchArray.map(post => {
+
+        return `
+            <div>
+                ${post.title}
+                ${post.desc}
+                ${post.tag}
+                ${post.username}
+            </div>
+                `
+    }).join('');
+
+    // not empty
+    if (selectField3.value) // if exist AND
+    {   
+        suggestions.innerHTML = html;
+        console.log('select is:  ' + selectField3.value);
+    }
+}
+
+function displayFrameWorkMatches(){
+    const matchArray = findSelect(this.value, postList);
+    const html = matchArray.map(post => {
+
+        return `
+            <div>
+                ${post.title}
+                ${post.desc}
+                ${post.tag}
+                ${post.username}
+            </div>
+                `
+    }).join('');
+
+    // not empty
+    if (selectField4.value) // if exist AND
+    {   
+        suggestions.innerHTML = html;
+        console.log('select is:  ' + selectField4.value);
+    }
 }
 
 const checkEmpty = document.querySelector('.search');
 const searchInput = document.querySelector('.search');
 const suggestions = document.querySelector('.post_container');
 
-searchInput.addEventListener('input', displayMatches);
+const selectField = document.querySelector('#id_field');
+const selectField2 = document.querySelector('#id_field2');
+const selectField3 = document.querySelector('#id_field3');
+const selectField4 = document.querySelector('#id_field4');
+
+searchInput.addEventListener('input', displayInputMatches);
+selectField.addEventListener('change', displayLanguageMatches);
+selectField2.addEventListener('change', displayOsMatches);
+selectField3.addEventListener('change', displaySolveMatches);
+selectField4.addEventListener('change', displayFrameWorkMatches);
 
 function init() {
     getPost();
-    // checkInput();
 }
 init();
