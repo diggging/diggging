@@ -106,10 +106,34 @@ requestDelComment.onreadystatechange = () =>{
         commentdelHandleResponse();
     };      
 };
+function sendLinkFacebook(){
+    var facebook_share_url = "https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}";
+    window.open(facebook_share_url,
+                'Share on Facebook',
+                'scrollbars=no, width=500, height=500');
+}    
+function sendLinkTwitter(){
+    var twitter_share_text="{{ post.title }}";
+    var twitter_share_url="{{ request.build_absolute_uri }}";
+    window.open("https://twitter.com/share?text="+twitter_share_text+"&url="+twitter_share_url,
+                'Share on Twitter',
+                'scrollbars=no, width=500, height=500');
+}
+function sendLinkNaver(){
+    var raw_url = "{{ request.build_absolute_uri }}";
+    var raw_title = "{{ post.title }}"
+    var naver_root_url = "http://share.naver.com/web/shareView.nhn?url="
+    var naver_share_url = naver_root_url+encodeURI(raw_url)+"&title="+encodeURI(raw_title);
+    window.open(naver_share_url,
+                'Share on Naver',
+                'scrollbars=no, width=500, height=500');    
+}
 </script>
+
 {% endblock %}
 
 {% block content %}
+
 <div class="container_detail">
     {% if post.image %}
         <img src="{{ post.image.url }}" class="thumbnail_area">
@@ -128,7 +152,7 @@ requestDelComment.onreadystatechange = () =>{
         <div class="category_area">
             <span class="post_language">언어|{{post.language}}</span>
             <span class="folder_name">폴더|{{folder.folder_name}}</span>
-            <span class="post_os">운영체제|{{post.os}}}</span>
+            <span class="post_os">운영체제|{{post.os}}</span>
             <div class="post_os">에러메시지|{{post.error_message}}</div>
         </div>
         <div class="desc_area">
@@ -137,6 +161,32 @@ requestDelComment.onreadystatechange = () =>{
         <div class="post_{{post.id}}">
             <div class="tag_area">{{post.tag}}</div>
             <button class="like_button post__like" onclick="onClickLikeScrap({{ post.id }}, 'like')">도움이되었어요 {{ post.helped_num }}</button>
+            <div class="accordion_area">
+                <button class="btn btn_toggle">공유하기</button>
+                <div class="content_area">
+                    <span class="sociallink ml-1">
+                        <a href="javascript:sendLinkFacebook()" title="페이스북으로 공유">
+                        <img src="{% static 'images/facebook.png' %}" width=36 alt="Facebook">
+                        </a>
+                    </span>
+                    <span class="sociallink ml-1">
+                        <a href="javascript:sendLinkTwitter()" title="트위터로 공유">
+                        <img src="{% static 'images/twitter.png' %}" width=36 alt="Twitter">
+                        </a>
+                    </span>
+                    <span class="sociallink ml-1">
+                        <a href="javascript:sendLinkNaver()" title="네이버로 공유">
+                        <img src="{% static 'images/naver.png' %}" width=36 alt="Naver">
+                        </a>
+                    </span>
+                    <span class="sociallink ml-1">
+                        <a href="javascript:sendLinkKakao()" id="kakao-link-btn" title="카카오톡으로 공유">
+                        <img src="{% static 'images/kakaotalk.png' %}" width=36 alt="Kakaotalk"> <!--이거는 도메인이없어서 못하는중임당... 배포하면 수정 할 예정.-->
+                        </a>
+                    </span>
+                </div>
+            </div>
+
             <span><a href="{% url 'posts:get_post' user_id=post.user.id post_id=post.id %}"><button class="post__scrap" onclick="onClickLikeScrap({{ post.id }}, 'scrap')">퍼가기 {{post.scrap_num}}</button></a></span>
         </div>
             <div class="edit_btn">
@@ -167,9 +217,9 @@ requestDelComment.onreadystatechange = () =>{
     </div>
 </div>        
 
-{% endblock %}
-
 <script>
+
+
 //     // axios try
 // const likeButton = document.querySelector('.like_button')
 // likeButton.forEach(button => {
@@ -213,3 +263,9 @@ requestDelComment.onreadystatechange = () =>{
 
 
 // ajax로 다시시도
+</script>
+{% endblock %}
+
+
+
+
