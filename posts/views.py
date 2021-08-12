@@ -49,6 +49,7 @@ def main(request):
 
 
 # 프론트에서 해당 포스트 id 넘겨주면
+@login_required
 def post_detail(request, user_id, post_id):
     post_details = Post.objects.get(pk=post_id)
     me = get_object_or_404(User, pk=user_id)
@@ -89,115 +90,83 @@ def post_create(request):
             framework = request.POST.get("framework")  # framework 가져옴
             solve = request.POST.get("problem_solving")  # 해결 여부
 
-            lang_folder = Folder.objects.filter(folder_name=language, folder_user=me, folder_kind="language")  # lang folder 가져옴
-            frame_folder = Folder.objects.filter(folder_name=framework, folder_user=me, folder_kind="framework")  # frameworkd folder 가져옴
+            lang_folder = Folder.objects.filter(
+                folder_name=language, folder_user=me
+            )  # lang folder 가져옴
+            frame_folder = Folder.objects.filter(
+                folder_name=framework, folder_user=me
+            )  # frameworkd folder 가져옴
 
             if lang_folder.exists():
                 # 있으면 foriegn key 연결
-                existed_folder = Folder.objects.get(folder_name=language, folder_user=me, folder_kind="language")
+                existed_folder = Folder.objects.get(
+                    folder_name=language, folder_user=me
+                )
                 posts.folder.add(existed_folder)
             else:
                 # 없으면 folder 만들어서
-                new_folder = Folder.objects.create(folder_name=language, folder_user=me, folder_kind="language")
+                new_folder = Folder.objects.create(folder_name=language, folder_user=me)
                 posts.folder.add(new_folder)
 
             if frame_folder.exists():
                 # 있으면 foriegn key 연결
-                existed_folder = Folder.objects.get(folder_name=framework, folder_user=me, folder_kind="framework")
+                existed_folder = Folder.objects.get(
+                    folder_name=framework, folder_user=me
+                )
                 posts.folder.add(existed_folder)
             else:
                 # 없으면 folder 만들어서
-                new_folder = Folder.objects.create(folder_name=framework, folder_user=me, folder_kind="framework")
+                new_folder = Folder.objects.create(
+                    folder_name=framework, folder_user=me
+                )
+                posts.folder.add(new_folder)
+
+            if frame_folder.exists():
+                # 있으면 foriegn key 연결
+                existed_folder = Folder.objects.get(
+                    folder_name=framework, folder_user=me
+                )
+                posts.folder.add(existed_folder)
+            else:
+                # 없으면 folder 만들어서
+                new_folder = Folder.objects.create(
+                    folder_name=framework, folder_user=me
+                )
                 posts.folder.add(new_folder)
 
             # 해결, 미해결 폴더에 넣기
             if solve == "해결":
-                existed_folder = Folder.objects.get(folder_user=me, folder_name=solve, folder_kind="solved")
+                existed_folder = Folder.objects.get(folder_user=me, folder_name=solve)
                 posts.folder.add(existed_folder)
             else:
-                print(solve)
-                print(Folder.objects.get(folder_user=me, folder_name=solve))
-                existed_folder = Folder.objects.get(folder_user=me, folder_name=solve, folder_kind="solved")
+                existed_folder = Folder.objects.get(folder_user=me, folder_name=solve)
                 posts.folder.add(existed_folder)
 
             posts.save()
+
             # 포스팅 시에 sand 추가해주기
             new_sand = Sand.objects.create(user=me, amount=100, reason="삽질 기록 작성")
 
             # 지수언니가 말한대로 고침!
             return redirect("posts:post_detail", posts.user.id, posts.id)
-        
+
     form = PostForm()
-    ctx = {"form": form}
+    ctx = {
+        "form": form,
+    }
+
     return render(request, "posts/post_create.html", context=ctx)
 
 
 def post_update(request, pk):
-    # 눈물나는 update.......................
-    # 수정히기 -> 폴더 바뀌면 폴더 바꿔야함
-    # 원래 있던 폴더에 글이 하나밖에 없었다면 폴더가 삭제 되어야함(하지만 해결 미해결은 아님)
-    # 으아ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ
-    post = get_object_or_404(Post, pk=pk)
-    origin_lang_fol = post.folder.get(folder_kind="language")
-    origin_frame_fol = post.folder.get(folder_kind="framework")
-    origin_solve_fol = post.folder.get(folder_kind="solved")
-    print(origin_lang_fol)
-    print(origin_frame_fol)
-    print(origin_solve_fol)
+    posts = get_object_or_404(Post, pk=pk)
     if request.method == "POST":
-        form = PostForm(request.POST, instance=post)
+        form = PostForm(request.POST, instance=posts)
         if form.is_valid():
             form.save()
-            new_lang = request.POST.get("language")
-            new_frame = request.POST.get("framework")
-            new_solve = request.POST.get("problem_solving")
-            print(new_lang)
-            print(new_frame)
-            print(new_solve)
-
-            # lang 폴더가 달라진다면?
-            if new_lang != origin_lang_fol.folder_name:
-                # 1. post와 폴더의 관계 끊기
-                origin_lang_fol.related_posts.remove(post)
-                # 2. post와 새로운 폴더와의 연결
-                # 이미 있는 폴더면 걍 넣어주고 아니면 생성후 넣어줌
-                lang_folder = Folder.objects.filter(folder_name=new_lang, folder_user=post.user, folder_kind="language")
-                if lang_folder.exists():
-                    # 있으면 foriegn key 연결
-                    existed_folder = Folder.objects.get(folder_name=new_lang, folder_user=post.user, folder_kind="language")
-                    post.folder.add(existed_folder)
-                else:
-                # 없으면 folder 만들어서
-                    new_folder = Folder.objects.create(folder_name=new_lang, folder_user=post.user, folder_kind="language")
-                    post.folder.add(new_folder)
-                # 원래 폴더에 더이상 연결된 post가 없다면? 폴더삭제 / 있다면? 냅두기
-                print(origin_lang_fol.related_posts.all())
-                if not origin_lang_fol.related_posts.all():
-                    origin_lang_fol.delete()
-
-            # framework
-            if new_frame != origin_frame_fol.folder_name:
-                origin_frame_fol.related_posts.remove(post)
-                frame_folder = Folder.objects.filter(folder_name=new_frame, folder_user=post.user, folder_kind="framework")
-                if frame_folder.exists():
-                    existed_folder = Folder.objects.get(folder_name=new_frame, folder_user=post.user, folder_kind="framework")
-                    post.folder.add(existed_folder)
-                else:
-                    new_folder = Folder.objects.create(folder_name=new_frame, folder_user=post.user, folder_kind="framework")
-                    post.folder.add(new_folder)
-                if not origin_frame_fol.related_posts.all():
-                    origin_frame_fol.delete()
-            
-            # solve
-            if new_solve != origin_solve_fol.folder_name:
-                origin_solve_fol.related_posts.remove(post)    # 지우고
-                solve_folder = Folder.objects.get(folder_name=new_solve, folder_user=post.user, folder_kind="solved")
-                post.folder.add(solve_folder)
-
-            post.save()
-            return redirect("posts:main") #수정
+            return redirect("posts:main")  # 수정
     else:
-        form = PostForm(instance=post)
+        form = PostForm(instance=posts)
         ctx = {
             "form": form,
         }
@@ -291,8 +260,9 @@ def get_post(request, user_id, post_id):
     )
 
     # 퍼가기 -> host 에게 alarm감
-    print(me)
-    new_alarm = Alarm.objects.create(user=post_host, reason= me.user_nickname+"님이 내 기록 "+post.title+"을 퍼갔어요.")
+    new_alarm = Alarm.objects.create(
+        user=post_host, reason=me.user_nickname + "님이 내 기록 " + post.title + "을 퍼갔어요."
+    )
     # url: 저장 후 post_detail 페이지에 남아있음.
     return redirect("posts:post_detail", user_id, post_id)
 
