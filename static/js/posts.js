@@ -51,13 +51,12 @@ function findInput(wordToMatch, postList) {
 }
 
 function findSelect(wordToMatch, postList) {
-    return postList.filter(post => {
-        const regex = new RegExp(escapeRegExp(wordToMatch), 'gi');
-        return post.language.match(regex)
-        || post.framework.match(regex)
-        || post.os.match(regex)
-        || post.problem_solving.match(regex)
-    })
+    const matchLang = postList.filter(post => post.language === wordToMatch)
+    const matchOs = postList.filter(post => post.os === wordToMatch)
+    const matchSolve = postList.filter(post => post.problem_solving === wordToMatch)
+    const matchFramework = postList.filter(post => post.framework === wordToMatch)
+
+    return matchLang, matchOs, matchSolve, matchFramework
 }
 
 // matching된 검색 관련 글 출력
@@ -94,16 +93,15 @@ function displayInputMatches(){
 }
 
 function displayLanguageMatches(){
-    let matchArray = findSelect(this.value, postList);
-
+    let matchArray = []
+    
     if (this.value === "전체") {
         matchArray = postList
     } else {
-        console.log("전체가 아니야!")
+        matchArray = postList.filter(post => post.language === this.value)
     }
 
     const html = matchArray.map(post => {
-
         return `
             <div>
                 ${post.title}
@@ -123,11 +121,12 @@ function displayLanguageMatches(){
 }
 
 function displayOsMatches(){
-    let matchArray = findSelect(this.value, postList);
+    let matchArray = []
 
     if (this.value === "전체") {
         matchArray = postList
     } else {
+        matchArray = postList.filter(post => post.os === this.value)
         console.log("전체가 아니야!")
     }
 
@@ -151,7 +150,13 @@ function displayOsMatches(){
 }
 
 function displaySolveMatches(){
-    let matchArray = findSelect(this.value, postList);
+    let matchArray = []
+
+    if (this.value === "전체") {
+        matchArray = postList
+    } else {
+        matchArray = postList.filter(post => post.problem_solving === this.value)
+    }
 
     const html = matchArray.map(post => {
         return `
@@ -173,11 +178,12 @@ function displaySolveMatches(){
 }
 
 function displayFrameWorkMatches(){
-    let matchArray = findSelect(this.value, postList);
+    let matchArray = []
 
     if (this.value === "전체") {
-        matchArray = postList;
+        matchArray = postList
     } else {
+        matchArray = postList.filter(post => post.framework === this.value)
         console.log("전체가 아니야!")
     }
 
