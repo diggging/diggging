@@ -7,6 +7,7 @@ from core import models as core_models
 from tagging.fields import TagField
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.conf import settings
 
 # Create your models here
 class Post(core_models.TimeStampModel):
@@ -186,8 +187,15 @@ class Post(core_models.TimeStampModel):
     is_friend = models.BooleanField(verbose_name="이웃공개", default=False)  # 나를 팔로잉 하는 사람.
     scrap_num = models.IntegerField(default=0)
     helped_num = models.IntegerField(default=0)
-
+    likes_user = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        related_name="likes_user",
+    )
     objects = models.Manager()
+
+    def count_likes_user(self):
+        return self.likes_user.count()
 
 
 class Folder(core_models.TimeStampModel):
