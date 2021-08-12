@@ -115,15 +115,26 @@ requestDelComment.onreadystatechange = () =>{
         <img src="{{ post.image.url }}" class="thumbnail_area">
     {% endif %}
     <div class="post_container">
-        <div class="title_area">
-            <h1>{{post.title}}</h1>
-            <div class="post_user_info">
-                {% if post.user.user_profile_image %}
-                    <img src="{{post.user.user_profile_image.url}}">
-                {% endif %}
-                <span>{{post.user.username}}</span>
+        <div class="post_top">
+            <div class="title_area">
+                <h1>{{post.title}}</h1>
+                <div class="post_user_info">
+                    {% if post.user.user_profile_image %}
+                        <img src="{{post.user.user_profile_image.url}}">
+                    {% endif %}
+                    <span>{{post.user.username}}</span>
+                </div>
             </div>
-
+            {% if request.user.id == post.user.id %}
+                <div class="auth_btn_area">
+                    <div class="edit_btn">
+                        <a href="{% url 'posts:post_update' post.id %}">수정하기</a>
+                    </div>
+                    <div class="delete_btn">
+                        <a href="{% url 'posts:post_delete' post.id %}">삭제하기</a>
+                    </div>
+                </div>
+            {% endif %}
         </div>
         <div class="category_area">
             <span class="post_language">언어|{{post.language}}</span>
@@ -137,14 +148,8 @@ requestDelComment.onreadystatechange = () =>{
         <div class="post_{{post.id}}">
             <div class="tag_area">{{post.tag}}</div>
             <button class="like_button post__like" onclick="onClickLikeScrap({{ post.id }}, 'like')">도움이되었어요 {{ post.helped_num }}</button>
-            <span><a href="{% url 'posts:get_post' user_id=post.user.id post_id=post.id %}"><button class="post__scrap" onclick="onClickLikeScrap({{ post.id }}, 'scrap')">퍼가기 {{post.scrap_num}}</button></a></span>
+            <a href="{% url 'posts:get_post' user_id=post.user.id post_id=post.id %}"><button class="post__scrap" onclick="onClickLikeScrap({{ post.id }}, 'scrap')">퍼가기 {{post.scrap_num}}</button></a>
         </div>
-            <div class="edit_btn">
-                <a href="{% url 'posts:post_update' post.id %}">수정하기</button>
-            </div>
-            <div class="delete">
-                <a href="{% url 'posts:post_delete' post.id %}">삭제하기</a>
-            </div>
         <div class="comment_area">
             <div class='addComment'>
                 {% for comment in comments %}

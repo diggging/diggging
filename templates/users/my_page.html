@@ -24,9 +24,11 @@
                     </div>
                         레벨 | {{user.user_level}} 단계
                     </h4>
-                    <h4>
-                        현재 모래 | {{user.user_point}} 포인트
-                    </h4>
+                    <div class="point_gage">
+                        <label for="value_low">{{user.user_point}} 모래포인트</label>
+                        <!-- value값이 내 모래포인트에 따라서 반영되어야함. max기준도 레벨에 따라 바뀌어야함.(아직구현X) -->
+                        <meter id="value_low" min="0" max="100" low="30" high="60" optimum="90" value="10"></meter>
+                    </div>
                     <div class="proflie_text">    
                     {% if request.user.user_profile_content %}    
                         {{request.user.user_profile_content}}
@@ -67,12 +69,4 @@
 
     </div>
     <div class="third_container container"></div>
-
-{% for sand in my_all_sands%}
-<p>{{sand.user}}</p>
-<p>{{sand.amout}}</p>
-<p>{{sand.reason}}</p>
-<br/>
-{% endfor%}
-
 {% endblock %}

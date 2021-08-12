@@ -28,6 +28,7 @@ urlpatterns = [
     path('<int:pk>/my_page_folder/', view=views.my_page_folder, name="my_page_folder"),
     path('<int:host_pk>/follow', view=views.follow, name = "follow"),
     path('<int:pk>/follow_list', view=views.follow_list, name = "follow_list"),
+    path('<int:pk>/my_page_point/', view=views.my_page_point, name="my_page_point"),  
 
     path('<int:pk>/account_detail', view=views.account_detail, name = "account_detail"),
     path('<int:pk>/change_nickname/', view=views.change_nickname, name="change_nickname"),

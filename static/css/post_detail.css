@@ -77,6 +77,11 @@ body {
     padding: 20rem;
 }
 
+.post_top {
+    display: flex;
+    justify-content: space-between;
+}
+
 .post_area h1 {
     font-size: 2em;
     color: var(--text-color);
@@ -108,8 +113,9 @@ body {
 }
 
 .post_user_info img {
-    width: 44px;
-    border-radius: 16px;
+    width: 36px;
+    border-radius: 20px;
+    margin: 10px;
 }
 
 .user_nickname {
@@ -117,15 +123,77 @@ body {
     align-items: center;
 }
 
+
+.auth_btn_area {
+    display: flex;
+    align-items: center;
+}
+
+.auth_btn_area > div {
+    padding: 20px;
+}
+
+.auth_btn_area a {
+    padding: 10px 14px;
+}
+
+.edit_btn > a {
+    font-family: var(--btn-font);
+    color:var(--sand-color);
+    background-color: var(--btn-color);
+    border-radius: 4px;
+    box-shadow: none;
+    border: solid 2px var(--sand-color);
+    color: var(--sand-color);
+    text-decoration: none;
+    padding: 10px 14px;
+}
+
+.edit_btn > a:visited {
+    color: var(--sand-color);
+    text-decoration: none;
+}
+
+.edit_btn a:hover {
+    background-color: var(--hover-color);
+}
+
+.edit_btn a:active {
+    background-color: floralwhite;
+    color: var(--sand-color)
+}
+
+.delete_btn a:hover {
+    background-color: #fee5ce;
+    color: salmon;
+}
+
+.delete_btn a:active {
+    background-color: lightsalmon;
+    color: whitesmoke;
+}
+
 .category_area {
     font-family: var(--btn-font);
     font-size: 0.825rem;
     color:var(--text-color);
 }
-
 .desc_area {
     font-family: var(--content-font);
+    min-height: 8rem;
+    font-size: 1rem;
+    margin-top: 2rem;
+    
 }
+
+.tag_area {
+    margin-bottom: 30px;
+}
+
+.comment_box {
+    margin-bottom: 30px;
+}
+
 
 .addComment {
     font-size: 1rem;
@@ -198,10 +266,10 @@ body {
     font-family: var(--content-font);
     border: solid 1px var(--border-color);
     border-radius: 4px;
-    width: 50em;
+    width: 80%;
 }
 
-.like_button, .post__scrap {
+.post__like, .post__scrap {
     padding: 10px 20px;
     border: 1px solid var(--border-color);
     background: floralwhite;
