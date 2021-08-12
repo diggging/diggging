@@ -107,6 +107,39 @@ form {
     justify-content: center;
 }
 
+
+#id_error_message {
+    display: flex;
+    height: 60px;
+    width: 835px;
+    padding: 5px 7px; 
+    font-family: var(--btn-font);
+    border: solid 1px var(--border-color);
+    margin: 10px 0px;
+    font-size : var(--btn-font);
+}
+
+.choice_area {
+    font-family: var(--btn-font);
+    display: flex;
+    justify-content: space-between
+}
+
+.choice_area select {
+    width: 10em;
+    height: 44px;
+    border: solid 1px var(--border-color);
+    font-family: var(--content-font);
+    font-size: 1em;
+    color: var(--text-color);
+}
+
+.choice_area :not(:first-child) {
+    margin-left: 20px;
+}
+
+
+
 .btn_area {
     display: flex;
     justify-content: space-evenly;

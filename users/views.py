@@ -56,6 +56,9 @@ def signup(request):
             to_email = user_form.cleaned_data.get('email')
             email = EmailMessage(mail_subject, message, to=[to_email])
             email.send()
+
+            solved = Folder.objects.create(folder_user=user, folder_name="해결")
+            not_solved = Folder.objects.create(folder_user=user, folder_name="미해결")
             # return HttpResponse('Please confirm your email address to complete the registration') -> 이메일 인증 성공 확인 가능 메세지
             return redirect('users:login')
     else:

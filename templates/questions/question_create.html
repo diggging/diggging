@@ -6,9 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="{% static 'posts/post_create.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/questions/question_create.css' %}" />
     <!-- <link rel="stylesheet" href="../../../highlight/styles/base16/framer.min.css"> -->
-
 </head>
 <body>
     <div class="create_title">
@@ -23,7 +22,7 @@
                 {{ form.media }}
                 <div class="thumbnail_area">
                     <label for="id_image">
-                      <img src="{% static 'posts/thumbnail_image.svg' %}" />
+                      <img src="{% static 'image/thumbnail_image.svg' %}" />
                     </label>
                     {{ form.image }}
                 </div>

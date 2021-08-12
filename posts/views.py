@@ -74,12 +74,15 @@ def post_create(request):
             me = posts.user  # folder 주인 가져오기
             language = request.POST.get("language")  # language 가져옴
             framework = request.POST.get("framework")  # framework 가져옴
+            solve = request.POST.get("problem_solving") # 해결 여부
+
             lang_folder = Folder.objects.filter(
                 folder_name=language, folder_user=me
             )  # lang folder 가져옴
             frame_folder = Folder.objects.filter(
                 folder_name=framework, folder_user=me
             )  # frameworkd folder 가져옴
+
             if lang_folder.exists():
                 # 있으면 foriegn key 연결
                 existed_folder = Folder.objects.get(
@@ -104,6 +107,28 @@ def post_create(request):
                 )
                 posts.folder.add(new_folder)
 
+            if frame_folder.exists():
+                # 있으면 foriegn key 연결
+                existed_folder = Folder.objects.get(
+                    folder_name=framework, folder_user=me
+                )
+                posts.folder.add(existed_folder)
+            else:
+                # 없으면 folder 만들어서
+                new_folder = Folder.objects.create(
+                    folder_name=framework, folder_user=me
+                )
+                posts.folder.add(new_folder)
+
+            # 해결, 미해결 폴더에 넣기
+            if solve == "해결":
+                existed_folder = Folder.objects.get(folder_user=me, folder_name=solve)
+                posts.folder.add(existed_folder)
+            else:
+                existed_folder = Folder.objects.get(folder_user=me, folder_name=solve)
+                posts.folder.add(existed_folder)
+
+
             posts.save()
 
             # 포스팅 시에 sand 추가해주기
@@ -111,12 +136,14 @@ def post_create(request):
 
             # 지수언니가 말한대로 고침!
             return redirect("posts:post_detail", posts.user.id, posts.id)
-        form = PostForm()
-        ctx = {
-            "form": form,
-        }
+        
 
-        return render(request, "posts/post_create.html", context=ctx)
+    form = PostForm()
+    ctx = {
+        "form": form,
+    }
+
+    return render(request, "posts/post_create.html", context=ctx)
 
 
 def post_update(request, pk):

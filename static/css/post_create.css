@@ -118,7 +118,7 @@ form {
 }
 
 .choice_area select {
-    width: 12em;
+    width: 10em;
     height: 44px;
     border: solid 1px var(--border-color);
     font-family: var(--content-font);
