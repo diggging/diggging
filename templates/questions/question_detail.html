@@ -107,29 +107,27 @@
             <div class="answer_desc_box">
                 {{ answer.desc|safe|escape|linebreaks}}
             </div>
-            <a href="javascript:answerCmtDisplay">댓글창 열기</a>
+            <a href="javascript:doDisplay2()">댓글창 열기</a>
             <!-- 답변의 댓글창영역 -->
             <div id="answer_comment_box">
                 <div class='addAnswerComment'>
-                    {% for comment in answer.answer_comments.all %}
-                    <div class='answer_comment_id_{{comment.id}}'>
-                        <div class="answer_comment_text">
-                            {{comment.text}}
-                        </div>
-                        <div class="add_comment_delete_btn">
-                            <button onclick="onClickAnswerCommentDelete({{answer.id}}, {{comment.id}})">삭제</button>
-                        </div>
-                        <div>
-                            <input class="answer_comment_input" type="text" placeholder="댓글달기" />
-                            <button onclick="onClickAnswerComment({{ post.id }})">게시</button>
-                            <!--comment 별로 id 준당-->
-                        </div>
+                    <div>
+                        <input class="answer_comment_input" type="text" placeholder="댓글달기" />
+                        <button onclick="onClickAnswerComment({{ post.id }})">게시</button>
+                        <!--comment 별로 id 준당-->
                     </div>
-                </div>
-                <div>
-                    <input class="answer_comment_input" type="text" placeholder="댓글달기" />
-                    <button onclick="onClickAnswerComment({{ answer.id }})">게시</button>
-                    <!--comment 별로 id 준당-->
+                    <div id="comment_box2">
+                        {% for comment in answer.answer_comments.all.reverse %}
+                            <div class='answer_comment_id_{{comment.id}}'>
+                                <div class="answer_comment_text">
+                                    {{comment.text}}
+                                </div>
+                                <div class="add_comment_delete_btn">
+                                    <button onclick="onClickAnswerCommentDelete({{answer.id}}, {{comment.id}})">삭제</button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -280,6 +278,14 @@
     <script type="text/javascript">
         function doDisplay() {
             var commentBox = document.getElementById("comment_box");
+            if (commentBox.style.display == 'none') {
+                commentBox.style.display = 'block';
+            } else {
+                commentBox.style.display = 'none';
+            }
+        }
+        function doDisplay2() {
+            var commentBox = document.getElementById("comment_box2");
             if (commentBox.style.display == 'none') {
                 commentBox.style.display = 'block';
             } else {
