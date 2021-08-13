@@ -4,6 +4,7 @@ import requests
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.views.generic.base import TemplateView
 #from .forms import SignUpForm
 from .forms import UserCustomCreationForm, AuthenticationCustomForm
@@ -30,6 +31,7 @@ from django.utils.encoding import force_bytes, force_text
 from .tokens import account_activation_token, password_reset_token
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.sites.models import Site
 
 # Create your views here.
@@ -182,7 +184,7 @@ def password_reset_form(request, pk):
 # github login
 def github_login(request):
     client_id = os.environ.get("GITHUB_ID")
-    redirect_uri = "http://127.0.0.1:8000/user/login/github/callback"
+    redirect_uri = "http://127.0.0.1:8000/users/login/github/callback"
     return redirect(f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope=read:user")
 
 def github_callback(request):
@@ -191,43 +193,54 @@ def github_callback(request):
         client_secret = os.environ.get("GITHUB_SECRET")
         code = request.GET.get("code", None)
         if code is not None:
-            result = requests.post(f"https://github.com/login/oauth/access_token?client_id={client_id}&client_secret={client_secret}&code={code}",
+            token_request = requests.post(f"https://github.com/login/oauth/access_token?client_id={client_id}&client_secret={client_secret}&code={code}",
             headers = {"Accept": "application/json"}
             )
-            result_json = result.json()
-            error = result_json.get("error", None)
+            token_json = token_request.json()
+            error = token_json.get("error", None)
             if error is not None:
-                raise Exception()
+                raise Exception("Can't get access token")
             else:
-                access_token = result_json.get("access_token")
-                profile_request = requests.get("https://api.github.com/user", 
-                headers={
-                    "Authorization": f"token {access_token}",
-                    "Accept": "application/json",
-                })
+                access_token = token_json.get("access_token")
+                profile_request = requests.get(
+                    "https://api.github.com/user", 
+                    headers={
+                        "Authorization": f"token {access_token}",
+                        "Accept": "application/json",
+                    },
+                )
                 
                 profile_json = profile_request.json()
-                username = profile_json.get("login", None)
-                if username is not None:
-                    name = profile_json.get("name")
+                print(profile_json) # for test
+                user_name = profile_json.get("login", None)
+                if user_name is not None:
                     email = profile_json.get("email")
+                    print(email) # for test
                     try:
                         user = User.objects.get(email=email)
+                        print(user)
                         if user.login_method != User.LOGIN_GITHUB:
-                            raise Exception()
+                            raise Exception(f"Please log in with: {user.login_method}")
                     except User.DoesNotExist:
-                        user = User.objects.create(username=name, email=email, user_nickname=name, login_method=User.LOGIN_GITHUB,)
+                        user = User.objects.create(
+                            username= user_name, 
+                            email=email, 
+                            user_nickname= user_name, 
+                            login_method=User.LOGIN_GITHUB,   
+                        )
                         user.set_unusable_password()
                         user.save()
                     login(request, user)
+                    messages.success(request, f"Welcome back {user.username}")
                     return redirect('users:my_page', user.pk)
                 else:
-                    raise Exception()
+                    raise Exception("Can't get your profile")
         else:
-            raise Exception()
+            raise Exception("Can't get code")
     
-    except Exception:
-        return redirect("users:login")
+    except Exception as e:
+        messages.error(request, e)
+        return redirect(reverse("users:login"))
     
 
 # ________________________________________________ mypage ________________________________________________
