@@ -16,7 +16,7 @@
                 <div class="login_question">
                     <h4>회원이 아닌가요?</h4>
                     <a href="{% url 'users:signup' %}">회원가입하기</a>
-                    <a href="">비밀번호 찾기</a>
+                    <a href="{% url 'users:password_reset' %}">비밀번호 찾기</a>
                 </div>
             </div>
 
@@ -49,18 +49,11 @@
                 </form>
             </div>
             <div class="login_bottom">
-                {% comment %}
-                sns로그인자리
-                {% endcomment %}
-                <a href=" {% provider_login_url 'naver' %}">네이버 로그인</a>
-                <a href=" {% provider_login_url 'naver' %}">네이버 로그인</a>
-                {% include 'users/github_login.html' %}
-
-                <a href="{% url 'users:password_reset' %}">비밀번호를 까먹었나여?</a>
+                <a href=" {% provider_login_url 'naver' %}" class="naver_login"><img src="../../static/image/naver_favicon.ico" /><span>네이버 로그인</span></a>
+                <span>{% include 'users/github_login.html' %}</span>
             </div>
         </div>
     </div>
-
 </body>
 {% endblock %}
 

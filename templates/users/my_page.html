@@ -4,6 +4,15 @@
 {% block script %}
 <link rel="stylesheet" href="{% static 'css/my_page.css' %}">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+<!-- 합쳐지고 최소화된 최신 CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+<!-- 부가적인 테마 -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+<!-- 합쳐지고 최소화된 최신 자바스크립트 -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
 
 <script>
     const modal = document.querySelector('.point_modal');
@@ -41,7 +50,7 @@
         body.style.overflow = auto
     })
 </script>
-<!-- 삽질기록 폴더 뜨게하기 -->
+<!-- 삽질기록 디렉토리 영역 뜨게하기 -->
 <script>
     const directoryBox = document.querySelector('.directory_box');
     const logFolderOpen = document.querySelector('#log_folder_btn');
@@ -66,6 +75,22 @@
             lastQuestionList.style.display = 'hidden';
         }
     })
+</script>
+<!-- carousel -->
+<script>
+    $(function(){
+// 이미지 슬라이드 컨트롤를 사용하기 위해서는 carousel를 실행해야한다.
+        $('#myCarousel').carousel({
+        // 슬리아딩 자동 순환 지연 시간
+        // false면 자동 순환하지 않는다.
+        interval: 1000,
+        // hover를 설정하면 마우스를 가져대면 자동 순환이 멈춘다.
+        pause: "hover",
+        // 순환 설정, true면 1 -> 2가면 다시 1로 돌아가서 반복
+        wrap: true,
+        });
+        });
+
 </script>
 {% endblock script %}
 
@@ -133,7 +158,7 @@
         </div>
     </div>
     <!-- 내 마이페이지 -->
-    <div class="first_container container">
+    <div class="first_container my_container">
         <div class="profile_container">
             {% if request.user.pk == host.pk %}
                 <div class="profile_area">
@@ -147,13 +172,19 @@
                         {% endif %}
                         <span class="user_nickname">{{ request.user.username }}님의 모래상자<span>
                     </div>
-                    <h4>
-                        레벨 | {{user.user_level}} 단계
-                    </h4>
+                    <p>
+                        레벨 | {{host.user_level}} 단계
+                    </p>
                     <div class="point_gage">
                         <label for="value_low">{{my_sand_sum.amount__sum}} 모래포인트</label>
                         <!-- max기준 레벨에 따라 if문으로 바뀌어야함(아직level넘겨주지 않아서 구현 X)  -->
+                        {% if host.user_level == 0 %}
                         <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500" value="{{my_sand_sum.amount__sum}}"></meter>
+                        {% elif host.user_level == 1 %}
+                        <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500" value="{{my_sand_sum.amount__sum}}"></meter>
+                        {% else%}
+                        <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000" value="{{my_sand_sum.amount__sum}}"></meter>
+                        {% endif %}
                     </div>
                     <div class="proflie_text">    
                     {% if request.user.user_profile_content %}    
@@ -206,15 +237,48 @@
         </div>
         <div class="sand_pour_area"></div>
     </div>
-    <div class="second_container">
-        <div class="directory_box">
-            <div class="folder_area">
-                {% for folder in language_folders %}
-                    <div class="folder_space">
-                        <i class="far fa-folder folder_icon fa-4x"></i>  
-                        <div class="folder_name"> {{folder}} </div>
+    <div class="second_container my_container">
+        <div class="category_tab">
+            <ul class="carousel-indicator" style="display: flex;
+            flex-direction: row;">
+                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1">언어</button>
+                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2">프레임워크</button>
+                <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3">해결/미해결</button>
+            </ul>
+        </div>
+        <div class="folder_area">
+            <div class="directory_box carousel slide" id="myCarousel" data-ride="carousel" >
+                <div class="carousel-inner" role="listbox">
+                    <!-- framework -->
+                    <div class="carousel-item active">
+                    {% for folder in framework_folders %}
+                        <div class="folder_space">
+                            <i class="far fa-folder folder_icon fa-2x"></i>  
+                            <div class="folder_name"> {{folder}} </div>
+                        </div>
+                    {% endfor %}
                     </div>
-                {% endfor %}
+                    <!-- endframwork -->
+                    <!-- 해결미해결 -->
+                    <div class="carousel-item">
+                    {% for folder in solve_folders %}
+                        <div class="folder_space">
+                            <i class="far fa-folder folder_icon fa-2x"></i>  
+                            <div class="folder_name"> {{folder}} </div>
+                        </div>
+                    {% endfor %}
+                    </div>
+                    <!-- 해결미해결끝 -->
+                    <!-- 기본 : 언어별 -->
+                    <div class="carousel-item">
+                        {% for folder in language_folders %}
+                        <div class="folder_space">
+                            <i class="far fa-folder folder_icon fa-2x"></i>  
+                            <div class="folder_name"> {{folder}} </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
         <div class="last_log_box">
@@ -227,5 +291,5 @@
             {% endfor %}
         </div>
     </div>
-    <div class="third_container container"></div>
+    <div class="third_container my_container"></div>
 {% endblock %}
