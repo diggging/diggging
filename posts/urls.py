@@ -18,5 +18,10 @@ urlpatterns = [
     path("count_like_scrap/", views.count_like_scrap, name="count_like_scrap"),
     path("search_post_axios/", views.search_post_axios, name="search_post_axios"),
     path("search_user_axios/", views.search_user_axios, name="search_user_axios"),
+    path("scrap_axios/", views.scrap_axios, name="scrap_axios"),
+    path("helped_axios/", views.helped_axios, name="helped_axios"),
+    path("follow_axios/", views.follow_axios, name="follow_axios"),
+    path("my_recent_axios/", views.my_recent_axios, name="my_recent_axios"),
+
     # path("folder/", views.make_folder, name="make_folder"),
 ]

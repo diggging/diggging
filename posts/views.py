@@ -31,7 +31,8 @@ def main(request):
             all_followings_posts.union(following_posts)  # queryset append
         all_followings_posts = all_followings_posts.order_by("-created")  # 생성 기준으로 listing
     else:
-        all_followings_posts = None
+        all_followings_posts = [] ## -> None으로 하면 js에서 오류 뜸
+
     # 내 최신 포스트
     my_recent_post = Post.objects.filter(user=me).order_by("-created")
 
@@ -44,6 +45,47 @@ def main(request):
     }
 
     return render(request, "posts/post_list.html", context=ctx)
+
+# main axios
+@csrf_exempt
+def scrap_axios(request):
+    all_posts_scrap = Post.objects.all().order_by("-scrap_num")
+    all_posts_scrap_list = serializers.serialize('json', all_posts_scrap)
+
+    return HttpResponse(all_posts_scrap_list, content_type="text/json-comment-filtered")
+
+@csrf_exempt
+def helped_axios(request):
+    all_posts_helped = Post.objects.all().order_by("-helped_num")
+    all_posts_helped_list = serializers.serialize('json', all_posts_helped)
+
+    return HttpResponse(all_posts_helped_list, content_type="text/json-comment-filtered")
+
+@csrf_exempt
+def follow_axios(request):
+    
+    me = request.user
+    followings = me.user_following.all()
+    if followings:
+        all_followings_posts = Post.objects.filter(user=followings[0])
+        for following in followings[1:]:
+            following_posts = Post.objects.filter(user=following)
+            all_followings_posts.union(following_posts)  # queryset append
+        all_followings_posts = all_followings_posts.order_by("-created")  # 생성 기준으로 listing
+    else:
+        all_followings_posts = []
+
+    all_followings_list_posts = serializers.serialize('json', all_followings_posts)
+
+    return HttpResponse(all_followings_list_posts, content_type="text/json-comment-filtered")
+
+@csrf_exempt
+def my_recent_axios(request):
+    me = request.user
+    my_recent_post = Post.objects.filter(user=me).order_by("-created")
+    my_recent_post_list = serializers.serialize('json', my_recent_post)
+
+    return HttpResponse(my_recent_post_list, content_type="text/json-comment-filtered")
 
 
 # 프론트에서 해당 포스트 id 넘겨주면
@@ -162,6 +204,7 @@ def post_delete(request, pk):
 #     }
 #     return render(request, "posts/search.html", ctx)
 
+## 수정필요
 @csrf_exempt
 def search(request):
     form = SelectForm()

@@ -6,7 +6,7 @@ const userList = []; // user fields
 
 //post data
 const getPost = async() => {
-    const url = '/posts/search_post_axios/';
+    const url = '/posts/scrap_axios/';
     const postData = await axios.get(url);
     listPost.push(postData.data);
     
@@ -22,7 +22,7 @@ const getPost = async() => {
 
 //user data
 const getUser = async() => {
-    const url = '/posts/search_user_axios/';
+    const url = '/posts/helped_axios/';
     const userData = await axios.get(url);
     listUser.push(userData.data);
 
@@ -202,6 +202,7 @@ const choiceSelects = () => {
     // console.log(filterData)
     const objLength = Object.keys(filterData).length;
     let updataList = [];
+
     postList = postList.filter(post => { //아 이것만 고쳐주면 될듯.
         for(let i=0; i < postList.length; i++){
             for (let key in filterData) {
@@ -213,7 +214,7 @@ const choiceSelects = () => {
             }
         }
     })
-    // console.log(postList)
+    console.log(postList)
 }
 
 

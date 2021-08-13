@@ -3,11 +3,20 @@
 
 {% block script %}
 <link rel="stylesheet" href="{% static 'css/post_list.css' %}">
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="{% static 'js/post_list.js' %}"></script>
+
 {% endblock %}
 
 {% block content %}
 <body>
     <div class="main_container">
+        <div class="main_link">
+            <button onclick="getPostScrap()"> 스크랩 순 /</button>
+            <button onclick="getPostHelped()"> 도움 순 /</button>
+            <button onclick="getPostRecent()"> 내가 남긴 기록 최신순 /</button>
+            <button onclick="getPostfollow()" > 이웃 최신순</button>
+        </div>
         <div class="post_container">
             {% for post in posts_scrap %}
             <div class="post_card">
