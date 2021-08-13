@@ -1,6 +1,6 @@
 const listPost = []; //post data 추출용
 const listUser = []; //user data 추출용
-const postList = []; // post fields -> 여기에 post, username까지 들어감.
+let postList = []; // post fields -> 여기에 post, username까지 들어감.
 const userList = []; // user fields
 
 
@@ -36,7 +36,7 @@ const getUser = async() => {
     }
 }
 
-function escapeRegExp (string) { // c++ 인식 해결
+function escapeRegExp (string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
@@ -48,15 +48,6 @@ function findInput(wordToMatch, postList) {
         || post.desc.match(regex) //p 인식의 주범,,,,,,,
         || post.tag.match(regex)
     });
-}
-
-function findSelect(wordToMatch, postList) {
-    const matchLang = postList.filter(post => post.language === wordToMatch)
-    const matchOs = postList.filter(post => post.os === wordToMatch)
-    const matchSolve = postList.filter(post => post.problem_solving === wordToMatch)
-    const matchFramework = postList.filter(post => post.framework === wordToMatch)
-
-    return matchLang, matchOs, matchSolve, matchFramework
 }
 
 // matching된 검색 관련 글 출력
@@ -116,7 +107,6 @@ function displayLanguageMatches(){
     if (selectField.value) // if exist AND
     {   
         suggestions.innerHTML = html;
-        console.log('select is:  ' + selectField.value);
     }
 }
 
@@ -124,10 +114,9 @@ function displayOsMatches(){
     let matchArray = []
 
     if (this.value === "전체") {
-        matchArray = postList
+        matchArray = postList;
     } else {
-        matchArray = postList.filter(post => post.os === this.value)
-        console.log("전체가 아니야!")
+        matchArray = postList.filter(post => post.os === this.value);
     }
 
     const html = matchArray.map(post => {
@@ -145,8 +134,8 @@ function displayOsMatches(){
     if (selectField2.value) // if exist AND
     {   
         suggestions.innerHTML = html;
-        console.log('select is:  ' + selectField2.value);
     }
+    return this.value
 }
 
 function displaySolveMatches(){
@@ -155,7 +144,7 @@ function displaySolveMatches(){
     if (this.value === "전체") {
         matchArray = postList
     } else {
-        matchArray = postList.filter(post => post.problem_solving === this.value)
+        matchArray = postList.filter(post => post.problem_solving === this.value);
     }
 
     const html = matchArray.map(post => {
@@ -173,7 +162,6 @@ function displaySolveMatches(){
     if (selectField3.value) // if exist AND
     {   
         suggestions.innerHTML = html;
-        console.log('select is:  ' + selectField3.value);
     }
 }
 
@@ -184,7 +172,6 @@ function displayFrameWorkMatches(){
         matchArray = postList
     } else {
         matchArray = postList.filter(post => post.framework === this.value)
-        console.log("전체가 아니야!")
     }
 
     const html = matchArray.map(post => {
@@ -202,9 +189,33 @@ function displayFrameWorkMatches(){
     if (selectField4.value) // if exist AND
     {   
         suggestions.innerHTML = html;
-        console.log('select is:  ' + selectField4.value);
     }
 }
+
+const choiceSelects = () => {
+    const filterData = {
+        language: selectField.value,
+        os: selectField2.value,
+        problem_solving: selectField3.value,
+        framework: selectField4.value,
+    }
+    // console.log(filterData)
+    const objLength = Object.keys(filterData).length;
+    let updataList = [];
+    postList = postList.filter(post => { //아 이것만 고쳐주면 될듯.
+        for(let i=0; i < postList.length; i++){
+            for (let key in filterData) {
+                if(post[key] != filterData[key]){
+                    return
+                }
+                updataList.push(post)
+                console.log(updataList)
+            }
+        }
+    })
+    // console.log(postList)
+}
+
 
 const checkEmpty = document.querySelector('.search');
 const searchInput = document.querySelector('.search');
@@ -220,6 +231,11 @@ selectField.addEventListener('change', displayLanguageMatches);
 selectField2.addEventListener('change', displayOsMatches);
 selectField3.addEventListener('change', displaySolveMatches);
 selectField4.addEventListener('change', displayFrameWorkMatches);
+
+selectField.addEventListener('change', choiceSelects);
+selectField2.addEventListener('change', choiceSelects);
+selectField3.addEventListener('change', choiceSelects);
+selectField4.addEventListener('change', choiceSelects);
 
 function init() {
     getPost();
