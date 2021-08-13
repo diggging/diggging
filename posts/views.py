@@ -6,13 +6,18 @@ from django.core import serializers
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+
+from django.views.decorators.http import require_POST, require_GET
+
+
 from .models import Post, Folder
 from users.models import Sand
 from . import models
 from .forms import SelectForm, PostForm, SearchForm
 import json
 
-from django.core.paginator import Paginator  
+from django.core.paginator import Paginator
+
 
 
 # Create your views here.
@@ -49,19 +54,29 @@ def main(request):
 
     return render(request, "posts/post_list.html", context=ctx)
 
+#-----------------------------------------------------------------------
+def is_ajax(request):
+    """
+    This utility function is used, as `request.is_ajax()` is deprecated.
+
+    This implements the previous functionality. Note that you need to
+    attach this header manually if using fetch.
+    """
+    return request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest"
+
 # main axios
-@csrf_exempt
+@require_GET
 def scrap_axios(request):
     all_posts_scrap = Post.objects.all().order_by("-scrap_num")
+    paginator = Paginator(all_posts_scrap, 8)
+    page_num = int(request.GET.get("page", 1))
+    # if page_num > paginator.num_pages:
+    #     raise Http404
+    posts_scrap = paginator.page(page_num)
+    context = {'scrap_posts': posts_scrap}
+    return render(request, 'posts/post_list.html', context)
 
-    # paginator = Paginator(all_posts_scrap, 8)
-    # page = request.GET.get('page')
-    # post = paginator.get_page(page)
-
-    all_posts_scrap_list = serializers.serialize('json', all_posts_scrap)
-
-    return HttpResponse(all_posts_scrap_list, content_type="text/json-comment-filtered")
-
+#-----------------------------------------------------------------------
 @csrf_exempt
 def helped_axios(request):
     all_posts_helped = Post.objects.all().order_by("-helped_num")

@@ -1,81 +1,62 @@
 {% extends 'base.html' %}
-{% load static %}
 
+{% load static %}
 {% block script %}
 <link rel="stylesheet" href="{% static 'css/post_list.css' %}">
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="{% static 'js/post_list.js' %}"></script>
-
+<script src="{% static 'js/infinite.js' %}"></script>
 {% endblock %}
-
 {% block content %}
-<body>
-    <div class="main_container">
-        <div class="main_link">
-            <button onclick="getPostScrap()"> 스크랩 순 /</button>
-            <button onclick="getPostHelped()"> 도움 순 /</button>
-            <button onclick="getPostRecent()"> 내가 남긴 기록 최신순 /</button>
-            <button onclick="getPostfollow()" > 이웃 최신순</button>
-        </div>
-        <div class="post_container">
-            {% for post in posts_scrap %}
-            <div class="post_card">
-                <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_image">
-                    <div class="post_image_container">
-                    {% if post.image %}
-                        <img src="{{post.image.url}}" alt="" class="post_image_container">
-                    {% endif %}
-                    </div>
-                </a>
-                <div class="post_element">
-                    <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_link">
-                        <div class="post_title">
-                            {{ post.title|truncatechars:26 }}
-                        </div>
-                        <div class="post_tag">
-                            # {{ post.tag }}
-                        </div>
-                        <p class="post_desc">
-                            {{ post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;" }}
-                        </p>
-                    </a>
+<div class="post_container" id="scroll-element">
+    {% for post in posts_scrap %}
+    <div class="post_card">
+        <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_image">
+            <div class="post_image_container">
+                {% if post.image %}
+                <img src="{{post.image.url}}" alt="" class="post_image_container">
+                {% endif %}
+            </div>
+        </a>
+        <div class="post_element">
+            <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_link">
+                <div class="post_title">
+                    {{ post.title|truncatechars:26 }}
                 </div>
-                <div class="post_user">
-                    <a href="{% url 'users:my_page' post.user.id %}" class="user_info">
-                    {% if post.user.user_profile_image %}    
-                        <img src="{{post.user.user_profile_image.url}}" class="user_info_image">
-                    {% endif %}
-                        <span>
-                            by {{post.user.username}}
-                        </span>
-                    </a>
-
-                    <div class="likes">
-                        👍
-                        <div class="likes_count">
-                            {{post.scrap_num}}
-                        </div>
-                    </div>
+                <div class="post_tag">
+                    # {{ post.tag }}
+                </div>
+                <p class="post_desc">
+                    {{ post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;" }}
+                </p>
+            </a>
+        </div>
+        <div class="post_user">
+            <a href="{% url 'users:my_page' post.user.id %}" class="user_info">
+                {% if post.user.user_profile_image %}
+                <img src="{{post.user.user_profile_image.url}}" class="user_info_image">
+                {% endif %}
+                <span>
+                    by {{post.user.username}}
+                </span>
+            </a>
+            <div class="likes">
+                :+1:
+                <div class="likes_count">
+                    {{post.scrap_num}}
                 </div>
             </div>
-            {% endfor %}
         </div>
-        <article>
-
-        </article>
     </div>
-    {% comment %}
-    이거 현주가 following들 post 나오는지 test할라고 만든 html!
-    
-    <div>
-        {% for post in followings_posts%}
-        <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" >{{ post.title }}
-        </a>
-        {% endfor %}
-    </div>
-    {% endcomment %}
-    
-    
-</body>
+    {% endfor %}
+    <hr>
+</div>
+<div id="bottom-sentinel">
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        let bottomSentinal = document.querySelector("#bottom-sentinel");
+        let scrollElement = document.querySelector("#scroll-element");
+        let baseUrl = "{% url 'posts:scrap_axios' %}";
+        attachInfiniteScroll(bottomSentinal, scrollElement, baseUrl);
+    })
+</script>
 {% endblock %}
