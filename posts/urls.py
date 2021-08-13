@@ -22,6 +22,5 @@ urlpatterns = [
     path("helped_axios/", views.helped_axios, name="helped_axios"),
     path("follow_axios/", views.follow_axios, name="follow_axios"),
     path("my_recent_axios/", views.my_recent_axios, name="my_recent_axios"),
-
     # path("folder/", views.make_folder, name="make_folder"),
 ]

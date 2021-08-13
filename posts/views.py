@@ -15,6 +15,8 @@ import json
 from django.core.paginator import Paginator  
 
 
+
+
 # Create your views here.
 
 # main 페이지
@@ -52,15 +54,23 @@ def main(request):
 # main axios
 @csrf_exempt
 def scrap_axios(request):
-    all_posts_scrap = Post.objects.all().order_by("-scrap_num")
+    # all_posts_scrap = Post.objects.all().order_by("-scrap_num")
 
-    paginator = Paginator(all_posts_scrap, 8)
-    page = request.GET.get('page')
-    post = paginator.get_page(page)
+    # paginator = Paginator(all_posts_scrap, 8)
+    # page = request.GET.get('page')
+    # post = paginator.get_page(page)
 
-    all_posts_scrap_list = serializers.serialize('json', post)
+    # all_posts_scrap_list = serializers.serialize('json', post)
 
-    return HttpResponse(all_posts_scrap_list, content_type="text/json-comment-filtered")
+    # return HttpResponse(all_posts_scrap_list, content_type="text/json-comment-filtered")
+    req = json.loads(request.body)
+    post_id = req["id"]
+    post = Post.objects.get(id=post_id)
+    # print(post_id)
+    
+    return JsonResponse({
+        "id": post_id
+    })
 
 @csrf_exempt
 def helped_axios(request):

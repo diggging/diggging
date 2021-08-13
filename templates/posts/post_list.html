@@ -13,14 +13,14 @@
 <body>
     <div class="main_container">
         <div class="main_link">
-            <button onclick="getPostScrap()"> 스크랩 순 /</button>
+            <button onclick="onClickLike()"> 스크랩 순 /</button>
             <button onclick="getPostHelped()"> 도움 순 /</button>
             <button onclick="getPostRecent()"> 내가 남긴 기록 최신순 /</button>
             <button onclick="getPostfollow()" > 이웃 최신순</button>
         </div>
         <div class="post_container">
             {% for post in posts_scrap %}
-            <div class="post_card">
+            <!-- <div class="post_card_{{post.id}}">
                 <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_image">
                     <div class="post_image_container">
                     {% if post.image %}
@@ -58,11 +58,26 @@
                         </div>
                     </div>
                 </div>
+            </div> -->
+            <div class="{{post.id}}">
+                <div >{{post.title}}</div>
+                <div >{{post.desc}}</div>
+                <div >{{post.user}}</div>
             </div>
+
             {% endfor %}
         </div>
+        <!-- {% if page_obj.has_next %}
+        <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
+        {% endif %}
+        <div class="d-flex justify-content-center" style="display:none;">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div> -->
     </div>
-    {% comment %}
+
+    <!-- {% comment %}
     이거 현주가 following들 post 나오는지 test할라고 만든 html!
     
     <div>
@@ -71,8 +86,8 @@
         </a>
         {% endfor %}
     </div>
-    {% endcomment %}
+    {% endcomment %} -->
     
-    
+
 </body>
 {% endblock %}
