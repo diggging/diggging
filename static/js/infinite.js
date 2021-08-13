@@ -11,9 +11,6 @@ const fetchPage = async (url) => {
 
         if (req.ok) {
             let body = await req.text();
-
-        // Be careful of XSS if you do this. Make sure
-        // you remove all possible sources of XSS.
             scrollElement.innerHTML += body;
         } else {
             end = true;

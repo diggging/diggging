@@ -24,35 +24,44 @@ from django.core.paginator import Paginator
 
 # main 페이지
 def main(request):
-    # 모든 전체 글에서 스크랩 순위대로 추천
-    all_posts_scrap = Post.objects.all().order_by("-scrap_num")
-    # 모든 전체 글에서 도움 순위대로 추천
-    all_posts_helped = Post.objects.all().order_by("-helped_num")
+    # # 모든 전체 글에서 스크랩 순위대로 추천
+    # all_posts_scrap = Post.objects.all().order_by("-scrap_num")
+    # # 모든 전체 글에서 도움 순위대로 추천
+    # all_posts_helped = Post.objects.all().order_by("-helped_num")
 
-    # 이웃들의 최신 글을 긁어오는 코드
-    me = request.user
-    followings = me.user_following.all()
-    if followings:
-        all_followings_posts = Post.objects.filter(user=followings[0])
-        for following in followings[1:]:
-            following_posts = Post.objects.filter(user=following)
-            all_followings_posts.union(following_posts)  # queryset append
-        all_followings_posts = all_followings_posts.order_by("-created")  # 생성 기준으로 listing
-    else:
-        all_followings_posts = [] ## -> None으로 하면 js에서 오류 뜸
+    # # 이웃들의 최신 글을 긁어오는 코드
+    # me = request.user
+    # followings = me.user_following.all()
+    # if followings:
+    #     all_followings_posts = Post.objects.filter(user=followings[0])
+    #     for following in followings[1:]:
+    #         following_posts = Post.objects.filter(user=following)
+    #         all_followings_posts.union(following_posts)  # queryset append
+    #     all_followings_posts = all_followings_posts.order_by("-created")  # 생성 기준으로 listing
+    # else:
+    #     all_followings_posts = [] ## -> None으로 하면 js에서 오류 뜸
 
-    # 내 최신 포스트
-    my_recent_post = Post.objects.filter(user=me).order_by("-created")
+    # # 내 최신 포스트
+    # my_recent_post = Post.objects.filter(user=me).order_by("-created")
 
-    ctx = {
-        "posts_scrap": all_posts_scrap,  # 스크랩 순
-        "posts_helped": all_posts_helped,  # helped 순
-        "user": request.user,  # 나
-        "followings_posts": all_followings_posts,  # 내가 follow하는 사람들의 최신순 포스트
-        "my_recent_post": my_recent_post,  # 내 글 최신순
-    }
+    # ctx = {
+    #     "posts_scrap": all_posts_scrap,  # 스크랩 순
+    #     "posts_helped": all_posts_helped,  # helped 순
+    #     "user": request.user,  # 나
+    #     "followings_posts": all_followings_posts,  # 내가 follow하는 사람들의 최신순 포스트
+    #     "my_recent_post": my_recent_post,  # 내 글 최신순
+    # }
 
-    return render(request, "posts/post_list.html", context=ctx)
+    return render(request, "posts/post_list.html")
+
+def helped(request):
+    return render(request, "posts/post_helped.html")
+
+def follow(request):
+    return render(request, "posts/post_follow.html")
+
+def my_recent(request):
+    return render(request, "posts/my_recent.html")
 
 #-----------------------------------------------------------------------
 def is_ajax(request):
@@ -76,19 +85,26 @@ def scrap_axios(request):
     # context = {'scrap_posts': posts_scrap}
 
     if is_ajax(request):
-        return render(request, 'posts/_posts.html', {'scrap_posts': posts_scrap})
+        return render(request, 'posts/_posts.html', {'posts': posts_scrap})
 
-    return render(request, 'posts/post_list.html', {'scrap_posts': posts_scrap})
+    return render(request, 'posts/post_list.html', {'posts': posts_scrap})
 
 #-----------------------------------------------------------------------
-@csrf_exempt
+@require_GET
 def helped_axios(request):
     all_posts_helped = Post.objects.all().order_by("-helped_num")
-    all_posts_helped_list = serializers.serialize('json', all_posts_helped)
+    paginator = Paginator(all_posts_helped, 8)
+    page_num = request.GET.get("page")
+    # if page_num > paginator.num_pages:
+    #     raise Http404
+    posts_helped = paginator.page(page_num)
 
-    return HttpResponse(all_posts_helped_list, content_type="text/json-comment-filtered")
+    if is_ajax(request):
+        return render(request, 'posts/_posts.html', {'posts': posts_helped})
 
-@csrf_exempt
+    return render(request, 'posts/post_helped.html', {'posts': posts_helped})
+
+@require_GET
 def follow_axios(request):
     
     me = request.user
@@ -101,18 +117,35 @@ def follow_axios(request):
         all_followings_posts = all_followings_posts.order_by("-created")  # 생성 기준으로 listing
     else:
         all_followings_posts = []
+    
+    paginator = Paginator(all_followings_posts, 8)
+    page_num = request.GET.get("page")
+    posts_follow = paginator.page(page_num)
 
-    all_followings_list_posts = serializers.serialize('json', all_followings_posts)
+    if is_ajax(request):
+        return render(request, 'posts/_posts.html', {'posts': posts_follow})
 
-    return HttpResponse(all_followings_list_posts, content_type="text/json-comment-filtered")
+    return render(request, 'posts/post_list.html', {'posts': posts_follow})
 
-@csrf_exempt
+# @csrf_exempt
+# def my_recent_axios(request):
+#     me = request.user
+#     my_recent_post = Post.objects.filter(user=me).order_by("-created")
+#     my_recent_post_list = serializers.serialize('json', my_recent_post)
+
+#     return HttpResponse(my_recent_post_list, content_type="text/json-comment-filtered")
+@require_GET
 def my_recent_axios(request):
     me = request.user
     my_recent_post = Post.objects.filter(user=me).order_by("-created")
-    my_recent_post_list = serializers.serialize('json', my_recent_post)
+    paginator = Paginator(my_recent_post, 8)
+    page_num = request.GET.get("page")
+    posts_my = paginator.page(page_num)
 
-    return HttpResponse(my_recent_post_list, content_type="text/json-comment-filtered")
+    if is_ajax(request):
+        return render(request, 'posts/_posts.html', {'posts': posts_my})
+
+    return render(request, 'posts/post_list.html', {'posts': posts_my})
 
 
 # 프론트에서 해당 포스트 id 넘겨주면
