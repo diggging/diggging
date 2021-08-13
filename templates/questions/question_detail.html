@@ -109,14 +109,16 @@
             </div>
             <a href="javascript:doDisplay2()">댓글창 열기</a>
             <!-- 답변의 댓글창영역 -->
+            <div id="comment_box2">
             <div id="answer_comment_box">
                 <div class='addAnswerComment'>
                     <div>
                         <input class="answer_comment_input" type="text" placeholder="댓글달기" />
-                        <button onclick="onClickAnswerComment({{ post.id }})">게시</button>
+                        <button onclick="onClickAnswerComment({{ answer.id }})">게시</button>
                         <!--comment 별로 id 준당-->
                     </div>
-                    <div id="comment_box2">
+                    
+                    
                         {% for comment in answer.answer_comments.all.reverse %}
                             <div class='answer_comment_id_{{comment.id}}'>
                                 <div class="answer_comment_text">
@@ -128,8 +130,8 @@
                             </div>
                         {% endfor %}
                     </div>
+                    </div>
                 </div>
-            </div>
         </div>
         {% endfor %}
         {% endif %}
@@ -218,7 +220,9 @@
                 'Content-Type',
                 'application/x-www-form-urlencoded'
             );
+            console.log(id)
             const text = document.querySelector(`.answer-id-${id} .answer_comment_input`).value
+            
             requestAnswerComment.send(JSON.stringify({ id: id, text: text }));
         };
         const AnswercommentHandleResponse = () => {
@@ -286,6 +290,7 @@
         }
         function doDisplay2() {
             var commentBox = document.getElementById("comment_box2");
+            console.log(commentBox)
             if (commentBox.style.display == 'none') {
                 commentBox.style.display = 'block';
             } else {
