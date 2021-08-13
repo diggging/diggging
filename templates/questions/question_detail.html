@@ -44,7 +44,7 @@
         <!-- 질문의 버튼 영역 -->
         <div class="post_{{post.id}}">
             <a class="like_button post__like" onclick="onClickLikeScrap({{ post.id }}, 'like')">도움이되었어요{{post.helped_num}}</a>
-            <a href="{% url 'posts:get_post' user_id=post.user.id post_id=post.id %}" 
+            <a href="{% url 'questions:get_post' user_id=post.user.id post_id=post.id %}" 
             class="post__scrap" onclick="onClickLikeScrap({{ post.id }}, 'scrap')">퍼가기 {{post.scrap_num}}</a>
             <!-- 댓글창열기버튼 -->
             <a href="javascript:doDisplay();" class="comment_btn">댓글 {{comments|length}}</a>

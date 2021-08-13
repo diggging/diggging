@@ -8,7 +8,7 @@ from django.views.generic.base import TemplateView
 #from .forms import SignUpForm
 from .forms import UserCustomCreationForm, AuthenticationCustomForm
 from .models import User, Sand, Alarm
-from posts.models import Folder
+from posts.models import Folder, Post
 from questions.models import Question_post, Answer
 from django.views import View
 from django.contrib.auth.decorators import login_required
@@ -250,6 +250,8 @@ def my_page(request, pk):
 
     # 최근에 남긴 질문
     my_recent_questions = Question_post.objects.filter(user=host).order_by("-created")
+    # 지수가 필요해서 넣었음
+    my_recent_logs = Post.objects.filter(user=host).order_by("-created")
 
     # 모래
     my_sand = Sand.objects.filter(user = host)
@@ -279,6 +281,7 @@ def my_page(request, pk):
 
         #'my_questions': my_questions,
         'my_recent_questions' : my_recent_questions,
+        'my_recent_logs' : my_recent_logs,
         'my_all_sands': my_sand,    # sand 모든 object list
         'my_sand_sum' : my_sand_sum,    # 현재까지 sand 총합
     }
