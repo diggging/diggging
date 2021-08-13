@@ -6,7 +6,7 @@ const userList = []; // user fields
 
 //post data
 const getPost = async() => {
-    const url = '/posts/scrap_axios/';
+    const url = '/posts/search_post_axios/';
     const postData = await axios.get(url);
     listPost.push(postData.data);
     
@@ -22,7 +22,7 @@ const getPost = async() => {
 
 //user data
 const getUser = async() => {
-    const url = '/posts/helped_axios/';
+    const url = '/posts/search_user_axios/';
     const userData = await axios.get(url);
     listUser.push(userData.data);
 
