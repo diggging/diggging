@@ -9,7 +9,7 @@ from django.views.generic.base import TemplateView
 from .forms import UserCustomCreationForm, AuthenticationCustomForm
 from .models import User, Sand, Alarm
 from posts.models import Folder
-from questions.models import Question_post, Answer
+from questions.models import Question_post, Answer, QuestionFolder
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, PasswordResetForm
@@ -243,11 +243,13 @@ def my_page(request, pk):
     host_follower = host.user_followed.all()
 
     # 폴더 보여주기위한 변수
-    language_folders = Folder.objects.filter(folder_user=host)
+    language_folders = Folder.objects.filter(folder_user=host, folder_kind="language")
+    framework_folders = Folder.objects.filter(folder_user=host, folder_kind="framework")
     
     # 질문 모음
-    # my_questions = Question_post.objects.filter(user=host)
-    # questions_folder = Question_post.folder
+    my_questions = Question_post.objects.filter(user=host)
+    questions_language_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="language")
+    questions_framework_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
 
     # 최근에 남긴 질문
     my_recent_questions = Question_post.objects.filter(user=host).order_by("-created")
@@ -264,6 +266,10 @@ def my_page(request, pk):
         'host_follower' : host_follower,
         'host_following' : host_following,
         'language_folders' : language_folders,
+        'framework_folders' : framework_folders,
+        'questions_language_folder' : questions_language_folder,
+        'questions_framework_folder' : questions_framework_folder,
+
         #'my_questions': my_questions,
         'my_recent_questions' : my_recent_questions,
         'my_all_sands': my_sand,    # sand 모든 object list
