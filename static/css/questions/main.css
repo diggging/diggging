@@ -127,3 +127,26 @@ p {
     border: solid 1px var(--border-color);
     border-radius: 8px;
 }
+
+.no_answer_list_box {
+    display: flex;
+    flex-direction: column;
+}
+
+.no_answer_list {
+    border: solid, 1px, var(--border-color);
+    border-radius: 4px;
+    background-color: white;
+    display: flex;
+    margin: 5px 0;
+}
+
+.no_answer_list a {
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 0.825rem;
+    height: 4rem;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+}

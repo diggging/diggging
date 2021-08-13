@@ -2,6 +2,8 @@
 {% load static %}
 {% block script %}
 <link rel="stylesheet" href="{% static 'css/questions/main.css' %}">
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+
 {% endblock %}
 {% block content %}
 <!-- 네비바 아래로 가게하는 컨테이너 -->
@@ -15,16 +17,23 @@
                     <h2>답변을 기다리는 질문들</h2>
                 </div>
                 <div class="no_answer_list_box">
+                    {% for post in selected_answer_posts %}
                     <div class="no_answer_list">
-                        <!--for 문 돌리고-->
-                        {% for selected_answer_post in selected_answer_posts %}
-                        <h4>작성자 이름:</h4>
-                        {{selected_answer_post.user.username}}
-                        {{selected_answer_post.title}}
-                        {{selected_answer_post.desc}}
-                        {% endfor %}
+                        <a href="{% url 'question:question_post_detail' post.user.id post.id %}">
+                            <div class="no_user_info">
+                                {% if post.user.user_profile_image %}
+                                    {{ post.user.user_profile_image.url }}
+                                {% else %}
+                                    <i class="fas fa-user-circle fa-2x" style="color:bisque"></i>
+                                {% endif %}
+                                    <span class="no_answer_username">{{post.user.user_nickname}}</span>
+                            </div>
+                            <span class="no_answer_title">{{post.title|truncatechars:20}}</span>
+                            <span class="no_answer_username">{{post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;" }}</span>
+                        </a>
                         <!--채택이 false인거만 나오게 한다.-->
                     </div>
+                    {% endfor %}
                 </div>
             </div>
             <!-- 답변 기다리는 질문박스 끝 -->
