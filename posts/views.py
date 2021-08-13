@@ -86,6 +86,24 @@ def post_like(request):
     return HttpResponse(json.dumps(ctx), content_type="application/json")
 
 
+@login_required
+@require_POST
+def post_scrap(request):
+    pk = request.POST.get("pk", None)
+    post = get_object_or_404(Post, pk=pk)
+    user = request.user
+
+    if post.scarps_user.filter(id=user.id).exists():
+        post.scarps_user.remove(user)
+        message = "퍼가기 취소"
+    else:
+        post.scarps_user.add(user)
+        message = "퍼가기"
+
+    ctx = {"scarps_count": post.count_scarps_user(), "message": message}
+    return HttpResponse(json.dumps(ctx), content_type="application/json")
+
+
 def post_create(request):
     if request.method == "POST":
         form = PostForm(request.POST, request.FILES)

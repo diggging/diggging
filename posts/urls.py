@@ -16,6 +16,7 @@ urlpatterns = [
     path("search/", views.search, name="search"),
     path("<int:user_id>/<int:post_id>/get_post", view=views.get_post, name="get_post"),
     path("like/", views.post_like, name="post_like"),
+    path("scrap/", views.post_scrap, name="post_scrap"),
     # path("count_like_scrap/", views.count_like_scrap, name="count_like_scrap"),
     # path("folder/", views.make_folder, name="make_folder"),
 ]
