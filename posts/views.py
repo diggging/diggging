@@ -12,6 +12,9 @@ from . import models
 from .forms import SelectForm, PostForm, SearchForm
 import json
 
+from django.core.paginator import Paginator  
+
+
 # Create your views here.
 
 # main 페이지
@@ -50,7 +53,12 @@ def main(request):
 @csrf_exempt
 def scrap_axios(request):
     all_posts_scrap = Post.objects.all().order_by("-scrap_num")
-    all_posts_scrap_list = serializers.serialize('json', all_posts_scrap)
+
+    paginator = Paginator(all_posts_scrap, 8)
+    page = request.GET.get('page')
+    post = paginator.get_page(page)
+
+    all_posts_scrap_list = serializers.serialize('json', post)
 
     return HttpResponse(all_posts_scrap_list, content_type="text/json-comment-filtered")
 

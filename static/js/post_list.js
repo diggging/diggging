@@ -8,6 +8,8 @@ let helpedPost =[];
 let followPost = [];
 let recentPost = [];
 
+let list = [];
+
 // scrap
 const getPostScrap = async() => {
     const url = '/posts/scrap_axios/';
@@ -16,10 +18,17 @@ const getPostScrap = async() => {
     
     for (let i=0; i < scrapList[0].length; i++) {
         scrapPost.push(scrapList[0][i].fields);
-        }
-
+    }
+    console.log(scrapList);
     displayScrap();
-    scrapPost = [];
+    // scrapPost = [];
+}
+
+const morePostScrap = async() => {
+    const url = '/posts/scrap_axios/';
+    const data = await axios.post(url);
+    
+
 }
 
 const displayScrap = () => {
@@ -140,7 +149,6 @@ const getPostfollow = async() => {
     const postData = await axios.post(url);
     followList.push(postData.data)
     
-    console.log(postData);
     for (let i=0; i < followList[0].length; i++) {
         followPost.push(followList[0][i].fields);
         }
