@@ -7,12 +7,10 @@ const fetchPage = async (url) => {
     const appendElements = async (scrollElement, counter, baseUrl) => {
 
         let url = `${baseUrl}?page=${counter + 1}`
-        console.log(baseUrl);
         let req = await fetchPage(url);
 
         if (req.ok) {
             let body = await req.text();
-            console.log(body);
 
         // Be careful of XSS if you do this. Make sure
         // you remove all possible sources of XSS.
@@ -24,14 +22,14 @@ const fetchPage = async (url) => {
 
 
     const attachInfiniteScroll = (sentinel, scrollElement, baseUrl) => {
-    let counter = 1;
+    let counter = 0;
     let end = false;
 
     let observer = new IntersectionObserver(async (entries) => {
         let bottomEntry = entries[0];
-
+    
         if (!end && bottomEntry.intersectionRatio > 0) {
-        await appendElements(scrollElement, counter, baseUrl);
+            await appendElements(scrollElement, counter, baseUrl);
         counter += 1;
         }
     })

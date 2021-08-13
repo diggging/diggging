@@ -69,12 +69,16 @@ def is_ajax(request):
 def scrap_axios(request):
     all_posts_scrap = Post.objects.all().order_by("-scrap_num")
     paginator = Paginator(all_posts_scrap, 8)
-    page_num = int(request.GET.get("page", 1))
+    page_num = request.GET.get("page")
     # if page_num > paginator.num_pages:
     #     raise Http404
     posts_scrap = paginator.page(page_num)
-    context = {'scrap_posts': posts_scrap}
-    return render(request, 'posts/post_list.html', context)
+    # context = {'scrap_posts': posts_scrap}
+
+    if is_ajax(request):
+        return render(request, 'posts/_posts.html', {'scrap_posts': posts_scrap})
+
+    return render(request, 'posts/post_list.html', {'scrap_posts': posts_scrap})
 
 #-----------------------------------------------------------------------
 @csrf_exempt
