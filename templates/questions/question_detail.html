@@ -1,6 +1,5 @@
 {% extends 'questions/base.html' %}
 {% load static %}
-
 {% block content %}
 <div class="question_container">
     <div class="post_container">
@@ -10,24 +9,24 @@
                 <h1>{{post.title}}</h1>
                 <div class="post_user_info">
                     {% if post.user.user_profile_image %}
-                        <img src="{{post.user.user_profile_image.url}}">
+                    <img src="{{post.user.user_profile_image.url}}">
                     {% endif %}
-                    {%if post.user.user_nick_name%}
-                        <h3>{{ post.user.user_nickname }}님의 질문</h3>
+                    {%if post.user.user_nickname%}
+                    <h3>{{ post.user.user_nickname }}님의 질문</h3>
                     {%else%}
-                        <h3>{{ post.user.username }}님의 질문</h3>
+                    <h3>{{ post.user.username }}님의 질문</h3>
                     {%endif%}
                 </div>
             </div>
             {% if request.user.id == post.user.id %}
-                <div class="auth_btn_area">
-                    <div class="edit_btn">
-                        <a href="{% url 'question:question_update' post.id %}">수정하기</a>
-                    </div>
-                    <div class="delete_btn">
-                        <a href="{% url 'question:question_delete' post.id %}">삭제하기</a>
-                    </div>
+            <div class="auth_btn_area">
+                <div class="edit_btn">
+                    <a href="{% url 'question:question_update' post.id %}">수정하기</a>
                 </div>
+                <div class="delete_btn">
+                    <a href="{% url 'question:question_delete' post.id %}">삭제하기</a>
+                </div>
+            </div>
             {% endif %}
         </div>
         <!-- 제목영역 끝 -->
@@ -43,9 +42,10 @@
         <div class="tag_area">{{post.tag}}</div>
         <!-- 질문의 버튼 영역 -->
         <div class="post_{{post.id}}">
-            <a class="like_button post__like" onclick="onClickLikeScrap({{ post.id }}, 'like')">도움이되었어요{{post.helped_num}}</a>
-            <a href="{% url 'posts:get_post' user_id=post.user.id post_id=post.id %}" 
-            class="post__scrap" onclick="onClickLikeScrap({{ post.id }}, 'scrap')">퍼가기 {{post.scrap_num}}</a>
+            <a class="like_button post__like" onclick="onClickLikeScrap({{ post.id }}, 'like')">도움이되었어요
+                {{post.helped_num}}</a>
+            <a href="{% url 'question:get_question' post.id %}" class="post__scrap"
+                onclick="onClickLikeScrap({{ post.id }}, 'scrap')">퍼가기 {{post.scrap_num}}</a>
             <!-- 댓글창열기버튼 -->
             <a href="javascript:doDisplay();" class="comment_btn">댓글 {{comments|length}}</a>
         </div>
@@ -53,18 +53,18 @@
         <div id="comment_box">
             <div class='addComment'>
                 {% for comment in comments %}
-                <div class='comment_id_{{comment_id}}'>
+                <div class='comment_id_{{comment.id}}'>
                     <div class="comment_text">
                         <div class="post_user_info">
                             {% if comment.user.user_profile_image %}
-                                <img src="{{comment.user.user_profile_image.url}}">
+                            <img src="{{comment.user.user_profile_image.url}}">
                             {% endif %}
                             <span>{{comment.user.user_nickname}}</span>
                         </div>
                         {{comment.text}}
                     </div>
                     <div class="delete_btn">
-                        <button onclick="onClickDelete({{id}}, {{comment_id}})">삭제</button>
+                        <button onclick="onClickDelete({{post.id}}, {{comment.id}})">삭제</button>
                     </div>
                 </div>
                 {% endfor %}
@@ -81,48 +81,43 @@
     <a href="{% url 'question:answer_create' post.id %}" class="btn_control">답변 남기기</a>
     <div class="answer_area">
         {% if post_answers %}
-            {% for answer in post_answers %}
-                <div class="answer_container">
-                    <div class="post_top">
-                        <div class="answer_info_box">
-                            {%if answer.user.user_nick_name%}
-                                <h3>{{ answer.user.user_nickname }}님의 답변</h3>
-                            {%else%}
-                                <h3>{{ answer.user.username }}님의 답변</h3>
-                            {%endif%}
-                            <h3>채택여부 : {{answer.selection}}</h3>
-                            {{answer.title}}
+        {% for answer in post_answers %}
+        <div class="answer_container answer-id-{{answer.id}}">
+            <div class="post_top">
+                <div class="answer_info_box">
+                    {%if answer.user.user_nickname%}
+                    <h3>{{ answer.user.user_nickname }}님의 답변</h3>
+                    {%else%}
+                    <h3>{{ answer.user.username }}님의 답변</h3>
+                    {%endif%}
+                    <h3>채택여부 : {{answer.selection}}</h3>
+                    {{answer.title}}
+                </div>
+                {% if request.user.id == answer.user.id %}
+                <div class="auth_btn_area">
+                    <div class="edit_btn">
+                        <a href="{% url 'question:answer_update' post.id answer.id %}">수정하기</a>
+                    </div>
+                    <div class="delete_btn">
+                        <a href="{% url 'question:answer_delete' post.id answer.id %}">삭제하기</a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            <div class="answer_desc_box">
+                {{ answer.desc|safe|escape|linebreaks}}
+            </div>
+            <a href="javascript:answerCmtDisplay">댓글창 열기</a>
+            <!-- 답변의 댓글창영역 -->
+            <div id="answer_comment_box">
+                <div class='addAnswerComment'>
+                    {% for comment in answer.answer_comments.all %}
+                    <div class='answer_comment_id_{{comment.id}}'>
+                        <div class="answer_comment_text">
+                            {{comment.text}}
                         </div>
-                        {% if request.user.id == answer.user.id %}
-                            <div class="auth_btn_area">
-                                <div class="edit_btn">
-                                    <a href="{% url 'question:question_update' post.id %}">수정하기</a>
-                                </div>
-                                <div class="delete_btn">
-                                    <a href="{% url 'question:question_delete' post.id %}">삭제하기</a>
-                                </div>
-                            </div>
-                        {% endif %}
-                    </div>
-                    <div class="answer_desc_box">
-                        {{ answer.desc|safe|escape|linebreaks}}
-                    </div>
-                    <div class="btn_area">
-                        <a href="{% url 'question:get_answer_comments' answer.id %}" class="">댓글창 열기</a>
-                    </div>
-                    <!-- 답변의 댓글창영역 -->
-                    <div id="answer_comment_box">
-                        <div class='addAnswerComment'>
-                            {% for comment in answer.answer_comments.all %}
-                                <div class='answer_comment_id_{{comment_id}}'>
-                                    <div class="answer_comment_text">
-                                        {{comment.text}}
-                                    </div>
-                                    <div class="add_comment_delete_btn">
-                                        <button onclick="onClickAnswerCmtDelete({{id}}, {{comment_id}})">삭제</button>
-                                    </div>
-                                </div>
-                            {% endfor %}
+                        <div class="add_comment_delete_btn">
+                            <button onclick="onClickAnswerCommentDelete({{answer.id}}, {{comment.id}})">삭제</button>
                         </div>
                         <div>
                             <input class="answer_comment_input" type="text" placeholder="댓글달기" />
@@ -131,18 +126,24 @@
                         </div>
                     </div>
                 </div>
-            {% endfor %}
+                <div>
+                    <input class="answer_comment_input" type="text" placeholder="댓글달기" />
+                    <button onclick="onClickAnswerComment({{ answer.id }})">게시</button>
+                    <!--comment 별로 id 준당-->
+                </div>
+            </div>
+        </div>
+        {% endfor %}
         {% endif %}
     </div>
-{% endblock %}
-    
+    {% endblock %}
 
-
-
-{% block script %}
+    {% block script %}
     <link rel="stylesheet" href="{% static 'css/questions/question_detail.css' %}">
     <!-- 질문 코멘트 댓글 -->
     <script>
+        //--------------------------------------------------------------------------------------------------------
+        // 질문 코멘트 추가 부분
         const requestComment = new XMLHttpRequest();
         const onClickComment = (id) => {
             const url = '/comments/add_question_comment/';
@@ -180,6 +181,8 @@
                 commentHandleResponse();
             };
         };
+        //-------------------------------------------------------------------------------------------
+        // 질문 코멘트 삭제 부분
         const requestDelComment = new XMLHttpRequest();
         const onClickDelete = (id, comment_id) => {
             const url = '/comments/delete_question_comment/';
@@ -205,51 +208,75 @@
         };
     </script>
     <!-- 질문 코멘트 끝 -->
-
     <!-- 답변 코멘트 시작 -->
     <script>
+        //------------------------------------------------------------------------------------------------------
+        // 답변 코멘트 추가 부분
         const requestAnswerComment = new XMLHttpRequest();
-            const onClickAnswerComment = (id) => {
-                const url = '/comments/add_answer_comment/';
-                requestAnswerComment.open('POST', url, true);
-                requestAnswerComment.setRequestHeader(
-                    'Content-Type',
-                    'application/x-www-form-urlencoded'
-                );
-                const text = document.querySelector(`.answer_comment_input`).value;
-                requestAnswerComment.send(JSON.stringify({ id: id, text: text }));
-            };
-            
-            const AnswercommentHandleResponse = () => {
+        const onClickAnswerComment = (id) => {
+            const url = '/comments/add_answer_comment/';
+            requestAnswerComment.open('POST', url, true);
+            requestAnswerComment.setRequestHeader(
+                'Content-Type',
+                'application/x-www-form-urlencoded'
+            );
+            const text = document.querySelector(`.answer-id-${id} .answer_comment_input`).value
+            requestAnswerComment.send(JSON.stringify({ id: id, text: text }));
+        };
+        const AnswercommentHandleResponse = () => {
             if (requestComment.status < 400) {
                 const { id } = JSON.parse(requestAnswerComment.response);
                 const { text } = JSON.parse(requestAnswerComment.response);
                 const { comment_id } = JSON.parse(requestAnswerComment.response);
-                const addAnswerComment = document.querySelector(`.addAnswerComment`);
-                console.log(comment_id);
-                addAnswerComment.innerHTML += `
-            <div class='answer_comment_id_${comment_id}'>
-                <div class="answer_comment_text">
-                    ${text}
-                </div>
-                <div class="answer_comment_delete_btn">
-                    <button onclick="onClickAnswerCmtDelete(${id}, ${comment_id})">삭제</button>
-                </div>
-            </div>
-        `
+                const addAnswerComment = document.querySelector(`.answer-id-${id} .addAnswerComment`);
                 const cmt_input = document.querySelector('.answer_comment_input');
-                cmt_input.value = null
-            };
+                addAnswerComment.innerHTML += `
+                <div class='answer_comment_id_${comment_id}'>
+                    <div class="answer_comment_text">
+                        ${text}
+                    </div>
+                    <div class="answer_comment_delete_btn">
+                        <button onclick="onClickAnswerCommentDelete(${id}, ${comment_id})">삭제</button>
+                    </div>
+                </div>
+                `
+                cmt_input.value = ''
+            }
         };
         requestAnswerComment.onreadystatechange = () => {
             if (requestAnswerComment.readyState === XMLHttpRequest.DONE) {
                 AnswercommentHandleResponse();
+            }
+        };
+
+        /*------------------------------------------------------------------------------------------------*/
+        // 답변 코멘트 삭제 부분
+        const requestDelAnswerComment = new XMLHttpRequest();
+
+        const onClickAnswerCommentDelete = (id, comment_id) => {
+            const url = '/comments/delete_answer_comment/';
+            requestDelAnswerComment.open('POST', url, true);
+            requestDelAnswerComment.setRequestHeader(
+                'Content-Type',
+                'application/x-www-form-urlencoded'
+            );
+            requestDelAnswerComment.send(JSON.stringify({ id: id, comment_id: comment_id }));
+        };
+        const AnswerCommentDelHandleResponse = () => {
+            if (requestDelAnswerComment.status < 400) {
+                const { id } = JSON.parse(requestDelAnswerComment.response);
+                const { comment_id } = JSON.parse(requestDelAnswerComment.response);
+                const element = document.querySelector(`.answer_comment_id_${comment_id}`);
+                console.log(element)
+                element.remove();
             };
         };
-        </script>
-
-
-
+        requestDelAnswerComment.onreadystatechange = () => {
+            if (requestDelAnswerComment.readyState === XMLHttpRequest.DONE) {
+                AnswerCommentDelHandleResponse();
+            };
+        };
+    </script>
     <script type="text/javascript">
         function doDisplay() {
             var commentBox = document.getElementById("comment_box");
@@ -260,11 +287,9 @@
             }
         }
     </script>
-
     <!-- 도움되었어요 스크랩버튼 기능 -->
     <script>
         const requestLike = new XMLHttpRequest();
-
         const onClickLikeScrap = (id, type) => { //함수정의 : 어떤 게시글인지 . 버튼 타입을 받아온다.
             const url = '/questions/count_like_scrap/'; //어느 url로 요청할 것인지.
             requestLike.open('POST', url, true); //post방식으로 이 url에 ajax방식으로 요청을보내는데, 
@@ -274,7 +299,6 @@
             );
             requestLike.send(JSON.stringify({ id: id, type: type })); //요청할 때 필요한 정보들. ajax방식으로 할 땐 무.조.건 JSON방식으로 보내야함.
         };
-
         const likeHandleResponse = () => {  //응답 처리해주는 함수 ( 숫자 +1되는 처리)
             if (requestLike.status < 400) {
                 const { id, type } = JSON.parse(requestLike.response);    // {'id': 1, 'type': 'like'}
@@ -282,16 +306,13 @@
                 const originHTML = element.innerHTML;
                 const [buttonType, helped_num] = originHTML.split(' ');  // ['Like', '0']
                 const count = Number(helped_num) + 1;
-
                 element.innerHTML = `${buttonType} ${count}`;
             }
         };
-
         requestLike.onreadystatechange = () => {
             if (requestLike.readyState === XMLHttpRequest.DONE) {
                 likeHandleResponse();
             }
         };
     </script>
-
     {% endblock %}

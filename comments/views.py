@@ -67,11 +67,12 @@ def delete_question_comment(request):
     req = json.loads(request.body)
     post_id = req["id"]
     comment_id = req["comment_id"]
-    if request.method == "POST":
-        post = Question_post.objects.get(id=post_id)
-        comment = Comment.objects.get(id=comment_id)
-        comment.delete()
-        total_num_comments = post.comments.count()
+        
+    post = Question_post.objects.get(id=post_id)
+    comment = Comment.objects.get(id=comment_id)
+    comment.delete()
+    total_num_comments = post.comments.count()
+    
     return JsonResponse({
         "id": post_id, 
         "comment_id": comment_id,
@@ -97,9 +98,9 @@ def add_answer_comment(request):
 def delete_answer_comment(request):
     req = json.loads(request.body)
     answer_id = req['id']
-    answer_comment_id = req["answer_comment_id"]
+    answer_comment_id = req["comment_id"]
     answer = Answer.objects.get(id=answer_id)
-    answer_comment = Comment.objects.get(id=answer_id)
+    answer_comment = Comment.objects.get(id=answer_comment_id)
     answer_comment.delete()
     return JsonResponse({
         'id': answer_id,

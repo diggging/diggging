@@ -125,6 +125,7 @@ def question_post_detail(request, user_id, post_id):
     post_answers = post_details.answers.all().order_by("-created")
     # question_comments 역참조
     comments = post_details.question_comments.all()
+    # answer_comments = [answer.answer_comments for answer in post_answers]
     ctx = {
         "post": post_details,
         "host": me,
@@ -178,6 +179,8 @@ def answer_delete(request, question_post_id, answer_id):
     answer = Answer.objects.get(pk=answer_id)
     answer.delete()
     return redirect("question:question_post_detail", question_post.user.id, question_post_id)
+
+
 #----------------------------------------------------------------------------------------------------------
 # 질문 기록 퍼오기
 def get_question(request, question_post_id):

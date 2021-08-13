@@ -39,7 +39,7 @@ class Answer(core_models.TimeStampModel):
     desc = RichTextUploadingField(verbose_name="설명", blank=False, config_name="default")
     code = RichTextUploadingField(verbose_name="코드", blank=True, config_name="default")
 
-    objects = models.Manager()
+    # objects = models.Manager()
     
 class QuestionFolder(posts_models.Folder):
     pass
