@@ -245,6 +245,7 @@ def my_page(request, pk):
     # 폴더 보여주기위한 변수
     language_folders = Folder.objects.filter(folder_user=host, folder_kind="language")
     framework_folders = Folder.objects.filter(folder_user=host, folder_kind="framework")
+    solve_folders = Folder.objects.filter(folder_user=host, folder_kind="solved")
     
     # 질문 모음
     my_questions = Question_post.objects.filter(user=host)
@@ -257,6 +258,15 @@ def my_page(request, pk):
     # 모래
     my_sand = Sand.objects.filter(user = host)
     my_sand_sum = my_sand.aggregate(Sum('amount'))
+    if my_sand_sum < 2000:
+        host.user_level = 0
+    elif my_sand_sum<7000:
+        host.user_level=1
+    elif my_sand_sum<18000:
+        host.user_level=2
+    else:
+        host.user_level=3
+
     print(my_sand)
     print(my_sand_sum)
 
@@ -267,6 +277,7 @@ def my_page(request, pk):
         'host_following' : host_following,
         'language_folders' : language_folders,
         'framework_folders' : framework_folders,
+        'solve_folders': solve_folders,
         'questions_language_folder' : questions_language_folder,
         'questions_framework_folder' : questions_framework_folder,
 
