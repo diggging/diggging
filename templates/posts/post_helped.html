@@ -7,12 +7,13 @@
 {% endblock %}
 
 {% block content %}
+
 <div class="post_container" id="scroll-element">
     <a href="{% url 'posts:main' %}">스크랩 /</a>
     <a href="{% url 'posts:helped' %}">도움 /</a>
     <a href="{% url 'posts:my_recent' %} ">내 최신순 /</a>
     <a href="{% url 'posts:follow' %}">이웃 /</a>
-
+    
     {% include 'posts/_posts.html' with posts=posts %}
     
 </div>
@@ -22,7 +23,7 @@
     document.addEventListener("DOMContentLoaded", () => {
         let bottomSentinal = document.querySelector("#bottom-sentinel");
         let scrollElement = document.querySelector("#scroll-element");
-        let baseUrl = "{% url 'posts:scrap_axios' %}";
+        let baseUrl = "{% url 'posts:helped_axios' %}";
         attachInfiniteScroll(bottomSentinal, scrollElement, baseUrl);
     })
 </script>
