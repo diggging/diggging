@@ -234,15 +234,12 @@ def github_callback(request):
                     ctx = {
                         'user': user
                     }
-                    messages.success(request, f"Welcome back {user.username}")
                     return redirect("users:my_page", user.id)
                 else:
                     raise Exception("Can't get your profile")
         else:
             raise Exception("Can't get code")
-    
     except Exception as e:
-        messages.error(request, e)
         return redirect(reverse("users:login"))
     
 
