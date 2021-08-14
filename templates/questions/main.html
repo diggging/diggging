@@ -19,15 +19,23 @@
         if(requestAnswer.status < 400){
             const answer = requestAnswer.response;
             const answerab = document.querySelector('.answerabc');
-            
-            console.log(answer);
+            // answer_dict = {
+            //     "id": answer.id,
+            //     "title": title,
+            //     "desc": name_rank_str,
+            // }
+            console.log(answer[0]);
+            console.log(answer[0][0]);
             answerab.innerHTML =`
             <div>
-                ${answer[id].title}}
+                answer[0][0]
             </div>
             `
         };
     };
+
+
+    
     requestAnswer.onreadystatechange = () =>{
         if(requestAnswer.readyState === XMLHttpRequest.DONE){
             AnswerHandleResponse();
