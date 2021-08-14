@@ -14,7 +14,6 @@ class QuestionPostAdmin(admin.ModelAdmin):
         "image",
         "desc",
         "code",
-        "tag",
         "is_public",
         "is_friend",
         "folder",

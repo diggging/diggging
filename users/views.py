@@ -278,14 +278,17 @@ def my_page(request, pk):
     my_sand = Sand.objects.filter(user = host)
     my_sand_sum = my_sand.aggregate(Sum('amount'))
     print(my_sand_sum)
-    if int(my_sand_sum['amount__sum']) < 2000:
-        host.user_level = 0
-    elif int(my_sand_sum['amount__sum']) <7000:
-        host.user_level=1
-    elif int(my_sand_sum['amount__sum']) <18000:
-        host.user_level=2
+    if my_sand_sum['amount__sum'] == None:
+        my_sand_sum = 0
     else:
-        host.user_level=3
+        if int(my_sand_sum['amount__sum']) < 2000:
+            host.user_level = 0
+        elif int(my_sand_sum['amount__sum']) <7000:
+            host.user_level=1
+        elif int(my_sand_sum['amount__sum']) <18000:
+            host.user_level=2
+        else:
+            host.user_level=3
 
     print(my_sand)
     print(my_sand_sum)

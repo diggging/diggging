@@ -54,19 +54,19 @@ def question_create(request):
             
             if lang_folder.exists():
                 existed_folder = QuestionFolder.objects.get(folder_name=language, folder_user=me, folder_kind="language")
-                posts.folder.add(existed_folder)
+                posts.question_folder.add(existed_folder)
             else:
                 new_folder = QuestionFolder.objects.create(folder_name=language, folder_user=me, folder_kind="language")
-                posts.folder.add(new_folder)
+                posts.question_folder.add(new_folder)
 
             if frame_folder.exists():
                 # 있으면 foriegn key 연결
                 existed_folder = QuestionFolder.objects.get(folder_name=framework, folder_user=me, folder_kind="framework")
-                posts.folder.add(existed_folder)
+                posts.question_folder.add(existed_folder)
             else:
                 # 없으면 folder 만들어서
                 new_folder = QuestionFolder.objects.create(folder_name=framework, folder_user=me, folder_kind="framework")
-                posts.folder.add(new_folder)
+                posts.question_folder.add(new_folder)
 
             posts.save()
 
@@ -93,20 +93,16 @@ def question_update(request, pk):
     question_post = get_object_or_404(Question_post, pk=pk)
     origin_lang_fol = question_post.question_folder.get(folder_kind="language")
     origin_frame_fol = question_post.question_folder.get(folder_kind="framework")
-    origin_solve_fol = question_post.question_folder.get(folder_kind="solved")
     print(origin_lang_fol)
     print(origin_frame_fol)
-    print(origin_solve_fol)
     if request.method == "POST":
         form = QuestionPostForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             new_lang = request.POST.get("language")
             new_frame = request.POST.get("framework")
-            new_solve = request.POST.get("problem_solving")
             print(new_lang)
             print(new_frame)
-            print(new_solve)
 
             # lang 폴더가 달라진다면?
             if new_lang != origin_lang_fol.folder_name:
@@ -158,7 +154,10 @@ def question_delete(request, pk):
 def question_post_detail(request, user_id, post_id):
     post_details = Question_post.objects.get(pk=post_id)
     me = get_object_or_404(User, pk=user_id)
-    folder = post_details.folder.get(
+    print(post_details.language)
+    print(post_details.user)
+
+    folder = post_details.question_folder.get(
         folder_name=post_details.language, folder_user=post_details.user
     )
     # comments = post_details.comments.all() comments는 ajax로 따로 띄워준다고 해서 지웠습니다
