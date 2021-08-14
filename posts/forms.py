@@ -5,7 +5,6 @@ from django.forms.widgets import RadioSelect
 from .models import Post
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
-
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post

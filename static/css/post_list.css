@@ -53,12 +53,22 @@ html, body {
     margin-top: 150px;
 }
 
+.main_link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .post_container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    margin-top: 150px;
 }
+
 
 .post_card {
     width: 20rem;

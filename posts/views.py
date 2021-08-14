@@ -1,25 +1,112 @@
 from users.models import Alarm, User
 from comments.models import Comment
 from django.http.response import JsonResponse
+from django.http import HttpResponse
+from django.core import serializers
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+
+from django.views.decorators.http import require_POST, require_GET
+
+
 from .models import Post, Folder
 from users.models import Sand
 from . import models
 from .forms import SelectForm, PostForm, SearchForm
 import json
 
+from django.core.paginator import Paginator
+
+
+
 # Create your views here.
 
 # main 페이지
 def main(request):
-    # 모든 전체 글에서 스크랩 순위대로 추천
-    all_posts_scrap = Post.objects.all().order_by("-scrap_num")
-    # 모든 전체 글에서 도움 순위대로 추천
-    all_posts_helped = Post.objects.all().order_by("-helped_num")
+    # # 모든 전체 글에서 스크랩 순위대로 추천
+    # all_posts_scrap = Post.objects.all().order_by("-scrap_num")
+    # # 모든 전체 글에서 도움 순위대로 추천
+    # all_posts_helped = Post.objects.all().order_by("-helped_num")
 
-    # 이웃들의 최신 글을 긁어오는 코드
+    # # 이웃들의 최신 글을 긁어오는 코드
+    # me = request.user
+    # followings = me.user_following.all()
+    # if followings:
+    #     all_followings_posts = Post.objects.filter(user=followings[0])
+    #     for following in followings[1:]:
+    #         following_posts = Post.objects.filter(user=following)
+    #         all_followings_posts.union(following_posts)  # queryset append
+    #     all_followings_posts = all_followings_posts.order_by("-created")  # 생성 기준으로 listing
+    # else:
+    #     all_followings_posts = [] ## -> None으로 하면 js에서 오류 뜸
+
+    # # 내 최신 포스트
+    # my_recent_post = Post.objects.filter(user=me).order_by("-created")
+
+    # ctx = {
+    #     "posts_scrap": all_posts_scrap,  # 스크랩 순
+    #     "posts_helped": all_posts_helped,  # helped 순
+    #     "user": request.user,  # 나
+    #     "followings_posts": all_followings_posts,  # 내가 follow하는 사람들의 최신순 포스트
+    #     "my_recent_post": my_recent_post,  # 내 글 최신순
+    # }
+
+    return render(request, "posts/post_list.html")
+
+def helped(request):
+    return render(request, "posts/post_helped.html")
+
+def follow(request):
+    return render(request, "posts/post_follow.html")
+
+def my_recent(request):
+    return render(request, "posts/my_recent.html")
+
+#-----------------------------------------------------------------------
+def is_ajax(request):
+    """
+    This utility function is used, as `request.is_ajax()` is deprecated.
+
+    This implements the previous functionality. Note that you need to
+    attach this header manually if using fetch.
+    """
+    return request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest"
+
+# main axios
+@require_GET
+def scrap_axios(request):
+    all_posts_scrap = Post.objects.all().order_by("-scrap_num")
+    paginator = Paginator(all_posts_scrap, 8)
+    page_num = request.GET.get("page")
+    # if page_num > paginator.num_pages:
+    #     raise Http404
+    posts_scrap = paginator.page(page_num)
+    # context = {'scrap_posts': posts_scrap}
+
+    if is_ajax(request):
+        return render(request, 'posts/_posts.html', {'posts': posts_scrap})
+
+    return render(request, 'posts/post_list.html', {'posts': posts_scrap})
+
+#-----------------------------------------------------------------------
+@require_GET
+def helped_axios(request):
+    all_posts_helped = Post.objects.all().order_by("-helped_num")
+    paginator = Paginator(all_posts_helped, 8)
+    page_num = request.GET.get("page")
+    # if page_num > paginator.num_pages:
+    #     raise Http404
+    posts_helped = paginator.page(page_num)
+
+    if is_ajax(request):
+        return render(request, 'posts/_posts.html', {'posts': posts_helped})
+
+    return render(request, 'posts/post_helped.html', {'posts': posts_helped})
+
+@require_GET
+def follow_axios(request):
+    
     me = request.user
     followings = me.user_following.all()
     if followings:
@@ -29,19 +116,36 @@ def main(request):
             all_followings_posts.union(following_posts)  # queryset append
         all_followings_posts = all_followings_posts.order_by("-created")  # 생성 기준으로 listing
     else:
-        all_followings_posts = None
-    # 내 최신 포스트
+        all_followings_posts = []
+    
+    paginator = Paginator(all_followings_posts, 8)
+    page_num = request.GET.get("page")
+    posts_follow = paginator.page(page_num)
+
+    if is_ajax(request):
+        return render(request, 'posts/_posts.html', {'posts': posts_follow})
+
+    return render(request, 'posts/post_list.html', {'posts': posts_follow})
+
+# @csrf_exempt
+# def my_recent_axios(request):
+#     me = request.user
+#     my_recent_post = Post.objects.filter(user=me).order_by("-created")
+#     my_recent_post_list = serializers.serialize('json', my_recent_post)
+
+#     return HttpResponse(my_recent_post_list, content_type="text/json-comment-filtered")
+@require_GET
+def my_recent_axios(request):
+    me = request.user
     my_recent_post = Post.objects.filter(user=me).order_by("-created")
+    paginator = Paginator(my_recent_post, 8)
+    page_num = request.GET.get("page")
+    posts_my = paginator.page(page_num)
 
-    ctx = {
-        "posts_scrap": all_posts_scrap,  # 스크랩 순
-        "posts_helped": all_posts_helped,  # helped 순
-        "user": request.user,  # 나
-        "followings_posts": all_followings_posts,  # 내가 follow하는 사람들의 최신순 포스트
-        "my_recent_post": my_recent_post,  # 내 글 최신순
-    }
+    if is_ajax(request):
+        return render(request, 'posts/_posts.html', {'posts': posts_my})
 
-    return render(request, "posts/post_list.html", context=ctx)
+    return render(request, 'posts/post_list.html', {'posts': posts_my})
 
 
 # 프론트에서 해당 포스트 id 넘겨주면
@@ -61,7 +165,6 @@ def post_detail(request, user_id, post_id):
     # html added by 종권
     return render(request, "posts/post_detail.html", ctx)
 
-
 def post_create(request):
     if request.method == "POST":
         form = PostForm(request.POST, request.FILES)
@@ -69,7 +172,6 @@ def post_create(request):
             posts = form.save(commit=False)
             posts.user = request.user
             posts.save()
-
             # 폴더 분류해주기
             me = posts.user  # folder 주인 가져오기
             language = request.POST.get("language")  # language 가져옴
@@ -167,33 +269,68 @@ def post_delete(request, pk):
     return redirect("posts:main")
 
 
+# def search(request):
+#     language = request.POST.get("post")
+#     framework = request.POST.get("framework")  # frmae work 현주가 추가
+#     post = request.POST.get("post", "")
+#     select_languages = request.POST.get("field")
+#     print(select_languages)
+#     select_os = request.POST.get("field2")
+#     select_solve = request.POST.get("field3")
+#     select_framwork = request.POST.get("field4")
+#     free_post = Post.objects.filter(language=language).order_by("-id")
+#     frame_post = Post.objects.filter(framework=framework).order_by("-id")
+#     form = SelectForm()
+#     ctx = {
+#         "free_post": free_post,
+#         "post": post,
+#         "form": form,
+#         "frame_post": frame_post,
+#     }
+#     return render(request, "posts/search.html", ctx)
+
+## 수정필요
+@csrf_exempt
 def search(request):
-    language = request.POST.get("post")
-    framework = request.POST.get("framework")  # frmae work 현주가 추가
-    post = request.POST.get("post", "")
-    select_languages = request.POST.get("field")
-    print(select_languages)
-    select_os = request.POST.get("field2")
-    select_solve = request.POST.get("field3")
-    select_framwork = request.POST.get("field4")
-    free_post = Post.objects.filter(language=language).order_by("-id")
-    frame_post = Post.objects.filter(framework=framework).order_by("-id")
     form = SelectForm()
+    posts = Post.objects.all()
+    q = request.POST.get('q', "")
+    # if q: 
+    #     search_title = posts.filter(title__icontains=q)
+    #     search_desc = posts.filter(desc__icontains=q)
+    #     post = search_desc.union(search_title)        
+    #     ctx = {
+    #         'posts': post,
+    #         'q': q,
+    #         'form': form,
+    #     }
+    #     return render(request, "posts/search.html", ctx)
+        
+    # else:
+    #     ctx = {
+    #         'form': form,
+    #     }
     ctx = {
-        "free_post": free_post,
-        "post": post,
-        "form": form,
-        "frame_post": frame_post,
-    }
+            'posts': posts,
+            'q': q,
+            'form': form,
+        }
     return render(request, "posts/search.html", ctx)
 
-# @csrf_exempt
-# def search_axios(request):
-#     req = json.loads(request.body)
-#     post_id = []
+#post data 보내주기
+@csrf_exempt
+def search_post_axios(request):
+    post = Post.objects.all()
+    post_list = serializers.serialize('json', post)
 
-#     return JsonResponse({'post': post})
+    return HttpResponse(post_list, content_type="text/json-comment-filtered")
 
+#user data 보내주기
+@csrf_exempt
+def search_user_axios(request):
+    user = User.objects.all()
+    user_list = serializers.serialize('json', user)
+    return HttpResponse(user_list, content_type="text/json-comment-filtered")
 
 # 삽질 기록 퍼오기
 def get_post(request, user_id, post_id):

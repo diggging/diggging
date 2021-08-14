@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <script src="{% static 'js/base.js' %}"></script>
 </head>
 <body>
     <nav class="nav">
@@ -32,12 +33,17 @@
                     </div>
                     <h6>질문광장</h6>
                 </div>
-                <div class="nav_vertical">
-                    <div>
-                        <a href="{% url 'users:my_page' user.id %}">😎</a>
-                    </div>
+                <div class="user_btn">
+                    <button class="toggle_btn" onclick="toggleBtn()" href="{% url 'users:my_page' user.id %}">😎</button>
                     <h6>{{user.username}}</h6>
+                    <div class="toggle" style="display: none;">
+                        <a href="{% url 'users:my_page' user.id %}">내 디렉토리</a>
+                        <a href="">내 모래포인트</a>
+                        <a href="{% url 'users:account_detail' user.id %}">계정 설정</a>
+                        <a href="{% url 'users:logout' %}">로그아웃</a>
+                    </div>
                 </div>
+        </div>
             {% else %}
                 <div class="nav_vertical">
                     <div>
