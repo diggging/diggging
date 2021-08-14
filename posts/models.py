@@ -192,10 +192,18 @@ class Post(core_models.TimeStampModel):
         blank=True,
         related_name="likes_user",
     )
+    scarps_user = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        related_name="scarps_user",
+    )
     objects = models.Manager()
 
     def count_likes_user(self):
         return self.likes_user.count()
+
+    def count_scarps_user(self):
+        return self.scarps_user.count()
 
 
 class Folder(core_models.TimeStampModel):
@@ -208,7 +216,9 @@ class Folder(core_models.TimeStampModel):
         ("language", "language"),
         ("solved", "solved"),
     )
-    folder_kind = models.CharField(verbose_name="폴더 종류", max_length=10, choices=kind_choices, blank=False)
+    folder_kind = models.CharField(
+        verbose_name="폴더 종류", max_length=10, choices=kind_choices, blank=False
+    )
 
     def __str__(self):
         return self.folder_name
