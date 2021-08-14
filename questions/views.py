@@ -6,6 +6,8 @@ from .forms import AnswerPostForm, QuestionPostForm
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Question_post, Answer, QuestionFolder
 from users.models import Sand, Alarm
+from django.core import serializers
+
 
 # Create your views here.
 def question_main(request):
@@ -281,6 +283,13 @@ def answer_ajax(request):
     req = json.loads(request.body)
     user_id = req["id"]
     users = User.objects.get(id=user_id)
-    answer = list(Answer.objects.filter(user=users).values().order_by("-created"))
+    answer = list(Answer.objects.filter().values().order_by("-created"))
+    user = User.objects.all()
+    user_list = serializers.serialize('json', user)
     print(answer)
-    return JsonResponse(answer, safe=False)
+
+    ctx = {
+        "answer": answer,
+        "user": user_list
+    }
+    return JsonResponse(ctx, safe=False)
