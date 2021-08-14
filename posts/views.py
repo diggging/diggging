@@ -1,9 +1,9 @@
 from users.models import Alarm, User
 from comments.models import Comment
 from django.http.response import JsonResponse
-from django.http import HttpResponse
 from django.core import serializers
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from django.http import HttpResponse
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -15,6 +15,8 @@ from users.models import Sand
 from . import models
 from .forms import SelectForm, PostForm, SearchForm
 import json
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 
 from django.core.paginator import Paginator
 
@@ -114,7 +116,9 @@ def follow_axios(request):
         for following in followings[1:]:
             following_posts = Post.objects.filter(user=following)
             all_followings_posts.union(following_posts)  # queryset append
-        all_followings_posts = all_followings_posts.order_by("-created")  # 생성 기준으로 listing
+        all_followings_posts = all_followings_posts.order_by(
+            "-created"
+        )  # 생성 기준으로 listing
     else:
         all_followings_posts = []
     
@@ -149,6 +153,8 @@ def my_recent_axios(request):
 
 
 # 프론트에서 해당 포스트 id 넘겨주면
+
+
 def post_detail(request, user_id, post_id):
     post_details = Post.objects.get(pk=post_id)
     me = get_object_or_404(User, pk=user_id)
@@ -165,6 +171,43 @@ def post_detail(request, user_id, post_id):
     # html added by 종권
     return render(request, "posts/post_detail.html", ctx)
 
+
+@login_required
+@require_POST
+def post_like(request):
+    pk = request.POST.get("pk", None)
+    post = get_object_or_404(Post, pk=pk)
+    user = request.user
+
+    if post.likes_user.filter(id=user.id).exists():
+        post.likes_user.remove(user)
+        message = "좋아요 취소"
+    else:
+        post.likes_user.add(user)
+        message = "좋아요"
+
+    ctx = {"likes_count": post.count_likes_user(), "message": message}
+    return HttpResponse(json.dumps(ctx), content_type="application/json")
+
+
+@login_required
+@require_POST
+def post_scrap(request):
+    pk = request.POST.get("pk", None)
+    post = get_object_or_404(Post, pk=pk)
+    user = request.user
+
+    if post.scarps_user.filter(id=user.id).exists():
+        post.scarps_user.remove(user)
+        message = "퍼가기 취소"
+    else:
+        post.scarps_user.add(user)
+        message = "퍼가기"
+
+    ctx = {"scarps_count": post.count_scarps_user(), "message": message}
+    return HttpResponse(json.dumps(ctx), content_type="application/json")
+
+
 def post_create(request):
     if request.method == "POST":
         form = PostForm(request.POST, request.FILES)
@@ -176,7 +219,7 @@ def post_create(request):
             me = posts.user  # folder 주인 가져오기
             language = request.POST.get("language")  # language 가져옴
             framework = request.POST.get("framework")  # framework 가져옴
-            solve = request.POST.get("problem_solving") # 해결 여부
+            solve = request.POST.get("problem_solving")  # 해결 여부
 
             lang_folder = Folder.objects.filter(
                 folder_name=language, folder_user=me
@@ -230,7 +273,6 @@ def post_create(request):
                 existed_folder = Folder.objects.get(folder_user=me, folder_name=solve)
                 posts.folder.add(existed_folder)
 
-
             posts.save()
 
             # 포스팅 시에 sand 추가해주기
@@ -238,7 +280,6 @@ def post_create(request):
 
             # 지수언니가 말한대로 고침!
             return redirect("posts:post_detail", posts.user.id, posts.id)
-        
 
     form = PostForm()
     ctx = {
@@ -254,7 +295,7 @@ def post_update(request, pk):
         form = PostForm(request.POST, instance=posts)
         if form.is_valid():
             form.save()
-            return redirect("posts:main") #수정
+            return redirect("posts:main")  # 수정
     else:
         form = PostForm(instance=posts)
         ctx = {
@@ -341,14 +382,14 @@ def get_post(request, user_id, post_id):
     post_host = User.objects.get(id=user_id)
 
     # get: object-없는걸 가져오면 오류 , filter: queryset- 없어도 빈 queryset 오류 x
-    lang_folder = Folder.objects.filter(folder_name=target_language, folder_user=me)
-    frame_folder = Folder.objects.filter(folder_name=target_framework, folder_user=me)
+    lang_folder = Folder.objects.filter(folder_name=target_language, folder_user=me, folder_kind="language")
+    frame_folder = Folder.objects.filter(folder_name=target_framework, folder_user=me, folder_kind="framework")
 
     # 만약 나, language로 된 폴더 있으면
     if lang_folder.exists():
         # 그 폴더에 포스트 그냥 추가하기
         folder = Folder.objects.get(
-            folder_name=target_language, folder_user=me
+            folder_name=target_language, folder_user=me, folder_kind="language"
         )  # query set은 object가 아니므로 object 다시 가져옴
         folder.related_posts.add(post)  # add 는 저장 x 명시적 저장 필요
         folder.save()
@@ -356,7 +397,7 @@ def get_post(request, user_id, post_id):
     else:
         # 폴더를 생성한 뒤, 거기에 추가하기
         new_folder = Folder.objects.create(
-            folder_name=target_language, folder_user=me
+            folder_name=target_language, folder_user=me, folder_kind="language"
         )  # create - 자동저장
         post.folder.add(new_folder)
     post.save()
@@ -365,7 +406,7 @@ def get_post(request, user_id, post_id):
     if frame_folder.exists():
         # 그 폴더에 포스트 그냥 추가하기
         folder = Folder.objects.get(
-            folder_name=target_framework, folder_user=me
+            folder_name=target_framework, folder_user=me, folder_kind="framework"
         )  # query set은 object가 아니므로 object 다시 가져옴
         folder.related_posts.add(post)  # add 는 저장 x 명시적 저장 필요
         folder.save()
@@ -373,16 +414,20 @@ def get_post(request, user_id, post_id):
     else:
         # 폴더를 생성한 뒤, 거기에 추가하기
         new_folder = Folder.objects.create(
-            folder_name=target_framework, folder_user=me
+            folder_name=target_framework, folder_user=me, folder_kind="framework"
         )  # create - 자동저장
         post.folder.add(new_folder)
     post.save()
 
     # 퍼가기 할 때 sand 생성하기 - host꺼 생성해줘야함
-    new_sand = Sand.objects.create(user=post.user, amount=50, reason=me.user_nickname+"님의 내 기록 퍼가기")
+    new_sand = Sand.objects.create(
+        user=post.user, amount=50, reason=me.user_nickname + "님의 내 기록 퍼가기"
+    )
 
     # 퍼가기 -> host 에게 alarm감
-    new_alarm = Alarm.objects.create(user=post_host, reason=me.user_nickname+"님이 내 기록 "+post.title+"을 퍼갔어요.")
+    new_alarm = Alarm.objects.create(
+        user=post_host, reason=me.user_nickname + "님이 내 기록 " + post.title + "을 퍼갔어요."
+    )
     # url: 저장 후 post_detail 페이지에 남아있음.
     return redirect("posts:post_detail", user_id, post_id)
 
@@ -396,7 +441,7 @@ def get_post(request, user_id, post_id):
 
 
 # 도움이 되었어요, 스크랩 개수 count 하기 위한 axios
-@csrf_exempt
+"""@csrf_exempt
 def count_like_scrap(request):
     # json 문자열을 json.loads를 통해서 json 형태에서 파이썬 객체 형태로 parsing
     # front 단에서 request.body를 통해서 넘어와야 하는 것들
@@ -422,4 +467,4 @@ def count_like_scrap(request):
 
     # TODO: 굳이 JsonResponse 필요한가? (프론트엔드 단에서는 도움이 되었어요 or 스크랩 개수가 표현이 되지 않는 듯)
     # if 전달할 내용이 없다면 Httpresponse로 가도 됨.
-    return JsonResponse({"id": post_id, "type": button_type})
+    return JsonResponse({"id": post_id, "type": button_type})"""

@@ -7,6 +7,8 @@ from django.shortcuts import get_object_or_404, render, redirect
 from .models import Question_post, Answer, QuestionFolder
 from users.models import Sand, Alarm
 from django.core import serializers
+from django.core.serializers.json import DjangoJSONEncoder
+from django.http import HttpResponse, JsonResponse
 
 
 # Create your views here.
@@ -47,32 +49,23 @@ def question_create(request):
             me = posts.user
             language = request.POST.get("language")
             framework = request.POST.get("framework")  # framework 가져옴
-            lang_folder = QuestionFolder.objects.filter(folder_name=language, folder_user=me)
-            frame_folder = QuestionFolder.objects.filter(folder_name=framework, folder_user=me)  # frameworkd folder 가져옴
+            lang_folder = QuestionFolder.objects.filter(folder_name=language, folder_user=me, folder_kind="language")
+            frame_folder = QuestionFolder.objects.filter(folder_name=framework, folder_user=me, folder_kind="framework")  # frameworkd folder 가져옴
             
             if lang_folder.exists():
-                existed_folder = QuestionFolder.objects.get(
-                    folder_name=language, folder_user=me
-                )
+                existed_folder = QuestionFolder.objects.get(folder_name=language, folder_user=me, folder_kind="language")
                 posts.folder.add(existed_folder)
-
             else:
-                new_folder = QuestionFolder.objects.create(
-                    folder_name=language, folder_user=me
-                )
+                new_folder = QuestionFolder.objects.create(folder_name=language, folder_user=me, folder_kind="language")
                 posts.folder.add(new_folder)
 
             if frame_folder.exists():
                 # 있으면 foriegn key 연결
-                existed_folder = QuestionFolder.objects.get(
-                    folder_name=framework, folder_user=me
-                )
+                existed_folder = QuestionFolder.objects.get(folder_name=framework, folder_user=me, folder_kind="framework")
                 posts.folder.add(existed_folder)
             else:
                 # 없으면 folder 만들어서
-                new_folder = QuestionFolder.objects.create(
-                    folder_name=framework, folder_user=me
-                )
+                new_folder = QuestionFolder.objects.create(folder_name=framework, folder_user=me, folder_kind="framework")
                 posts.folder.add(new_folder)
 
             posts.save()
@@ -97,14 +90,60 @@ def get_answer_comments (request, answer_id):
     return render(request, "questions/question_detail.html", ctx)
 
 def question_update(request, pk):
-    question_posts = get_object_or_404(Question_post, pk=pk)
+    question_post = get_object_or_404(Question_post, pk=pk)
+    origin_lang_fol = question_post.quetion_folder.get(folder_kind="language")
+    origin_frame_fol = question_post.question_folder.get(folder_kind="framework")
+    origin_solve_fol = question_post.question_folder.get(folder_kind="solved")
+    print(origin_lang_fol)
+    print(origin_frame_fol)
+    print(origin_solve_fol)
     if request.method == "POST":
         form = QuestionPostForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect("question:question_post_detail", question_posts.user.id, question_posts.id)
+            new_lang = request.POST.get("language")
+            new_frame = request.POST.get("framework")
+            new_solve = request.POST.get("problem_solving")
+            print(new_lang)
+            print(new_frame)
+            print(new_solve)
+
+            # lang 폴더가 달라진다면?
+            if new_lang != origin_lang_fol.folder_name:
+                # 1. post와 폴더의 관계 끊기
+                origin_lang_fol.question_folder.remove(question_post)
+                # 2. post와 새로운 폴더와의 연결
+                # 이미 있는 폴더면 걍 넣어주고 아니면 생성후 넣어줌
+                lang_folder = QuestionFolder.objects.filter(folder_name=new_lang, folder_user=question_post.user, folder_kind="language")
+                if lang_folder.exists():
+                    # 있으면 foriegn key 연결
+                    existed_folder = QuestionFolder.objects.get(folder_name=new_lang, folder_user=question_post.user, folder_kind="language")
+                    question_post.question_folder.add(existed_folder)
+                else:
+                # 없으면 folder 만들어서
+                    new_folder = QuestionFolder.objects.create(folder_name=new_lang, folder_user=question_post.user, folder_kind="language")
+                    question_post.question_folder.add(new_folder)
+                # 원래 폴더에 더이상 연결된 post가 없다면? 폴더삭제 / 있다면? 냅두기
+                print(origin_lang_fol.question_folder.all())
+                if not origin_lang_fol.question_folder.all():
+                    origin_lang_fol.delete()
+
+            # framework
+            if new_frame != origin_frame_fol.folder_name:
+                origin_frame_fol.question_folder.remove(question_post)
+                frame_folder = QuestionFolder.objects.filter(folder_name=new_frame, folder_user=question_post.user, folder_kind="framework")
+                if frame_folder.exists():
+                    existed_folder = QuestionFolder.objects.get(folder_name=new_frame, folder_user=question_post.user, folder_kind="framework")
+                    question_post.question_folder.add(existed_folder)
+                else:
+                    new_folder = QuestionFolder.objects.create(folder_name=new_frame, folder_user=question_post.user, folder_kind="framework")
+                    question_post.question_folder.add(new_folder)
+                if not origin_frame_fol.question_folder.all():
+                    origin_frame_fol.delete()
+                    
+            return redirect("question:question_post_detail", question_post.user.id, question_post.id)
     else:
-        form = QuestionPostForm(instance=question_posts)
+        form = QuestionPostForm(instance=question_post)
         ctx = {
             "form": form,
         }
@@ -149,6 +188,8 @@ def answer_create(request, question_post_id):
             answers.question = question
             question_host = question.user
             answers.save()
+            question_host = question.user
+
             # 질문에 답변이 달렸다는 알람 넣어주기
             new_alarm = Alarm.objects.create(user=question_host, reason="내가 남긴 질문"+question.title+"에 답변이 달렸어요. 확인해보세요!")
             return redirect("question:question_post_detail", question_host.id, question_post_id)
@@ -191,20 +232,22 @@ def get_question(request, question_post_id):
     target_framework = question_post.framework  # 어떤 framework인지 - 프레임워크 생성용
     me = request.user
 
-    lang_folder = QuestionFolder.objects.filter(folder_name=target_language, folder_user=me)
-    frame_folder = QuestionFolder.objects.filter(folder_name=target_framework, folder_user=me)
+    lang_folder = QuestionFolder.objects.filter(folder_name=target_language, folder_user=me, folder_kind="language")
+    frame_folder = QuestionFolder.objects.filter(folder_name=target_framework, folder_user=me, folder_kind="framework")
 
     if lang_folder.exists():
         folder = QuestionFolder.objects.get(
             folder_name = target_language,
             folder_user = me,
+            folder_kind="language"
         )
-        folder.related_posts.add(question_post)
+        folder.question_folder.add(question_post)
         folder.save()
     else:
         new_folder = QuestionFolder.objects.create(
             folder_name = target_language,
-            folder_user = me
+            folder_user = me,
+            folder_kind="language"
         )
         question_post.folder.add(new_folder)
     question_post.save()
@@ -213,15 +256,15 @@ def get_question(request, question_post_id):
     if frame_folder.exists():
         # 그 폴더에 포스트 그냥 추가하기
         folder = QuestionFolder.objects.get(
-            folder_name=target_framework, folder_user=me
+            folder_name=target_framework, folder_user=me, folder_kind="framework"
         )  # query set은 object가 아니므로 object 다시 가져옴
-        folder.related_posts.add(question_post)  # add 는 저장 x 명시적 저장 필요
+        folder.question_folder.add(question_post)  # add 는 저장 x 명시적 저장 필요
         folder.save()
     # 없으면
     else:
         # 폴더를 생성한 뒤, 거기에 추가하기
         new_folder = QuestionFolder.objects.create(
-            folder_name=target_framework, folder_user=me
+            folder_name=target_framework, folder_user=me, folder_kind="framework"
         )  # create - 자동저장
         question_post.folder.add(new_folder)
     question_post.save()
@@ -265,9 +308,11 @@ def count_like_scrap_question(request):
     button_type = req["type"]
     question_post = Question_post.objects.get(id=question_post_id)
     question_host = question_post.user
+    print(question_host)
     me = request.user
     if button_type == "like":
         question_post.helped_num += 1
+        print(question_host)
         new_sand = Sand.objects.create(user=question_host, amount=20, reason="도움이 되었어요") # 이거 하는지 안하는지 모름
         new_alarm = Alarm.objects.create(user=question_host, reason="내가 남긴 질문 "+question_post.title+"이 "+me.user_nickname+" 님께 도움이 되었어요.")
     

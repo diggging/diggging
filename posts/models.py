@@ -7,6 +7,7 @@ from core import models as core_models
 from tagging.fields import TagField
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.conf import settings
 
 # Create your models here
 class Post(core_models.TimeStampModel):
@@ -186,8 +187,23 @@ class Post(core_models.TimeStampModel):
     is_friend = models.BooleanField(verbose_name="이웃공개", default=False)  # 나를 팔로잉 하는 사람.
     scrap_num = models.IntegerField(default=0)
     helped_num = models.IntegerField(default=0)
-
+    likes_user = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        related_name="likes_user",
+    )
+    scarps_user = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        related_name="scarps_user",
+    )
     objects = models.Manager()
+
+    def count_likes_user(self):
+        return self.likes_user.count()
+
+    def count_scarps_user(self):
+        return self.scarps_user.count()
 
 
 class Folder(core_models.TimeStampModel):
@@ -195,22 +211,14 @@ class Folder(core_models.TimeStampModel):
     folder_user = models.ForeignKey(
         "users.User", related_name="folder_user", on_delete=models.CASCADE
     )
-    # user = models.ForeignKey("users.User", related_name="user", on_delete=models.CASCADE)
     kind_choices = (
-            ("framework", "framework"),
-            ("language", "language"),
-            ("solved", "solved"),
-        )
-    folder_kind = models.CharField(verbose_name="폴더 종류", max_length=10, choices=kind_choices, blank=False)
-
+        ("framework", "framework"),
+        ("language", "language"),
+        ("solved", "solved"),
+    )
+    folder_kind = models.CharField(
+        verbose_name="폴더 종류", max_length=10, choices=kind_choices, blank=False
+    )
 
     def __str__(self):
         return self.folder_name
-
-    # def name(self):
-    #    return self.related_posts.language
-
-    # def post_count(self):
-    #    return self.related_posts.count()
-
-    # post_count.short_description = "number of posts saved"

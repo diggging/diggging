@@ -8,7 +8,6 @@ class QuestionPostForm(forms.ModelForm):
         model = Question_post
         fields = {
             "title",
-            "problem_solving",
             "os",
             "framework",
             "language",

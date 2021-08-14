@@ -198,6 +198,14 @@
                             {% endif %}
                         </div>
                     </div>
+                        레벨 | {{user.user_level}} 단계
+                    </h4>
+                    <h4>
+                        현재 모래 | {{user.user_point}} 포인트
+                    </h4>
+                    <div class="proflie_text">    
+                    {% if request.user.user_profile_content %}    
+                        {{request.user.user_profile_content}}
                     {% else %}
                     <!-- 로그인 안했을 때 -->
                     <div class="profile">
@@ -234,5 +242,4 @@
             <!-- 내가 남긴 답변 영역 끝 -->
         </div>
     </div>
-</div>
 {% endblock %}

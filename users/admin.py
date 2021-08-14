@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Alarm, User
+from .models import Alarm, Sand, User
 
 # Register your models here.
 
@@ -8,7 +8,7 @@ from .models import Alarm, User
 @admin.register(User)
 class CustomUserAdmin(admin.ModelAdmin):
     fields = ("username", "password", "last_login", "email", "user_nickname",
-              "user_profile_content", "user_profile_image", "user_following", "login_method", "is_active")
+              "user_profile_content", "user_profile_image", "user_following", "login_method", "is_active", "is_staff", "is_admin")
     list_display = ("username", "user_nickname",
                     "user_level", "user_point",  "following_count","id", "is_active", "login_method")
 
@@ -16,3 +16,7 @@ class CustomUserAdmin(admin.ModelAdmin):
 @admin.register(Alarm)
 class CustomAlarmAdmin(admin.ModelAdmin):
     fields = ("reason", "is_checked")
+
+@admin.register(Sand)
+class CustomAlarmAdmin(admin.ModelAdmin):
+    fields = ("user", "reason","amount")

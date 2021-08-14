@@ -10,13 +10,12 @@ from django.views.generic.base import TemplateView
 from .forms import UserCustomCreationForm, AuthenticationCustomForm
 from .models import User, Sand, Alarm
 from posts.models import Folder, Post
-from questions.models import Question_post, Answer
+from questions.models import Question_post, Answer, QuestionFolder
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, PasswordResetForm
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView
-import os
 # 이메일 인증 관련 import
 import logging
 from django.http import HttpResponse
@@ -62,9 +61,16 @@ def signup(request):
             solved = Folder.objects.create(folder_user=user, folder_name="해결")
             not_solved = Folder.objects.create(folder_user=user, folder_name="미해결")
             # return HttpResponse('Please confirm your email address to complete the registration') -> 이메일 인증 성공 확인 가능 메세지
+            # user가 생기자마자 바로 해결, 미해결 폴더 만들기
+            solved = Folder.objects.create(folder_user=user, folder_name="해결" , folder_kind="solved")
+            not_solved = Folder.objects.create(folder_user=user, folder_name="미해결", folder_kind="solved")
+
             return redirect('users:login')
     else:
         user_form = UserCustomCreationForm()
+
+    
+    
     ctx={'signup_form' : user_form}
     return render(request, "users/signup.html", context=ctx)
 
@@ -115,10 +121,11 @@ def password_reset(request):
     # email 받으면
     if request.method == 'POST':
         email  = request.POST.get("email")
+        username = request.POST.get("username")
         # email 이 존재하는 이메일인지 확인
-        if User.objects.filter(email = email).exists():
+        if User.objects.filter(email = email, username=username).exists():
             #있으면 메일 보내기
-            user = User.objects.get(email=email)
+            user = User.objects.get(email=email, username=username)
             current_site = get_current_site(request)
             print(current_site)
             message = render_to_string('users/password_reset_email.html', {
@@ -327,6 +334,16 @@ def account_detail(request, pk):
         'host':host,
     }
     return render(request, template_name = "users/account_detail.html", context= ctx)
+
+def change_desc(request, pk):
+    context = {}
+    user = get_object_or_404(User,pk=pk)
+    if request.method == "POST":
+        new_desc = request.POST.get("new_desc")
+        user.user_profile_content=new_desc
+        user.save()
+        return redirect('users:account_detail', user.id)
+    return redirect('users:account_detail', user.id)
 
 def change_nickname(request, pk):
     context = {}

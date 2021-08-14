@@ -18,6 +18,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import include
+from posts import views as posts_views
 
 urlpatterns = [
     path("ckeditor/", include("ckeditor_uploader.urls")),
@@ -27,4 +28,5 @@ urlpatterns = [
     path("comments/", include("comments.urls", namespace="comments")),
     path("accounts/", include("allauth.urls")),
     path("questions/", include("questions.urls")),
+    path('', posts_views.main , name='main'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
