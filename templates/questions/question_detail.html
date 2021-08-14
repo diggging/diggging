@@ -106,9 +106,9 @@
             <div class="answer_desc_box">
                 {{ answer.desc|safe|escape|linebreaks}}
             </div>
-            <a href="javascript:doDisplay2()">댓글창 열기</a>
+            <a href="javascript:doDisplayAnswer({{answer.id}})">댓글창 열기</a>
             <!-- 답변의 댓글창영역 -->
-            <div id="comment_box2">
+            <div id="comment_box{{answer.id}}">
             <div id="answer_comment_box">
                 <div class='addAnswerComment'>
                     <div>
@@ -287,9 +287,9 @@
                 commentBox.style.display = 'none';
             }
         }
-        function doDisplay2() {
-            var commentBox = document.getElementById("comment_box2");
-            console.log(commentBox)
+        function doDisplayAnswer(id) {
+            var boxName = "comment_box"+String(id);
+            var commentBox = document.getElementById(boxName);
             if (commentBox.style.display == 'none') {
                 commentBox.style.display = 'block';
             } else {
