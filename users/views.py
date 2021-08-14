@@ -230,9 +230,12 @@ def github_callback(request):
                         )
                         user.set_unusable_password()
                         user.save()
-                    login(request, user)
+                    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                    ctx = {
+                        'user': user
+                    }
                     messages.success(request, f"Welcome back {user.username}")
-                    return redirect('users:my_page', user.pk)
+                    return redirect("users:my_page", user.id)
                 else:
                     raise Exception("Can't get your profile")
         else:
