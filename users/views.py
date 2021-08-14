@@ -240,6 +240,7 @@ def github_callback(request):
         else:
             raise Exception("Can't get code")
     except Exception as e:
+        messages.error(request, e)
         return redirect(reverse("users:login"))
     
 
