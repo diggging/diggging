@@ -9,6 +9,7 @@
 {% block content %}
 
 <div class="post_container" id="scroll-element">
+    
     <a href="{% url 'posts:main' %}">스크랩 /</a>
     <a href="{% url 'posts:helped' %}">도움 /</a>
     <a href="{% url 'posts:my_recent' %} ">내 최신순 /</a>
@@ -17,8 +18,10 @@
     {% include 'posts/_posts.html' with posts=posts %}
     
 </div>
+
 <div id="bottom-sentinel">
 </div>
+
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         let bottomSentinal = document.querySelector("#bottom-sentinel");

@@ -84,6 +84,12 @@ form {
     width: 18em;
 }
 
+#image {
+    height: 225px;
+    width: 288px;
+    /* margin: 10px 0px; */
+}
+
 #id_image {
     display: none;
 }

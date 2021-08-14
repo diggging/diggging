@@ -165,7 +165,6 @@ def post_detail(request, user_id, post_id):
     # html added by 종권
     return render(request, "posts/post_detail.html", ctx)
 
-
 def post_create(request):
     if request.method == "POST":
         form = PostForm(request.POST, request.FILES)
@@ -173,7 +172,6 @@ def post_create(request):
             posts = form.save(commit=False)
             posts.user = request.user
             posts.save()
-
             # 폴더 분류해주기
             me = posts.user  # folder 주인 가져오기
             language = request.POST.get("language")  # language 가져옴

@@ -19,6 +19,7 @@
                 <div class="thumbnail_area">
                     <label for="id_image">
                         <img src="{% static 'image/thumbnail_image.svg' %}" />
+                        <img id="image" src="" alt="" />
                     </label>
                     {{ form.image }}
                 </div>
@@ -58,4 +59,16 @@
             </form>
         </div>
     </div>
+
+    <!-- <form id="form_img">
+        <input type='file' onchange="upload_img(this);" />
+        <img id="img_id" src="#" alt="your image" />
+    </form> -->
+
+    <script>
+        document.getElementById('id_image').onchange = function () {
+            var src = URL.createObjectURL(this.files[0])
+            document.getElementById('image').src = src
+        }
+    </script>
 {% endblock %}
