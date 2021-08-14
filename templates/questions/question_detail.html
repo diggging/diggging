@@ -39,7 +39,6 @@
         <div class="desc_area">
             {{ post.desc|safe|escape }}
         </div>
-        <div class="tag_area">{{post.tag}}</div>
         <!-- 질문의 버튼 영역 -->
         <div class="post_{{post.id}}">
             <a class="like_button post__like" onclick="onClickLikeScrap({{ post.id }}, 'like')">도움이되었어요

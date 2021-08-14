@@ -34,6 +34,7 @@
                 </div>
                 <div class="error_area">
                     {{ form.error_message }}
+                    {{ form.problem_solving }}
                 </div>
                 <div class="desc_area">
                     {{ form.desc }}
@@ -43,7 +44,6 @@
                     <label for="id_is_public1">전체공개</label>
                     <input type="radio" id="id_is_public2" />
                     <label for="id_is_public2">비공개</label>
-                    <label class="tag_label" for="id_tag">태그</label>{{ form.tag }}
                 </div>
                 <div class="btn_area">
                     <button class="btn_control">임시저장</button>                   

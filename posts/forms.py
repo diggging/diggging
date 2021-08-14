@@ -17,7 +17,6 @@ class PostForm(forms.ModelForm):
             "error_message",
             "image",
             "desc",
-            "tag",
             "is_public",
             "is_friend",
         }

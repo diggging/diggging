@@ -175,7 +175,6 @@ class Post(core_models.TimeStampModel):
     # code = models.TextField(verbose_name="코드", blank=True)
     code = RichTextUploadingField(verbose_name="코드", blank=True, config_name="default")
 
-    tag = TagField(verbose_name="태그", blank=False)
     folder = models.ManyToManyField(
         "Folder",
         related_name="related_posts",

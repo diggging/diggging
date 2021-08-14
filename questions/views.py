@@ -91,7 +91,7 @@ def get_answer_comments (request, answer_id):
 
 def question_update(request, pk):
     question_post = get_object_or_404(Question_post, pk=pk)
-    origin_lang_fol = question_post.quetion_folder.get(folder_kind="language")
+    origin_lang_fol = question_post.question_folder.get(folder_kind="language")
     origin_frame_fol = question_post.question_folder.get(folder_kind="framework")
     origin_solve_fol = question_post.question_folder.get(folder_kind="solved")
     print(origin_lang_fol)

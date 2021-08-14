@@ -204,7 +204,6 @@ $(".scrap").click(function () { // .scarp 버튼을 클릭 감지
             {{ post.desc|safe|escape }}
         </div>
         <div class="post_{{post.id}}">
-            <div class="tag_area">{{post.tag}}</div>
             <div>
                 <input type="button" class="btn btn-info btn-sm like" name="{{ post.id }}" value="Like"
                     style="margin-top: 7px">

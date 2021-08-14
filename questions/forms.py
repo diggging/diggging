@@ -14,7 +14,7 @@ class QuestionPostForm(forms.ModelForm):
             "error_message",
             "image",
             "desc",
-            "tag",
+            "problem_solving"
         }
         widgets = {
             "title": forms.TextInput(
