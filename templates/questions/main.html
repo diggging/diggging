@@ -3,18 +3,48 @@
 {% block script %}
 <link rel="stylesheet" href="{% static 'css/questions/main.css' %}">
 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-
+<script>
+    const requestAnswer = new XMLHttpRequest();
+    const onClickAnswer = (id) =>{
+        const url = '/questions/answer_ajax/';
+        requestAnswer.open('POST',url,true);
+        requestAnswer.setRequestHeader(
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
+        console.log(requestAnswer);
+        requestAnswer.send(JSON.stringify({id:id}));
+    };
+    const AnswerHandleResponse = () =>{
+        if(requestAnswer.status < 400){
+            const answer = requestAnswer.response;
+            const answerab = document.querySelector('.answerabc');
+            
+            console.log(answer);
+            answerab.innerHTML =`
+            <div>
+                ${answer[id].title}}
+            </div>
+            `
+        };
+    };
+    requestAnswer.onreadystatechange = () =>{
+        if(requestAnswer.readyState === XMLHttpRequest.DONE){
+            AnswerHandleResponse();
+        };
+    };
+</script>
 {% endblock %}
 {% block content %}
 <!-- 네비바 아래로 가게하는 컨테이너 -->
 <div class="container">
     <div class="box_container">
-        <!-- 오른쪽 박스들 -->
+        <!-- 왼쪽 박스들 -->
         <div class="left_container">
             <!-- 답변을 기다리는 질문 박스 -->
             <div class="no_answer_container">
                 <div>
-                    <h2>답변을 기다리는 질문들</h2>
+                    <h3>답변을 기다리는 질문들</h3>
                 </div>
                 <div class="no_answer_list_box">
                     {% for post in selected_answer_posts %}
@@ -40,121 +70,124 @@
             <!-- 관심사에 따른 추천 박스 -->
             <div class="recommend_container">
                 <div>
-                    <h2>내가 관심있는 | {{languages}}</h2>
+                    <h3>내가 관심있는 </h3>
                 </div>
                 <div class="recommned_list_box">
+                    <!-- 관심사목록선택 체크박스 -->
                     <form action="" method="POST">
                         {%csrf_token%}
+                        <button type="submit">제출</button>
                         <div class="checkbox">
                             {% for languages in language %}
-                            <input type="checkbox" name="answers[]" id="answer1"
-                                value={{languages}}>{{languages}}</input>
+                            <div class="input_wrap">
+                                <input type="checkbox" name="answers[]" id="answer1"
+                                    value={{languages}}>{{languages}}</input>
+                            </div>
                             {%endfor%}
                         </div>
-                        <button type="submit">제출</button>
                     </form>
-                    <div class="recommend_list">
+                    <!-- 체크박스끝 -->
+                    <!-- 관심사에 따른 질문 목록들 -->
+                    <div class="recommend_list_box">
                         {% for post in posts%}
                         {%if str_search == post.language %}
-                        {{post.title}}
-                        {{post.desc}}
-                        {%endif%}
+                        <div class="recommend_list">
+                            <a href="{% url 'question:question_post_detail' post.user.id post.id %}">
+                                <div class="recommend_user_info">
+                                    {% if post.user.user_profile_image %}
+                                        {{ post.user.user_profile_image.url }}
+                                    {% else %}
+                                        <i class="fas fa-user-circle fa-2x" style="color:bisque"></i>
+                                    {% endif %}
+                                        <span class="post_username">{{post.user.user_nickname}}</span>
+                                </div>
+                                <div class="post_title">{{post.title|truncatechars:20}}</div>
+                                <div class="post_desc">{{post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;" }}</div>
+                            </a>
+                        </div>
+                        {% endif %}
                         {% endfor %}
                     </div>
+                    <!-- 관심사 질문목록 끝 -->
                 </div>
             </div>
         </div>
+        <!-- 왼쪽 영역 끝 -->
         <div class="right_container">
-            <input class="search_input">
             <div class="profile_area">
                 <div class="profile_container">
-                    {% if request.user.pk == host.pk %}
-                    <div class="profile_area">
+                    <!-- 로그인 되었을 때 -->
+                    {% if user.is_authenticated %}
+                    <div>
                         <div class="profile_username">
                             {% if host.user_profile_image %}
                             <span class="profile_image">
                                 <img src="{{ request.user.user_profile_image.url}}">
                             </span>
                             {% else %}
-                            <div class="empty_img"></div>
+                            <i class="fas fa-user-circle fa-2x" style="color:bisque"></i>
                             {% endif %}
-                            <span class="user_nickname">{{ request.user.username }}님의 모래상자<span>
-                                    <h4>
+                            <p class="user_nickname">{{ request.user.user_nickname }}님의 모래상자<p>
                         </div>
+                        <p>
                         레벨 | {{user.user_level}} 단계
-                        </h4>
-                        <h4>
-                            현재 모래 | {{user.user_point}} 포인트
-                        </h4>
+                        </p>
+                        <div class="point_gage">
+                            <label for="value_low">{{user.point_sum}} 모래포인트</label>
+                            <!-- max기준 레벨에 따라 if문으로 바뀌어야함(아직level넘겨주지 않아서 구현 X)  -->
+                            {% if host.user_level == 0 %}
+                            <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500" value="{{my_sand_sum.amount__sum}}"></meter>
+                            {% elif host.user_level == 1 %}
+                            <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500" value="{{my_sand_sum.amount__sum}}"></meter>
+                            {% else%}
+                            <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000" value="{{my_sand_sum.amount__sum}}"></meter>
+                            {% endif %}
+                        </div>
                         <div class="proflie_text">
                             {% if request.user.user_profile_content %}
-                            {{request.user.user_profile_content}}
+                            {{request.user.user_profile_content|truncatechars:40}}
                             {% else %}
                             <p>
                                 아직 자기소개가 없습니다.
                             </p>
                             {% endif %}
                         </div>
-                        <div class="follow_area">
-                            <div class="follow_btn_area">
-                                <a href=""><button class="follow_btn">팔로잉
-                                        {{request.user.user_following|length}}</button></a>
-                                <a href=""><button class="follow_btn">팔로워
-                                        {{request.user.user_followed|length}}</button></a>
-                            </div>
-                        </div>
                     </div>
                     {% else %}
-                    <div class="profile_area">
-                        <h1> {{ host.user_nickname}}님의 모래상자 </h1>
-                    </div>
-                    {% comment %}
-                    <a href='{% url "users:follow" host.id%}'> follow 하기 </a>
-                    {% endcomment %}
-                    <div class="follow_area">
-                        <a href=""><button class="follow_btn">팔로잉 {{ host_following|length }}</button></a>
-                        <a href=""><button class="follow_btn">팔로워 {{ host_follower|length }}</button></a>
+                    <!-- 로그인 안했을 때 -->
+                    <div class="profile">
+                        <div class="profile_username">
+                            <i class="fas fa-user-circle fa-2x" style="color:bisque"></i>
+                            <a href="{% url 'users:login' %}" class="user_nickname">로그인<a>
+                        </div>
+                        <div class="proflie_text">
+                            <p>
+                                로그인 하고 질문을 남겨보세요.
+                            </p>
+                        </div>
                     </div>
                     {% endif %}
                 </div>
-                <hr>
-                <div class="btn_list_area">
-                    <a href=''><button class="list_btn">삽질 기록 모음 > </button></a>
-                    <a href=''><button class="list_btn">질문 모음 > </button></a>
-                    <a href=''><button class="list_btn">내가 남긴 답변 목록 > </button></a>
-                    <a href=''><button class="list_btn">계정 관리 > </button></a>
-                </div>
-                <div class="follow_area">
-                    <a href=""><button class="follow_btn">팔로잉 {{ host_following|length }}</button></a>
-                    <a href=""><button class="follow_btn">팔로워 {{ host_follower|length }}</button></a>
-                </div>
             </div>
-            <hr>
-            <div class="btn_list_area">
-                <a href=''><button class="list_btn">삽질 기록 모음 > </button></a>
-                <a href=''><button class="list_btn">질문 모음 > </button></a>
-                <a href=''><button class="list_btn">내가 남긴 답변 목록 > </button></a>
-                <a href=''><button class="list_btn">계정 관리 > </button></a>
+            <!-- 디렉토리영역 -->
+            <!-- 탭 버튼 누르면 그에 해당하는 폴더 목록이 뜬다. -->
+            <div class="category_tab">
+                <button>언어</button>
+                <button>프레임워크</button>
             </div>
-            <div class="profile_info"></div>
-            <div class="follow_area"></div>
-        </div>
-        <div class="directory_container">
-            <div class="directory_tab_area"></div>
-            <div class="folder_box">
-                <div class="folder">
-                    <div class="folder_icon"></div>
-                    <div class="folder_name"></div>
+            <div class="folder_area">
+            {{request.user.folder_user.folder_name}}
+            </div>
+            <!-- 오른쪽 아래 내가 남긴 답변 영역 -->
+            <div class="my_answer_container">
+                <div>
+                    <button class="btn_my_answer" onclick="onClickAnswer({{request.user.id}})">내가 남긴 답변</button>
+                </div>
+                <div class="answerabc">
                 </div>
             </div>
+            <!-- 내가 남긴 답변 영역 끝 -->
         </div>
     </div>
-    <div class="my_answer_container">
-        <div class="btn_my_answer">
-            <button>내가 남긴 답변</button>
-        </div>
-    </div>
-</div>
-</div>
 </div>
 {% endblock %}

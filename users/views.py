@@ -280,18 +280,6 @@ def my_page(request, pk):
     }
     return render(request, template_name="users/my_page.html", context=ctx)
 
-def my_page_folder(request, pk):
-    host = get_object_or_404(User,pk=pk)
-    # 폴더 보여주기위한 변수
-    language_folders = Folder.objects.filter(folder_user=host)
-    
-    ctx = {
-        # 왼쪽 상단을 위한 변수
-        'host': host,
-        'language_folders' : language_folders,
-        #'my_questions': my_questions,
-    }
-    return render(request, template_name="users/my_page_folder.html", context=ctx)
 
 
 # 한번 누르면 follow, 두번 누르면 unfollow

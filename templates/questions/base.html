@@ -8,11 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% block script %}
+{% endblock %} 
 </head>
 <body>
     <nav class="nav">
         <a href="#" class="nav_search"><img src="" alt="">🔎 검색</a>
-        <h2 class="nav_main_title">삽질모음.TXT</h2>
+        <a class="nav_main_title" href="{% url 'posts:main' %}">삽질모음.TXT</a>
         <div class="nav_right">
             {% if user.is_authenticated %}
                 <div class="nav_vertical">
@@ -67,9 +69,8 @@
             {% endif %}
         </div>
     </nav>
-    {% block content%}
-    {% endblock %}
-    {% block script %}
-    {% endblock %}    
+{% block content%}
+{% endblock %}
+   
 </body>
 </html>

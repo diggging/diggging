@@ -64,14 +64,6 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 
 CKEDITOR_CONFIGS = {
     'default': {
-        'toolbar': 'Custom',
-        'height': 500,
-        'width': '100em',
-        'toolbar_Custom': [
-            ['Bold', 'Link', 'Image'],
-        ],         
-    },
-    'default': {
         'toolbar': 'Default',
         'toolbar_Default': [
             ['Bold', 'Font', 'FontSize', 'Bold', 'Strike', 'Underline'],
@@ -82,6 +74,7 @@ CKEDITOR_CONFIGS = {
             ],
         'extraPlugins': 'codesnippet, uploadwidget, codesnippetgeshi',
         'codeSnippetGeshi_url': '../lib/colorize.php',
+
     }
 }
 

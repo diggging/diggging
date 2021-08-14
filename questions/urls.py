@@ -20,4 +20,5 @@ urlpatterns = [
     path("<int:question_post_id>/chosen_answer", views.chosen_answer, name="chosen_answer"),
     path("count_like_scrap/", views.count_like_scrap_question, name="count_like_scrap"),
     path("<int:answer_id>/get_answer_comments", views.get_answer_comments, name="get_answer_comments"),
+    path("answer_ajax/", views.answer_ajax, name="answer_ajax"),
 ]

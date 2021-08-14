@@ -11,7 +11,6 @@ from users.models import Sand, Alarm
 def question_main(request):
     # 질문 최신순으로 정렬
     posts = Question_post.objects.all().order_by("-created")
-
     # 답변 채택 안되거나 답변이 아직 달리지 않은 질문들을 모아두는 list
     selected_answer_posts = []
     for post in posts:
@@ -29,6 +28,7 @@ def question_main(request):
         "posts": posts, 
         "language": languages,
         "str_search": str_search,
+        # 내 모래포인트와 질문 관련한 폴더 접근 가능해야해요,,
     }
     return render(request, "questions/main.html", ctx)
 
@@ -274,3 +274,13 @@ def count_like_scrap_question(request):
     question_post.save()
 
     return JsonResponse({"id": question_post_id, "type": button_type})
+
+# 내가 남긴 답변 목록 ajax
+@csrf_exempt
+def answer_ajax(request):
+    req = json.loads(request.body)
+    user_id = req["id"]
+    users = User.objects.get(id=user_id)
+    answer = list(Answer.objects.filter(user=users).values().order_by("-created"))
+    print(answer)
+    return JsonResponse(answer, safe=False)

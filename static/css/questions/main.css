@@ -34,28 +34,14 @@ p {
 
 
 @media only screen and (max-width: 767px) {
-    .container > .form_container {
-        padding: 1.5rem;
-        display: flex;
-        width: 100%;
-        height: 100vh;
-        flex-direction: column;
-        justify-content: space-around;
-        align-items: center;
+    .container > .box_container {
+        
     }
 }
 
 @media only screen and (min-width:768px) {
-    .container > .form_container {
-        padding: 1.5rem;
-        display: flex;
-        width: 600px;
-        height: 580px;
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        flex-direction: column;
-        justify-content: space-around;
-        align-items: center;
+    .container > .box_container {
+        
     }
 }
 
@@ -92,10 +78,17 @@ p {
 .no_answer_container {
     border: solid 1px var(--border-color);
     border-radius: 8px;
-    background-color: floralwhite;
-    height: 30em;
+    background-color: white;
+    height: 50vh;
     width: 100%;
-    padding: 28px;
+    padding: 4%;
+    overflow-y: scroll;
+    scroll-snap-type: ;
+}
+
+h3 {
+    font-family: var(--title-font);
+    color:var(--text-color);
 }
 
 .no_answer_list_box {
@@ -104,22 +97,9 @@ p {
 
 .no_answer_list {
     display: flex;
+    padding: 1rem 2rem;
 }
 
-.recommend_container {
-    margin-top: 28px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    padding: 28px;
-    border: solid 1px var(--border-color);
-    border-radius: 8px;
-    height: 40em;
-}
-
-.recommend_list_box {
-    margin-top: 18px;
-}
 
 .search_input {
     width: 100%;
@@ -139,14 +119,175 @@ p {
     background-color: white;
     display: flex;
     margin: 5px 0;
+    box-shadow: rgb(0 0 0 / 3%) 0px 4px 16px 0px;
+    transition: box-shadow 0.25s ease-in 0s, transform 0.25s ease-in 0s;
+    
+}
+
+.no_answer_list:hover {
+    transform: translateY(-4px);
+    box-shadow: rgb(0 0 0 / 8%) 0px 12px 20px 0px;
+}
+
+.no_answer_list:active {
+    background-color: whitesmoke;
 }
 
 .no_answer_list a {
     text-decoration: none;
     font-weight: 400;
-    font-size: 0.825rem;
+    font-size: 0.875rem;
     height: 4rem;
     color: var(--text-color);
     display: flex;
     align-items: center;
+}
+
+.checkbox {
+    margin: 30px 0;
+    font-family: var(--content-font);
+    color: burlywood;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    height: 7rem;
+    overflow-y: scroll;
+}
+
+.checkbox input {
+    margin-right: 0.625rem;
+}
+
+.input_wrap {
+    width: 8rem;
+    height: 1.4rem;
+}
+
+form button {
+    padding: 4px 8px;
+    border: solid 1px var(--border-color);
+    background: floralwhite;
+    border-radius: 4px;
+    top: -20px;
+    right: -94%;
+    position: relative;
+}
+
+.recommend_container {
+    margin-top: 28px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 28px;
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+    height: 40em;
+}
+
+.recommend_list_box {
+    height: 100%;
+}
+
+.recommend_list {
+    margin: 4% 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: rgb(0 0 0 / 3%) 0px 4px 16px 0px;
+    transition: box-shadow 0.25s ease-in 0s, transform 0.25s ease-in 0s;
+}
+
+
+.recommend_list:hover {
+    transform: translateY(-4px);
+    box-shadow: rgb(0 0 0 / 8%) 0px 12px 20px 0px;
+}
+
+.post_username {
+    font-size: 1rem;
+    font-family: var(--title-font);
+    color: var(--text-color);
+}
+
+.post_desc {
+    font-family: var(--content-font);
+    font-size: 0.875rem;
+    color: var(--text-color);
+}
+
+.post_username {
+    font-family: var(--btn-font);
+    font-size: 0.75rem;
+    color: var(--text-color);
+}
+
+
+.profile_area {
+    width: 100%;
+    height: 24vh;
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 8%;
+}
+
+.profile_container {
+    font-family: var(--content-font);
+    font-size: 0.75rem;
+    color: var(--text-color);
+}
+
+.profile_username {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5%;
+}
+
+.profile_username a {
+    margin-left: 1rem;
+    text-decoration-line: underline;
+}
+.profile_username p {
+    margin-left: 1rem;
+}
+
+.profile_text > p {
+    font-family: var(--content-font);
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+
+.btn_my_answer {
+    padding: 1rem;
+    border: solid 1px var(--border-color);
+    background: floralwhite;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: var(--btn-font);
+    text-align: center;
+    width: 100%;
+    color: var(--text-color);
+}
+
+.point_gage {
+    margin: 0.625rem 0;
+}
+
+.point_gage meter {
+    margin-left: 10px;
+    height: 1.125rem;
+    width: 90%;
+}
+
+.folder_area {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    font-family: var(--btn-font);
+    width: 100%;
+    height: 22vh;
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    padding: 6%;
 }

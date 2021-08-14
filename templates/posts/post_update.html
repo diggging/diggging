@@ -17,10 +17,12 @@
                 {% csrf_token %}
                 {{ form.media }}
                 <div class="thumbnail_area">
-                    <label for="id_image">
-                        <img src="{% static 'image/thumbnail_image.svg' %}" />
-                    </label>
-                    {{ form.image }}
+                    <div class="image_box">
+                        <label for="id_image">
+                            <img src="{% static 'image/thumbnail_image.svg' %}" />
+                        </label>
+                        {{ form.image }}
+                    </div>
                 </div>
                 {{ form.title }}
                 <div class="choice_area">
