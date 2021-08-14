@@ -331,7 +331,9 @@ def answer_ajax(request):
     answer = list(Answer.objects.filter().values().order_by("-created"))
     user = User.objects.all()
     user_list = serializers.serialize('json', user)
-    print(answer)
+    answer1 = Answer.objects.all()
+    for ans in answer1:
+        print(ans.question.user)
 
     ctx = {
         "answer": answer,
