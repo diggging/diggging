@@ -18,7 +18,7 @@ urlpatterns = [
     path("<int:pk>/delete", views.post_delete, name="post_delete"),
     path("search/", views.search, name="search"),
     path("<int:user_id>/<int:post_id>/get_post", view=views.get_post, name="get_post"),
-    path("count_like_scrap/", views.count_like_scrap, name="count_like_scrap"),
+    #path("count_like_scrap/", views.count_like_scrap, name="count_like_scrap"),
     path("search_post_axios/", views.search_post_axios, name="search_post_axios"),
     path("search_user_axios/", views.search_user_axios, name="search_user_axios"),
 

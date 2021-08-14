@@ -277,11 +277,12 @@ def my_page(request, pk):
     # 모래
     my_sand = Sand.objects.filter(user = host)
     my_sand_sum = my_sand.aggregate(Sum('amount'))
-    if my_sand_sum < 2000:
+    print(my_sand_sum)
+    if int(my_sand_sum['amount__sum']) < 2000:
         host.user_level = 0
-    elif my_sand_sum<7000:
+    elif int(my_sand_sum['amount__sum']) <7000:
         host.user_level=1
-    elif my_sand_sum<18000:
+    elif int(my_sand_sum['amount__sum']) <18000:
         host.user_level=2
     else:
         host.user_level=3
