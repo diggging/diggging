@@ -96,7 +96,7 @@ def question_update(request, pk):
     print(origin_lang_fol)
     print(origin_frame_fol)
     if request.method == "POST":
-        form = QuestionPostForm(request.POST, request.FILES)
+        form = QuestionPostForm(request.POST, request.FILES, instance=question_post)
         if form.is_valid():
             form.save()
             new_lang = request.POST.get("language")
@@ -204,16 +204,16 @@ def answer_update(request, question_post_id, answer_id):
     question_post = get_object_or_404(Question_post, pk= question_post_id)
     answer = get_object_or_404(Answer, pk=answer_id)
     if request.method == "POST":
-        form = AnswerPostForm(request.POST, request.FILES)
+        form = AnswerPostForm(request.POST, request.FILES, instance=answer)
         if form.is_valid():
             form.save()
             return redirect("question:question_post_detail", question_post.user.id, question_post_id)
-        else:
-            form = AnswerPostForm(instance=answer)
-            ctx = {
-                "form":form
-            }
-            return render(request, "questions/answer_update.html", ctx)
+    else:
+        form = AnswerPostForm(instance=answer)
+        ctx = {
+            "form":form
+        }
+        return render(request, "questions/answer_update.html", ctx)
 
 # 질문 답변 삭제
 def answer_delete(request, question_post_id, answer_id):
