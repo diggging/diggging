@@ -14,7 +14,126 @@ body {
     padding: 3rem
 }
 
+/* modal창 */
+.hidden {
+    display: hidden;
+}
 
+.point_modal {
+    
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal_body {
+    display: none;
+    position: absolute;
+    bottom: -70%;
+    left: 38%;
+
+    width: 400px;
+    height: 600px;
+
+    padding: 40px;
+
+    overflow: scroll;
+
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+
+    transition-timing-function: ease-in;
+    transition-duration: 1s;
+    
+}
+
+.follow_modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.follow_body {
+    display: none;
+    position: absolute;
+    bottom: 10%;
+    left: 32%;
+
+    width: 500px;
+    height: 600px;
+
+    padding: 40px;
+
+    overflow: scroll;
+
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+
+    transition-timing-function: ease-in;
+    transition-duration: 1s;
+}
+
+
+.follow_body h3 {
+    font-family: var(--btn-font);
+    font-size: 1rem;
+    color: var(--text-color);
+    font-family: var(--btn-font);
+}
+
+.follow_desc h4 {
+    font-size: 0.825rem;
+    font-family: var(--content-font);
+    font-weight: 300;
+    color: var(--text-color);
+}
+
+.flex_col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.follow_list {
+    display: flex;
+    margin-top: 5px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.follow_image {
+    object-fit: cover;
+    border-radius: 10px;
+    border-top: 1px solid rgb(248, 249, 250);
+    width: 40px;
+    height: 40px;
+    margin-bottom: 5px;
+    margin-right: 10px;
+}
+
+.follow_desc {
+    margin-left: 10px;
+    padding: 10px;
+}
 
 .container_box {
     display: flex;
@@ -24,19 +143,19 @@ body {
     padding: 2rem;
 }
 
-.container {
+.my_container {
     width: 33%;
     height: 90vh;
     padding: 1rem;
-    border: solid 1px var(--border-color);
-    border-radius: 8px;
     justify-content: flex-start;
-    margin: 10px;
+    margin: 10px 5px;
 
 }
 
 .first_container {
-    flex-direction: column
+    flex-direction: column;
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
 }
 
 .profile_username {
@@ -57,9 +176,10 @@ body {
 .profile_area {
     width: 300px;
     display: flex;
-    height: 14em;
     flex-direction: column;
     justify-content: space-evenly;
+    font-family: var(--content-font);
+    font-size: 0.825rem;
 }
 
 .profile_image {
@@ -96,7 +216,7 @@ body {
 
 .list_btn {
     border: solid 1px var(--border-color);
-    width: 19rem;
+    width: 90%;
     height: 60px;
     background: floralwhite;
     margin: 10px;
@@ -114,6 +234,7 @@ body {
     height: 60px;
     background: var(--btn-color);    
     margin: 20px auto;
+    transition: 0.5s;
 }
 .list_btn:active {
     border: solid 1px var(--border-color);
@@ -121,6 +242,7 @@ body {
     height: 60px;
     background: var(--hover-color);
     margin: 20px auto;
+    transition: 0.2s;
 }
 
 .empty_img {
@@ -135,17 +257,95 @@ body {
     display: block;
 }
 
+.category_tab {
+    display: flex;
+    width: 100%;
+    height: 10rem;
+}
+
+.carousel-indicator {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.carousel-indicator ul {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    width: 100%;
+    padding: 0;
+}
+
+.carousel-indicator button {
+    font-size: 1rem;
+    font-family: var(--btn-font);
+    color: var(--text-color);
+    height: 30px;
+    display: flex;
+    justify-content: space-around;
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+    align-items: center;
+    width: 30%;
+    padding: 1rem 2rem;
+    text-indent: 0;
+    cursor: pointer;
+    background-color: floralwhite;
+    /* border: 1px solid #fff; */
+    border-radius:4px;
+}
+.carousel-indicator button:active {
+    font-size: 1rem;
+    font-family: var(--btn-font);
+    color: var(--text-color);
+    height: 30px;
+    display: flex;
+    justify-content: space-around;
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+    align-items: center;
+    width: 30%;
+    padding: 1rem 2rem;
+    text-indent: 0;
+    cursor: pointer;
+    background-color: floralwhite;
+    /* border: 1px solid #fff; */
+    border-radius:4px;
+}
+
+
 
 .second_container {
     display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 10px;
 }
 
+.directory_box {
+    display: block;
+    height: 30vh;
+    padding: 1rem;
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+    justify-content: flex-start;
+    width: 100%;
+    overflow: scroll;
+
+}
+
+
 .folder_area {
-    height: 250px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
     font-family: var(--btn-font);
+    justify-content: space-around;
 }
 
 .folder_icon {
@@ -160,6 +360,38 @@ body {
 }
 
 .folder_space {
+    display: flex;
     margin: 4px;
-    margin: 1rem;
+    margin: 0.825rem;
+    flex-direction: column;
+    align-items: center;
+}
+
+.third_container {
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+}
+
+
+.last_log_box{
+    display: block;
+    padding: 1rem;
+    border-radius: 8px;
+    justify-content: flex-start;
+    margin: 10px;
+    width: 100%;
+    height: 100%;
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+}
+
+.last_question_list {
+    display: none;
+    border-top: solid 1px var(--border-color);
+    padding: 20px;
+    width: 100%;
+    font-size: 0.825rem;
+    border-bottom: solid 1px var(--border-color);
+    font-family: var(--content-font);
+    color: var(--text-color);
 }

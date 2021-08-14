@@ -181,3 +181,19 @@ p {
     margin-left: 70px;
     margin-top: 20px;
 }
+
+.login_bottom {
+    display: flex;
+}
+
+.login_bottom > a {
+    display: flex;
+    flex-direction: column;
+    color: var(--text-color);
+    font-size: 0.825rem;
+    font-family: var(--btn-font);
+    align-items: center;
+}
+.login_bottom img {
+    width: 30px;
+}

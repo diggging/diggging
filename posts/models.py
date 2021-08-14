@@ -196,6 +196,14 @@ class Folder(core_models.TimeStampModel):
         "users.User", related_name="folder_user", on_delete=models.CASCADE
     )
     # user = models.ForeignKey("users.User", related_name="user", on_delete=models.CASCADE)
+    kind_choices = (
+            ("framework", "framework"),
+            ("language", "language"),
+            ("solved", "solved"),
+        )
+    folder_kind = models.CharField(verbose_name="폴더 종류", max_length=10, choices=kind_choices, blank=False)
+
+
     def __str__(self):
         return self.folder_name
 

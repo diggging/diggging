@@ -9,7 +9,7 @@ from django.views.generic.base import TemplateView
 #from .forms import SignUpForm
 from .forms import UserCustomCreationForm, AuthenticationCustomForm
 from .models import User, Sand, Alarm
-from posts.models import Folder
+from posts.models import Folder, Post
 from questions.models import Question_post, Answer
 from django.views import View
 from django.contrib.auth.decorators import login_required
@@ -252,18 +252,32 @@ def my_page(request, pk):
     host_follower = host.user_followed.all()
 
     # 폴더 보여주기위한 변수
-    language_folders = Folder.objects.filter(folder_user=host)
+    language_folders = Folder.objects.filter(folder_user=host, folder_kind="language")
+    framework_folders = Folder.objects.filter(folder_user=host, folder_kind="framework")
+    solve_folders = Folder.objects.filter(folder_user=host, folder_kind="solved")
     
     # 질문 모음
-    # my_questions = Question_post.objects.filter(user=host)
-    # questions_folder = Question_post.folder
+    my_questions = Question_post.objects.filter(user=host)
+    questions_language_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="language")
+    questions_framework_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
 
     # 최근에 남긴 질문
     my_recent_questions = Question_post.objects.filter(user=host).order_by("-created")
+    # 지수가 필요해서 넣었음
+    my_recent_logs = Post.objects.filter(user=host).order_by("-created")
 
     # 모래
     my_sand = Sand.objects.filter(user = host)
     my_sand_sum = my_sand.aggregate(Sum('amount'))
+    if my_sand_sum < 2000:
+        host.user_level = 0
+    elif my_sand_sum<7000:
+        host.user_level=1
+    elif my_sand_sum<18000:
+        host.user_level=2
+    else:
+        host.user_level=3
+
     print(my_sand)
     print(my_sand_sum)
 
@@ -273,14 +287,18 @@ def my_page(request, pk):
         'host_follower' : host_follower,
         'host_following' : host_following,
         'language_folders' : language_folders,
+        'framework_folders' : framework_folders,
+        'solve_folders': solve_folders,
+        'questions_language_folder' : questions_language_folder,
+        'questions_framework_folder' : questions_framework_folder,
+
         #'my_questions': my_questions,
         'my_recent_questions' : my_recent_questions,
+        'my_recent_logs' : my_recent_logs,
         'my_all_sands': my_sand,    # sand 모든 object list
         'my_sand_sum' : my_sand_sum,    # 현재까지 sand 총합
     }
     return render(request, template_name="users/my_page.html", context=ctx)
-
-
 
 # 한번 누르면 follow, 두번 누르면 unfollow
 def follow(request, host_pk):
@@ -301,21 +319,6 @@ def follow(request, host_pk):
         host_alarm = Alarm.objects.create(user=host, reason=me.user_nickname+"님이 나를 팔로우합니다.")
     
     return redirect('users:my_page', host_pk)
-
-#follow_list 확인
-def follow_list(request, pk):
-    host = get_object_or_404(User,pk=pk)
-    host_following = host.user_following.all()
-    host_follower = host.user_followed.all()
-
-    ctx = {
-        'host': host,
-        'host_follower' : host_follower,
-        'host_following' : host_following,
-    }
-    return render(request, "users/follow_list.html", context=ctx)
-
-
 
 def account_detail(request, pk):
     host = get_object_or_404(User,pk=pk)
