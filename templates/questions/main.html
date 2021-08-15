@@ -12,7 +12,6 @@
             'Content-Type',
             'application/x-www-form-urlencoded'
         );
-        console.log(requestAnswer);
         requestAnswer.send(JSON.stringify({id:id}));
     };
     const AnswerHandleResponse = () =>{
@@ -34,11 +33,7 @@
             }
             // console.log(answer[0][0].answers.user.user_nickname)
             const answerab = document.querySelector('.answerabc');
-            // answer_dict = {
-            //     "id": answer.id,
-            //     "title": title,
-            //     "desc": name_rank_str,
-            // }
+            
 
             // title, desc, username
             const title = [];
@@ -56,20 +51,36 @@
                 obj.answer[i]['result'].push(desc[i])
                 obj.answer[i]['result'].push(username[i])
             }
+
             const result = []
 
             for (let i=0; i < obj.answer.length; i++) {
                 result[i] = (obj.answer[i].result)
             }
-            console.log(result)
 
-                answerab.innerHTML =`
-            <div>
-                ${result}
+            console.log(result[0])
+            console.log(result[1])
+
+            answerab.innerHTML =`
+            <div class="last_answer_box">
+                <div class="answer_id_0">
+                    ${result[0]}
+                </div>
+                <div class="answer_id_1">
+                    ${result[1]}
+                </div>
+                <div class="answer_id_2">
+                    ${result[2]}
+                </div>
+                <div class="answer_id_3">
+                    ${result[3]}
+                </div>
+                <div class="answer_id_4">
+                    ${result[4]}
+                </div>
             </div>
             `
-            
-        };
+        }
     };
 
     requestAnswer.onreadystatechange = () =>{

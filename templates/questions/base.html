@@ -16,7 +16,7 @@
             <a href="{% url 'posts:search' %}" class="nav_search"><img src="{% static 'image/search_icon.svg' %}" alt=""></a>
         </div>
         <div class="nav_center">
-            <a class="nav_main_title" href="{% url 'posts:main' %}">질문광장</a>
+            <a class="nav_main_title" href="{% url 'question:question_main' %}">질문광장</a>
         </div>
         <div class="toggle" style="display: none;">
             <a href="{% url 'users:my_page' user.id %}">내 디렉토리</a>

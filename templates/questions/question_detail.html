@@ -62,9 +62,11 @@
                         </div>
                         {{comment.text}}
                     </div>
+                    {% if request.user == comment.user %}
                     <div class="delete_btn">
                         <button onclick="onClickDelete({{post.id}}, {{comment.id}})">삭제</button>
                     </div>
+                    {% endif %}
                 </div>
             {% endfor %}
             </div>
@@ -123,9 +125,11 @@
                                 <div class="answer_comment_text">
                                     {{comment.text}}
                                 </div>
+                                {% if request.user == comment.user %}
                                 <div class="add_comment_delete_btn">
                                     <button onclick="onClickAnswerCommentDelete({{answer.id}}, {{comment.id}})">삭제</button>
                                 </div>
+                                {%endif%}
                             </div>
                         {% endfor %}
                     </div>

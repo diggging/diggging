@@ -251,9 +251,11 @@ $(".scrap").click(function () { // .scarp 버튼을 클릭 감지
                     <div class="comment_text">
                         {{comment.text}}
                     </div>
+                    {% if request.user == comment.user %}
                     <div class="delete_btn">
                         <button onclick="onClickDelete({{post.id}},{{comment.id}})">삭제</button> <!--comment 별로 id 준당-->
                     </div>
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>
