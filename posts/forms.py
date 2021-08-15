@@ -28,6 +28,7 @@ class PostForm(forms.ModelForm):
                 attrs={"class": "title_input", "placeholder": "발견한 에러메시지를 기록하세요."},
             ),
             "desc": forms.CharField(widget=CKEditorUploadingWidget()),
+            'is_public': forms.RadioSelect(choices=[(True, '전체공개'), (False, '비공개')])
         }
 
 class SelectForm(forms.Form):
