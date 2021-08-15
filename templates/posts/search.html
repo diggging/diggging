@@ -4,7 +4,7 @@
 {% block script %}
 <link rel="stylesheet" href="{% static 'css/search.css' %}">
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="{% static 'js/posts.js' %}"></script>
+<script src="{% static 'js/search.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -12,40 +12,78 @@
     <div class="main_container">
 
         <div class="input_container">
-            <form class="input_form" action="{% url 'posts:search' %}" method="post">
+            <form class="input_form" method="post">
                 {% csrf_token %}
-                <input type="text" class="search" placeholder="뭐라고 할까요?" name="q" value="{{q}}">
+                <input type="text"  class="search" id="search_input" placeholder="뭐라고 할까요?">
             </form>
         </div>
-        <div class="choice_container">
-            <div class="choice_box">
-                <div class="choice_select">
-                    {{form.field}}
-                </div>
-                <div class="choice_select">
-                    {{form.field2}}
-                </div>
-                <div class="choice_select">
-                    {{form.field3}}
-                </div>
-                <div class="choice_select">
-                    {{form.field4}}
-                </div>
-            </div>
+        
+
+        <!-- <div>
+            <form method="get">
+                {{myFilter.form}}
+                <button class="a" type="submit"> Search </button>
+            </form>
+            {% for post in posts %}
+                {{post.title}}
+            {% endfor %}
+        </div> -->
+
+        <div>
+            <form id="select" method="post" action="">
+                {% csrf_token %}
+                {{form}}
+            </form>
         </div>
-        <!-- <form class="search-form">
-            <input type="text" class="search" placeholder="City or State">
-            <ul class="suggestions">
-                <li>Filter for a city</li>
-                <li>or a state</li>
-            </ul>
-        </form> -->
+
 
         <div class="search_container">
             <div class="post_container">
                 
             </div>
         </div>
+
     </div>
+    <script>
+        const language = document.getElementById('id_field');
+        const os = document.getElementById('id_field2');
+        const problem_solving = document.getElementById('id_field3');
+        const framework = document.getElementById('id_field4');
+
+        const select = document.getElementById('select');
+
+        select.addEventListener('change', () => {
+            const langValue = language.options[language.selectedIndex].value;
+            const osValue = os.options[os.selectedIndex].value;
+            const solveValue = problem_solving.options[problem_solving.selectedIndex].value;
+            const frameValue = framework.options[framework.selectedIndex].value;
+
+            fetch('/posts/search_select/', {
+                body: JSON.stringify({language:langValue ,os:osValue,
+                                    problem_solving:solveValue, framework:frameValue}),
+                method: "POST",
+                headers : { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+
+                if (data.length === 0){
+                    searchContainer.innerHTML = "검색어와 맞는 글이 없어요"
+                } else {
+                    const txt = data.map(post => {
+                        return  `
+                            ${post.title}
+                        `
+                    })
+                    searchContainer.innerHTML = txt;
+                }
+            })
+        })
+    </script>
 {% endblock %}
 
+            

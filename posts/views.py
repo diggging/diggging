@@ -13,16 +13,14 @@ from django.views.decorators.http import require_POST, require_GET
 from .models import Post, Folder
 from users.models import Sand
 from . import models
-from .forms import SelectForm, PostForm, SearchForm
+from .forms import SelectForm, PostForm
 import json
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 
 from django.core.paginator import Paginator
-
-
-
-# Create your views here.
+from .filters import TutorialFilter
+from django.db.models import Q
 
 # main 페이지
 def main(request):
@@ -53,7 +51,6 @@ def main(request):
     #     "followings_posts": all_followings_posts,  # 내가 follow하는 사람들의 최신순 포스트
     #     "my_recent_post": my_recent_post,  # 내 글 최신순
     # }
-
     return render(request, "posts/post_list.html")
 
 def helped(request):
@@ -81,24 +78,18 @@ def scrap_axios(request):
     all_posts_scrap = Post.objects.all().order_by("-scrap_num")
     paginator = Paginator(all_posts_scrap, 8)
     page_num = request.GET.get("page")
-    # if page_num > paginator.num_pages:
-    #     raise Http404
     posts_scrap = paginator.page(page_num)
-    # context = {'scrap_posts': posts_scrap}
 
     if is_ajax(request):
         return render(request, 'posts/_posts.html', {'posts': posts_scrap})
 
     return render(request, 'posts/post_list.html', {'posts': posts_scrap})
 
-#-----------------------------------------------------------------------
 @require_GET
 def helped_axios(request):
     all_posts_helped = Post.objects.all().order_by("-helped_num")
     paginator = Paginator(all_posts_helped, 8)
     page_num = request.GET.get("page")
-    # if page_num > paginator.num_pages:
-    #     raise Http404
     posts_helped = paginator.page(page_num)
 
     if is_ajax(request):
@@ -151,6 +142,7 @@ def my_recent_axios(request):
 
     return render(request, 'posts/post_list.html', {'posts': posts_my})
 
+#-----------------------------------------------------------------------
 
 # 프론트에서 해당 포스트 id 넘겨주면
 
@@ -363,30 +355,78 @@ def post_delete(request, pk):
 #     }
 #     return render(request, "posts/search.html", ctx)
 
-## 수정필요
+## search input ajax
 @csrf_exempt
+def search_input(request):
+    if request.method == "POST":
+        search_str = json.loads(request.body).get("text")
+
+        post = Post.objects.filter(
+            title__icontains=search_str) | Post.objects.filter(
+            desc__icontains=search_str)
+
+        data = post.values()
+        return JsonResponse(list(data), safe=False)
+
+## search select ajax
+@csrf_exempt
+def search_select(request):
+    if request.method == "POST":
+
+        language = json.loads(request.body).get("language")
+        os = json.loads(request.body).get("os")
+        framework = json.loads(request.body).get("framework")
+        problem_solving = json.loads(request.body).get("problem_solving")
+
+        lang_filter = Post.objects.filter(language__exact=language)
+        os_filter = Post.objects.filter(os__exact=os)
+        frame_filter = Post.objects.filter(framework__exact=framework)
+        problem_filter = Post.objects.filter(problem_solving__exact=problem_solving)
+
+        ##전체 선택
+        fields = Post._meta.get_fields()
+        lang_fields = Post._meta.get_field('language')
+        os_fields = Post._meta.get_field('os')
+        frameword_fields = Post._meta.get_field('framework')
+        problem_fields = Post._meta.get_field('problem_solving')
+
+
+        result = Post.objects.none()
+
+        if lang_filter.exists():
+            result = lang_filter
+
+        if os_filter.exists() and result.exists():
+            result = result & os_filter
+        elif os_filter.exists():
+            result = os_filter
+        else:
+            result = result
+
+        if frame_filter.exists() and result.exists():
+            result = result & frame_filter
+        elif frame_filter.exists():
+            result = frame_filter
+        else:
+            result = result
+
+        if problem_filter.exists() and result.exists():
+            result = result & problem_filter
+        elif problem_filter.exists():
+            result = problem_filter
+        else:
+            result = result
+
+        data = result.values()
+
+    return JsonResponse(list(data), safe=False)
+
 def search(request):
-    form = SelectForm()
     posts = Post.objects.all()
-    q = request.POST.get('q', "")
-    # if q: 
-    #     search_title = posts.filter(title__icontains=q)
-    #     search_desc = posts.filter(desc__icontains=q)
-    #     post = search_desc.union(search_title)        
-    #     ctx = {
-    #         'posts': post,
-    #         'q': q,
-    #         'form': form,
-    #     }
-    #     return render(request, "posts/search.html", ctx)
-        
-    # else:
-    #     ctx = {
-    #         'form': form,
-    #     }
+
+    form = SelectForm()
     ctx = {
             'posts': posts,
-            'q': q,
             'form': form,
         }
     return render(request, "posts/search.html", ctx)

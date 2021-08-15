@@ -5,6 +5,7 @@ from django.forms.widgets import RadioSelect
 from .models import Post
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
+
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
@@ -28,6 +29,7 @@ class PostForm(forms.ModelForm):
                 attrs={"class": "title_input", "placeholder": "발견한 에러메시지를 기록하세요."},
             ),
             "desc": forms.CharField(widget=CKEditorUploadingWidget()),
+            'is_public': forms.RadioSelect(choices=[(True, '전체공개'), (False, '비공개')])
         }
 
 class SelectForm(forms.Form):
@@ -35,6 +37,3 @@ class SelectForm(forms.Form):
     field2 = forms.ChoiceField(choices=Post.os_choices)
     field3 = forms.ChoiceField(choices=Post.problem_choices)
     field4 = forms.ChoiceField(choices=Post.framework_choices)
-
-class SearchForm(forms.Form):
-    search_text = forms.CharField(label='검색어를 입력해주세요')

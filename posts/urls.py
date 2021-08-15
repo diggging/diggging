@@ -31,4 +31,9 @@ urlpatterns = [
     path("scrap/", views.post_scrap, name="post_scrap"),
     # path("count_like_scrap/", views.count_like_scrap, name="count_like_scrap"),
     # path("folder/", views.make_folder, name="make_folder"),
+
+    path("search_input/", views.search_input, name="search_input"),
+    path("search_select/", views.search_select, name="search_select"),
+
+
 ]
