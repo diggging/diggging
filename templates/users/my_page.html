@@ -299,85 +299,85 @@
         </div>
         <div class="sand_pour_area"></div>
     </div>
-        <div class="second_container my_container">
-            {%comment%}
-            <div class="category_tab">
-                <ol class="carousel-indicators">
-                    <!-- 이거로 안되면 걍 ajax나 axios로 할것임 -->
-                    <!-- style적용하려면 button태그로 바꿔야하는데 아직 작동되는지 확인못해서 안바꿈 -->
-                    <!-- 작동되면 button태그로도되는지 확인하고 버튼마다 언어, 프레임웤, 해결 글자넣기 -->
-                    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                    <li data-target="#myCarousel" data-slide-to="1"></li>
-                    <li data-target="#myCarousel" data-slide-to="2"></li>
-                </ol>
-            </div>
-            <div class="folder_area">
-                <div id="myCarousel" class="carousel slide" data-ride="carousel">
-                    <!-- Wrapper for slides -->
-                    <div class="carousel-inner" role="listbox">
-                        <!-- 유저의 폴더 종류 구분 - 이렇게하는게 맞겠지..? -->
-                        {% if forloop.counter == 1 %}
-                        <div class="item active">
-                        {% else %}
-                        <div class="item">
-                        {% endif %}
-                            <!-- 각 폴더 종류별로 존재하는 폴더 나열 -->
-                            {% for folder in framework_folders %}
-                            <div class="folder_space">
-                                <button type="button" class="{{folder}}">
-                                    <i class="far fa-folder folder_icon fa-2x"></i>  
-                                    <span class="folder_name">{{folder}}</span>\
-                                </button>
-                            </div>
-                            {% endfor %}
-                            {% for folder in solve_folders %}
-                            <div class="folder_space">
-                                <button type="button" class="{{folder}}">
-                                    <i class="far fa-folder folder_icon fa-2x"></i>  
-                                    <span class="folder_name">{{folder}}</span>\
-                                </button>
-                            </div>
-                            {% endfor %}
-                            {% for folder in language_folders %}
-                            <div class="folder_space">
-                                <button type="button" class="{{folder}}">
-                                    <i class="far fa-folder folder_icon fa-2x"></i>  
-                                    <div class="folder_name"> {{folder}} </div>
-                                </button>
-                            </div>
-                            {% endfor %}
-                      <div class="carousel-caption">
-                        <h3>{{folder_kind}}</h3>
-                      </div>
+    <div class="second_container my_container">
+        {%comment%}
+        <div class="category_tab">
+            <ol class="carousel-indicators">
+                <!-- 이거로 안되면 걍 ajax나 axios로 할것임 -->
+                <!-- style적용하려면 button태그로 바꿔야하는데 아직 작동되는지 확인못해서 안바꿈 -->
+                <!-- 작동되면 button태그로도되는지 확인하고 버튼마다 언어, 프레임웤, 해결 글자넣기 -->
+                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myCarousel" data-slide-to="1"></li>
+                <li data-target="#myCarousel" data-slide-to="2"></li>
+            </ol>
+        </div>
+        <div class="folder_area">
+            <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner" role="listbox">
+                    <!-- 유저의 폴더 종류 구분 - 이렇게하는게 맞겠지..? -->
+                    {% if forloop.counter == 1 %}
+                    <div class="item active">
+                    {% else %}
+                    <div class="item">
+                    {% endif %}
+                        <!-- 각 폴더 종류별로 존재하는 폴더 나열 -->
+                        {% for folder in framework_folders %}
+                        <div class="folder_space">
+                            <button type="button" class="{{folder}}">
+                                <i class="far fa-folder folder_icon fa-2x"></i>  
+                                <span class="folder_name">{{folder}}</span>\
+                            </button>
                         </div>
+                        {% endfor %}
+                        {% for folder in solve_folders %}
+                        <div class="folder_space">
+                            <button type="button" class="{{folder}}">
+                                <i class="far fa-folder folder_icon fa-2x"></i>  
+                                <span class="folder_name">{{folder}}</span>\
+                            </button>
                         </div>
+                        {% endfor %}
+                        {% for folder in language_folders %}
+                        <div class="folder_space">
+                            <button type="button" class="{{folder}}">
+                                <i class="far fa-folder folder_icon fa-2x"></i>  
+                                <div class="folder_name"> {{folder}} </div>
+                            </button>
+                        </div>
+                        {% endfor %}
+                    <div class="carousel-caption">
+                    <h3>{{folder_kind}}</h3>
+                    </div>
+                    </div>
                     </div>
                 </div>
             </div>
-            {%endcomment%}
         </div>
-        <!-- 질문버튼 눌렀을 때도 그에 해당하는 디렉토리들이 다르게 떠야함 -->
-        {%comment%}
-        <div class="last_log_box post__dig">
-            {% for log in my_recent_logs %}
-                <div class="last_log_list">
-                    {{log.title}}
-                </div>
-            {% endfor %}
-        </div>
-        <div class="last_question_box post__question">
-            <!-- 질문버튼 누르면 최근 질문 기록도 같이 뜸 -->
-            {% for question in my_recent_questions %}
-                <div class="last_question_list">
-                    {{question.title}}
-                </div>
-            {% endfor %}
-        </div>
+        {%endcomment%}
     </div>
+    <!-- 질문버튼 눌렀을 때도 그에 해당하는 디렉토리들이 다르게 떠야함 -->
+        {%comment%}
+    <div class="last_log_box post__dig">
+        {% for log in my_recent_logs %}
+            <div class="last_log_list">
+                {{log.title}}
+            </div>
+        {% endfor %}
+    </div>
+    <div class="last_question_box post__question">
+        <!-- 질문버튼 누르면 최근 질문 기록도 같이 뜸 -->
+        {% for question in my_recent_questions %}
+            <div class="last_question_list">
+                {{question.title}}
+            </div>
+        {% endfor %}
+    </div>
+    </div>
+    {%endcomment%}
     <!-- 폴더 눌렀을 때 글 목록 뜨는 곳 -->
     <div class="third_container my_container">
         <div class="my_post_list">
         </div>
     </div>
-    {%endcomment%}
 {% endblock %}
