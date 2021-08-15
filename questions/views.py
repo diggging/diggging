@@ -277,26 +277,29 @@ def get_question(request, question_post_id):
 # 질문 채택 관련 함수 (모달에서 사용자가 채택 or 채택 해제에 동의했을때 사용)
 def chosen_answer(request, question_answer_id):
     is_answer_chosen = Answer.objects.get(pk=question_answer_id)
-    questioin = is_answer_chosen.question
+    question = is_answer_chosen.question
     if request.method == "POST":
-        # 채택 여부가 거짓이면 True로 바꿔주고 False이면 True로 바꿔줌.
-        if is_answer_chosen.selection:
-            is_answer_chosen.selection = False
-        else:   # 채택이 안된 경우 된걸로 바꿔줌
+        # 채택 여부가 거짓이면 True로 바꿔주고 False이면 True로 바꿔줌. --> ??? 전자 후자 같은말..?
+        # 채택여부가 거짓이면 True로 바꿔주는 것만 ....
+        if is_answer_chosen.selection == False:
             is_answer_chosen.selection = True
             new_sand1 = Sand.objects.create(user=is_answer_chosen.user, amount=300, reason="내 답변 채택")
-            new_sand2 = Sand.objects.create(user=questioin.user, amount=50, reason="내 질문의 답변 채택")
+            new_sand2 = Sand.objects.create(user=question.user, amount=50, reason="내 질문의 답변 채택")
+            new_alarm = Alarm.objects.create(user=is_answer_chosen.user, reason="질문 " + question.title + " 에 남긴 답변이 채택되었어요.")
 
-            new_alarm = Alarm.objects.create(user=is_answer_chosen.user, reason="질문 " + questioin.title + " 에 남긴 답변이 채택되었어요.")
+            is_answer_chosen.selection = new_selection
 
+            new_selection.save()
+            
         ctx = {
             'is_answer_chosen': is_answer_chosen
         }
 
+
         # 선택 후에는 다시 question detail 페이지로 돌아감.
         return render(request, 'questions/question_detail.html', ctx)
-    # TODO: 의문점? else가 필요한가?
-    return redirect('questions:question_detail', is_answer_chosen.question.id)
+    # TODO: 의문점? else가 필요한가? 안필요할듯 
+    return redirect('question:question_post_detail', is_answer_chosen.question.user.id, is_answer_chosen.question.id)
 
 #--------------------------------------------------------------------------------------------------
 # 도움이 되었어요, 스크랩 개수 count 하기 위한 axios

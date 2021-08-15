@@ -47,6 +47,8 @@
 }
 
 
+
+
 .nav {
     position: fixed;
     top: 0;
@@ -162,7 +164,7 @@
     padding: 0.5rem 1.5rem;
 }
 
-.toggle a:not(:nth-child(4)) {
+.toggle a:not(:nth-child(3)) {
     border-bottom: solid 1px #CEC4B3;
 }
     

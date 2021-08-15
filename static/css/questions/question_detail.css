@@ -327,3 +327,13 @@ body {
     margin: 8rem 0;
 }
 
+
+.choice_btn a {
+    font-family: var(--btn-font);
+    color:var(--sand-color);
+    background-color:var(--btn-color);
+    border-radius: 4px;
+    box-shadow: none;
+    border: solid 2px var(--hover-color);
+    color: #A9A59F;
+}

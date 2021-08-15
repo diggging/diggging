@@ -104,6 +104,16 @@
                     </div>
                 </div>
                 {% endif %}
+                {% if request.user.id == post.user.id %}
+                    {% if answer.selection == False %}
+                        <div class="choice_btn">
+                            <a href="{% url 'question:chosen_answer' answer.id %}">채택</a>
+                        </div>
+                        채택안된 답변
+                    {% else %}
+                        채택되었어요
+                    {% endif %}
+                {% endif %}
             </div>
             <div class="answer_desc_box">
                 {{ answer.desc|safe|escape|linebreaks}}
