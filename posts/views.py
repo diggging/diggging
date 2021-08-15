@@ -372,39 +372,61 @@ def search_input(request):
 @csrf_exempt
 def search_select(request):
     if request.method == "POST":
+
         language = json.loads(request.body).get("language")
         os = json.loads(request.body).get("os")
         framework = json.loads(request.body).get("framework")
         problem_solving = json.loads(request.body).get("problem_solving")
 
-        # post = Post.objects.filter(language__exact=language)|
-        # Post.objects.filter(os__exact=os)|
-        # Post.objects.filter(framework__exact=framework)|
-        # Post.objects.filter(problem_solving__exact=problem_solving)
-        post = Post.objects.filter(
-            language__exact=language) | Post.objects.filter(
-            os__exact=os) | Post.objects.filter(
-            framework__exact=framework) | Post.objects.filter(
-            problem_solving__exact=problem_solving)
+        lang_filter = Post.objects.filter(language__exact=language)
+        os_filter = Post.objects.filter(os__exact=os)
+        frame_filter = Post.objects.filter(framework__exact=framework)
+        problem_filter = Post.objects.filter(problem_solving__exact=problem_solving)
 
-        data = post.values()
+        ##전체 선택
+        fields = Post._meta.get_fields()
+        lang_fields = Post._meta.get_field('language')
+        os_fields = Post._meta.get_field('os')
+        frameword_fields = Post._meta.get_field('framework')
+        problem_fields = Post._meta.get_field('problem_solving')
 
-        # posts = Post.objects.all()
-        # myFilter = TutorialFilter(request.GET, queryset=posts)
-        # posts = myFilter.qs.values()
+
+        result = Post.objects.none()
+
+        if lang_filter.exists():
+            result = lang_filter
+
+        if os_filter.exists() and result.exists():
+            result = result & os_filter
+        elif os_filter.exists():
+            result = os_filter
+        else:
+            result = result
+
+        if frame_filter.exists() and result.exists():
+            result = result & frame_filter
+        elif frame_filter.exists():
+            result = frame_filter
+        else:
+            result = result
+
+        if problem_filter.exists() and result.exists():
+            result = result & problem_filter
+        elif problem_filter.exists():
+            result = problem_filter
+        else:
+            result = result
+
+        data = result.values()
 
     return JsonResponse(list(data), safe=False)
 
-## 수정필요
-@csrf_exempt
 def search(request):
     posts = Post.objects.all()
-    # myFilter = TutorialFilter(request.GET, queryset=posts)
-    # posts = myFilter.qs
+
     form = SelectForm()
     ctx = {
             'posts': posts,
-            # 'myFilter': myFilter,
             'form': form,
         }
     return render(request, "posts/search.html", ctx)

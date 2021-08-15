@@ -12,7 +12,7 @@
     <div class="main_container">
 
         <div class="input_container">
-            <form class="input_form" action="" method="post">
+            <form class="input_form" method="post">
                 {% csrf_token %}
                 <input type="text"  class="search" id="search_input" placeholder="뭐라고 할까요?">
             </form>
@@ -33,7 +33,6 @@
             <form id="select" method="post" action="">
                 {% csrf_token %}
                 {{form}}
-                <button id="btn" type="submit"> Search </button>
             </form>
         </div>
 
@@ -53,12 +52,11 @@
 
         const select = document.getElementById('select');
 
-        select.addEventListener('submit', () => {
+        select.addEventListener('change', () => {
             const langValue = language.options[language.selectedIndex].value;
             const osValue = os.options[os.selectedIndex].value;
             const solveValue = problem_solving.options[problem_solving.selectedIndex].value;
             const frameValue = framework.options[framework.selectedIndex].value;
-
 
             fetch('/posts/search_select/', {
                 body: JSON.stringify({language:langValue ,os:osValue,
@@ -79,7 +77,6 @@
                     const txt = data.map(post => {
                         return  `
                             ${post.title}
-                            ${post.desc}
                         `
                     })
                     searchContainer.innerHTML = txt;
