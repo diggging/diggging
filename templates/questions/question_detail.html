@@ -107,7 +107,13 @@
                 {% if request.user.id == post.user.id %}
                     {% if answer.selection == False %}
                         <div class="choice_btn">
-                            <a href="{% url 'question:chosen_answer' answer.id %}">채택</a>
+                            <button class="popup">채택하기
+                                <div class="choice_modal_body">
+                                    <h3>해당 답변을 채택하시겠습니까?</h3>
+                                    <a href="{% url 'question:chosen_answer' answer.id %}" class="yes_choice">예</a>
+                                    <a href="#">아니오</a>
+                                </div>
+                            </button>
                         </div>
                         채택안된 답변
                     {% else %}
@@ -338,5 +344,19 @@
                 likeHandleResponse();
             }
         };
+    </script>
+    <!-- 채택팝업 -->
+    <script>
+        const body = document.querySelector('body')
+        const answerChoicePopup = document.querySelector('.popup')
+        let modalBody = document.querySelector('.choice_modal_body');
+        
+        answerChoicePopup.addEventListener('click', () => {
+            modalBody.setAttribute('visibility', 'visible');
+        });
+
+        body.addEventListener('click', () => {
+            modalBody.setAttribute('visibility', 'hidden');
+        });
     </script>
     {% endblock %}

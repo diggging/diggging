@@ -155,7 +155,12 @@
                                     {% else %}
                                         <i class="fas fa-user-circle fa-2x" style="color:bisque"></i>
                                     {% endif %}
-                                        <span class="post_username">{{post.user.user_nickname}}</span>
+                                    <div class="post_image_container">
+                                        {% if post.image %}
+                                        <img src="{{post.image.url}}" alt="" class="post_image_container">
+                                        {% endif %}
+                                    </div>
+                                    <span class="post_username">{{post.user.user_nickname}}</span>
                                 </div>
                                 <div class="post_title">{{post.title|truncatechars:20}}</div>
                                 <div class="post_desc">{{post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;" }}</div>

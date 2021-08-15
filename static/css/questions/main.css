@@ -202,6 +202,12 @@ form button {
     box-shadow: rgb(0 0 0 / 8%) 0px 12px 20px 0px;
 }
 
+
+.recommend_list .post_image_container {
+    display: block;
+    object-fit: cover;
+}
+
 .post_username {
     font-size: 1rem;
     font-family: var(--title-font);
