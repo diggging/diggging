@@ -4,10 +4,10 @@
 {% block script %}
 <link rel="stylesheet" href="{% static 'css/my_page.css' %}">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css"> -->
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script> -->
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script> -->
 
 
 <script>
@@ -300,8 +300,8 @@
         <div class="sand_pour_area"></div>
     </div>
         <div class="second_container my_container">
+            {%comment%}
             <div class="category_tab">
-                <!-- Indicators -->
                 <ol class="carousel-indicators">
                     <!-- 이거로 안되면 걍 ajax나 axios로 할것임 -->
                     <!-- style적용하려면 button태그로 바꿔야하는데 아직 작동되는지 확인못해서 안바꿈 -->
@@ -354,8 +354,10 @@
                     </div>
                 </div>
             </div>
+            {%endcomment%}
         </div>
         <!-- 질문버튼 눌렀을 때도 그에 해당하는 디렉토리들이 다르게 떠야함 -->
+        {%comment%}
         <div class="last_log_box post__dig">
             {% for log in my_recent_logs %}
                 <div class="last_log_list">
@@ -377,4 +379,5 @@
         <div class="my_post_list">
         </div>
     </div>
+    {%endcomment%}
 {% endblock %}

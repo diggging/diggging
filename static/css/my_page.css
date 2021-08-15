@@ -230,21 +230,20 @@ body {
     margin: 20px auto;
     border-radius: 2px;
     font-family: var(--btn-font);
-    font-size: 1.25rem;
     color: var(--text-color);
 }
 
 .list_btn:hover {
     border: solid 1px var(--border-color);
-    width: 300px;
+    width: 91%;
     height: 60px;
     background: var(--btn-color);    
     margin: 20px auto;
-    transition: 0.5s;
+    transition: 0.4s;
 }
 .list_btn:active {
     border: solid 1px var(--border-color);
-    width: 300px;
+    width: 91%;
     height: 60px;
     background: var(--hover-color);
     margin: 20px auto;
@@ -256,8 +255,6 @@ body {
     width: 40px;
     background-color: bisque;
 }
-
-
 
 .list_btn a {
     display: block;
@@ -408,6 +405,7 @@ body {
     height: 24px;
     padding: 2px;
     height: 28px;
+    margin: 0.875rem 0;
 }
 
 .level_badge a {
@@ -421,11 +419,10 @@ body {
 }
 
 a.badge_img .level_modal {
-
     position: absolute;
-    top: 248px;
-    left: 110px;
-    width: 18rem;
+    top: 5rem;
+    left: 5.2rem;
+    width: 20%;
     background: #F8F8F8;
     border-radius: 8px;
     border: solid 1px var(--border-color);
@@ -433,6 +430,7 @@ a.badge_img .level_modal {
     z-index: 1000000;
     display: inline;
     opacity: 0;
+    visibility: hidden;
     transition: 750ms all;
 }
 a.badge_img:hover .level_modal{
@@ -441,13 +439,15 @@ a.badge_img:hover .level_modal{
     font-size: 70%;
     color: #000;
 
+    visibility: visible;
     opacity: 1;
 }
 
 .level_modal span {
-    font-size: 1rem;
+    font-size: 12px;
     color: var(--logo-color);
     margin-left: 5px;
+    line-height: 2rem;
 }
 .level_modal p {
     color: var(--text-color);

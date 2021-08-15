@@ -31,12 +31,12 @@ def question_main(request):
 
     #지수가 필요해서 넣은 것 : 질문 관련 폴더
     # 질문 모음
-    my_questions = Question_post.objects.filter(user=host)
-    questions_language_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="language")
-    questions_framework_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
+    my_questions = Question_post.objects.filter(user=request.user)
+    questions_language_folder = QuestionFolder.objects.filter(folder_user=request.user, folder_kind="language")
+    questions_framework_folder = QuestionFolder.objects.filter(folder_user=request.user, folder_kind="framework")
 
     # 최근에 남긴 질문
-    my_recent_questions = Question_post.objects.filter(user=host).order_by("-created")
+    my_recent_questions = Question_post.objects.filter(user=request.user).order_by("-created")
 
     #지수가 필요해서 넣은 것 : 모래 포인트
     my_sand = Sand.objects.filter(user = request.user)
@@ -303,31 +303,25 @@ def get_question(request, question_post_id):
     return redirect("question:question_post_detail", me.id, question_post_id)
 
 # 질문 채택 관련 함수 (모달에서 사용자가 채택 or 채택 해제에 동의했을때 사용)
-def chosen_answer(request, question_answer_id):
+def chosen_answer(request, question_id, question_answer_id):
     is_answer_chosen = Answer.objects.get(pk=question_answer_id)
     question = is_answer_chosen.question
-    if request.method == "POST":
-        # 채택 여부가 거짓이면 True로 바꿔주고 False이면 True로 바꿔줌. --> ??? 전자 후자 같은말..?
-        # 채택여부가 거짓이면 True로 바꿔주는 것만 ....
-        if is_answer_chosen.selection == False:
-            is_answer_chosen.selection = True
-            new_sand1 = Sand.objects.create(user=is_answer_chosen.user, amount=300, reason="내 답변 채택")
-            new_sand2 = Sand.objects.create(user=question.user, amount=50, reason="내 질문의 답변 채택")
-            new_alarm = Alarm.objects.create(user=is_answer_chosen.user, reason="질문 " + question.title + " 에 남긴 답변이 채택되었어요.")
+    # if request.method == "POST": #채택할래? 예
+    is_answer_chosen.selection = True
+    new_sand1 = Sand.objects.create(user=is_answer_chosen.user, amount=300, reason="내 답변 채택")
+    new_sand2 = Sand.objects.create(user=question.user, amount=50, reason="내 질문의 답변 채택")
+    new_alarm = Alarm.objects.create(user=is_answer_chosen.user, reason="질문 " + question.title + " 에 남긴 답변이 채택되었어요.")
 
-            is_answer_chosen.selection = new_selection
+    # is_answer_chosen.selection.save()
 
-            new_selection.save()
-            
-        ctx = {
-            'is_answer_chosen': is_answer_chosen
-        }
-
+    ctx = {
+        'is_answer_chosen': is_answer_chosen
+    }
 
         # 선택 후에는 다시 question detail 페이지로 돌아감.
-        return render(request, 'questions/question_detail.html', ctx)
+    # return render(request, 'questions/question_detail.html', ctx)
     # TODO: 의문점? else가 필요한가? 안필요할듯 
-    return redirect('question:question_post_detail', is_answer_chosen.question.user.id, is_answer_chosen.question.id)
+    return redirect('question:question_post_detail',  question_id, is_answer_chosen.id)
 
 #--------------------------------------------------------------------------------------------------
 # 도움이 되었어요, 스크랩 개수 count 하기 위한 axios

@@ -176,7 +176,7 @@
                     {% if user.is_authenticated %}
                     <div>
                         <div class="profile_username">
-                            {% if host.user_profile_image %}
+                            {% if request.user.user_profile_image %}
                             <span class="profile_image">
                                 <img src="{{ request.user.user_profile_image.url}}">
                             </span>
