@@ -64,7 +64,7 @@ body {
     border: solid 1px var(--border-color);
     border-radius: 8px;
     height: 28rem; 
-    width: 90%;
+    width: 68em;
     display: flex;
     justify-content: center;
     object-fit: cover;

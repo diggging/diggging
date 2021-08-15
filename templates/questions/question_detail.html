@@ -2,6 +2,9 @@
 {% load static %}
 {% block content %}
 <div class="question_container">
+    {% if post.image %}
+        <img src="{{ post.image.url }}" class="thumbnail_area">
+    {% endif %}
     <div class="post_container">
         <!-- 제목영역 -->
         <div class="post_top">
@@ -107,19 +110,19 @@
                 {% if request.user.id == post.user.id %}
                     {% if answer.selection == False %}
                         <div class="choice_btn">
-                            <button class="popup">채택하기
-                                <div class="choice_modal_body">
-                                    <h3>해당 답변을 채택하시겠습니까?</h3>
-                                    <a href="{% url 'question:chosen_answer' answer.id %}" class="yes_choice">예</a>
-                                    <a href="#">아니오</a>
-                                </div>
-                            </button>
+                            <button class="popup">채택하기</button>
                         </div>
                         채택안된 답변
                     {% else %}
-                        채택되었어요
+                    채택되었어요
                     {% endif %}
-                {% endif %}
+                    {% endif %}
+                    <div class="choice_modal_body" style="visibility: hidden;" >
+                        <button class="modal_delete">x</button>
+                        <h3>해당 답변을 채택하시겠습니까?</h3>
+                        <a href="{% url 'question:chosen_answer' answer.id %}" class="yes_choice">예</a>
+                        <a href="#">아니오</a>
+                    </div>
             </div>
             <div class="answer_desc_box">
                 {{ answer.desc|safe|escape|linebreaks}}
@@ -350,13 +353,16 @@
         const body = document.querySelector('body')
         const answerChoicePopup = document.querySelector('.popup')
         let modalBody = document.querySelector('.choice_modal_body');
-        
+        const modalDelete = document.querySelector('.modal_delete');
         answerChoicePopup.addEventListener('click', () => {
-            modalBody.setAttribute('visibility', 'visible');
+            if(modalBody.style.visibility === "hidden") {
+                modalBody.style.visibility = "visible"
+            } else {
+                modalBody.style.visibility = "hidden"
+            }
         });
-
-        body.addEventListener('click', () => {
-            modalBody.setAttribute('visibility', 'hidden');
+        modalDelete.addEventListener('click', () => {
+            modalBody.style.visibility = "hidden";
         });
     </script>
     {% endblock %}

@@ -196,6 +196,18 @@ form button {
     transition: box-shadow 0.25s ease-in 0s, transform 0.25s ease-in 0s;
 }
 
+.recommend_list a{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-start;
+
+
+}
+.recommend_list a div:not(last-child){
+    margin-right: 4px;
+
+}
 
 .recommend_list:hover {
     transform: translateY(-4px);
@@ -206,6 +218,18 @@ form button {
 .recommend_list .post_image_container {
     display: block;
     object-fit: cover;
+    margin-right: 4%;
+}
+
+.recommend_user_info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.post_image_container img {
+    height: 5rem;
+    width: 7rem;
 }
 
 .post_username {

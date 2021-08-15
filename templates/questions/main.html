@@ -149,17 +149,17 @@
                         {%if str_search == post.language %}
                         <div class="recommend_list">
                             <a href="{% url 'question:question_post_detail' post.user.id post.id %}">
+                                <div class="post_image_container">
+                                    {% if post.image %}
+                                    <img src="{{post.image.url}}" alt="" class="post_image_container">
+                                    {% endif %}
+                                </div>
                                 <div class="recommend_user_info">
                                     {% if post.user.user_profile_image %}
                                         {{ post.user.user_profile_image.url }}
                                     {% else %}
                                         <i class="fas fa-user-circle fa-2x" style="color:bisque"></i>
                                     {% endif %}
-                                    <div class="post_image_container">
-                                        {% if post.image %}
-                                        <img src="{{post.image.url}}" alt="" class="post_image_container">
-                                        {% endif %}
-                                    </div>
                                     <span class="post_username">{{post.user.user_nickname}}</span>
                                 </div>
                                 <div class="post_title">{{post.title|truncatechars:20}}</div>

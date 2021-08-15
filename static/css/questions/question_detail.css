@@ -84,7 +84,7 @@ body {
     border: solid 1px var(--border-color);
     border-radius: 8px;
     height: 28rem; 
-    width: 90%;
+    width: 68em;
     display: flex;
     justify-content: center;
     object-fit: cover;
@@ -348,13 +348,6 @@ body {
     color: #A9A59F;
 }
 
-.choice_modal_body .show {
-    visibility: visible;
-    display:block;
-    -webkit-animation: fadeIn 1s;
-    animation: fadeIn 1s
-  }
-
 .choice_modal_body {
     visibility: hidden;
     position: absolute;
@@ -362,16 +355,16 @@ body {
     height: 100px;
     line-height: 2rem;
     padding: 1.8rem;
-
+    right: 100px;
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
 
     transition-timing-function: ease-in;
     transition-duration: 1s;
-    
 }
-/* .choice_modal_body h3,
-.choice_modal_body a {
-    visibility: hidden;
-} */
+
+.modal_delete {
+    width: 20px;
+    height: 20px;
+}
