@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <script src="{% static 'js/base.js' %}"></script>
 </head>
 <body>
@@ -27,25 +28,35 @@
             {% if user.is_authenticated %}
                 <div class="nav_vertical">
                     <div>
-                        <a href="#">💡</a>
+                        <a href="#"><i class="far fa-comment-alt fa-2x" style="font-size: 1.6rem; margin-top: 3px;"></i></a>
                     </div>
                     <h6>알림</h6>
                 </div>
                 <div class="nav_vertical">
                     <div>
-                        <a href="{% url 'posts:post_create' %}">🖋</a>
+                        <a href="{% url 'posts:post_create' %}"><img src="{% static 'image/dig_icon.svg' %}" style="height: 1.8rem; margin-left: 2px;"></a>
                     </div>
                     <h6>기록하기</h6>
                 </div>
                 <div class="nav_vertical">
                     <div>
-                        <a href="#">❓</a>
+                        <a href="{% url 'question:question_main' %}"><i class="fas fa-question-circle fa-2x"></i></a>
                     </div>
                     <h6>질문광장</h6>
                 </div>
                 <div class="user_btn">
-                    <button class="toggle_btn" onclick="toggleBtn()" href="{% url 'users:my_page' user.id %}">😎</button>
-                    <h6>{{user.username}}</h6>
+                    <button class="toggle_btn" onclick="toggleBtn()" href="{% url 'users:my_page' user.id %}">
+                        {% if user.user_profile_image %}
+                            {{ user.user_profile_image.url }}
+                        {% else %}
+                            <i class="fas fa-user-circle fa-2x"></i>
+                        {% endif %}
+                    </button>
+                    {% if user.user_nickname %}
+                        <h6>{{user.user_nickname}}</h6>
+                    {% else %}
+                        <h6>{{user.username}}</h6>
+                    {% endif %}
                 </div>
             {% else %}
                 <div class="nav_vertical">
@@ -56,7 +67,7 @@
                 </div>
                 <div class="nav_vertical">
                     <div>
-                        <a href="">❓</a>
+                        <a href="{% url 'question:question_main' %}"><i class="fas fa-question-circle"></i></a>
                     </div>
                     <h6>질문광장</h6>
                 </div>
