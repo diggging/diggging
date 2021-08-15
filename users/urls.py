@@ -37,4 +37,7 @@ urlpatterns = [
     path('login/github/callback', views.github_callback, name="github_callback"),
 
     path('<int:pk>/alarm', view= views.alarm, name="alarm"),
+
+    #마이페이지 ajax
+    path('digging_folder/', views.digging_folder, name="digging_folder"),
 ] 

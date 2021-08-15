@@ -17,9 +17,7 @@ from .forms import SelectForm, PostForm
 import json
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-
 from django.core.paginator import Paginator
-from .filters import TutorialFilter
 from django.db.models import Q
 
 # main 페이지

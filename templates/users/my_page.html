@@ -45,32 +45,30 @@
         body.style.overflow = auto
     })
 </script>
-<!-- 삽질기록 디렉토리 영역 뜨게하기 -->
-<script>
-    const directoryBox = document.querySelector('.directory_box');
-    const logFolderOpen = document.querySelector('#log_folder_btn');
 
-    logFolderOpen.addEventListener('click', () => {
-        if (directoryBox.style.display == 'hidden') {
-            directoryBox.style.display = 'block';
-        } else {
-            directoryBox.style.display = 'hidden';
-        }
+<!-- ------------------------------------------------------------------------ -->
+<script>
+    const logFolderBtn = document.getElementById('log_folder_btn');
+    
+    logFolderBtn.addEventListener('click', () => {
+        fetch('/users/digging_folder/', {
+            method: "POST",
+            headers : { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+
+        })
     })
 </script>
-<!-- 최근 질문기록 뜨게하기 + ajax/axios로바꿔야한다..질문/기록 버튼이 각각 있음.. -->
-<script>
-    const lastQuestionList = document.querySelector('.last_question_list');
-    const questionFolderOpen = document.querySelector('#question_folder_btn');
+<!-- ------------------------------------------------------------------------ -->
 
-    logFolderOpen.addEventListener('click', () => {
-        if (lastQuestionList.style.display == 'hidden') {
-            lastQuestionList.style.display = 'block';
-        } else {
-            lastQuestionList.style.display = 'hidden';
-        }
-    })
-</script>
+
+
 <!-- 최근 (기록/질문) 뜨게하기 -->
 <!-- 구현하려다가 어려워서 넘김.. 기존데이터를 가져와서 출력해주는거 알아보기....ajax어렵당.. -->
 {%comment%}
@@ -300,61 +298,26 @@
         <div class="sand_pour_area"></div>
     </div>
     <div class="second_container my_container">
-        {%comment%}
         <div class="category_tab">
-            <ol class="carousel-indicators">
-                <!-- 이거로 안되면 걍 ajax나 axios로 할것임 -->
-                <!-- style적용하려면 button태그로 바꿔야하는데 아직 작동되는지 확인못해서 안바꿈 -->
-                <!-- 작동되면 button태그로도되는지 확인하고 버튼마다 언어, 프레임웤, 해결 글자넣기 -->
-                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                <li data-target="#myCarousel" data-slide-to="1"></li>
-                <li data-target="#myCarousel" data-slide-to="2"></li>
-            </ol>
+            
         </div>
+
+
         <div class="folder_area">
             <div id="myCarousel" class="carousel slide" data-ride="carousel">
                 <!-- Wrapper for slides -->
-                <div class="carousel-inner" role="listbox">
-                    <!-- 유저의 폴더 종류 구분 - 이렇게하는게 맞겠지..? -->
-                    {% if forloop.counter == 1 %}
-                    <div class="item active">
-                    {% else %}
-                    <div class="item">
-                    {% endif %}
-                        <!-- 각 폴더 종류별로 존재하는 폴더 나열 -->
-                        {% for folder in framework_folders %}
-                        <div class="folder_space">
-                            <button type="button" class="{{folder}}">
-                                <i class="far fa-folder folder_icon fa-2x"></i>  
-                                <span class="folder_name">{{folder}}</span>\
-                            </button>
-                        </div>
-                        {% endfor %}
-                        {% for folder in solve_folders %}
-                        <div class="folder_space">
-                            <button type="button" class="{{folder}}">
-                                <i class="far fa-folder folder_icon fa-2x"></i>  
-                                <span class="folder_name">{{folder}}</span>\
-                            </button>
-                        </div>
-                        {% endfor %}
-                        {% for folder in language_folders %}
-                        <div class="folder_space">
-                            <button type="button" class="{{folder}}">
-                                <i class="far fa-folder folder_icon fa-2x"></i>  
-                                <div class="folder_name"> {{folder}} </div>
-                            </button>
-                        </div>
-                        {% endfor %}
-                    <div class="carousel-caption">
-                    <h3>{{folder_kind}}</h3>
+                {% for folder in framework_folders %}
+                    <div class="folder_space">
+                        <button type="button" class="{{folder}}">
+                            <i class="far fa-folder folder_icon fa-2x"></i>  
+                            <span class="folder_name">{{folder}}</span>\
+                        </button>
                     </div>
-                    </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
-        {%endcomment%}
+
+
     </div>
     <!-- 질문버튼 눌렀을 때도 그에 해당하는 디렉토리들이 다르게 떠야함 -->
         {%comment%}

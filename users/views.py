@@ -32,6 +32,8 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.sites.models import Site
+from django.views.decorators.csrf import csrf_exempt
+
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
@@ -311,6 +313,18 @@ def my_page(request, pk):
         'my_sand_sum' : my_sand_sum,    # 현재까지 sand 총합
     }
     return render(request, template_name="users/my_page.html", context=ctx)
+
+@csrf_exempt
+def digging_folder(request, pk):
+    if request.method == "POST":
+        host = get_object_or_404(User,pk=pk)
+
+        folder = Folder.objects.filter(folder_user=host, folder_kind="language") |  Folder.objects.filter(
+            folder_user=host, folder_kind="framework") | Folder.objects.filter(
+                folder_user=host, folder_kind="solved")
+        folder = post.values()
+
+        return JsonResponse(list(folder), safe=False)
 
 # 한번 누르면 follow, 두번 누르면 unfollow
 def follow(request, host_pk):
