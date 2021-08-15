@@ -34,6 +34,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.sites.models import Site
 from django.views.decorators.csrf import csrf_exempt
 
+from django.http.response import JsonResponse
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
@@ -316,15 +317,16 @@ def my_page(request, pk):
 
 @csrf_exempt
 def digging_folder(request, pk):
-    if request.method == "POST":
-        host = get_object_or_404(User,pk=pk)
+    host = get_object_or_404(User, pk=pk)
+    
+    folder = Folder.objects.filter(folder_user=host, folder_kind="language") |  Folder.objects.filter(
+        folder_user=host, folder_kind="framework") | Folder.objects.filter(
+            folder_user=host, folder_kind="solved")
+    data = folder.values()
 
-        folder = Folder.objects.filter(folder_user=host, folder_kind="language") |  Folder.objects.filter(
-            folder_user=host, folder_kind="framework") | Folder.objects.filter(
-                folder_user=host, folder_kind="solved")
-        folder = post.values()
+    return JsonResponse(list(data), safe=False)
 
-        return JsonResponse(list(folder), safe=False)
+
 
 # 한번 누르면 follow, 두번 누르면 unfollow
 def follow(request, host_pk):

@@ -62,7 +62,6 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.naver",
     #select search
-    "django_filters",
 ]
 
 CKEDITOR_UPLOAD_PATH = "uploads/"

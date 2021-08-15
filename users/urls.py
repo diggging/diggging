@@ -39,5 +39,5 @@ urlpatterns = [
     path('<int:pk>/alarm', view= views.alarm, name="alarm"),
 
     #마이페이지 ajax
-    path('digging_folder/', views.digging_folder, name="digging_folder"),
+    path('<int:pk>/digging_folder/', views.digging_folder, name="digging_folder"),
 ] 
