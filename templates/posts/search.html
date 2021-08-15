@@ -4,7 +4,7 @@
 {% block script %}
 <link rel="stylesheet" href="{% static 'css/search.css' %}">
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="{% static 'js/posts.js' %}"></script>
+<!-- <script src="{% static 'js/posts.js' %}"></script> -->
 {% endblock %}
 
 {% block content %}
@@ -14,7 +14,8 @@
         <div class="input_container">
             <form class="input_form" action="{% url 'posts:search' %}" method="post">
                 {% csrf_token %}
-                <input type="text" class="search" placeholder="뭐라고 할까요?" name="q" value="{{q}}">
+                <!-- <input type="text" class="search" placeholder="뭐라고 할까요?" name="q" value="{{q}}"> -->
+                <input type="text"  class="input_form" id="search_input" placeholder="뭐라고 할까요?">
             </form>
         </div>
         <div class="choice_container">
@@ -46,6 +47,43 @@
                 
             </div>
         </div>
+
     </div>
+    <script>
+        // search
+        const searchField =document.querySelector('#search_input');
+        const searchContainer = document.querySelector('.search_container');
+
+        searchField.addEventListener('keyup', (e) => {
+            const searchValue = e.target.value;
+
+            if(searchValue.trim().length > 0) {
+                console.log('searchValue', searchValue);
+
+                fetch('/posts/search_input/', {
+                    body: JSON.stringify({text:searchValue}),
+                    method: "POST",
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+            
+                    if (data.length === 0){
+                        searchContainer.innerHTML = "검색어와 맞는 글이 없어요"
+                    } else {
+                        const txt = data.map(post => {
+                            return  `
+                                ${post.title}
+                                ${post.desc}
+                            `
+                        })
+                        searchContainer.innerHTML = txt;
+                    }
+                    })
+            } else {
+
+                searchContainer.innerHTML = "검색해주셈"
+            }
+        }) 
+    </script>
 {% endblock %}
 

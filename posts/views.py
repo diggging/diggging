@@ -21,7 +21,6 @@ from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator
 
 
-
 # Create your views here.
 
 # main 페이지
@@ -91,7 +90,6 @@ def scrap_axios(request):
 
     return render(request, 'posts/post_list.html', {'posts': posts_scrap})
 
-#-----------------------------------------------------------------------
 @require_GET
 def helped_axios(request):
     all_posts_helped = Post.objects.all().order_by("-helped_num")
@@ -151,6 +149,7 @@ def my_recent_axios(request):
 
     return render(request, 'posts/post_list.html', {'posts': posts_my})
 
+#-----------------------------------------------------------------------
 
 # 프론트에서 해당 포스트 id 넘겨주면
 
@@ -362,6 +361,20 @@ def post_delete(request, pk):
 #         "frame_post": frame_post,
 #     }
 #     return render(request, "posts/search.html", ctx)
+
+@csrf_exempt
+def search_input(request):
+    if request.method == "POST":
+        search_str = json.loads(request.body).get("text")
+
+        post = Post.objects.filter(
+            title__icontains=search_str) | Post.objects.filter(
+            desc__icontains=search_str)
+        
+        data = post.values()
+        print(data)
+        return JsonResponse(list(data), safe=False)
+
 
 ## 수정필요
 @csrf_exempt
