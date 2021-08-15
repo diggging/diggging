@@ -29,6 +29,15 @@ def question_main(request):
     print(search)
     str_search = "".join(search)
 
+    #지수가 필요해서 넣은 것 : 질문 관련 폴더
+    # 질문 모음
+    my_questions = Question_post.objects.filter(user=host)
+    questions_language_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="language")
+    questions_framework_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
+
+    # 최근에 남긴 질문
+    my_recent_questions = Question_post.objects.filter(user=host).order_by("-created")
+
     #지수가 필요해서 넣은 것 : 모래 포인트
     my_sand = Sand.objects.filter(user = request.user)
     my_sand_sum = my_sand.aggregate(Sum('amount'))
