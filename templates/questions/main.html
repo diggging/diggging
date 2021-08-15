@@ -186,16 +186,16 @@
                             <p class="user_nickname">{{ request.user.user_nickname }}님의 모래상자<p>
                         </div>
                         <p>
-                        레벨 | {{user.user_level}} 단계
+                        레벨 | {{request.user.user_level}} 단계
                         </p>
                         <div class="point_gage">
-                            <label for="value_low">{{user.point_sum}} 모래포인트</label>
+                            <label for="value_low">{{my_sand_sum.amount__sum}} 모래포인트</label>
                             <!-- max기준 레벨에 따라 if문으로 바뀌어야함(아직level넘겨주지 않아서 구현 X)  -->
-                            {% if host.user_level == 0 %}
+                            {% if request.user.user_level == 0 %}
                             <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500" value="{{my_sand_sum.amount__sum}}"></meter>
-                            {% elif host.user_level == 1 %}
+                            {% elif request.user.user_level == 1 %}
                             <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500" value="{{my_sand_sum.amount__sum}}"></meter>
-                            {% else%}
+                            {% else %}
                             <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000" value="{{my_sand_sum.amount__sum}}"></meter>
                             {% endif %}
                         </div>

@@ -9,6 +9,7 @@ from users.models import Sand, Alarm
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse, JsonResponse
+from django.db.models import Sum
 
 
 # Create your views here.
@@ -27,12 +28,30 @@ def question_main(request):
     search = request.POST.getlist("answers[]")
     print(search)
     str_search = "".join(search)
+
+    #지수가 필요해서 넣은 것 : 모래 포인트
+    my_sand = Sand.objects.filter(user = request.user)
+    my_sand_sum = my_sand.aggregate(Sum('amount'))
+    print(my_sand_sum)
+    if my_sand_sum['amount__sum'] == None:
+        my_sand_sum = 0
+    else:
+        if int(my_sand_sum['amount__sum']) < 2000:
+            request.user.user_level = 0
+        elif int(my_sand_sum['amount__sum']) <7000:
+            request.user.user_level=1
+        elif int(my_sand_sum['amount__sum']) <18000:
+            request.user.user_level=2
+        else:
+            request.user.user_level=3
     ctx = {
         "selected_answer_posts": selected_answer_posts,
         "posts": posts, 
         "language": languages,
         "str_search": str_search,
-        # 내 모래포인트와 질문 관련한 폴더 접근 가능해야해요,,
+        'my_all_sands': my_sand,    # sand 모든 object list
+        'my_sand_sum' : my_sand_sum,    # 현재까지 sand 총합
+        #  질문 관련한 폴더 접근 가능해야해요,,
     }
     return render(request, "questions/main.html", ctx)
 
