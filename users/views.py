@@ -315,15 +315,16 @@ def my_page(request, pk):
     }
     return render(request, template_name="users/my_page.html", context=ctx)
 
+###흠,,,,,
 @csrf_exempt
 def digging_folder(request, pk):
     host = get_object_or_404(User, pk=pk)
-    
     folder = Folder.objects.filter(folder_user=host, folder_kind="language") |  Folder.objects.filter(
         folder_user=host, folder_kind="framework") | Folder.objects.filter(
             folder_user=host, folder_kind="solved")
+    user = User.objects.all()
     data = folder.values()
-
+    
     return JsonResponse(list(data), safe=False)
 
 
