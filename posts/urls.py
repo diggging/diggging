@@ -33,4 +33,7 @@ urlpatterns = [
     # path("folder/", views.make_folder, name="make_folder"),
 
     path("search_input/", views.search_input, name="search_input"),
+    path("search_select/", views.search_select, name="search_select"),
+
+
 ]
