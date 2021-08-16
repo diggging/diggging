@@ -25,13 +25,14 @@ def question_main(request):
             selected_answer_posts.append(post)
     languages = [langs[0] for langs in Question_post.language_choices]
     search = request.POST.getlist("answers[]")
-    print(search)
     str_search = "".join(search)
+    answer = Answer.objects.filter().values("title", "desc")
     ctx = {
         "selected_answer_posts": selected_answer_posts,
         "posts": posts,
         "language": languages,
         "str_search": str_search,
+        "answer": answer,
         # 내 모래포인트와 질문 관련한 폴더 접근 가능해야해요,,
     }
     return render(request, "questions/main.html", ctx)
@@ -364,13 +365,3 @@ def chosen_answer(request, question_answer_id):
         return render(request, "questions/question_detail.html", ctx)
     # TODO: 의문점? else가 필요한가?
     return redirect("questions:question_detail", is_answer_chosen.question.id)
-
-
-@csrf_exempt
-def answer_ajax(request):
-    req = json.loads(request.body)
-    user_id = req["id"]
-    users = User.objects.get(id=user_id)
-    answer = list(Answer.objects.filter(user=users).values())
-    print(answer)
-    return JsonResponse(answer, safe=False)

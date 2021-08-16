@@ -41,5 +41,4 @@ urlpatterns = [
         views.get_answer_comments,
         name="get_answer_comments",
     ),
-    path("answer_ajax/", views.answer_ajax, name="answer_ajax"),
 ]

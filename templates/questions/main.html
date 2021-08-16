@@ -3,34 +3,6 @@
 {% block script %}
 <link rel="stylesheet" href="{% static 'css/questions/main.css' %}">
 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-<script>
-    const requestAnswer = new XMLHttpRequest();
-    const onClickAnswer = (id) =>{
-        const url = '/questions/answer_ajax/';
-        requestAnswer.open('POST',url,true);
-        requestAnswer.setRequestHeader(
-            'Content-Type',
-            'application/x-www-form-urlencoded'
-        );
-        requestAnswer.send(JSON.stringify({id:id}));
-    };
-    const AnswerHandleResponse = () =>{
-        if(requestAnswer.status < 400){
-            const answer = requestAnswer.response;
-            const answerab = document.querySelector('.answerabc');
-            answerab.innerHTML =`
-            <div >
-                ${answer}
-            </div>
-            `
-        };
-    };
-    requestAnswer.onreadystatechange = () =>{
-        if(requestAnswer.readyState === XMLHttpRequest.DONE){
-            AnswerHandleResponse();
-        };
-    };
-</script>
 <style>
     .accordion {
         background-color: #FFFFFF;
@@ -65,21 +37,7 @@
         border-bottom: 1px solid #EEEEEE;
     }
 </style>
-<script>
-    var acc = document.getElementsByClassName("accordion");
-    var i;
-    for (i = 0; i < acc.length; i++) {
-        acc[i].addEventListener("click", function () {
-            this.classList.toggle("active");
-            var panel = this.nextElementSibling;
-            if (panel.style.maxHeight) {
-                panel.style.maxHeight = null;
-            } else {
-                panel.style.maxHeight = panel.scrollHeight + "px";
-            }
-        });
-    }
-</script>
+
 {% endblock %}
 {% block content %}
 <!-- 네비바 아래로 가게하는 컨테이너 -->
@@ -223,13 +181,31 @@
             </div>
             <div class="folder_area">
             {{request.user.folder_user.folder_name}}
-                <button class="accordion" onclick ="onClickAnswer({{ request.user.id }})">내가 남긴 답변</button>
+            </div>
+            <div class="my_answer_container">
+                <button class="accordion">내가 남긴 답변</button>
                     <div class="panel answerabc">
                             {% for answers in answer %}
                                 {{answers}}
                             {% endfor %}
                     </div>
+                </div>
             </div>
         </div>
     </div>
+    <script>
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.maxHeight) {
+                    panel.style.maxHeight = null;
+                } else {
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                }
+            });
+        }
+    </script>
 {% endblock %}
