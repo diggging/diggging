@@ -16,6 +16,7 @@ def comment(request):        #! 이름 바꿈!
     req = json.loads(request.body)
     post_id = req["id"]
     comment_content = req["text"]
+    print(req)
     post = Post.objects.get(id=post_id)
     # TODO: comment ajax 문제에서 comment.save()로 바꿔보았습니다. 잘 되는지 확인 부탁드려요
     comment = Comment.objects.create(post=post, text=comment_content, user=request.user)
