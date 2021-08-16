@@ -3,6 +3,10 @@
 {% block script %}
 <link rel="stylesheet" href="{% static 'css/questions/main.css' %}">
 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/vs2015.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script type="text/javascript">hljs.highlightAll();</script>
+<script type="text/javascript">hljs.initHighlightingOnLoad();</script>
 <script>
     const requestAnswer = new XMLHttpRequest();
     const onClickAnswer = (id) =>{
