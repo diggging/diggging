@@ -3,97 +3,46 @@
 {% block script %}
 <link rel="stylesheet" href="{% static 'css/questions/main.css' %}">
 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+<style>
+    .accordion {
+        background-color: #FFFFFF;
+        cursor: pointer;
+        padding: 16px;
+        width: 100%;
+        outline: none;
+        border: none;
+        text-align: left;
+        font-size: 16px;
+        transition: 0.4s;
+    }
+    .active, .accordion:hover {
+        background-color: #F5F5F5;
+        font-weight: bold;
+    }
+    .accordion:after {
+        content: '\002B';
+        font-weight: bold;
+        float: right;
+        margin-left: 5px;
+    }
+    .active:after {
+        content: "\2212";
+    }
+    .panel {
+        padding: 0 16px;
+        background-color: #FFFFFF;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.2s ease-out;
+        border-bottom: 1px solid #EEEEEE;
+    }
+</style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/vs2015.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script type="text/javascript">hljs.highlightAll();</script>
 <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
 <script>
-    const requestAnswer = new XMLHttpRequest();
-    const onClickAnswer = (id) =>{
-        const url = '/questions/answer_ajax/';
-        requestAnswer.open('POST',url,true);
-        requestAnswer.setRequestHeader(
-            'Content-Type',
-            'application/x-www-form-urlencoded'
-        );
-        requestAnswer.send(JSON.stringify({id:id}));
-    };
-    const AnswerHandleResponse = () =>{
-        if(requestAnswer.status < 400){
-            const answer = requestAnswer.response;
-            const obj = JSON.parse(answer);
-            const userObj = JSON.parse(obj.user); // 유저 데이터
-            
-            console.log(userObj);
-            console.log(obj)
 
-             //답변 데이터 -> 질문을 올린사람의 id가 필요
-            for (let i=0; i < obj.answer.length; i++) {
-                for (let j=0; j < userObj.length; j++){
-                    if(obj.answer[i].question_id === userObj[j].pk)
-                    obj.answer[i]['username'] = userObj[j].fields.username;
-                    obj.answer[i]['result'] = []
-                }
-            }
-            // console.log(answer[0][0].answers.user.user_nickname)
-            const answerab = document.querySelector('.answerabc');
-            
-
-            // title, desc, username
-            const title = [];
-            const desc = [];
-            const username = [];
-            for (let i=0; i < obj.answer.length; i++){
-                title.push(obj.answer[i].title)
-                desc.push(obj.answer[i].desc)
-                username.push(obj.answer[i].username)
-            }
-            
-            // result = [title, desc, username]
-            for (let i=0; i < obj.answer.length; i++) {
-                obj.answer[i]['result'].push(title[i])
-                obj.answer[i]['result'].push(desc[i])
-                obj.answer[i]['result'].push(username[i])
-            }
-
-            const result = []
-
-            for (let i=0; i < obj.answer.length; i++) {
-                result[i] = (obj.answer[i].result)
-            }
-
-            console.log(result[0])
-            console.log(result[1])
-
-            answerab.innerHTML =`
-            <div class="last_answer_box">
-                <div class="answer_id_0">
-                    ${result[0]}
-                </div>
-                <div class="answer_id_1">
-                    ${result[1]}
-                </div>
-                <div class="answer_id_2">
-                    ${result[2]}
-                </div>
-                <div class="answer_id_3">
-                    ${result[3]}
-                </div>
-                <div class="answer_id_4">
-                    ${result[4]}
-                </div>
-            </div>
-            `
-        }
-    };
-
-    requestAnswer.onreadystatechange = () =>{
-        if(requestAnswer.readyState === XMLHttpRequest.DONE){
-            AnswerHandleResponse();
-        };
-    };
-
-</script>
 {% endblock %}
 {% block content %}
 <!-- 네비바 아래로 가게하는 컨테이너 -->
@@ -232,15 +181,33 @@
             <div class="folder_area">
             {{request.user.folder_user.folder_name}}
             </div>
-            <!-- 오른쪽 아래 내가 남긴 답변 영역 -->
             <div class="my_answer_container">
-                <div>
-                    <button class="btn_my_answer" onclick="onClickAnswer({{request.user.id}})">내가 남긴 답변</button>
-                </div>
-                <div class="answerabc">
+                <button class="accordion">내가 남긴 답변</button>
+                    <div class="panel answerabc">
+                            {% for answers in answer %}
+                                {{answers.user}}
+                                {{answers.title}}
+                                {{answers.desc}}
+                                <br/>
+                            {% endfor %}
+                    </div>
                 </div>
             </div>
-            <!-- 내가 남긴 답변 영역 끝 -->
         </div>
     </div>
+    <script>
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.maxHeight) {
+                    panel.style.maxHeight = null;
+                } else {
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                }
+            });
+        }
+    </script>
 {% endblock %}

@@ -31,8 +31,9 @@ def question_main(request):
             selected_answer_posts.append(post)
     languages = [langs[0] for langs in Question_post.language_choices]
     search = request.POST.getlist("answers[]")
-    print(search)
     str_search = "".join(search)
+    answer = Answer.objects.all()
+    print(answer)
 
     #지수가 필요해서 넣은 것 : 질문 관련 폴더
     # 질문 모음
@@ -60,16 +61,19 @@ def question_main(request):
             request.user.user_level=3
     ctx = {
         "selected_answer_posts": selected_answer_posts,
-        "posts": posts, 
+        "posts": posts,
         "language": languages,
         "str_search": str_search,
+        "answer": answer,
+        # 내 모래포인트와 질문 관련한 폴더 접근 가능해야해요,,
         'my_all_sands': my_sand,    # sand 모든 object list
         'my_sand_sum' : my_sand_sum,    # 현재까지 sand 총합
         #  질문 관련한 폴더 접근 가능해야해요,,
     }
     return render(request, "questions/main.html", ctx)
 
-#-----------------------------------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------------------------------
 # 질문 CRUD
 def question_create(request):
     if request.method == "POST":
@@ -82,23 +86,35 @@ def question_create(request):
             me = posts.user
             language = request.POST.get("language")
             framework = request.POST.get("framework")  # framework 가져옴
-            lang_folder = QuestionFolder.objects.filter(folder_name=language, folder_user=me, folder_kind="language")
-            frame_folder = QuestionFolder.objects.filter(folder_name=framework, folder_user=me, folder_kind="framework")  # frameworkd folder 가져옴
-            
+            lang_folder = QuestionFolder.objects.filter(
+                folder_name=language, folder_user=me, folder_kind="language"
+            )
+            frame_folder = QuestionFolder.objects.filter(
+                folder_name=framework, folder_user=me, folder_kind="framework"
+            )  # frameworkd folder 가져옴
+
             if lang_folder.exists():
-                existed_folder = QuestionFolder.objects.get(folder_name=language, folder_user=me, folder_kind="language")
+                existed_folder = QuestionFolder.objects.get(
+                    folder_name=language, folder_user=me, folder_kind="language"
+                )
                 posts.question_folder.add(existed_folder)
             else:
-                new_folder = QuestionFolder.objects.create(folder_name=language, folder_user=me, folder_kind="language")
+                new_folder = QuestionFolder.objects.create(
+                    folder_name=language, folder_user=me, folder_kind="language"
+                )
                 posts.question_folder.add(new_folder)
 
             if frame_folder.exists():
                 # 있으면 foriegn key 연결
-                existed_folder = QuestionFolder.objects.get(folder_name=framework, folder_user=me, folder_kind="framework")
+                existed_folder = QuestionFolder.objects.get(
+                    folder_name=framework, folder_user=me, folder_kind="framework"
+                )
                 posts.question_folder.add(existed_folder)
             else:
                 # 없으면 folder 만들어서
-                new_folder = QuestionFolder.objects.create(folder_name=framework, folder_user=me, folder_kind="framework")
+                new_folder = QuestionFolder.objects.create(
+                    folder_name=framework, folder_user=me, folder_kind="framework"
+                )
                 posts.question_folder.add(new_folder)
 
             posts.save()
@@ -113,7 +129,8 @@ def question_create(request):
 
         return render(request, "questions/question_create.html", ctx)
 
-def get_answer_comments (request, answer_id):
+
+def get_answer_comments(request, answer_id):
     answer = Answer.objects.get(pk=answer_id)
     answer_comments = answer.answer_comments.all()
     ctx = {
@@ -121,6 +138,7 @@ def get_answer_comments (request, answer_id):
         "comments": answer_comments,
     }
     return render(request, "questions/question_detail.html", ctx)
+
 
 def question_update(request, pk):
     question_post = get_object_or_404(Question_post, pk=pk)
@@ -143,14 +161,26 @@ def question_update(request, pk):
                 origin_lang_fol.question_folder.remove(question_post)
                 # 2. post와 새로운 폴더와의 연결
                 # 이미 있는 폴더면 걍 넣어주고 아니면 생성후 넣어줌
-                lang_folder = QuestionFolder.objects.filter(folder_name=new_lang, folder_user=question_post.user, folder_kind="language")
+                lang_folder = QuestionFolder.objects.filter(
+                    folder_name=new_lang,
+                    folder_user=question_post.user,
+                    folder_kind="language",
+                )
                 if lang_folder.exists():
                     # 있으면 foriegn key 연결
-                    existed_folder = QuestionFolder.objects.get(folder_name=new_lang, folder_user=question_post.user, folder_kind="language")
+                    existed_folder = QuestionFolder.objects.get(
+                        folder_name=new_lang,
+                        folder_user=question_post.user,
+                        folder_kind="language",
+                    )
                     question_post.question_folder.add(existed_folder)
                 else:
-                # 없으면 folder 만들어서
-                    new_folder = QuestionFolder.objects.create(folder_name=new_lang, folder_user=question_post.user, folder_kind="language")
+                    # 없으면 folder 만들어서
+                    new_folder = QuestionFolder.objects.create(
+                        folder_name=new_lang,
+                        folder_user=question_post.user,
+                        folder_kind="language",
+                    )
                     question_post.question_folder.add(new_folder)
                 # 원래 폴더에 더이상 연결된 post가 없다면? 폴더삭제 / 있다면? 냅두기
                 print(origin_lang_fol.question_folder.all())
@@ -160,17 +190,31 @@ def question_update(request, pk):
             # framework
             if new_frame != origin_frame_fol.folder_name:
                 origin_frame_fol.question_folder.remove(question_post)
-                frame_folder = QuestionFolder.objects.filter(folder_name=new_frame, folder_user=question_post.user, folder_kind="framework")
+                frame_folder = QuestionFolder.objects.filter(
+                    folder_name=new_frame,
+                    folder_user=question_post.user,
+                    folder_kind="framework",
+                )
                 if frame_folder.exists():
-                    existed_folder = QuestionFolder.objects.get(folder_name=new_frame, folder_user=question_post.user, folder_kind="framework")
+                    existed_folder = QuestionFolder.objects.get(
+                        folder_name=new_frame,
+                        folder_user=question_post.user,
+                        folder_kind="framework",
+                    )
                     question_post.question_folder.add(existed_folder)
                 else:
-                    new_folder = QuestionFolder.objects.create(folder_name=new_frame, folder_user=question_post.user, folder_kind="framework")
+                    new_folder = QuestionFolder.objects.create(
+                        folder_name=new_frame,
+                        folder_user=question_post.user,
+                        folder_kind="framework",
+                    )
                     question_post.question_folder.add(new_folder)
                 if not origin_frame_fol.question_folder.all():
                     origin_frame_fol.delete()
-                    
-            return redirect("question:question_post_detail", question_post.user.id, question_post.id)
+
+            return redirect(
+                "question:question_post_detail", question_post.user.id, question_post.id
+            )
     else:
         form = QuestionPostForm(instance=question_post)
         ctx = {
@@ -178,12 +222,14 @@ def question_update(request, pk):
         }
         return render(request, "questions/question_update.html", ctx)
 
+
 def question_delete(request, pk):
     question_post = Question_post.objects.get(pk=pk)
     question_post.delete()
     return redirect("question:question_main")
 
-#------------------------------------------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------------------------------------------
 def question_post_detail(request, user_id, post_id):
     post_details = Question_post.objects.get(pk=post_id)
     me = get_object_or_404(User, pk=user_id)
@@ -208,7 +254,8 @@ def question_post_detail(request, user_id, post_id):
     }
     return render(request, "questions/question_detail.html", ctx)
 
-#-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------------
 # 질문 답변 작성 폼 관련 함수
 def answer_create(request, question_post_id):
     question = Question_post.objects.get(pk=question_post_id)
@@ -223,40 +270,49 @@ def answer_create(request, question_post_id):
             question_host = question.user
 
             # 질문에 답변이 달렸다는 알람 넣어주기
-            new_alarm = Alarm.objects.create(user=question_host, reason="내가 남긴 질문"+question.title+"에 답변이 달렸어요. 확인해보세요!")
-            return redirect("question:question_post_detail", question_host.id, question_post_id)
+            new_alarm = Alarm.objects.create(
+                user=question_host,
+                reason="내가 남긴 질문" + question.title + "에 답변이 달렸어요. 확인해보세요!",
+            )
+            return redirect(
+                "question:question_post_detail", question_host.id, question_post_id
+            )
     else:
         form = AnswerPostForm()
         ctx = {
-            'form': form,
+            "form": form,
         }
-        return render(request, 'questions/answer_create.html', ctx)
+        return render(request, "questions/answer_create.html", ctx)
+
 
 # 질문 답변 업데이트
 def answer_update(request, question_post_id, answer_id):
-    question_post = get_object_or_404(Question_post, pk= question_post_id)
+    question_post = get_object_or_404(Question_post, pk=question_post_id)
     answer = get_object_or_404(Answer, pk=answer_id)
     if request.method == "POST":
         form = AnswerPostForm(request.POST, request.FILES, instance=answer)
         if form.is_valid():
             form.save()
-            return redirect("question:question_post_detail", question_post.user.id, question_post_id)
+            return redirect(
+                "question:question_post_detail", question_post.user.id, question_post_id
+            )
     else:
         form = AnswerPostForm(instance=answer)
-        ctx = {
-            "form":form
-        }
+        ctx = {"form": form}
         return render(request, "questions/answer_update.html", ctx)
+
 
 # 질문 답변 삭제
 def answer_delete(request, question_post_id, answer_id):
     question_post = Question_post.objects.get(pk=question_post_id)
     answer = Answer.objects.get(pk=answer_id)
     answer.delete()
-    return redirect("question:question_post_detail", question_post.user.id, question_post_id)
+    return redirect(
+        "question:question_post_detail", question_post.user.id, question_post_id
+    )
 
 
-#----------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------
 # 질문 기록 퍼오기
 def get_question(request, question_post_id):
     question_post = get_object_or_404(Question_post, pk=question_post_id)
@@ -264,22 +320,22 @@ def get_question(request, question_post_id):
     target_framework = question_post.framework  # 어떤 framework인지 - 프레임워크 생성용
     me = request.user
 
-    lang_folder = QuestionFolder.objects.filter(folder_name=target_language, folder_user=me, folder_kind="language")
-    frame_folder = QuestionFolder.objects.filter(folder_name=target_framework, folder_user=me, folder_kind="framework")
+    lang_folder = QuestionFolder.objects.filter(
+        folder_name=target_language, folder_user=me, folder_kind="language"
+    )
+    frame_folder = QuestionFolder.objects.filter(
+        folder_name=target_framework, folder_user=me, folder_kind="framework"
+    )
 
     if lang_folder.exists():
         folder = QuestionFolder.objects.get(
-            folder_name = target_language,
-            folder_user = me,
-            folder_kind="language"
+            folder_name=target_language, folder_user=me, folder_kind="language"
         )
         folder.question_folder.add(question_post)
         folder.save()
     else:
         new_folder = QuestionFolder.objects.create(
-            folder_name = target_language,
-            folder_user = me,
-            folder_kind="language"
+            folder_name=target_language, folder_user=me, folder_kind="language"
         )
         question_post.folder.add(new_folder)
     question_post.save()
@@ -302,10 +358,19 @@ def get_question(request, question_post_id):
     question_post.save()
 
     # 퍼가기 할 때 sand 생성하기 - host꺼 생성해줘야함
-    new_sand = Sand.objects.create(user=question_post.user, amount=50, reason=me.user_nickname+"님의 내 질문 퍼가기")
-    new_alarm = Alarm.objects.create(user=question_post.user, reason=request.user.user_nickname+" 님이 내 질문 " + question_post.title + "을 퍼갔어요.")
+    new_sand = Sand.objects.create(
+        user=question_post.user, amount=50, reason=me.user_nickname + "님의 내 질문 퍼가기"
+    )
+    new_alarm = Alarm.objects.create(
+        user=question_post.user,
+        reason=request.user.user_nickname
+        + " 님이 내 질문 "
+        + question_post.title
+        + "을 퍼갔어요.",
+    )
 
     return redirect("question:question_post_detail", me.id, question_post_id)
+
 
 # 질문 채택 관련 함수 (모달에서 사용자가 채택 or 채택 해제에 동의했을때 사용)
 def chosen_answer(request, question_answer_id):
@@ -329,82 +394,3 @@ def chosen_answer(request, question_answer_id):
     # return render(request, 'questions/question_detail.html', ctx)
     # TODO: 의문점? else가 필요한가? 안필요할듯 
     return redirect('question:question_post_detail', is_answer_chosen.question.user.id, is_answer_chosen.question.id)
-
-#--------------------------------------------------------------------------------------------------
-# 도움이 되었어요, 스크랩 개수 count 하기 위한 axios
-# @csrf_exempt
-# def count_like_scrap_question(request):
-#     req = json.loads(request.body)
-#     question_post_id = req["id"]
-#     button_type = req["type"]
-#     question_post = Question_post.objects.get(id=question_post_id)
-#     question_host = question_post.user
-#     print(question_host)
-#     me = request.user
-#     if button_type == "like":
-#         question_post.helped_num += 1
-#         print(question_host)
-#         new_sand = Sand.objects.create(user=question_host, amount=20, reason="도움이 되었어요") # 이거 하는지 안하는지 모름
-#         new_alarm = Alarm.objects.create(user=question_host, reason="내가 남긴 질문 "+question_post.title+"이 "+me.user_nickname+" 님께 도움이 되었어요.")
-    
-#     elif button_type == "퍼오기":
-#         question_post.scrap_num += 1
-#     question_post.save()
-
-#     return JsonResponse({"id": question_post_id, "type": button_type})
-
-# 내가 남긴 답변 목록 ajax
-@csrf_exempt
-def answer_ajax(request):
-    req = json.loads(request.body)
-    user_id = req["id"]
-    users = User.objects.get(id=user_id)
-    answer = list(Answer.objects.filter().values().order_by("-created"))
-    user = User.objects.all()
-    user_list = serializers.serialize('json', user)
-    answer1 = Answer.objects.all()
-    for ans in answer1:
-        print(ans.question.user)
-
-    ctx = {
-        "answer": answer,
-        "user": user_list
-    }
-    return JsonResponse(ctx, safe=False)
-
-# question like
-@login_required
-@require_POST
-def question_like(request):
-    pk = request.POST.get("pk", None)
-    post = get_object_or_404(Question_post, pk=pk)
-    user = request.user
-
-    if post.likes_user.filter(id=user.id).exists():
-        post.likes_user.remove(user)
-        message = "좋아요 취소"
-    else:
-        post.likes_user.add(user)
-        message = "좋아요"
-
-    ctx = {"likes_count": post.count_likes_user(), "message": message}
-    return HttpResponse(json.dumps(ctx), content_type="application/json")
-
-
-@login_required
-@require_POST
-def question_scrap(request):
-    pk = request.POST.get("pk", None)
-    post = get_object_or_404(Question_post, pk=pk)
-    user = request.user
-
-    if post.scarps_user.filter(id=user.id).exists():
-        post.scarps_user.remove(user)
-        message = "퍼가기 취소"
-    else:
-        post.scarps_user.add(user)
-        message = "퍼가기"
-
-    ctx = {"scarps_count": post.count_scarps_user(), "message": message}
-    return HttpResponse(json.dumps(ctx), content_type="application/json")
-
