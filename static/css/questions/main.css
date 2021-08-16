@@ -332,3 +332,36 @@ form button {
     border: solid 1px var(--border-color);
     height: 10vh;
 }
+
+.accordion {
+    background-color: #FFFFFF;
+    cursor: pointer;
+    padding: 16px;
+    width: 100%;
+    outline: none;
+    border: none;
+    text-align: left;
+    font-size: 16px;
+    transition: 0.4s;
+}
+.active, .accordion:hover {
+    background-color: #F5F5F5;
+    font-weight: bold;
+}
+.accordion:after {
+    content: '\002B';
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+}
+.active:after {
+    content: "\2212";
+}
+.panel {
+    padding: 0 16px;
+    background-color: #FFFFFF;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    border-bottom: 1px solid #EEEEEE;
+}

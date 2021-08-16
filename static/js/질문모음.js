@@ -57,6 +57,7 @@ langBtn.addEventListener('click', () => {
             const txt = data.map(folder => {
                 return `
                 <button class="lang_post_btn" id="${folder.id}" value="${folder.id}">
+                    <i class="far fa-folder folder_icon fa-3x"></i>
                     ${folder.folder_name}
                 </button>    
                 `
@@ -125,6 +126,7 @@ const frameworkBtn = document.querySelector('.framework_btn');
                 const txt = data.map(folder => {
                     return `
                     <button class="framework_post_btn" id="${folder.id}" value="${folder.id}">
+                        <i class="far fa-folder folder_icon fa-3x"></i>
                         ${folder.folder_name}
                     </button>    
                     `

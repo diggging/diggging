@@ -145,7 +145,7 @@
     </div>
     
     <!-- 내 마이페이지 -->
-    <div class="first_container my_container">
+    <div class="first_container">
         <div class="profile_container">
             {% if request.user.pk == host.pk %}
                 <div class="profile_area">
@@ -274,56 +274,47 @@
         </div>
         <div class="sand_pour_area"></div>
     </div>
-    <div class="second_container my_container">
-        <div class="category_tab">
-            <div id="btn_tap">
-                <button id="btn1" class="language_btn" value="{{host.id}}">언어</button>
-                <button id="btn3" class="framework_btn"  value="{{host.id}}">프레임워크</button>
+    <div class="right_container">
+        <div class="second_container">
+            <div class="category_tab">
+                <div id="btn_tap">
+                    <button id="btn1" class="language_btn" value="{{host.id}}">언어</button>
+                    <button id="btn3" class="framework_btn"  value="{{host.id}}">프레임워크</button>
+                </div>
+                <div class="folder_category">
+                    </button>
+                </div>
             </div>
-            <div class="folder_category">
-                </button>
+    
+    
+            <div class="folder_area">
             </div>
+    
+    
         </div>
-
-
-        <div class="folder_area">
-            <div id="myCarousel" class="carousel slide" data-ride="carousel">
-                <!-- Wrapper for slides -->
-                {% for folder in framework_folders %}
-                    <div class="folder_space">
-                        <button type="button" class="{{folder}}">
-                            <i class="far fa-folder folder_icon fa-2x"></i>  
-                            <span class="folder_name">{{folder}}</span>\
-                        </button>
-                    </div>
-                {% endfor %}
-            </div>
+        <!-- 질문버튼 눌렀을 때도 그에 해당하는 디렉토리들이 다르게 떠야함 -->
+            {%comment%}
+        <div class="last_log_box post__dig">
+            {% for log in my_recent_logs %}
+                <div class="last_log_list">
+                    {{log.title}}
+                </div>
+            {% endfor %}
         </div>
-
-
-    </div>
-    <!-- 질문버튼 눌렀을 때도 그에 해당하는 디렉토리들이 다르게 떠야함 -->
-        {%comment%}
-    <div class="last_log_box post__dig">
-        {% for log in my_recent_logs %}
-            <div class="last_log_list">
-                {{log.title}}
+        <div class="last_question_box post__question">
+            <!-- 질문버튼 누르면 최근 질문 기록도 같이 뜸 -->
+            {% for question in my_recent_questions %}
+                <div class="last_question_list">
+                    {{question.title}}
+                </div>
+            {% endfor %}
+        </div>
+        </div>
+        {%endcomment%}
+        <!-- 폴더 눌렀을 때 글 목록 뜨는 곳 -->
+        <div class="third_container">
+            <div class="my_post_list">
             </div>
-        {% endfor %}
-    </div>
-    <div class="last_question_box post__question">
-        <!-- 질문버튼 누르면 최근 질문 기록도 같이 뜸 -->
-        {% for question in my_recent_questions %}
-            <div class="last_question_list">
-                {{question.title}}
-            </div>
-        {% endfor %}
-    </div>
-    </div>
-    {%endcomment%}
-    <!-- 폴더 눌렀을 때 글 목록 뜨는 곳 -->
-    <div class="third_container my_container">
-        <div class="my_post_list">
         </div>
     </div>
 {% endblock %}
