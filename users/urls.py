@@ -49,8 +49,6 @@ urlpatterns = [
     #질문모음 ajax
     path('<int:pk>/questions_lang_folder/', views.questions_lang_folder, name="questions_lang_folder"),
     path('<int:pk>/questions_lang_post/', views.questions_lang_post, name="questions_lang_post"),
-    path('<int:pk>/questions_problem_folder/', views.questions_problem_folder, name="questions_problem_folder"),
-    path('<int:pk>/questions_problem_post/', views.questions_problem_post, name="questions_problem_post"),
     path('<int:pk>/questions_framework_folder/', views.questions_framework_folder, name="questions_framework_folder"),
     path('<int:pk>/questions_framework_post/', views.questions_framework_post, name="questions_framework_post"),
 

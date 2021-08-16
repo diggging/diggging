@@ -176,6 +176,7 @@
             );
             const text = document.querySelector(`.comment_input`).value;
             requestComment.send(JSON.stringify({ id: id, text: text }));
+            console.log(requestComment);
         };
         const commentHandleResponse = () => {
             if (requestComment.status < 400) {

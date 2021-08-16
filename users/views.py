@@ -558,35 +558,22 @@ def questions_lang_folder(request, pk):
 
 def questions_lang_post(request, pk):
     folder = QuestionFolder.objects.get(pk=pk)
-    posts = Question_post.objects.filter(folder=folder)
+    posts = Question_post.objects.filter(question_folder=folder)
     data = posts.values()
-
-    return JsonResponse(list(data), safe=False)
-
-def questions_problem_folder(request, pk):
-    host = get_object_or_404(User, pk=pk)
-    folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="solved")
-    data = folder.values()
-    
-    return JsonResponse(list(data), safe=False)
-
-def questions_problem_post(request, pk):
-    folder = QuestionFolder.objects.get(pk=pk)
-    posts = Question_post.objects.filter(folder=folder)
-    data = posts.values()
-
+    print(folder)
+    print(posts)
     return JsonResponse(list(data), safe=False)
 
 def questions_framework_folder(request, pk):
     host = get_object_or_404(User, pk=pk)
-    folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="solved")
+    folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
     data = folder.values()
     
     return JsonResponse(list(data), safe=False)
 
 def questions_framework_post(request, pk):
     folder = QuestionFolder.objects.get(pk=pk)
-    posts = Question_post.objects.filter(folder=folder)
+    posts = Question_post.objects.filter(question_folder=folder)
     data = posts.values()
 
     return JsonResponse(list(data), safe=False)

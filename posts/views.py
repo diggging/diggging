@@ -76,7 +76,6 @@ def scrap_axios(request):
     posts_scrap = paginator.page(page_num)
     my_recent_post_list = serializers.serialize('json', posts_scrap)
 
-    
     if is_ajax(request):
         return render(request, 'posts/_posts.html', {'posts': posts_scrap})
         # return JsonResponse(ctx, safe=False)
