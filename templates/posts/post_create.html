@@ -1,75 +1,75 @@
-
 {% load static %}
 {% block script %}
-    <link rel="stylesheet" href="{% static 'css/post_create.css' %}" />
-    <!-- <link rel="stylesheet" href="../../../highlight/styles/base16/framer.min.css"> -->
-    <link href="ckeditor/plugins/codesnippet/lib/highlight/styles/equilibrium-dark.min.css" rel="stylesheet">
-    <script src="ckeditor/plugins/codesnippet/lib/highlight/highlight.min.js"></script>
-    {% endblock script %}
+<link rel="stylesheet" href="{% static 'css/post_create.css' %}" />
+<!-- <link rel="stylesheet" href="../../../highlight/styles/base16/framer.min.css"> -->
+<link href="ckeditor/plugins/codesnippet/lib/highlight/styles/monokai-sublime.min.css" rel="stylesheet">
+<script src="ckeditor/plugins/codesnippet/lib/highlight/highlight.min.js"></script>
+{% endblock script %}
 {% block content %}
-    <div class="create_title">
-        <h1>삽질기록 남기기</h1>
-        <br>
-    </div>
+<div class="create_title">
+    <h1>삽질기록 남기기</h1>
+    <br>
+</div>
 
-    <div class="container">
-        <div class="form_container">
-            <form method="POST" enctype="multipart/form-data" autocomplete="off">
-                {% csrf_token %}
-                {{ form.media }}
-                <div class="thumbnail_area">
-                    <label for="id_image">
-                        <!-- <img id="thumbnail" src="{% static 'image/thumbnail_image.svg' %}" /> -->
-                        <img id="image" src="" alt="" onError="this.onerror=null;this.src='../../static/image/thumbnail_image.svg';" />
-                    </label>
-                    {{ form.image }}
-                </div>
-                {{ form.title }}
-                <div class="choice_area">
-                    {{ form.language }}
-                    {% comment %}
-                    프레임워크 연결 확인용 html 코드 by 현주
-                    {% endcomment %}
-                    {{ form.framework }}
-                    <label for="id_os">운영체제    {{ form.os }}</label>
-                    {{ form.problem_solving }}
-                </div>
-                <div class="error_area">
-                    {{ form.error_message }}
-                </div>
-                <div class="desc_area">
-                    {{ form.desc }}
-                </div>
-                <div class="tag_area">
-                    공개설정 | 
-                    <!-- <input type="radio" id="id_is_public" />
+<div class="container">
+    <div class="form_container">
+        <form method="POST" enctype="multipart/form-data" autocomplete="off">
+            {% csrf_token %}
+            {{ form.media }}
+            <div class="thumbnail_area">
+                <label for="id_image">
+                    <!-- <img id="thumbnail" src="{% static 'image/thumbnail_image.svg' %}" /> -->
+                    <img id="image" src="" alt=""
+                        onError="this.onerror=null;this.src='../../static/image/thumbnail_image.svg';" />
+                </label>
+                {{ form.image }}
+            </div>
+            {{ form.title }}
+            <div class="choice_area">
+                {{ form.language }}
+                {% comment %}
+                프레임워크 연결 확인용 html 코드 by 현주
+                {% endcomment %}
+                {{ form.framework }}
+                <label for="id_os">운영체제 {{ form.os }}</label>
+                {{ form.problem_solving }}
+            </div>
+            <div class="error_area">
+                {{ form.error_message }}
+            </div>
+            <div class="desc_area">
+                {{ form.desc }}
+            </div>
+            <div class="tag_area">
+                공개설정 |
+                <!-- <input type="radio" id="id_is_public" />
                     <label for="">전체공개</label>
                     <input type="radio" id="id_is_public" />
                     <label for="">비공개</label>
                     <input type="radio" id="id_is_public" />
                     <label for="">이웃공개</label> -->
-                    {{form.is_public}}
-                </div>
-                <div class="btn_area">
-                    <button class="btn_control">임시저장</button>                   
-                        <input type="submit" value="기록 남기기" class="btn_control"/>
-                    <button  class="btn_control">
-                        <a href="{% url 'posts:main' %}">나가기</a>
-                    </button>
-                </div>
-            </form>
-        </div>
+                {{form.is_public}}
+            </div>
+            <div class="btn_area">
+                <button class="btn_control">임시저장</button>
+                <input type="submit" value="기록 남기기" class="btn_control" />
+                <button class="btn_control">
+                    <a href="{% url 'posts:main' %}">나가기</a>
+                </button>
+            </div>
+        </form>
     </div>
+</div>
 
-    <!-- <form id="form_img">
+<!-- <form id="form_img">
         <input type='file' onchange="upload_img(this);" />
         <img id="img_id" src="#" alt="your image" />
     </form> -->
 
-    <script>
-        document.getElementById('id_image').onchange = function () {
-            var src = URL.createObjectURL(this.files[0])
-            document.getElementById('image').src = src
-        }
-    </script>
+<script>
+    document.getElementById('id_image').onchange = function () {
+        var src = URL.createObjectURL(this.files[0])
+        document.getElementById('image').src = src
+    }
+</script>
 {% endblock %}

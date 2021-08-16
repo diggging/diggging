@@ -77,10 +77,13 @@ CKEDITOR_CONFIGS = {
             {'name': 'insert',
             'items': ['Image', 'Table','CodeSnippet']},
             ],
-        'extraPlugins': 'codesnippet, uploadwidget, codesnippetgeshi',
-        'codeSnippetGeshi_url': '../lib/colorize.php',
-
-    }
+        'extraPlugins': ','.join(
+            [
+                'codesnippet', 'uploadwidget',
+            ]
+        ),
+        'codeSnippet_theme': 'monokai_sublime',
+    },
 }
 
 
