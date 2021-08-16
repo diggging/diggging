@@ -73,7 +73,9 @@
             } else {
                 const txt = data.map(folder => {
                     return `
+                    <button class="lang_post_btn" id="${folder.id}" value="${folder.id}">
                         ${folder.folder_name}
+                    </button>    
                     `
                 })
                 categoryTab.innerHTML = txt;
@@ -103,7 +105,9 @@
             } else {
                 const txt = data.map(folder => {
                     return `
+                    <button class="lang_post_btn" id="${folder.id}" value="${folder.id}">
                         ${folder.folder_name}
+                    </button>    
                     `
                 })
                 categoryTab.innerHTML = txt;
@@ -133,7 +137,9 @@
             } else {
                 const txt = data.map(folder => {
                     return `
+                    <button id="${folder.id}" value="${folder.id}">
                         ${folder.folder_name}
+                    </button>    
                     `
                 })
                 categoryTab.innerHTML = txt;
@@ -164,7 +170,9 @@
             } else {
                 const txt = data.map(folder => {
                     return `
+                    <button class="" id="${folder.id}" value="${folder.id}">
                         ${folder.folder_name}
+                    </button>    
                     `
                 })
                 categoryTab.innerHTML = txt;
@@ -172,7 +180,37 @@
         })
     })
 </script>
-
+<script>
+    const langPostBtn = document.querySelectorAll('.lang_post_btn');
+    console.log(langPostBtn)
+    langPostBtn.addEventListener('click', () => {
+        id =langPostBtn.value;
+        var a = "http://127.0.0.1:8000/users/" + id
+        var url = a + "/lang_folder_posts/"
+        
+        fetch(url, {
+            method: "GET",
+            headers : { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            if (data.length === 0) {
+                categoryTab.innerHTML = "폴더없음"
+            } else {
+                const txt = data.map(post => {
+                    return `
+                    ${post}    
+                    `
+                })
+                categoryTab.innerHTML = txt;
+            }
+        })
+    })
+</script>
 <!-- 최근 (기록/질문) 뜨게하기 -->
 <!-- 구현하려다가 어려워서 넘김.. 기존데이터를 가져와서 출력해주는거 알아보기....ajax어렵당.. -->
 {%comment%}

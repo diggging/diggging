@@ -43,6 +43,8 @@ urlpatterns = [
     path('<int:pk>/lang_folder/', views.lang_folder, name="lang_folder"),
     path('<int:pk>/solved_folder/', views.solved_folder, name="solved_folder"),
     path('<int:pk>/framework_folder/', views.framework_folder, name="framework_folder"),
+    ##
+    path('<int:pk>/lang_folder_posts/', views.lang_folder_posts, name="lang_folder_posts"),
 
 
 ] 

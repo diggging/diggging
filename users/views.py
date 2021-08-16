@@ -355,6 +355,13 @@ def framework_folder(request, pk):
 
     return JsonResponse(list(data), safe=False)
 
+@csrf_exempt
+def lang_folder_posts(request, pk):
+    folder = Folder.objects.get(pk=pk)
+    posts = Post.objects.filter(folder=folder)
+    data = posts.values()
+
+    return JsonResponse(list(data), safe=False)
 
 # 한번 누르면 follow, 두번 누르면 unfollow
 def follow(request, host_pk):
