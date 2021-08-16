@@ -10,7 +10,6 @@ const appendElements = async (scrollElement, counter, baseUrl) => {
     let req = await fetchPage(url);
     if (req.ok) {
         let body = await req.text();
-        console.log(body)
         scrollElement.innerHTML += body;
     } else {
         end = true;

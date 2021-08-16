@@ -14,8 +14,10 @@ from .forms import SelectForm, PostForm
 import json
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
+from questions.models import Question_post, Answer, QuestionFolder
+
 
 # main 페이지
 def main(request):
@@ -69,12 +71,15 @@ def is_ajax(request):
 
 # main axios
 @require_GET
-def scrap_axios(request):
+def scrap_axios(request):    
+    posts = Question_post.objects.all() ##질문만 받아오기
     all_posts_scrap = Post.objects.all().order_by("-scrap_num")
+
+    post = Post.objects.filter()
+
     paginator = Paginator(all_posts_scrap, 8)
     page_num = request.GET.get("page")
     posts_scrap = paginator.page(page_num)
-    my_recent_post_list = serializers.serialize('json', posts_scrap)
 
     if is_ajax(request):
         return render(request, 'posts/_posts.html', {'posts': posts_scrap})
