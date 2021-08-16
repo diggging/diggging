@@ -2,10 +2,10 @@ import os
 import users
 import requests
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
+#from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from django.views.generic.base import TemplateView
+#from django.views.generic.base import TemplateView
 #from .forms import SignUpForm
 from .forms import UserCustomCreationForm, AuthenticationCustomForm
 from .models import User, Sand, Alarm
@@ -13,9 +13,7 @@ from posts.models import Folder, Post
 from questions.models import Question_post, Answer, QuestionFolder
 from django.views import View
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, PasswordResetForm
 from django.contrib.auth.hashers import check_password
-from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView
 # 이메일 인증 관련 import
 import logging
 from django.http import HttpResponse
@@ -28,22 +26,19 @@ from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from django.core.mail import EmailMessage
 from django.utils.encoding import force_bytes, force_text
 from .tokens import account_activation_token, password_reset_token
-from django.urls import reverse_lazy
 from django.contrib import messages
-from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib.sites.models import Site
+# from django.contrib.messages.views import SuccessMessageMixin
+# from django.contrib.sites.models import Site
 from django.views.decorators.csrf import csrf_exempt
 
 from django.http.response import JsonResponse
-import json
+# import json
 
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
 # 회원가입
 def signup(request):
-    #if request.user.is_authenticated:
-    #    return redirect('users:my_page')
     if request.method == "POST":
         user_form = UserCustomCreationForm(request.POST)
         if user_form.is_valid():
@@ -63,12 +58,10 @@ def signup(request):
             email = EmailMessage(mail_subject, message, to=[to_email])
             email.send()
 
+            # user가 생기자마자 바로 해결, 미해결 폴더 만들기
             solved = Folder.objects.create(folder_user=user, folder_name="해결")
             not_solved = Folder.objects.create(folder_user=user, folder_name="미해결")
             # return HttpResponse('Please confirm your email address to complete the registration') -> 이메일 인증 성공 확인 가능 메세지
-            # user가 생기자마자 바로 해결, 미해결 폴더 만들기
-            solved = Folder.objects.create(folder_user=user, folder_name="해결" , folder_kind="solved")
-            not_solved = Folder.objects.create(folder_user=user, folder_name="미해결", folder_kind="solved")
 
             return redirect('users:login')
     else:
@@ -81,7 +74,6 @@ def signup(request):
 
 # 이메일 인증 후 계정 활성화
 def activate(request, uidb64, token):
-    print("sdfsdf")
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
@@ -105,9 +97,6 @@ def log_in(request):
             login(request, form.get_user(), backend='django.contrib.auth.backends.ModelBackend') # 추가
             user = form.get_user()
             return redirect('users:my_page', user.pk)
-        # else:
-        #     context.update({"error_messages:해당하는 유저 정보가 없습니다."})
-        #     return render(request, template_name="users/login.html")
         
     else:
         form = AuthenticationCustomForm()
@@ -132,7 +121,6 @@ def password_reset(request):
             #있으면 메일 보내기
             user = User.objects.get(email=email, username=username)
             current_site = get_current_site(request)
-            print(current_site)
             message = render_to_string('users/password_reset_email.html', {
                 'user': user,
                 #'domain': current_site.domain,
@@ -159,7 +147,6 @@ def password_reset(request):
 
 # 이메일 인증
 def password_reset_email(request, uidb64, token):
-    print("aaa")
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
@@ -223,14 +210,11 @@ def github_callback(request):
                 )
                 
                 profile_json = profile_request.json()
-                print(profile_json) # for test
                 user_name = profile_json.get("login", None)
                 if user_name is not None:
                     email = profile_json.get("email")
-                    print(email) # for test
                     try:
                         user = User.objects.get(email=email)
-                        print(user)
                         if user.login_method != User.LOGIN_GITHUB:
                             raise Exception(f"Please log in with: {user.login_method}")
                     except User.DoesNotExist:
@@ -282,7 +266,6 @@ def my_page(request, pk):
     # 모래
     my_sand = Sand.objects.filter(user = host)
     my_sand_sum = my_sand.aggregate(Sum('amount'))
-    print(my_sand_sum)
     if my_sand_sum['amount__sum'] == None:
         my_sand_sum = 0
     else:
@@ -294,9 +277,6 @@ def my_page(request, pk):
             host.user_level=2
         else:
             host.user_level=3
-
-    print(my_sand)
-    print(my_sand_sum)
 
     ctx = {
         # 왼쪽 상단을 위한 변수
@@ -343,7 +323,6 @@ def my_posts(request, host_id):
     # 모래
     my_sand = Sand.objects.filter(user = host)
     my_sand_sum = my_sand.aggregate(Sum('amount'))
-    print(my_sand_sum)
     if my_sand_sum['amount__sum'] == None:
         my_sand_sum = 0
     else:
@@ -355,9 +334,6 @@ def my_posts(request, host_id):
             host.user_level=2
         else:
             host.user_level=3
-
-    print(my_sand)
-    print(my_sand_sum)
 
     ctx = {
         # 왼쪽 상단을 위한 변수
@@ -402,7 +378,6 @@ def my_questions(request, host_id):
     # 모래
     my_sand = Sand.objects.filter(user = host)
     my_sand_sum = my_sand.aggregate(Sum('amount'))
-    print(my_sand_sum)
     if my_sand_sum['amount__sum'] == None:
         my_sand_sum = 0
     else:
@@ -414,9 +389,6 @@ def my_questions(request, host_id):
             host.user_level=2
         else:
             host.user_level=3
-
-    print(my_sand)
-    print(my_sand_sum)
 
     ctx = {
         # 왼쪽 상단을 위한 변수
@@ -461,7 +433,6 @@ def my_answers(request, host_id):
     # 모래
     my_sand = Sand.objects.filter(user = host)
     my_sand_sum = my_sand.aggregate(Sum('amount'))
-    print(my_sand_sum)
     if my_sand_sum['amount__sum'] == None:
         my_sand_sum = 0
     else:
@@ -473,9 +444,6 @@ def my_answers(request, host_id):
             host.user_level=2
         else:
             host.user_level=3
-
-    print(my_sand)
-    print(my_sand_sum)
 
     ctx = {
         # 왼쪽 상단을 위한 변수
@@ -560,8 +528,6 @@ def questions_lang_post(request, pk):
     folder = QuestionFolder.objects.get(pk=pk)
     posts = Question_post.objects.filter(question_folder=folder)
     data = posts.values()
-    print(folder)
-    print(posts)
     return JsonResponse(list(data), safe=False)
 
 def questions_framework_folder(request, pk):
@@ -595,7 +561,7 @@ def follow(request, host_pk):
         me.user_following.add(host)
         # host의 follower에 나 추가
         host.user_followed.add(me)
-        host_alarm = Alarm.objects.create(user=host, reason=me.user_nickname+"님이 나를 팔로우합니다.")
+        host_alarm = Alarm.objects.create(user=host, reason=me.user_nickname+" 님이 나를 팔로우합니다.")
     
     return redirect('users:my_page', host_pk)
 

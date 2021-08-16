@@ -179,7 +179,9 @@
                 <button>프레임워크</button>
             </div>
             <div class="folder_area">
-            {{request.user.folder_user.folder_name}}
+                {% for folder in question_folder %}
+                    {{folder.folder_name}}
+                {% endfor %}
             </div>
             <div class="my_answer_container">
                 <button class="accordion">내가 남긴 답변</button>

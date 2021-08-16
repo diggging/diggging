@@ -1,4 +1,4 @@
-from django.shortcuts import render
+#from django.shortcuts import render
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Comment
@@ -21,12 +21,13 @@ def comment(request):        #! 이름 바꿈!
     # TODO: comment ajax 문제에서 comment.save()로 바꿔보았습니다. 잘 되는지 확인 부탁드려요
     comment = Comment.objects.create(post=post, text=comment_content, user=request.user)
     comment.save() 
-    new_alarm = Alarm.objects.create(user=post.user, reason="내가 남긴 기록"+post.title+'에'+request.user.user_nickname+'님이 댓글을 남겼어요.')
+    new_alarm = Alarm.objects.create(user=post.user, reason="내가 남긴 기록 \""+post.title+'\" 에 '+request.user.user_nickname+' 님이 댓글을 남겼어요.')
     return JsonResponse({
         "id": post_id, 
         "text": comment_content,
         "comment_id": comment.id,
     })
+
 # delete comment
 @csrf_exempt
 def delete_comment(request):
@@ -53,7 +54,7 @@ def add_question_comment(request):
     comment.save()
     total_num_comments = post.comments.count()
     # TODO: 삽질 기록 부분 comment 부분과 마찬가지로 잘 작동하는지 봐주세요.
-    new_alarm = Alarm.objects.create(user=post.user, reason="내가 남긴 질문"+post.title+'에'+request.user.user_nickname+'님이 댓글을 남겼어요.')
+    new_alarm = Alarm.objects.create(user=post.user, reason="내가 남긴 질문 \""+post.title+'\" 에 '+request.user.user_nickname+' 님이 댓글을 남겼어요.')
     return JsonResponse({
         "id": post_id, 
         "text": comment_content,
@@ -89,12 +90,13 @@ def add_answer_comment(request):
     answer = Answer.objects.get(id=answer_id)
     answer_comment = Comment.objects.create(answer=answer, text=answer_comment_content, user=request.user)
     answer_comment.save()
-    new_alarm = Alarm.objects.create(user=answer.user, reason="내가 남긴 답변"+ answer.title+'에' + request.user.user_nickname+'님이 댓글을 남겼어요.')
+    new_alarm = Alarm.objects.create(user=answer.user, reason="내가 남긴 답변 \""+ answer.title+'\" 에 ' + request.user.user_nickname+' 님이 댓글을 남겼어요.')
     return JsonResponse({
         "id": answer_id,
         "text": answer_comment_content,
         "comment_id": answer_comment.id,
     })
+    
 @csrf_exempt
 def delete_answer_comment(request):
     req = json.loads(request.body)

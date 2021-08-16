@@ -1,7 +1,5 @@
 from django.db import models
-from posts import models as posts_models
 from core import models as core_models
-from tagging.fields import TagField
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.conf import settings
 
@@ -11,14 +9,14 @@ class Question_post(core_models.TimeStampModel):
         "users.User", related_name="question_user", on_delete=models.CASCADE
     )
     title = models.CharField(verbose_name="제목", max_length=50)
-    problem_choices = (
-        ("==선택==", "==선택=="),
-        ("해결", "해결"),
-        ("미해결", "미해결"),
-    )
-    problem_solving = models.CharField(
-        verbose_name="해결/미해결", max_length=10, choices=problem_choices, blank=False
-    )
+    # problem_choices = (
+    #     ("==선택==", "==선택=="),
+    #     ("해결", "해결"),
+    #     ("미해결", "미해결"),
+    # )
+    # problem_solving = models.CharField(
+    #     verbose_name="해결/미해결", max_length=10, choices=problem_choices, blank=False
+    # )
     os_choices = (
         ("==선택==", "==선택=="),
         ("전체", "전체"),
