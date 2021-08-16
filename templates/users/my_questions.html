@@ -9,7 +9,7 @@
 <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script> -->
 <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script> -->
 
-<script src="{% static 'js/삽질기록모음.js' %}"></script>
+<script src="{% static 'js/질문모음.js' %}"></script>
 
 <script>
     const modal = document.querySelector('.point_modal');
@@ -278,7 +278,6 @@
         <div class="category_tab">
             <div id="btn_tap">
                 <button id="btn1" class="language_btn" value="{{host.id}}">언어</button>
-                <button id="btn2" class="problem_btn" value="{{host.id}}">해결/미해결</button>
                 <button id="btn3" class="framework_btn"  value="{{host.id}}">프레임워크</button>
             </div>
             <div class="folder_category">

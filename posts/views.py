@@ -6,10 +6,7 @@ from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.http import HttpResponse
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-
 from django.views.decorators.http import require_POST, require_GET
-
-
 from .models import Post, Folder
 from users.models import Sand
 from . import models
@@ -17,8 +14,10 @@ from .forms import SelectForm, PostForm
 import json
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
+from questions.models import Question_post, Answer, QuestionFolder
+
 
 # main 페이지
 def main(request):
@@ -72,16 +71,27 @@ def is_ajax(request):
 
 # main axios
 @require_GET
-def scrap_axios(request):
+def scrap_axios(request):    
+    posts = Question_post.objects.all() ##질문만 받아오기
     all_posts_scrap = Post.objects.all().order_by("-scrap_num")
+
+    post = Post.objects.filter()
+
     paginator = Paginator(all_posts_scrap, 8)
     page_num = request.GET.get("page")
     posts_scrap = paginator.page(page_num)
 
     if is_ajax(request):
         return render(request, 'posts/_posts.html', {'posts': posts_scrap})
+        # return JsonResponse(ctx, safe=False)
 
     return render(request, 'posts/post_list.html', {'posts': posts_scrap})
+
+@csrf_exempt
+def test(request):
+    
+    return render(request, 'posts/test.html')
+
 
 @require_GET
 def helped_axios(request):
@@ -331,27 +341,6 @@ def post_delete(request, pk):
     posts = Post.objects.get(pk=pk)
     posts.delete()
     return redirect("posts:main")
-
-
-# def search(request):
-#     language = request.POST.get("post")
-#     framework = request.POST.get("framework")  # frmae work 현주가 추가
-#     post = request.POST.get("post", "")
-#     select_languages = request.POST.get("field")
-#     print(select_languages)
-#     select_os = request.POST.get("field2")
-#     select_solve = request.POST.get("field3")
-#     select_framwork = request.POST.get("field4")
-#     free_post = Post.objects.filter(language=language).order_by("-id")
-#     frame_post = Post.objects.filter(framework=framework).order_by("-id")
-#     form = SelectForm()
-#     ctx = {
-#         "free_post": free_post,
-#         "post": post,
-#         "form": form,
-#         "frame_post": frame_post,
-#     }
-#     return render(request, "posts/search.html", ctx)
 
 ## search input ajax
 @csrf_exempt

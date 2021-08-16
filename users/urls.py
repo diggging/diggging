@@ -38,6 +38,22 @@ urlpatterns = [
 
     path('<int:pk>/alarm', view= views.alarm, name="alarm"),
 
-    #마이페이지 ajax
-    path('<int:pk>/digging_folder/', views.digging_folder, name="digging_folder"),
+    #삽질기록모음 ajax
+    path('<int:pk>/lang_folder/', views.lang_folder, name="lang_folder"),
+    path('<int:pk>/solved_folder/', views.solved_folder, name="solved_folder"),
+    path('<int:pk>/framework_folder/', views.framework_folder, name="framework_folder"),
+    path('<int:pk>/lang_folder_posts/', views.lang_folder_posts, name="lang_folder_posts"),
+    path('<int:pk>/solved_folder_posts/', views.solved_folder_posts, name="solved_folder_posts"),
+    path('<int:pk>/framework_folder_posts/', views.framework_folder_posts, name="framework_folder_posts"),
+
+    #질문모음 ajax
+    path('<int:pk>/questions_lang_folder/', views.questions_lang_folder, name="questions_lang_folder"),
+    path('<int:pk>/questions_lang_post/', views.questions_lang_post, name="questions_lang_post"),
+    path('<int:pk>/questions_framework_folder/', views.questions_framework_folder, name="questions_framework_folder"),
+    path('<int:pk>/questions_framework_post/', views.questions_framework_post, name="questions_framework_post"),
+
+
+    # my page
+    path('<int:host_id>/my_page/my_posts', view=views.my_posts, name="my_posts"),
+    path('<int:host_id>/my_page/my_questions', view=views.my_questions, name="my_questions"),
 ] 

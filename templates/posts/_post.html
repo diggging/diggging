@@ -1,38 +1,38 @@
-<div class="post_card">
-    <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_image">
-        <div class="post_image_container">
-            {% if post.image %}
-            <img src="{{post.image.url}}" alt="" class="post_image_container">
-            {% endif %}
-        </div>
-    </a>
-    <div class="post_element">
-        <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_link">
-            <div class="post_title">
-                {{ post.title|truncatechars:26 }}
+    <div class="post_card">
+        <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_image">
+            <div class="post_image_container">
+                {% if post.image %}
+                <img src="{{post.image.url}}" alt="" class="post_image_container">
+                {% endif %}
             </div>
-            <div class="post_tag">
-                # {{ post.tag }}
-            </div>
-            <p class="post_desc">
-                {{ post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;" }}
-            </p>
         </a>
-    </div>
-    <div class="post_user">
-        <a href="{% url 'users:my_page' post.user.id %}" class="user_info">
-            {% if post.user.user_profile_image %}
-            <img src="{{post.user.user_profile_image.url}}" class="user_info_image">
-            {% endif %}
-            <span>
-                by {{post.user.username}}
-            </span>
-        </a>
-        <div class="likes">
-            :+1:
-            <div class="likes_count">
-                {{post.scrap_num}}
+        <div class="post_element">
+            <a href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}" class="post_link">
+                <div class="post_title">
+                    {{ post.title|truncatechars:26 }}
+                </div>
+                <div class="post_tag">
+                    # {{ post.tag }}
+                </div>
+                <p class="post_desc">
+                    {{ post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;" }}
+                </p>
+            </a>
+        </div>
+        <div class="post_user">
+            <a href="{% url 'users:my_page' post.user.id %}" class="user_info">
+                {% if post.user.user_profile_image %}
+                <img src="{{post.user.user_profile_image.url}}" class="user_info_image">
+                {% endif %}
+                <span>
+                    by {{post.user.username}}
+                </span>
+            </a>
+            <div class="likes">
+                :+1:
+                <div class="likes_count">
+                    {{post.scrap_num}}
+                </div>
             </div>
         </div>
     </div>
-</div>

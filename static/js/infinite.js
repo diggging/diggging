@@ -6,9 +6,8 @@ const fetchPage = async (url) => {
 
 const appendElements = async (scrollElement, counter, baseUrl) => {
 
-    let url = `${baseUrl}?page=${counter + 1}`
+    let url = `${baseUrl}?page=${counter + 1}` //url 변동되게 하는거 이런식으로 하면 될거 같다.
     let req = await fetchPage(url);
-
     if (req.ok) {
         let body = await req.text();
         scrollElement.innerHTML += body;
@@ -31,3 +30,6 @@ const attachInfiniteScroll = (sentinel, scrollElement, baseUrl) => {
     })
     observer.observe(sentinel);
 };
+
+
+
