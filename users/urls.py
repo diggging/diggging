@@ -40,5 +40,6 @@ urlpatterns = [
 
     #마이페이지 ajax
     path('<int:pk>/digging_folder/', views.digging_folder, name="digging_folder"),
+    path('<int:pk>/framework_folder/', views.framework_folder, name="framework_folder"),
     
 ] 

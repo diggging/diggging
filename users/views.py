@@ -315,7 +315,7 @@ def my_page(request, pk):
     }
     return render(request, template_name="users/my_page.html", context=ctx)
 
-###흠,,,,,
+###흠,,,,,삽질 기록모음
 @csrf_exempt
 def digging_folder(request, pk):
     host = get_object_or_404(User, pk=pk)
@@ -327,13 +327,19 @@ def digging_folder(request, pk):
     # |  Folder.objects.filter(
     #     folder_user=host, folder_kind="framework") | Folder.objects.filter(
     #         folder_user=host, folder_kind="solved")
-    user = User.objects.all()
     data = folder.values()
     
     return JsonResponse(list(data), safe=False)
 
+@csrf_exempt
+def framework_folder(request, pk):
+    host = get_object_or_404(User, pk=pk)
+    folder = Folder.objects.filter(folder_user=host, folder_kind="framework")
+    data = folder.values()
 
+    return JsonResponse(list(data), safe=False)
 
+    
 # 한번 누르면 follow, 두번 누르면 unfollow
 def follow(request, host_pk):
     # 여기서 오는 pk는 내가 follow하려는 사람의 pk임

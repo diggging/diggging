@@ -46,7 +46,7 @@
     })
 </script>
 
-<!-- ------------------------------------------------------------------------ -->
+<!--삽질 기록 모음-------------------------------------------------------------------------->
 <script>
     const logFolderBtn = document.getElementById('log_folder_btn');
     const categoryTab = document.querySelector('.folder_category');
@@ -81,9 +81,37 @@
         })
     })
 </script>
-<!-- ------------------------------------------------------------------------ -->
-
-
+<!--프레임워크별------------------------------------------------------------------------ -->
+<script>
+    const frameworkBtn = document.getElementById('framework_btn');
+    frameworkBtn.addEventListener('click', () => {
+        id =frameworkBtn.value;
+        var a = "http://127.0.0.1:8000/users/" + id
+        var url = a + "/framework_folder/"
+        
+        fetch(url, {
+            method: "GET",
+            headers : { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            if (data.length === 0) {
+                categoryTab.innerHTML = "폴더없음"
+            } else {
+                const txt = data.map(folder => {
+                    return `
+                        ${folder.folder_name}
+                    `
+                })
+                categoryTab.innerHTML = txt;
+            }
+        })
+    })
+</script>
 
 <!-- 최근 (기록/질문) 뜨게하기 -->
 <!-- 구현하려다가 어려워서 넘김.. 기존데이터를 가져와서 출력해주는거 알아보기....ajax어렵당.. -->
@@ -304,8 +332,8 @@
         <hr>
         <div class="btn_list_area">
             <button href="" class="list_btn" id="log_folder_btn" value="{{host.id}}">삽질 기록 모음 > </button>
-            <button class="list_btn" id="question_folder_btn">질문 모음 > </button>
-            <button class="list_btn">내가 남긴 답변 목록 > </button>
+            <button class="list_btn" id="question_folder_btn" value="{{host.id}}">질문 모음 > </button>
+            <button class="list_btn" value="{{host.id}}">내가 남긴 답변 목록 > </button>
             {% if request.user.pk == host.pk %}
             <a href = '{% url "users:account_detail" host.id %}'><button class="list_btn">계정 관리 > </button></a>
             {% else %}
@@ -315,9 +343,9 @@
     </div>
     <div class="second_container my_container">
         <div class="category_tab">
-            <button>언어</button>
-            <button>해결/미해결</button>
-            <button>프레임워크</button>
+            <button id="language_btn" value="{{host.id}}">언어</button>
+            <button id="problem_btn" value="{{host.id}}">해결/미해결</button>
+            <button id="framework_btn" value="{{host.id}}">프레임워크</button>
             <div class="folder_category">
 
             </div>
