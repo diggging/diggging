@@ -1,53 +1,22 @@
 from users.models import Alarm, User
-from comments.models import Comment
 from django.http.response import JsonResponse
 from django.core import serializers
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.http import HttpResponse
-from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 from .models import Post, Folder
 from users.models import Sand
-from . import models
 from .forms import SelectForm, PostForm
 import json
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db.models import Q
-from questions.models import Question_post, Answer, QuestionFolder
+from django.core.paginator import Paginator
+from questions.models import Question_post
 
 
 # main 페이지
 def main(request):
-    # # 모든 전체 글에서 스크랩 순위대로 추천
-    # all_posts_scrap = Post.objects.all().order_by("-scrap_num")
-    # # 모든 전체 글에서 도움 순위대로 추천
-    # all_posts_helped = Post.objects.all().order_by("-helped_num")
-
-    # # 이웃들의 최신 글을 긁어오는 코드
-    # me = request.user
-    # followings = me.user_following.all()
-    # if followings:
-    #     all_followings_posts = Post.objects.filter(user=followings[0])
-    #     for following in followings[1:]:
-    #         following_posts = Post.objects.filter(user=following)
-    #         all_followings_posts.union(following_posts)  # queryset append
-    #     all_followings_posts = all_followings_posts.order_by("-created")  # 생성 기준으로 listing
-    # else:
-    #     all_followings_posts = [] ## -> None으로 하면 js에서 오류 뜸
-
-    # # 내 최신 포스트
-    # my_recent_post = Post.objects.filter(user=me).order_by("-created")
-
-    # ctx = {
-    #     "posts_scrap": all_posts_scrap,  # 스크랩 순
-    #     "posts_helped": all_posts_helped,  # helped 순
-    #     "user": request.user,  # 나
-    #     "followings_posts": all_followings_posts,  # 내가 follow하는 사람들의 최신순 포스트
-    #     "my_recent_post": my_recent_post,  # 내 글 최신순
-    # }
     return render(request, "posts/post_list.html")
 
 def helped(request):
@@ -61,12 +30,6 @@ def my_recent(request):
 
 #-----------------------------------------------------------------------
 def is_ajax(request):
-    """
-    This utility function is used, as `request.is_ajax()` is deprecated.
-
-    This implements the previous functionality. Note that you need to
-    attach this header manually if using fetch.
-    """
     return request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest"
 
 # main axios
@@ -130,13 +93,6 @@ def follow_axios(request):
 
     return render(request, 'posts/post_list.html', {'posts': posts_follow})
 
-# @csrf_exempt
-# def my_recent_axios(request):
-#     me = request.user
-#     my_recent_post = Post.objects.filter(user=me).order_by("-created")
-#     my_recent_post_list = serializers.serialize('json', my_recent_post)
-
-#     return HttpResponse(my_recent_post_list, content_type="text/json-comment-filtered")
 @require_GET
 def my_recent_axios(request):
     me = request.user
@@ -248,8 +204,6 @@ def post_create(request):
                 existed_folder = Folder.objects.get(folder_user=me, folder_name=solve, folder_kind="solved")
                 posts.folder.add(existed_folder)
             else:
-                print(solve)
-                print(Folder.objects.get(folder_user=me, folder_name=solve))
                 existed_folder = Folder.objects.get(folder_user=me, folder_name=solve, folder_kind="solved")
                 posts.folder.add(existed_folder)
 
@@ -274,9 +228,6 @@ def post_update(request, pk):
     origin_lang_fol = post.folder.get(folder_kind="language")
     origin_frame_fol = post.folder.get(folder_kind="framework")
     origin_solve_fol = post.folder.get(folder_kind="solved")
-    print(origin_lang_fol)
-    print(origin_frame_fol)
-    print(origin_solve_fol)
     if request.method == "POST":
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
@@ -284,9 +235,6 @@ def post_update(request, pk):
             new_lang = request.POST.get("language")
             new_frame = request.POST.get("framework")
             new_solve = request.POST.get("problem_solving")
-            print(new_lang)
-            print(new_frame)
-            print(new_solve)
 
             # lang 폴더가 달라진다면?
             if new_lang != origin_lang_fol.folder_name:
@@ -498,41 +446,3 @@ def get_post(request, user_id, post_id):
     )
     # url: 저장 후 post_detail 페이지에 남아있음.
     return redirect("posts:post_detail", user_id, post_id)
-
-
-# @login_required
-# def like(request, post_pk):
-#     #특정 게시물에 대한 정보
-#     post = get_object_or_404(Post, pk = post_pk)
-#     user = request.user
-#     if user in post.like
-
-
-# 도움이 되었어요, 스크랩 개수 count 하기 위한 axios
-"""@csrf_exempt
-def count_like_scrap(request):
-    # json 문자열을 json.loads를 통해서 json 형태에서 파이썬 객체 형태로 parsing
-    # front 단에서 request.body를 통해서 넘어와야 하는 것들
-    # 1) 'id' (post의 id값)
-    # 2) 'type' (button이 도움이 되었어요 버튼인지 스크랩 개수 버튼인지의 여부)
-    req = json.loads(request.body)
-    post_id = req["id"]
-    button_type = req["type"]
-
-    post = Post.objects.get(id=post_id)
-    post_host = post.user
-    me = request.user
-    # 만약에 button type이 도움이 되었어요 버튼이면 도움이 되었어요 개수 + 1
-    # 만약에 button type이 퍼오기이라면 스크랩 개수 + 1
-    if button_type == "like":
-        post.helped_num += 1
-        new_sand = Sand.objects.create(user=post_host, amount=20, reason="도움이 되었어요") # 도움이 되었어요 누르면 sand 추가
-        new_alarm = Alarm.objects.create(user=post_host, reason="내가 남긴 기록 "+post.title+"이 "+me.user_nickname+" 님께 도움이 되었어요.")
-    elif button_type == "퍼오기":
-        post.scrap_num += 1
-
-    post.save()
-
-    # TODO: 굳이 JsonResponse 필요한가? (프론트엔드 단에서는 도움이 되었어요 or 스크랩 개수가 표현이 되지 않는 듯)
-    # if 전달할 내용이 없다면 Httpresponse로 가도 됨.
-    return JsonResponse({"id": post_id, "type": button_type})"""

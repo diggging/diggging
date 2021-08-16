@@ -2,36 +2,24 @@
 {% load static %}
 
 {% block script %}
-<script
-src="https://code.jquery.com/jquery-3.6.0.min.js"
-integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="{% static 'css/search.css' %}">
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="{% static 'js/search.js' %}"></script>
 {% endblock %}
 
 {% block content %}
+
 <body>
     <div class="main_container">
 
         <div class="input_container">
             <form class="input_form" method="post">
                 {% csrf_token %}
-                <input type="text"  class="search" id="search_input" placeholder="뭐라고 할까요?">
+                <input type="text" class="search" id="search_input" placeholder="뭐라고 할까요?">
             </form>
         </div>
-        
-
-        <!-- <div>
-            <form method="get">
-                {{myFilter.form}}
-                <button class="a" type="submit"> Search </button>
-            </form>
-            {% for post in posts %}
-                {{post.title}}
-            {% endfor %}
-        </div> -->
 
         <div>
             <form id="select" method="post" action="">
@@ -43,13 +31,11 @@ crossorigin="anonymous"></script>
 
         <div class="search_container">
             <div class="post_container">
-                
+
             </div>
         </div>
 
     </div>
     <script>
     </script>
-{% endblock %}
-
-            
+    {% endblock %}

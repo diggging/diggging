@@ -1,7 +1,4 @@
 from django import forms
-from django.db.models import fields
-from django.db.models.fields import BooleanField, files
-from django.forms.widgets import RadioSelect
 from .models import Post
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
