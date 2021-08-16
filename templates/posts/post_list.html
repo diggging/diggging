@@ -18,41 +18,39 @@
 </div>
 <div id="bottom-sentinel">
 </div>
+<button class="btn">버튼</button>
 <script>
+    // 페이지별로 데이터 보내주는 비동기
+    // 그 데이터를 또 무한 비동기 
+    
+    let baseUrl = "{% url 'posts:scrap_axios' %}"; //baseUrl만 바꿔주면 동기가 될꺼 같은데?
+    const a = () => {
+        const baseUrl = "{% url 'posts:scrap_axios' %}";
+        return baseUrl;
+    }
+
+    const b = () => {
+        const baseUrl = "{% url 'posts:helped_axios' %}";
+        return baseUrl;
+    }
+    
+    const c = () => {
+        const baseUrl = "{% url 'posts:follow_axios' %}";
+        return baseUrl;
+    }
+    const d = () => {
+        const baseUrl = "{% url 'posts:my_recent_axios' %}";
+        return baseUrl;
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         console.log( 'document was not ready, place code here' );
         let bottomSentinal = document.querySelector("#bottom-sentinel");
         let scrollElement = document.querySelector("#scroll-element");
-        let baseUrl = "{% url 'posts:scrap_axios' %}"; //baseUrl만 바꿔주면 동기가 될꺼 같은데?
+        
         attachInfiniteScroll(bottomSentinal, scrollElement, baseUrl);
+        console.log(baseUrl);
     });
-    
-    const helped = document.getElementById('helped');
-    console.log(helped);
-    
-    helped.addEventListener('click', () => {
-        console.log('클릭');
-    })
-    
-    const a = () => {
-        const url = "{% url 'posts:scrap_axios' %}";
-        console.log(url)
-    }
-
-    const b = () => {
-        const url = "{% url 'posts:helped_axios' %}";
-        console.log(url)
-    }
-    
-    const c = () => {
-        const url = "{% url 'posts:follow_axios' %}";
-        console.log(url)
-    }
-    const d = () => {
-        const url = "{% url 'posts:my_recent_axios' %}";
-        console.log(url)
-    }
-    
 </script>
 {% endblock %}
 

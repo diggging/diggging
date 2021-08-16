@@ -45,6 +45,8 @@ urlpatterns = [
     path('<int:pk>/framework_folder/', views.framework_folder, name="framework_folder"),
     ##
     path('<int:pk>/lang_folder_posts/', views.lang_folder_posts, name="lang_folder_posts"),
+    path('<int:pk>/solved_folder_posts/', views.solved_folder_posts, name="solved_folder_posts"),
+    path('<int:pk>/framework_folder_posts/', views.framework_folder_posts, name="framework_folder_posts"),
 
 
 ] 

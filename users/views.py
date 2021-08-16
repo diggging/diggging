@@ -355,8 +355,25 @@ def framework_folder(request, pk):
 
     return JsonResponse(list(data), safe=False)
 
+##folder post
 @csrf_exempt
 def lang_folder_posts(request, pk):
+    folder = Folder.objects.get(pk=pk)
+    posts = Post.objects.filter(folder=folder)
+    data = posts.values()
+
+    return JsonResponse(list(data), safe=False)
+
+@csrf_exempt
+def solved_folder_posts(request, pk):
+    folder = Folder.objects.get(pk=pk)
+    posts = Post.objects.filter(folder=folder)
+    data = posts.values()
+
+    return JsonResponse(list(data), safe=False)
+
+@csrf_exempt
+def framework_folder_posts(request, pk):
     folder = Folder.objects.get(pk=pk)
     posts = Post.objects.filter(folder=folder)
     data = posts.values()

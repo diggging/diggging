@@ -74,11 +74,20 @@ def scrap_axios(request):
     paginator = Paginator(all_posts_scrap, 8)
     page_num = request.GET.get("page")
     posts_scrap = paginator.page(page_num)
+    my_recent_post_list = serializers.serialize('json', posts_scrap)
 
+    
     if is_ajax(request):
         return render(request, 'posts/_posts.html', {'posts': posts_scrap})
+        # return JsonResponse(ctx, safe=False)
 
     return render(request, 'posts/post_list.html', {'posts': posts_scrap})
+
+@csrf_exempt
+def test(request):
+    
+    return render(request, 'posts/test.html')
+
 
 @require_GET
 def helped_axios(request):

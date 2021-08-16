@@ -139,13 +139,14 @@
             } else {
                 const txt = data.map(folder => {
                     return `
-                    <button id="${folder.id}" value="${folder.id}">
+                    <button class="problem_post_btn" id="${folder.id}" value="${folder.id}">
                         ${folder.folder_name}
                     </button>    
                     `
                 })
                 categoryTab.innerHTML = txt;
             }
+            problemPost()
         })
     })
 </script>
@@ -172,20 +173,21 @@
             } else {
                 const txt = data.map(folder => {
                     return `
-                    <button class="" id="${folder.id}" value="${folder.id}">
+                    <button class="framework_post_btn" id="${folder.id}" value="${folder.id}">
                         ${folder.folder_name}
                     </button>    
                     `
                 })
                 categoryTab.innerHTML = txt;
             }
+            framePost()
         })
     })
 </script>
 <script>
     const langPost = () => {
     const langPostBtn = document.querySelectorAll('.lang_post_btn');
-    
+    const thirdContainer = document.querySelector('.third_container');
     for(let i=0; i < langPostBtn.length; i++) {
         langPostBtn[i].addEventListener('click', () => {
             console.log(langPostBtn[i])
@@ -193,7 +195,7 @@
             id =langPostBtn[i].value;
             var a = "http://127.0.0.1:8000/users/" + id
             var url = a + "/lang_folder_posts/"
-            
+            console.log(url)
             fetch(url, {
                 method: "GET",
                 headers : { 
@@ -205,19 +207,93 @@
             .then(data => {
                 console.log(data)
                 if (data.length === 0) {
-                    categoryTab.innerHTML = "폴더없음"
+                    thirdContainer.innerHTML = "파일없음"
                 } else {
                     const txt = data.map(post => {
                         return `
                         ${post.title}    
                         `
                     })
-                    categoryTab.innerHTML = txt;
+                    thirdContainer.innerHTML = txt;
                 }
             })
         });
     }
     }
+</script>
+<script>
+    const problemPost = () => {
+        const problemBtn = document.querySelectorAll('.problem_post_btn');
+        const thirdContainer = document.querySelector('.third_container');
+        for(let i=0; i < problemBtn.length; i++) {
+            problemBtn[i].addEventListener('click', () => {
+                console.log(problemBtn[i])
+    
+                id =problemBtn[i].value;
+                var a = "http://127.0.0.1:8000/users/" + id
+                var url = a + "/solved_folder_posts/"
+                
+                fetch(url, {
+                    method: "GET",
+                    headers : { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data)
+                    if (data.length === 0) {
+                        thirdContainer.innerHTML = "파일없음";
+                    } else {
+                        const txt = data.map(post => {
+                            return `
+                            ${post.title}    
+                            `
+                        })
+                        thirdContainer.innerHTML = txt;
+                    }
+                })
+            });
+        }
+        }
+</script>
+<script>
+    const framePost = () => {
+        const framePostBtn = document.querySelectorAll('.framework_post_btn');
+        const thirdContainer = document.querySelector('.third_container');
+        for(let i=0; i < framePostBtn.length; i++) {
+            framePostBtn[i].addEventListener('click', () => {
+                console.log(framePostBtn[i])
+    
+                id =framePostBtn[i].value;
+                var a = "http://127.0.0.1:8000/users/" + id
+                var url = a + "/framework_folder_posts/"
+                
+                fetch(url, {
+                    method: "GET",
+                    headers : { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data)
+                    if (data.length === 0) {
+                        thirdContainer.innerHTML = "파일없음"
+                    } else {
+                        const txt = data.map(post => {
+                            return `
+                            ${post.title}    
+                            `
+                        })
+                        thirdContainer.innerHTML = txt;
+                    }
+                })
+            });
+        }
+        }
 </script>
 <!-- 최근 (기록/질문) 뜨게하기 -->
 <!-- 구현하려다가 어려워서 넘김.. 기존데이터를 가져와서 출력해주는거 알아보기....ajax어렵당.. -->

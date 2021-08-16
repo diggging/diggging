@@ -36,3 +36,35 @@ searchField.addEventListener('keyup', (e) => {
         searchContainer.innerHTML = "검색해주셈"
     }
 })
+
+
+
+
+let baseUrl = "{% url 'posts:scrap_axios' %}"; //baseUrl만 바꿔주면 동기가 될꺼 같은데?
+    const a = () => {
+        const baseUrl = "{% url 'posts:scrap_axios' %}";
+        return baseUrl;
+    }
+
+    const b = () => {
+        const baseUrl = "{% url 'posts:helped_axios' %}";
+        return baseUrl;
+    }
+    
+    const c = () => {
+        const baseUrl = "{% url 'posts:follow_axios' %}";
+        return baseUrl;
+    }
+    const d = () => {
+        const baseUrl = "{% url 'posts:my_recent_axios' %}";
+        return baseUrl;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log( 'document was not ready, place code here' );
+        let bottomSentinal = document.querySelector("#bottom-sentinel");
+        let scrollElement = document.querySelector("#scroll-element");
+        
+        attachInfiniteScroll(bottomSentinal, scrollElement, baseUrl);
+        console.log(baseUrl);
+    });
