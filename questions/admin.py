@@ -7,7 +7,6 @@ class QuestionPostAdmin(admin.ModelAdmin):
     fields = (
         "user",
         "title",
-        "problem_solving",
         "language",
         "os",
         "error_message",
@@ -16,7 +15,7 @@ class QuestionPostAdmin(admin.ModelAdmin):
         "code",
         "is_public",
         "is_friend",
-        "folder",
+        "question_folder",
         "scrap_num",
         "helped_num",
     )
@@ -37,7 +36,7 @@ class QuestionPostAdmin(admin.ModelAdmin):
         return Post.content[:20]
 
     def get_folders(self, obj):
-        return "\n".join([f.folder_name for f in obj.folder.all()])
+        return "\n".join([f.folder_name for f in obj.question_folder.all()])
 
 
 @admin.register(models.Answer)
@@ -63,4 +62,4 @@ class QuestionFolder(admin.ModelAdmin):
     list_display_links = ["folder_name"]
 
     def posts(self, obj):
-        return ",".join([r.title for r in obj.related_posts.all()])
+        return ",".join([r.title for r in obj.question_folder.all()])

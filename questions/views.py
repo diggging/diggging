@@ -70,11 +70,11 @@ def question_create(request):
     if request.method == "POST":
         form = QuestionPostForm(request.POST, request.FILES)
         if form.is_valid():
-            posts = form.save(commit=False)
-            posts.user = request.user
-            posts.save()
+            questions = form.save(commit=False)
+            questions.user = request.user
+            questions.save()
 
-            me = posts.user
+            me = questions.user
             language = request.POST.get("language")
             framework = request.POST.get("framework")  # framework 가져옴
             lang_folder = QuestionFolder.objects.filter(folder_name=language, folder_user=me, folder_kind="language")
@@ -82,24 +82,25 @@ def question_create(request):
             
             if lang_folder.exists():
                 existed_folder = QuestionFolder.objects.get(folder_name=language, folder_user=me, folder_kind="language")
-                posts.question_folder.add(existed_folder)
+                questions.question_folder.add(existed_folder)
+
             else:
                 new_folder = QuestionFolder.objects.create(folder_name=language, folder_user=me, folder_kind="language")
-                posts.question_folder.add(new_folder)
+                questions.question_folder.add(new_folder)
 
             if frame_folder.exists():
                 # 있으면 foriegn key 연결
                 existed_folder = QuestionFolder.objects.get(folder_name=framework, folder_user=me, folder_kind="framework")
-                posts.question_folder.add(existed_folder)
+                questions.question_folder.add(existed_folder)
             else:
                 # 없으면 folder 만들어서
                 new_folder = QuestionFolder.objects.create(folder_name=framework, folder_user=me, folder_kind="framework")
-                posts.question_folder.add(new_folder)
+                questions.question_folder.add(new_folder)
 
-            posts.save()
+            questions.save()
 
             # create 하면 detail 페이지로 넘어가도록 수정
-            return redirect("question:question_post_detail", posts.user.id, posts.id)
+            return redirect("question:question_post_detail", questions.user.id, questions.id)
     else:
         form = QuestionPostForm()
         ctx = {
