@@ -2,10 +2,8 @@
 {% load static %}
 {% block script %}
     <link rel="stylesheet" href="{% static 'css/questions/main.css' %}">
-    
     <script>
         const requestAnswer = new XMLHttpRequest();
-
         const onClickAnswer = (id) =>{
             const url = '/questions/answer_ajax/';
             requestAnswer.open('POST',url,true);
@@ -15,13 +13,11 @@
             );
             requestAnswer.send(JSON.stringify({id:id}));
         };
-
         const AnswerHandleResponse = () =>{
             if(requestAnswer.status < 400){
                 const answer = requestAnswer.response;
                 const answerab = document.querySelector('.answerabc');
-                console.log(answer[0])
-                answerab.innerHTML +=`
+                answerab.innerHTML =`
                 <div >
                     ${answer}
                 </div>
@@ -33,6 +29,55 @@
                 AnswerHandleResponse();
             };
         };
+    </script>
+    <style>
+        .accordion {
+            background-color: #FFFFFF;
+            cursor: pointer;
+            padding: 16px;
+            width: 100%;
+            outline: none;
+            border: none;
+            text-align: left;
+            font-size: 16px;
+            transition: 0.4s;
+        }
+        .active, .accordion:hover {
+            background-color: #F5F5F5;
+            font-weight: bold;
+        }
+        .accordion:after {
+            content: '\002B';
+            font-weight: bold;
+            float: right;
+            margin-left: 5px;
+        }
+        .active:after {
+            content: "\2212";
+        }
+        .panel {
+            padding: 0 16px;
+            background-color: #FFFFFF;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+            border-bottom: 1px solid #EEEEEE;
+        }
+    </style>
+    <script>
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.maxHeight) {
+                    panel.style.maxHeight = null;
+                } else {
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                }
+            });
+        }
     </script>
 {% endblock %}
 {% block content %}
@@ -150,13 +195,11 @@
                     </div>
                 </div>
                 <div class="my_answer_container">
-                    <div class="btn_my_answer">
-                        <button onclick ="onClickAnswer({{ request.user.id }})">내가 남긴 답변</button>
-                    </div>
-                    <div class ="answerabc">
-                        {% for answers in answer %}
-                            {{answers}}
-                        {% endfor %}
+                <button class="accordion" onclick ="onClickAnswer({{ request.user.id }})">내가 남긴 답변</button>
+                    <div class="panel answerabc">
+                            {% for answers in answer %}
+                                {{answers}}
+                            {% endfor %}
                     </div>
                 </div>
             </div>
