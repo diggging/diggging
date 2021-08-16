@@ -40,6 +40,5 @@ urlpatterns = [
 
     #마이페이지 ajax
     path('<int:pk>/digging_folder/', views.digging_folder, name="digging_folder"),
-    #마이페이지 동기
     
 ] 

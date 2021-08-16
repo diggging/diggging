@@ -47,9 +47,9 @@
 </script>
 
 <!-- ------------------------------------------------------------------------ -->
-<!-- <script>
+<script>
     const logFolderBtn = document.getElementById('log_folder_btn');
-    const categoryTab = document.querySelector('.category_tab');
+    const categoryTab = document.querySelector('.folder_category');
     console.log(logFolderBtn)
     logFolderBtn.addEventListener('click', () => {
         //url를 user.pk로 설정해줘야 한다.
@@ -73,14 +73,14 @@
             } else {
                 const txt = data.map(folder => {
                     return `
-                        ${folder}
+                        ${folder.folder_name}
                     `
                 })
                 categoryTab.innerHTML = txt;
             }
         })
     })
-</script> -->
+</script>
 <!-- ------------------------------------------------------------------------ -->
 
 
@@ -315,7 +315,12 @@
     </div>
     <div class="second_container my_container">
         <div class="category_tab">
-            
+            <button>언어</button>
+            <button>해결/미해결</button>
+            <button>프레임워크</button>
+            <div class="folder_category">
+
+            </div>
         </div>
 
 
