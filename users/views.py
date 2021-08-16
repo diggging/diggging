@@ -35,6 +35,8 @@ from django.contrib.sites.models import Site
 from django.views.decorators.csrf import csrf_exempt
 
 from django.http.response import JsonResponse
+import json
+
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
@@ -315,18 +317,11 @@ def my_page(request, pk):
     }
     return render(request, template_name="users/my_page.html", context=ctx)
 
-###흠,,,,,삽질 기록모음
+#-----삽질 기록모음
 @csrf_exempt
 def digging_folder(request, pk):
     host = get_object_or_404(User, pk=pk)
     folder = Folder.objects.filter(folder_user=host, folder_kind="language")
-
-    # a = Folder.objects.get()
-    # print(folder.related_posts.title)
-    
-    # |  Folder.objects.filter(
-    #     folder_user=host, folder_kind="framework") | Folder.objects.filter(
-    #         folder_user=host, folder_kind="solved")
     data = folder.values()
     
     return JsonResponse(list(data), safe=False)
@@ -379,6 +374,25 @@ def framework_folder_posts(request, pk):
     data = posts.values()
 
     return JsonResponse(list(data), safe=False)
+
+#-----질문 모음
+@csrf_exempt
+def questions_folder(request, pk):
+    host = get_object_or_404(User, pk=pk)
+    folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="language")
+    data = folder.values()
+    
+    return JsonResponse(list(data), safe=False)
+
+@csrf_exempt
+def questions_lang_folder(request, pk):
+    host = get_object_or_404(User, pk=pk)
+    folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="language")
+    data = folder.values()
+
+    return JsonResponse(list(data), safe=False)
+
+
 
 # 한번 누르면 follow, 두번 누르면 unfollow
 def follow(request, host_pk):

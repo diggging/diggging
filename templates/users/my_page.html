@@ -9,6 +9,8 @@
 <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script> -->
 <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script> -->
 
+<script src="{% static 'js/삽질기록모음.js' %}"></script>
+<script src="{% static 'js/질문모음.js' %}"></script>
 
 <script>
     const modal = document.querySelector('.point_modal');
@@ -46,255 +48,6 @@
     })
 </script>
 
-<!--삽질 기록 모음-------------------------------------------------------------------------->
-<script>
-    const logFolderBtn = document.getElementById('log_folder_btn');
-    const categoryTab = document.querySelector('.folder_category');
-
-    logFolderBtn.addEventListener('click', () => {
-        //url를 user.pk로 설정해줘야 한다.
-        id =logFolderBtn.value;
-        
-        var a = "http://127.0.0.1:8000/users/" + id
-        var url = a + "/digging_folder/"
-        
-        fetch(url, {
-            method: "GET",
-            headers : { 
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data)
-            if (data.length === 0) {
-                categoryTab.innerHTML = "폴더없음"
-            } else {
-                const txt = data.map(folder => {
-                    return `
-                    <button class="lang_post_btn" id="${folder.id}" value="${folder.id}">
-                        ${folder.folder_name}
-                    </button>    
-                    `
-                })
-                categoryTab.innerHTML = txt;
-            }
-            langPost()
-        })
-    })
-</script>
-<script>
-    const langBtn = document.getElementById('language_btn');
-    langBtn.addEventListener('click', () => {
-        id =langBtn.value;
-        var a = "http://127.0.0.1:8000/users/" + id
-        var url = a + "/lang_folder/"
-        
-        fetch(url, {
-            method: "GET",
-            headers : { 
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data)
-            if (data.length === 0) {
-                categoryTab.innerHTML = "폴더없음"
-            } else {
-                const txt = data.map(folder => {
-                    return `
-                    <button class="lang_post_btn" id="${folder.id}" value="${folder.id}">
-                        ${folder.folder_name}
-                    </button>    
-                    `
-                })
-                categoryTab.innerHTML = txt;
-            }
-            langPost()
-        })
-    })
-</script>
-<script>
-    const problemBtn = document.getElementById('problem_btn');
-    problemBtn.addEventListener('click', () => {
-        id =langBtn.value;
-        var a = "http://127.0.0.1:8000/users/" + id
-        var url = a + "/solved_folder/"
-        
-        fetch(url, {
-            method: "GET",
-            headers : { 
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data)
-            if (data.length === 0) {
-                categoryTab.innerHTML = "폴더없음"
-            } else {
-                const txt = data.map(folder => {
-                    return `
-                    <button class="problem_post_btn" id="${folder.id}" value="${folder.id}">
-                        ${folder.folder_name}
-                    </button>    
-                    `
-                })
-                categoryTab.innerHTML = txt;
-            }
-            problemPost()
-        })
-    })
-</script>
-<!--프레임워크별------------------------------------------------------------------------ -->
-<script>
-    const frameworkBtn = document.getElementById('framework_btn');
-    frameworkBtn.addEventListener('click', () => {
-        id =frameworkBtn.value;
-        var a = "http://127.0.0.1:8000/users/" + id
-        var url = a + "/framework_folder/"
-        
-        fetch(url, {
-            method: "GET",
-            headers : { 
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-        })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data)
-            if (data.length === 0) {
-                categoryTab.innerHTML = "폴더없음"
-            } else {
-                const txt = data.map(folder => {
-                    return `
-                    <button class="framework_post_btn" id="${folder.id}" value="${folder.id}">
-                        ${folder.folder_name}
-                    </button>    
-                    `
-                })
-                categoryTab.innerHTML = txt;
-            }
-            framePost()
-        })
-    })
-</script>
-<script>
-    const langPost = () => {
-    const langPostBtn = document.querySelectorAll('.lang_post_btn');
-    const thirdContainer = document.querySelector('.third_container');
-    for(let i=0; i < langPostBtn.length; i++) {
-        langPostBtn[i].addEventListener('click', () => {
-            console.log(langPostBtn[i])
-
-            id =langPostBtn[i].value;
-            var a = "http://127.0.0.1:8000/users/" + id
-            var url = a + "/lang_folder_posts/"
-            console.log(url)
-            fetch(url, {
-                method: "GET",
-                headers : { 
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-            })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data)
-                if (data.length === 0) {
-                    thirdContainer.innerHTML = "파일없음"
-                } else {
-                    const txt = data.map(post => {
-                        return `
-                        ${post.title}    
-                        `
-                    })
-                    thirdContainer.innerHTML = txt;
-                }
-            })
-        });
-    }
-    }
-</script>
-<script>
-    const problemPost = () => {
-        const problemBtn = document.querySelectorAll('.problem_post_btn');
-        const thirdContainer = document.querySelector('.third_container');
-        for(let i=0; i < problemBtn.length; i++) {
-            problemBtn[i].addEventListener('click', () => {
-                console.log(problemBtn[i])
-    
-                id =problemBtn[i].value;
-                var a = "http://127.0.0.1:8000/users/" + id
-                var url = a + "/solved_folder_posts/"
-                
-                fetch(url, {
-                    method: "GET",
-                    headers : { 
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                })
-                .then(res => res.json())
-                .then(data => {
-                    console.log(data)
-                    if (data.length === 0) {
-                        thirdContainer.innerHTML = "파일없음";
-                    } else {
-                        const txt = data.map(post => {
-                            return `
-                            ${post.title}    
-                            `
-                        })
-                        thirdContainer.innerHTML = txt;
-                    }
-                })
-            });
-        }
-        }
-</script>
-<script>
-    const framePost = () => {
-        const framePostBtn = document.querySelectorAll('.framework_post_btn');
-        const thirdContainer = document.querySelector('.third_container');
-        for(let i=0; i < framePostBtn.length; i++) {
-            framePostBtn[i].addEventListener('click', () => {
-                console.log(framePostBtn[i])
-    
-                id =framePostBtn[i].value;
-                var a = "http://127.0.0.1:8000/users/" + id
-                var url = a + "/framework_folder_posts/"
-                
-                fetch(url, {
-                    method: "GET",
-                    headers : { 
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                })
-                .then(res => res.json())
-                .then(data => {
-                    console.log(data)
-                    if (data.length === 0) {
-                        thirdContainer.innerHTML = "파일없음"
-                    } else {
-                        const txt = data.map(post => {
-                            return `
-                            ${post.title}    
-                            `
-                        })
-                        thirdContainer.innerHTML = txt;
-                    }
-                })
-            });
-        }
-        }
-</script>
 <!-- 최근 (기록/질문) 뜨게하기 -->
 <!-- 구현하려다가 어려워서 넘김.. 기존데이터를 가져와서 출력해주는거 알아보기....ajax어렵당.. -->
 {%comment%}
@@ -513,7 +266,7 @@
         </div>
         <hr>
         <div class="btn_list_area">
-            <button href="" class="list_btn" id="log_folder_btn" value="{{host.id}}">삽질 기록 모음 > </button>
+            <button class="list_btn" id="log_folder_btn" value="{{host.id}}">삽질 기록 모음 > </button>
             <button class="list_btn" id="question_folder_btn" value="{{host.id}}">질문 모음 > </button>
             <button class="list_btn" value="{{host.id}}">내가 남긴 답변 목록 > </button>
             {% if request.user.pk == host.pk %}
@@ -525,11 +278,12 @@
     </div>
     <div class="second_container my_container">
         <div class="category_tab">
-            <button id="language_btn" value="{{host.id}}">언어</button>
-            <button id="problem_btn" value="{{host.id}}">해결/미해결</button>
-            <button id="framework_btn" value="{{host.id}}">프레임워크</button>
+            <div id="btn_tap">
+                <button id="language_btn" value="{{host.id}}">언어</button>
+                <button id="problem_btn" value="{{host.id}}">해결/미해결</button>
+                <button id="framework_btn" value="{{host.id}}">프레임워크</button>
+            </div>
             <div class="folder_category">
-                <button class="lang_post_btn" id="{{language_folders.id}}" value="{{language_folders.id}}">
                 </button>
             </div>
         </div>
