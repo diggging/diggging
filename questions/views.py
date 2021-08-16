@@ -26,7 +26,8 @@ def question_main(request):
     languages = [langs[0] for langs in Question_post.language_choices]
     search = request.POST.getlist("answers[]")
     str_search = "".join(search)
-    answer = Answer.objects.filter().values("title", "desc")
+    answer = Answer.objects.all()
+    print(answer)
     ctx = {
         "selected_answer_posts": selected_answer_posts,
         "posts": posts,
