@@ -11,14 +11,8 @@
             <div class="title_area">
                 <h1>{{post.title}}</h1>
                 <div class="post_user_info">
-                    {% if post.user.user_profile_image %}
                     <img src="{{post.user.user_profile_image.url}}">
-                    {% endif %}
-                    {%if post.user.user_nickname%}
                     <h3>{{ post.user.user_nickname }}님의 질문</h3>
-                    {%else%}
-                    <h3>{{ post.user.username }}님의 질문</h3>
-                    {%endif%}
                 </div>
             </div>
             {% if request.user.id == post.user.id %}
@@ -97,17 +91,9 @@
                 <div class='comment_id_{{comment.id}}'>
                     <div class="comment_info">
                         <div class="comment_profile">
-                            {% if comment.user.user_profile_image %}
-                                {{comment.user.user_profile_image.url}}
-                            {% else %}
-                                <i class="fas fa-user-circle fa-2x" style="color:#CEC4B3;"></i>
-                            {% endif %}
+                            {{comment.user.user_profile_image.url}}
                             <span class="user_nicknamme">
-                            {% if comment.user.user_nickname %}
                             {{comment.user.user_nickname}}
-                            {% else %}
-                            {{comment.user.username}}
-                            {% endif %}
                             </span>
                         </div>
                         <div class="comment_content">
@@ -145,11 +131,7 @@
         <div class="answer_container answer-id-{{answer.id}}">
             <div class="post_top">
                 <div class="answer_info_box">
-                    {%if answer.user.user_nickname%}
                     <h3>{{ answer.user.user_nickname }}님의 답변</h3>
-                    {%else%}
-                    <h3>{{ answer.user.username }}님의 답변</h3>
-                    {%endif%}
                     <h3>채택여부 : {{answer.selection}}</h3>
                     {{answer.title}}
                 </div>
@@ -193,8 +175,6 @@
                         <button onclick="onClickAnswerComment({{ answer.id }})">게시</button>
                         <!--comment 별로 id 준당-->
                     </div>
-                    
-                    
                         {% for comment in answer.answer_comments.all.reverse %}
                             <div class='answer_comment_id_{{comment.id}}'>
                                 <div class="answer_comment_text">
@@ -248,15 +228,16 @@
             const addComment = document.querySelector(`.addComment`);
             console.log(comment_id);
             addComment.innerHTML += `
-        <div class='comment_id_${comment_id}'>
-            <div class="comment_text">
-                ${text}
+            <div class='comment_id_${comment_id}'>
+                <div class="comment_info">
+                    <div class="comment_text">
+                    ${text}
+                </div>
+                <div class="delete_btn">
+                    <button onclick="onClickDelete(${id}, ${comment_id})">삭제</button>
+                </div>
             </div>
-            <div class="delete_btn">
-                <button onclick="onClickDelete(${id}, ${comment_id})">삭제</button>
-            </div>
-        </div>
-    `
+            `
             const cmt_input = document.querySelector('.comment_input');
             cmt_input.value = null
         };
@@ -266,6 +247,41 @@
             commentHandleResponse();
         };
     };
+
+    // <div class='comment_id_${comment.id}'>
+    //     <div class="comment_info">
+    //         <div class="comment_profile">
+    //             <img src="{{comment.user.user_profile_image.url}}">
+    //             <span class="user_nicknamme">
+    //             {{comment.user.user_nickname}}
+    //             </span>
+    //         </div>
+    //         <div class="comment_content">
+    //             <div class="comment_created">
+    //                 {{comment.created}}
+    //             </div>
+    //             <div class="comment_text">
+    //                 ${text}
+    //             </div>
+    //         </div>
+    //     </div>
+    //     <div class="delete_btn">
+    //         <button onclick="onClickDelete(${id}, ${comment.id})">삭제</button>
+    //     </div>
+    // </div>
+
+
+    //     <div class='comment_id_${comment_id}'>
+    //         <div class="comment_info">
+    //             <div class="comment_text">
+    //             ${text}
+    //         </div>
+    //         <div class="delete_btn">
+    //             <button onclick="onClickDelete(${id}, ${comment_id})">삭제</button>
+    //         </div>
+    //     </div>
+    
+
     //-------------------------------------------------------------------------------------------
     // 질문 코멘트 삭제 부분
     const requestDelComment = new XMLHttpRequest();
@@ -315,11 +331,21 @@
             const { comment_id } = JSON.parse(requestAnswerComment.response);
             const addAnswerComment = document.querySelector(`.answer-id-${id} .addAnswerComment`);
             const cmt_input = document.querySelector('.answer_comment_input');
+            const comment_profile = document.querySelector(`.comment_profile`);
+            // 코멘트 작성자의 프로필 사진을 받아와야함
+            
+            // if answer.프로필사진 있으면
+            // comment_profile.innerHTML = `
+            // <div>
+            //코멘트 작성자의 닉네임이
+
+            
             addAnswerComment.innerHTML += `
             <div class='answer_comment_id_${comment_id}'>
-                <div class="answer_comment_text">
+                <div class="answer_comment_text">`
+                    if 
                     ${text}
-                </div>
+                `</div>
                 <div class="answer_comment_delete_btn">
                     <button onclick="onClickAnswerCommentDelete(${id}, ${comment_id})">삭제</button>
                 </div>
@@ -327,6 +353,7 @@
             `
             cmt_input.value = ''
         }
+
     };
     requestAnswerComment.onreadystatechange = () => {
         if (requestAnswerComment.readyState === XMLHttpRequest.DONE) {

@@ -13,11 +13,14 @@ from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 
-
 # Create your views here.
 def question_main(request):
     # 질문 최신순으로 정렬
     posts = Question_post.objects.all().order_by("-created")
+    #  모든 전체질문에서 스크랩 순위대로 추천
+    all_question_scrap = Question_post.objects.all().order_by("-scrap_num")
+    # 모든 전체 질문에서 도움 순위대로 추천
+    all_posts_helped = Question_post.objects.all().order_by("-helped_num")
     # 답변 채택 안되거나 답변이 아직 달리지 않은 질문들을 모아두는 list
     selected_answer_posts = []
     for post in posts:
@@ -307,10 +310,8 @@ def get_question(request, question_post_id):
 # 질문 채택 관련 함수 (모달에서 사용자가 채택 or 채택 해제에 동의했을때 사용)
 def chosen_answer(request, question_answer_id):
     is_answer_chosen = Answer.objects.get(pk=question_answer_id)
-    print('aaaaa')
     question = is_answer_chosen.question
     # if request.method == "POST": #채택할래? 예
-    print('BBbbbbb')
     is_answer_chosen.selection = True
     is_answer_chosen.save()
     print(is_answer_chosen)

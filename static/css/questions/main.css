@@ -266,6 +266,11 @@ form button {
     color: var(--text-color);
 }
 
+.profile_image img {
+    width: 2.2rem;
+    height: 2.2rem;
+}
+
 .profile_username {
     display: flex;
     align-items: center;

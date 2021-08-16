@@ -46,17 +46,9 @@
                 </div>
                 <div class="user_btn">
                     <button class="toggle_btn" onclick="toggleBtn()" href="{% url 'users:my_page' user.id %}">
-                        {% if user.user_profile_image %}
-                            {{ user.user_profile_image.url }}
-                        {% else %}
-                            <i class="fas fa-user-circle fa-2x"></i>
-                        {% endif %}
+                        <img src="{{ user.user_profile_image.url }}">
                     </button>
-                    {% if user.user_nickname %}
-                        <h6>{{user.user_nickname}}</h6>
-                    {% else %}
-                        <h6>{{user.username}}</h6>
-                    {% endif %}
+                    <h6>{{user.user_nickname}}</h6>
                 </div>
             {% else %}
                 <div class="nav_vertical">

@@ -134,9 +134,9 @@
     justify-content: center;
 }
 
-.toggle_btn i {
-    font-size: 2rem;
-    color:#CEC4B3;
+.toggle_btn img {
+    width: 2.3rem; 
+    height: 2.3rem;
 }
 
 .toggle {

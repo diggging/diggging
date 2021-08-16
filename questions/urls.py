@@ -17,6 +17,8 @@ urlpatterns = [
     # path("count_like_scrap/", views.count_like_scrap_question, name="count_like_scrap"),
     path("like/", views.question_like, name="question_like"),
     path("scrap/", views.question_scrap, name="question_scrap"),
+    # path("/scrap_num", views.question_main, name="question_main_scrap"),
+    # path("/helped_num", views.question_main, name="question_main_helped"),
 
     path("<int:answer_id>/get_answer_comments", views.get_answer_comments, name="get_answer_comments"),
     path("answer_ajax/", views.answer_ajax, name="answer_ajax"),

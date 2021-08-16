@@ -12,7 +12,7 @@ class User(AbstractUser):
 
     LOGIN_CHOICES = ((LOGIN_EMAIL, "Email"), (LOGIN_GITHUB, "Github"))
     user_nickname = models.CharField(
-        verbose_name="nickname", max_length=8, blank=True)
+        verbose_name="nickname", max_length=8, blank=True, default="익명")
     user_level = models.IntegerField(verbose_name="level", default=0)
     user_point = models.IntegerField(verbose_name="point", default=0)
     user_register_datetime = models.DateTimeField(
@@ -22,7 +22,7 @@ class User(AbstractUser):
     user_profile_content = models.TextField(
         verbose_name="personal description", blank=True)
     user_profile_image = models.ImageField(
-        verbose_name="대표 사진", upload_to="images/", blank=True, null=True)
+        verbose_name="대표 사진", upload_to="images/", blank=True, null=True , default='../static/image/profile_img.svg')
     is_staff = models.BooleanField(verbose_name="staff status", default=False, help_text="Designates whther the user can log into admin site")
     is_active = models.BooleanField(verbose_name="active", default=True) # 이메일 인증 완료되기 전까지 False로 설정
     email = models.EmailField(blank=True, max_length=254, verbose_name='email address', null=False)

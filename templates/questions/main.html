@@ -111,12 +111,8 @@
                     <div class="no_answer_list">
                         <a href="{% url 'question:question_post_detail' post.user.id post.id %}">
                             <div class="no_user_info">
-                                {% if post.user.user_profile_image %}
-                                    {{ post.user.user_profile_image.url }}
-                                {% else %}
-                                    <i class="fas fa-user-circle fa-2x" style="color:bisque"></i>
-                                {% endif %}
-                                    <span class="no_answer_username">{{post.user.user_nickname}}</span>
+                                <img src="{{ post.user.user_profile_image.url }}">
+                                <span class="no_answer_username">{{post.user.user_nickname}}</span>
                             </div>
                             <span class="no_answer_title">{{post.title|truncatechars:20}}</span>
                             <span class="no_answer_username">{{post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;" }}</span>
@@ -146,9 +142,10 @@
                             {%endfor%}
                         </div>
                     </form>
-                    <!-- 체크박스끝 -->
+                    <!-- 체크박스끝 --> 
                     <!-- 관심사에 따른 질문 목록들 -->
                     <div class="recommend_list_box">
+                        <a href="#">도움 순</a> / <a href="">스크랩 순</a>
                         {% for post in posts%}
                         {%if str_search == post.language %}
                         <div class="recommend_list">
@@ -159,11 +156,7 @@
                                     {% endif %}
                                 </div>
                                 <div class="recommend_user_info">
-                                    {% if post.user.user_profile_image %}
-                                        {{ post.user.user_profile_image.url }}
-                                    {% else %}
-                                        <i class="fas fa-user-circle fa-2x" style="color:bisque"></i>
-                                    {% endif %}
+                                    <img src="{{ post.user.user_profile_image.url }}">
                                     <span class="post_username">{{post.user.user_nickname}}</span>
                                 </div>
                                 <div class="post_title">{{post.title|truncatechars:20}}</div>
@@ -185,13 +178,9 @@
                     {% if user.is_authenticated %}
                     <div>
                         <div class="profile_username">
-                            {% if request.user.user_profile_image %}
                             <span class="profile_image">
                                 <img src="{{ request.user.user_profile_image.url}}">
                             </span>
-                            {% else %}
-                            <i class="fas fa-user-circle fa-2x" style="color:bisque"></i>
-                            {% endif %}
                             <p class="user_nickname">{{ request.user.user_nickname }}님의 모래상자<p>
                         </div>
                         <p>

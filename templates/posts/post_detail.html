@@ -182,12 +182,8 @@ $(".scrap").click(function () { // .scarp 버튼을 클릭 감지
             <div class="title_area">
                 <h1>{{post.title}}</h1>
                 <div class="post_user_info">
-                    {% if post.user.user_profile_image %}
-                        <img src="{{post.user.user_profile_image.url}}">
-                    {%else%}
-                        <i class="fas fa-user-circle fa-2x" style="color:#CEC4B3;"></i>
-                    {% endif %}
-                    <span>{{post.user.username}}</span>
+                    <img src="{{post.user.user_profile_image.url}}">
+                    <span>{{post.user.user_nickname}}</span>
                 </div>
             </div>
             {% if request.user.id == post.user.id %}
@@ -257,17 +253,9 @@ $(".scrap").click(function () { // .scarp 버튼을 클릭 감지
                 <div class='comment_id_{{comment.id}}'>
                     <div class="comment_info">
                         <div class="comment_profile">
-                            {% if comment.user.user_profile_image %}
-                                {{comment.user.user_profile_image.url}}
-                            {% else %}
-                                <i class="fas fa-user-circle fa-2x" style="color:#CEC4B3;"></i>
-                            {% endif %}
+                            {{comment.user.user_profile_image.url}}
                             <span class="user_nicknamme">
-                            {% if comment.user.user_nickname %}
                             {{comment.user.user_nickname}}
-                            {% else %}
-                            {{comment.user.username}}
-                            {% endif %}
                             </span>
                         </div>
                         <div class="comment_content">
