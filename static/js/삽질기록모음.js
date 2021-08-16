@@ -5,24 +5,34 @@ const btnTap = document.getElementById('btn_tap');
 
 console.log(btnTap.childElementCount)
 
-const removeId = () => {
-    while (btnTap.hasChildNodes()) {
-        btnTap.removeChild(btnTap.firstChild);
-    }
-}  
+// const removeId = () => {
+//     while (btnTap.hasChildNodes()) {
+//         btnTap.removeChild(btnTap.firstChild);
+//     }
+// }  
 
-const createId = (id) => {
-    const idName = ['language_btn', 'problem_btn', 'framework_btn'];
-    const idText = ['언어', '해결/미해결', '프레임워크'];
-    for(let i=0; i < 3; i++) {
-        let btn = document.createElement('button');
-        btn.setAttribute('id', idName[i]);
-        btn.setAttribute('value', id);
-        let btnText = document.createTextNode(idText[i]);
-        btn.appendChild(btnText);
-        btnTap.appendChild(btn);
-    }
-}
+// const createId = (id) => {
+//     const idName = ['language_btn', 'problem_btn', 'framework_btn'];
+//     const idText = ['언어', '해결/미해결', '프레임워크'];
+//     for(let i=0; i < 3; i++) {
+//         let btn = document.createElement('button');
+//         btn.setAttribute('id', idName[i]);
+//         btn.setAttribute('value', id);
+//         let btnText = document.createTextNode(idText[i]);
+//         btn.appendChild(btnText);
+//         btnTap.appendChild(btn);
+//     }
+// }
+
+const setClassDigging = () => {
+    const btn1 = document.getElementById('btn1');
+    const btn2 = document.getElementById('btn2');
+    const btn3 = document.getElementById('btn3');
+
+    btn1.setAttribute('class', 'language_btn');
+    btn2.setAttribute('class', 'problem_btn');
+    btn3.setAttribute('class', 'framework_btn');
+}   
 
 logFolderBtn.addEventListener('click', () => {
     //url를 user.pk로 설정해줘야 한다.
@@ -40,8 +50,7 @@ logFolderBtn.addEventListener('click', () => {
     })
     .then(res => res.json())
     .then(data => {
-        removeId()
-        createId(id)
+        setClassDigging()
         console.log(data)
         if (data.length === 0) {
             categoryTab.innerHTML = "폴더없음"
@@ -56,12 +65,14 @@ logFolderBtn.addEventListener('click', () => {
             categoryTab.innerHTML = txt;
         }
         langPost()
+        console.log()
     })
 })
 
-const langBtn = document.getElementById('language_btn');
+const langBtn = document.querySelector('.language_btn');
 
 langBtn.addEventListener('click', () => {
+    console.log(langBtn)
     id =langBtn.value;
     var a = "http://127.0.0.1:8000/users/" + id
     var url = a + "/lang_folder/"
@@ -135,7 +146,7 @@ const langPost = () => {
 
 //해결 미해결
 
-const problemBtn = document.getElementById('problem_btn');
+const problemBtn = document.querySelector('.problem_btn');
 
 problemBtn.addEventListener('click', () => {
     id =problemBtn.value;
@@ -153,7 +164,7 @@ problemBtn.addEventListener('click', () => {
     .then(res => res.json())
     .then(data => {
         console.log(data)
-
+        
         if (data.length === 0) {
             categoryTab.innerHTML = "폴더없음"
         } else {
@@ -207,7 +218,7 @@ const problemPost = () => {
 }
 
 //프레임 워크
-const frameworkBtn = document.getElementById('framework_btn');
+const frameworkBtn = document.querySelector('.framework_btn');
     frameworkBtn.addEventListener('click', () => {
         id =frameworkBtn.value;
         var a = "http://127.0.0.1:8000/users/" + id
@@ -226,7 +237,7 @@ const frameworkBtn = document.getElementById('framework_btn');
             if (data.length === 0) {
                 categoryTab.innerHTML = "폴더없음"
             } else {
-        
+                
                 const txt = data.map(folder => {
                     return `
                     <button class="framework_post_btn" id="${folder.id}" value="${folder.id}">
@@ -261,6 +272,7 @@ const framePost = () => {
             .then(res => res.json())
             .then(data => {
                 console.log(data)
+
                 if (data.length === 0) {
                     thirdContainer.innerHTML = "파일없음"
                 } else {

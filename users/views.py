@@ -375,7 +375,7 @@ def framework_folder_posts(request, pk):
 
     return JsonResponse(list(data), safe=False)
 
-#-----질문 모음
+#---------질문 모음
 @csrf_exempt
 def questions_folder(request, pk):
     host = get_object_or_404(User, pk=pk)
