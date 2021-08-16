@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <script src="{% static 'js/base.js' %}"></script>
-   
+
 </head>
 <body>
     <nav class="nav">
@@ -19,11 +19,19 @@
         <div class="nav_center">
             <a class="nav_main_title" href="{% url 'question:question_main' %}">질문광장</a>
         </div>
-        <div class="toggle" style="display: none;">
-            <a href="{% url 'users:my_page' user.id %}">내 디렉토리</a>
-            <a href="{% url 'users:account_detail' user.id %}">계정 설정</a>
-            <a href="{% url 'users:logout' %}">로그아웃</a>
-        </div>
+        {% if user.is_authenticated %}
+            <div class="toggle" style="display: none;">
+                <a href="{% url 'users:my_page' user.id %}">내 디렉토리</a>
+                <a href="{% url 'users:account_detail' user.id %}">계정 설정</a>
+                <a href="{% url 'users:logout' %}">로그아웃</a>
+            </div>
+        {% else %}
+            <div class="toggle" style="display: none;">
+                <a href="">내 디렉토리</a>
+                <a href="">계정 설정</a>
+                <a href="{% url 'users:logout' %}">로그아웃</a>
+            </div>
+        {% endif %}    
         <div class="nav_right">
             {% if user.is_authenticated %}
                 <div class="nav_vertical">

@@ -1,29 +1,31 @@
 import json
 from django.http.response import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+# from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from users.models import User
 from .forms import AnswerPostForm, QuestionPostForm
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Question_post, Answer, QuestionFolder
 from users.models import Sand, Alarm
-from django.core import serializers
-from django.core.serializers.json import DjangoJSONEncoder
-from django.http import HttpResponse, JsonResponse
+#from django.core import serializers
+# from django.core.serializers.json import DjangoJSONEncoder
+from django.http import HttpResponse #, JsonResponse
 from django.db.models import Sum
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required 
 from django.views.decorators.http import require_POST
 
 # Create your views here.
+@login_required
 def question_main(request):
     # 질문 최신순으로 정렬
-    posts = Question_post.objects.all().order_by("-created")
+    question_posts = Question_post.objects.all().order_by("-created")
     #  모든 전체질문에서 스크랩 순위대로 추천
     all_question_scrap = Question_post.objects.all().order_by("-scrap_num")
     # 모든 전체 질문에서 도움 순위대로 추천
     all_posts_helped = Question_post.objects.all().order_by("-helped_num")
     # 답변 채택 안되거나 답변이 아직 달리지 않은 질문들을 모아두는 list
     selected_answer_posts = []
-    for post in posts:
+    for post in question_posts:
         # Question_Post에 정의된 answer_selection_count() 함수 이용하여 개수 파악
         if post.answer_selection_count() > 0:
             selected_answer_posts.append(post)
@@ -33,7 +35,6 @@ def question_main(request):
     search = request.POST.getlist("answers[]")
     str_search = "".join(search)
     answer = Answer.objects.all()
-    print(answer)
 
     #지수가 필요해서 넣은 것 : 질문 관련 폴더
     # 질문 모음
@@ -43,6 +44,8 @@ def question_main(request):
 
     # 최근에 남긴 질문
     my_recent_questions = Question_post.objects.filter(user=request.user).order_by("-created")
+
+    question_folder = QuestionFolder.objects.filter(folder_user=request.user)
 
     #지수가 필요해서 넣은 것 : 모래 포인트
     my_sand = Sand.objects.filter(user = request.user)
@@ -61,14 +64,15 @@ def question_main(request):
             request.user.user_level=3
     ctx = {
         "selected_answer_posts": selected_answer_posts,
-        "posts": posts,
+        "posts": question_posts,
         "language": languages,
         "str_search": str_search,
         "answer": answer,
         # 내 모래포인트와 질문 관련한 폴더 접근 가능해야해요,,
         'my_all_sands': my_sand,    # sand 모든 object list
         'my_sand_sum' : my_sand_sum,    # 현재까지 sand 총합
-        #  질문 관련한 폴더 접근 가능해야해요,,
+        #  질문 관련한 폴더 접근 가능해야해요,, -> 헸습니다. 현주
+        'question_folder' : question_folder,
     }
     return render(request, "questions/main.html", ctx)
 
@@ -144,16 +148,12 @@ def question_update(request, pk):
     question_post = get_object_or_404(Question_post, pk=pk)
     origin_lang_fol = question_post.question_folder.get(folder_kind="language")
     origin_frame_fol = question_post.question_folder.get(folder_kind="framework")
-    print(origin_lang_fol)
-    print(origin_frame_fol)
     if request.method == "POST":
         form = QuestionPostForm(request.POST, request.FILES, instance=question_post)
         if form.is_valid():
             form.save()
             new_lang = request.POST.get("language")
             new_frame = request.POST.get("framework")
-            print(new_lang)
-            print(new_frame)
 
             # lang 폴더가 달라진다면?
             if new_lang != origin_lang_fol.folder_name:
@@ -183,7 +183,6 @@ def question_update(request, pk):
                     )
                     question_post.question_folder.add(new_folder)
                 # 원래 폴더에 더이상 연결된 post가 없다면? 폴더삭제 / 있다면? 냅두기
-                print(origin_lang_fol.question_folder.all())
                 if not origin_lang_fol.question_folder.all():
                     origin_lang_fol.delete()
 
@@ -233,8 +232,6 @@ def question_delete(request, pk):
 def question_post_detail(request, user_id, post_id):
     post_details = Question_post.objects.get(pk=post_id)
     me = get_object_or_404(User, pk=user_id)
-    print(post_details.language)
-    print(post_details.user)
 
     folder = post_details.question_folder.get(
         folder_name=post_details.language, folder_user=post_details.user
@@ -315,6 +312,7 @@ def answer_delete(request, question_post_id, answer_id):
 # ----------------------------------------------------------------------------------------------------------
 # 질문 기록 퍼오기
 def get_question(request, question_post_id):
+    print("넘어감?")
     question_post = get_object_or_404(Question_post, pk=question_post_id)
     target_language = question_post.language
     target_framework = question_post.framework  # 어떤 framework인지 - 프레임워크 생성용
@@ -379,8 +377,6 @@ def chosen_answer(request, question_answer_id):
     # if request.method == "POST": #채택할래? 예
     is_answer_chosen.selection = True
     is_answer_chosen.save()
-    print(is_answer_chosen)
-    print(is_answer_chosen.selection)
     new_sand1 = Sand.objects.create(user=is_answer_chosen.user, amount=300, reason="내 답변 채택")
     new_sand2 = Sand.objects.create(user=question.user, amount=50, reason="내 질문의 답변 채택")
     new_alarm = Alarm.objects.create(user=is_answer_chosen.user, reason="질문 " + question.title + " 에 남긴 답변이 채택되었어요.")
@@ -394,3 +390,34 @@ def chosen_answer(request, question_answer_id):
     # return render(request, 'questions/question_detail.html', ctx)
     # TODO: 의문점? else가 필요한가? 안필요할듯 
     return redirect('question:question_post_detail', is_answer_chosen.question.user.id, is_answer_chosen.question.id)
+
+# question like
+@login_required
+@require_POST
+def question_like(request):
+    pk = request.POST.get("pk", None)
+    post = get_object_or_404(Question_post, pk=pk)
+    user = request.user
+    if post.likes_user.filter(id=user.id).exists():
+        post.likes_user.remove(user)
+        message = "좋아요 취소"
+    else:
+        post.likes_user.add(user)
+        message = "좋아요"
+    ctx = {"likes_count": post.count_likes_user(), "message": message}
+    return HttpResponse(json.dumps(ctx), content_type="application/json")
+
+@login_required
+@require_POST
+def question_scrap(request):
+    pk = request.POST.get("pk", None)
+    post = get_object_or_404(Question_post, pk=pk)
+    user = request.user
+    if post.scarps_user.filter(id=user.id).exists():
+        post.scarps_user.remove(user)
+        message = "퍼가기 취소"
+    else:
+        post.scarps_user.add(user)
+        message = "퍼가기"
+    ctx = {"scarps_count": post.count_scarps_user(), "message": message}
+    return HttpResponse(json.dumps(ctx), content_type="application/json")

@@ -17,5 +17,8 @@ urlpatterns = [
 
 
     path("<int:answer_id>/get_answer_comments", views.get_answer_comments, name="get_answer_comments"),
+
+    path("like/", views.question_like, name="question_like"), 
+    path("scrap/", views.question_scrap, name="question_scrap"),
 ]
 
