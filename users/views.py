@@ -319,9 +319,14 @@ def my_page(request, pk):
 @csrf_exempt
 def digging_folder(request, pk):
     host = get_object_or_404(User, pk=pk)
-    folder = Folder.objects.filter(folder_user=host, folder_kind="language") |  Folder.objects.filter(
-        folder_user=host, folder_kind="framework") | Folder.objects.filter(
-            folder_user=host, folder_kind="solved")
+    folder = Folder.objects.filter(folder_user=host, folder_kind="language")
+
+    a = Folder.objects.get()
+    print(folder.related_posts.title)
+    
+    # |  Folder.objects.filter(
+    #     folder_user=host, folder_kind="framework") | Folder.objects.filter(
+    #         folder_user=host, folder_kind="solved")
     user = User.objects.all()
     data = folder.values()
     

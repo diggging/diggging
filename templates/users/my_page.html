@@ -47,14 +47,16 @@
 </script>
 
 <!-- ------------------------------------------------------------------------ -->
-<script>
+<!-- <script>
     const logFolderBtn = document.getElementById('log_folder_btn');
-
+    const categoryTab = document.querySelector('.category_tab');
+    console.log(logFolderBtn)
     logFolderBtn.addEventListener('click', () => {
         //url를 user.pk로 설정해줘야 한다.
-        var a = "http://127.0.0.1:8000/users/" + 1
+        id =logFolderBtn.value;
+        
+        var a = "http://127.0.0.1:8000/users/" + id
         var url = a + "/digging_folder/"
-        console.log(url)
         
         fetch(url, {
             method: "GET",
@@ -66,9 +68,19 @@
         .then(res => res.json())
         .then(data => {
             console.log(data)
+            if (data.length === 0) {
+                categoryTab.innerHTML = "폴더없음"
+            } else {
+                const txt = data.map(folder => {
+                    return `
+                        ${folder}
+                    `
+                })
+                categoryTab.innerHTML = txt;
+            }
         })
     })
-</script>
+</script> -->
 <!-- ------------------------------------------------------------------------ -->
 
 
@@ -291,7 +303,7 @@
         </div>
         <hr>
         <div class="btn_list_area">
-            <button href="" class="list_btn" id="log_folder_btn">삽질 기록 모음 > </button>
+            <button href="" class="list_btn" id="log_folder_btn" value="{{host.id}}">삽질 기록 모음 > </button>
             <button class="list_btn" id="question_folder_btn">질문 모음 > </button>
             <button class="list_btn">내가 남긴 답변 목록 > </button>
             {% if request.user.pk == host.pk %}

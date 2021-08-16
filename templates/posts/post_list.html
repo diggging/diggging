@@ -8,13 +8,13 @@
 
 {% block content %}
 <div class="post_container" id="scroll-element">
-    <a href="{% url 'posts:main' %}">스크랩 /</a>
-    <button onclick="a()" id="helped" href="#">도움 /</button>
-    <a href="{% url 'posts:my_recent' %}">내 최신순 /</a>
-    <a href="{% url 'posts:follow' %}">이웃 /</a>
+    <button onclick="a()" >스크랩 /</button>
+    <button onclick="b()" id="helped" href="#">도움 /</button>
+    <button onclick="c()" >내 최신순 /</button>
+    <button onclick="d()" >이웃 /</button>
 
     {% include 'posts/_posts.html' with posts=posts %}
-    
+
 </div>
 <div id="bottom-sentinel">
 </div>
@@ -26,11 +26,33 @@
         let baseUrl = "{% url 'posts:scrap_axios' %}"; //baseUrl만 바꿔주면 동기가 될꺼 같은데?
         attachInfiniteScroll(bottomSentinal, scrollElement, baseUrl);
     });
-
+    
+    const helped = document.getElementById('helped');
+    console.log(helped);
+    
+    helped.addEventListener('click', () => {
+        console.log('클릭');
+    })
+    
     const a = () => {
+        const url = "{% url 'posts:scrap_axios' %}";
+        console.log(url)
+    }
+
+    const b = () => {
+        const url = "{% url 'posts:helped_axios' %}";
+        console.log(url)
+    }
+    
+    const c = () => {
+        const url = "{% url 'posts:follow_axios' %}";
+        console.log(url)
+    }
+    const d = () => {
         const url = "{% url 'posts:my_recent_axios' %}";
         console.log(url)
     }
+    
 </script>
 {% endblock %}
 

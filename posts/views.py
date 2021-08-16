@@ -6,10 +6,7 @@ from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.http import HttpResponse
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-
 from django.views.decorators.http import require_POST, require_GET
-
-
 from .models import Post, Folder
 from users.models import Sand
 from . import models
@@ -331,27 +328,6 @@ def post_delete(request, pk):
     posts = Post.objects.get(pk=pk)
     posts.delete()
     return redirect("posts:main")
-
-
-# def search(request):
-#     language = request.POST.get("post")
-#     framework = request.POST.get("framework")  # frmae work 현주가 추가
-#     post = request.POST.get("post", "")
-#     select_languages = request.POST.get("field")
-#     print(select_languages)
-#     select_os = request.POST.get("field2")
-#     select_solve = request.POST.get("field3")
-#     select_framwork = request.POST.get("field4")
-#     free_post = Post.objects.filter(language=language).order_by("-id")
-#     frame_post = Post.objects.filter(framework=framework).order_by("-id")
-#     form = SelectForm()
-#     ctx = {
-#         "free_post": free_post,
-#         "post": post,
-#         "form": form,
-#         "frame_post": frame_post,
-#     }
-#     return render(request, "posts/search.html", ctx)
 
 ## search input ajax
 @csrf_exempt
