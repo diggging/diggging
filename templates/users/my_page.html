@@ -81,6 +81,66 @@
         })
     })
 </script>
+<script>
+    const langBtn = document.getElementById('language_btn');
+    langBtn.addEventListener('click', () => {
+        id =langBtn.value;
+        var a = "http://127.0.0.1:8000/users/" + id
+        var url = a + "/lang_folder/"
+        
+        fetch(url, {
+            method: "GET",
+            headers : { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            if (data.length === 0) {
+                categoryTab.innerHTML = "폴더없음"
+            } else {
+                const txt = data.map(folder => {
+                    return `
+                        ${folder.folder_name}
+                    `
+                })
+                categoryTab.innerHTML = txt;
+            }
+        })
+    })
+</script>
+<script>
+    const problemBtn = document.getElementById('problem_btn');
+    problemBtn.addEventListener('click', () => {
+        id =langBtn.value;
+        var a = "http://127.0.0.1:8000/users/" + id
+        var url = a + "/solved_folder/"
+        
+        fetch(url, {
+            method: "GET",
+            headers : { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            if (data.length === 0) {
+                categoryTab.innerHTML = "폴더없음"
+            } else {
+                const txt = data.map(folder => {
+                    return `
+                        ${folder.folder_name}
+                    `
+                })
+                categoryTab.innerHTML = txt;
+            }
+        })
+    })
+</script>
 <!--프레임워크별------------------------------------------------------------------------ -->
 <script>
     const frameworkBtn = document.getElementById('framework_btn');
