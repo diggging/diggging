@@ -184,6 +184,8 @@ $(".scrap").click(function () { // .scarp 버튼을 클릭 감지
                 <div class="post_user_info">
                     {% if post.user.user_profile_image %}
                         <img src="{{post.user.user_profile_image.url}}">
+                    {%else%}
+                        <i class="fas fa-user-circle fa-2x" style="color:#CEC4B3;"></i>
                     {% endif %}
                     <span>{{post.user.username}}</span>
                 </div>
@@ -253,8 +255,29 @@ $(".scrap").click(function () { // .scarp 버튼을 클릭 감지
             <div class='addComment'>
                 {% for comment in comments %}
                 <div class='comment_id_{{comment.id}}'>
-                    <div class="comment_text">
-                        {{comment.text}}
+                    <div class="comment_info">
+                        <div class="comment_profile">
+                            {% if comment.user.user_profile_image %}
+                                {{comment.user.user_profile_image.url}}
+                            {% else %}
+                                <i class="fas fa-user-circle fa-2x" style="color:#CEC4B3;"></i>
+                            {% endif %}
+                            <span class="user_nicknamme">
+                            {% if comment.user.user_nickname %}
+                            {{comment.user.user_nickname}}
+                            {% else %}
+                            {{comment.user.username}}
+                            {% endif %}
+                            </span>
+                        </div>
+                        <div class="comment_content">
+                            <div class="comment_created">
+                                {{comment.created}}
+                            </div>
+                            <div class="comment_text">
+                                {{comment.text}}
+                            </div>
+                        </div>
                     </div>
                     {% if request.user == comment.user %}
                     <div class="delete_btn">

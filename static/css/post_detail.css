@@ -110,6 +110,10 @@ body {
 
 .user_nickname {
     margin-left: 20px;
+    margin-top: 5px;
+    font-size: 0.875rem;
+    font-family: var(--btn-font);
+    color: var(--text-color);
 }
 
 .post_user_info img {
@@ -211,14 +215,47 @@ body {
     padding: 10px 20px;
 }
 
+.addComment > div {
+    padding: 1.2rem;
+    border: solid 1px var(--border-color);
+    border-radius: 14px;
+    margin: 0.5rem;
+}
+
 .comment_area {
     font-size: 1rem;
 }
 
 .comment_text {
+    font-size: 0.875rem;
     font-family: var(--content-font);
+    color: var(--text-color);
+    text-align: left;
 }
 
+.comment_info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.comment_content2 {
+    display: flex;
+    flex-direction: row;
+}
+
+.comment_created {
+    font-size: 0.625rem;
+    margin-bottom: 1rem;
+    color: var(--border-color);
+}
+
+.comment_profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 2rem;
+}
 
 .delete_btn > * {
     font-family: var(--btn-font);

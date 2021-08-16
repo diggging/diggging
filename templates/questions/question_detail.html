@@ -56,22 +56,37 @@
             <div class='addComment'>
                 {% for comment in comments %}
                 <div class='comment_id_{{comment.id}}'>
-                    <div class="comment_text">
-                        <div class="post_user_info">
+                    <div class="comment_info">
+                        <div class="comment_profile">
                             {% if comment.user.user_profile_image %}
-                            <img src="{{comment.user.user_profile_image.url}}">
+                                {{comment.user.user_profile_image.url}}
+                            {% else %}
+                                <i class="fas fa-user-circle fa-2x" style="color:#CEC4B3;"></i>
                             {% endif %}
-                            <span>{{comment.user.user_nickname}}</span>
+                            <span class="user_nicknamme">
+                            {% if comment.user.user_nickname %}
+                            {{comment.user.user_nickname}}
+                            {% else %}
+                            {{comment.user.username}}
+                            {% endif %}
+                            </span>
                         </div>
-                        {{comment.text}}
+                        <div class="comment_content">
+                            <div class="comment_created">
+                                {{comment.created}}
+                            </div>
+                            <div class="comment_text">
+                                {{comment.text}}
+                            </div>
+                        </div>
                     </div>
                     {% if request.user == comment.user %}
                     <div class="delete_btn">
-                        <button onclick="onClickDelete({{post.id}}, {{comment.id}})">삭제</button>
+                        <button onclick="onClickDelete({{post.id}},{{comment.id}})">삭제</button> <!--comment 별로 id 준당-->
                     </div>
                     {% endif %}
                 </div>
-            {% endfor %}
+                {% endfor %}   
             </div>
             <div class="comment_input_area">
                 <input class="comment_input" type="text" placeholder="댓글달기" />

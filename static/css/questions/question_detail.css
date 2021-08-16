@@ -220,8 +220,11 @@ body {
     justify-content: space-between;
 }
 
-.addComment button {
-    padding: 10px 20px;
+.addComment > div {
+    padding: 1.2rem;
+    border: solid 1px var(--border-color);
+    border-radius: 14px;
+    margin: 0.5rem;
 }
 
 .comment_area {
@@ -229,7 +232,34 @@ body {
 }
 
 .comment_text {
+    font-size: 0.875rem;
     font-family: var(--content-font);
+    color: var(--text-color);
+    text-align: left;
+}
+
+.comment_info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.comment_created {
+    font-size: 0.625rem;
+    margin-bottom: 1rem;
+    color: var(--border-color);
+}
+
+.comment_profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 2rem;
+}
+
+
+.addComment button {
+    padding: 10px 20px;
 }
 
 
