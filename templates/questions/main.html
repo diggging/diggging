@@ -12,72 +12,73 @@
             'Content-Type',
             'application/x-www-form-urlencoded'
         );
-        console.log(requestAnswer);
         requestAnswer.send(JSON.stringify({id:id}));
     };
     const AnswerHandleResponse = () =>{
         if(requestAnswer.status < 400){
             const answer = requestAnswer.response;
-            const obj = JSON.parse(answer);
-            const userObj = JSON.parse(obj.user); // 유저 데이터
-            
-            console.log(userObj);
-            console.log(obj)
-
-             //답변 데이터 -> 질문을 올린사람의 id가 필요
-            for (let i=0; i < obj.answer.length; i++) {
-                for (let j=0; j < userObj.length; j++){
-                    if(obj.answer[i].question_id === userObj[j].pk)
-                    obj.answer[i]['username'] = userObj[j].fields.username;
-                    obj.answer[i]['result'] = []
-                }
-            }
-            // console.log(answer[0][0].answers.user.user_nickname)
             const answerab = document.querySelector('.answerabc');
-            // answer_dict = {
-            //     "id": answer.id,
-            //     "title": title,
-            //     "desc": name_rank_str,
-            // }
-
-            // title, desc, username
-            const title = [];
-            const desc = [];
-            const username = [];
-            for (let i=0; i < obj.answer.length; i++){
-                title.push(obj.answer[i].title)
-                desc.push(obj.answer[i].desc)
-                username.push(obj.answer[i].username)
-            }
-            
-            // result = [title, desc, username]
-            for (let i=0; i < obj.answer.length; i++) {
-                obj.answer[i]['result'].push(title[i])
-                obj.answer[i]['result'].push(desc[i])
-                obj.answer[i]['result'].push(username[i])
-            }
-            const result = []
-
-            for (let i=0; i < obj.answer.length; i++) {
-                result[i] = (obj.answer[i].result)
-            }
-            console.log(result)
-
-                answerab.innerHTML =`
-            <div>
-                ${result}
+            answerab.innerHTML =`
+            <div >
+                ${answer}
             </div>
             `
-            
         };
     };
-
     requestAnswer.onreadystatechange = () =>{
         if(requestAnswer.readyState === XMLHttpRequest.DONE){
             AnswerHandleResponse();
         };
     };
-
+</script>
+<style>
+    .accordion {
+        background-color: #FFFFFF;
+        cursor: pointer;
+        padding: 16px;
+        width: 100%;
+        outline: none;
+        border: none;
+        text-align: left;
+        font-size: 16px;
+        transition: 0.4s;
+    }
+    .active, .accordion:hover {
+        background-color: #F5F5F5;
+        font-weight: bold;
+    }
+    .accordion:after {
+        content: '\002B';
+        font-weight: bold;
+        float: right;
+        margin-left: 5px;
+    }
+    .active:after {
+        content: "\2212";
+    }
+    .panel {
+        padding: 0 16px;
+        background-color: #FFFFFF;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.2s ease-out;
+        border-bottom: 1px solid #EEEEEE;
+    }
+</style>
+<script>
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+            } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+            }
+        });
+    }
 </script>
 {% endblock %}
 {% block content %}
@@ -224,14 +225,13 @@
             {{request.user.folder_user.folder_name}}
             </div>
             <!-- 오른쪽 아래 내가 남긴 답변 영역 -->
-            <div class="my_answer_container">
-                <div>
-                    <button class="btn_my_answer" onclick="onClickAnswer({{request.user.id}})">내가 남긴 답변</button>
-                </div>
-                <div class="answerabc">
-                </div>
+            <button class="accordion" onclick ="onClickAnswer({{ request.user.id }})">내가 남긴 답변</button>
+            <div class="panel answerabc">
+                    {% for answers in answer %}
+                        {{answers}}
+                    {% endfor %}
             </div>
-            <!-- 내가 남긴 답변 영역 끝 -->
         </div>
     </div>
+</div>
 {% endblock %}
