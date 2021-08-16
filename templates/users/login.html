@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="{% static 'users/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
 <!-- html required custom -->
 <script>
@@ -30,8 +30,8 @@
     <div class="container">
         <div class="form_container">
             <div class="login_top">
-                <a href="#" class="login_logo">
-                    <img class="login_logo" src="{% static 'users/login_logo.png' %}">
+                <a href="{% url 'main' %}" class="login_logo">
+                    <img class="login_logo" src="{% static 'image/login_logo.png' %}">
                 </a>
                 <div class="login_question">
                     <h4>회원이 아닌가요?</h4>
