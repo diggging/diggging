@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <script src="{% static 'js/base.js' %}"></script>
+   
 </head>
 <body>
     <nav class="nav">
@@ -85,10 +86,9 @@
             {% endif %}
         </div>
     </nav>
-    
     {% block content%}
     {% endblock %}
     {% block script %}
-    {% endblock %}    
+    {% endblock %}  
 </body>
 </html>

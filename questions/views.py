@@ -376,17 +376,17 @@ def answer_ajax(request):
 @require_POST
 def question_like(request):
     pk = request.POST.get("pk", None)
-    question = get_object_or_404(Question_post, pk=pk)
+    post = get_object_or_404(Question_post, pk=pk)
     user = request.user
 
-    if question.likes_user.filter(id=user.id).exists():
-        question.likes_user.remove(user)
+    if post.likes_user.filter(id=user.id).exists():
+        post.likes_user.remove(user)
         message = "좋아요 취소"
     else:
-        question.likes_user.add(user)
+        post.likes_user.add(user)
         message = "좋아요"
 
-    ctx = {"likes_count": question.count_likes_user(), "message": message}
+    ctx = {"likes_count": post.count_likes_user(), "message": message}
     return HttpResponse(json.dumps(ctx), content_type="application/json")
 
 
@@ -394,16 +394,16 @@ def question_like(request):
 @require_POST
 def question_scrap(request):
     pk = request.POST.get("pk", None)
-    question = get_object_or_404(Question_post, pk=pk)
+    post = get_object_or_404(Question_post, pk=pk)
     user = request.user
 
-    if question.scarps_user.filter(id=user.id).exists():
-        question.scarps_user.remove(user)
+    if post.scarps_user.filter(id=user.id).exists():
+        post.scarps_user.remove(user)
         message = "퍼가기 취소"
     else:
-        question.scarps_user.add(user)
+        post.scarps_user.add(user)
         message = "퍼가기"
 
-    ctx = {"scarps_count": question.count_scarps_user(), "message": message}
+    ctx = {"scarps_count": post.count_scarps_user(), "message": message}
     return HttpResponse(json.dumps(ctx), content_type="application/json")
 
