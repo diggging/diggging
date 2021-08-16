@@ -388,11 +388,16 @@ def search_select(request):
         frameword_fields = Post._meta.get_field('framework')
         problem_fields = Post._meta.get_field('problem_solving')
 
-
         result = Post.objects.none()
 
+        if language == "전체":
+            lang_filter = Post.objects.all()
+        
         if lang_filter.exists():
             result = lang_filter
+
+        if os == "전체":
+            os_filter = Post.objects.all()
 
         if os_filter.exists() and result.exists():
             result = result & os_filter
@@ -400,6 +405,9 @@ def search_select(request):
             result = os_filter
         else:
             result = result
+
+        if framework == "전체":
+            frame_filter = Post.objects.all()
 
         if frame_filter.exists() and result.exists():
             result = result & frame_filter
