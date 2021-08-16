@@ -14,7 +14,11 @@ urlpatterns = [
     path("<int:question_post_id>/<answer_id>/answer_delete", views.answer_delete, name="answer_delete"),
     path("<int:question_post_id>/get_question", views.get_question, name="get_question"),
     path("<int:question_answer_id>/chosen_answer", views.chosen_answer, name="chosen_answer"),
-    path("count_like_scrap/", views.count_like_scrap_question, name="count_like_scrap"),
+    # path("count_like_scrap/", views.count_like_scrap_question, name="count_like_scrap"),
+    path("like/", views.question_like, name="question_like"),
+    path("scrap/", views.question_scrap, name="question_scrap"),
+
     path("<int:answer_id>/get_answer_comments", views.get_answer_comments, name="get_answer_comments"),
     path("answer_ajax/", views.answer_ajax, name="answer_ajax"),
 ]
+

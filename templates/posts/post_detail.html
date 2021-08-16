@@ -212,7 +212,7 @@ $(".scrap").click(function () { // .scarp 버튼을 클릭 감지
         </div>
         <div class="post_{{post.id}}">
             <div>
-                <input type="button" class="btn btn-info btn-sm like" name="{{ post.id }}" value="Like"
+                <input type="button" class="like" name="{{ post.id }}" value="Like"
                     style="margin-top: 7px">
                 <button id="count-{{ post.id }}" style="font:bold 1em; margin-top: 3px">
                     도움이되었어요.{{ post.likes_user.all.count }}개</button>
@@ -247,7 +247,7 @@ $(".scrap").click(function () { // .scarp 버튼을 클릭 감지
                 <input type="button" class="btn btn-info btn-sm scrap" name="{{ post.id }}" value="scrap"
                     style="margin-top: 7px">
                 <button id="scarp-{{ post.id }}" style="font:bold 1em; margin-top: 3px">
-                    퍼가기.{{ post.scarps_user.all.count }}개</button>
+                    퍼가기{{ post.scarps_user.all.count }}개</button>
             </div>
 
         </div>

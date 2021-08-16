@@ -333,6 +333,7 @@ body {
     color: var(--sand-color);
     font-family: var(--btn-font);
     text-decoration: none;
+    margin-bottom: 4rem;
 }
 
 .btn_control a {

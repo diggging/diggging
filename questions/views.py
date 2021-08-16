@@ -10,6 +10,8 @@ from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse, JsonResponse
 from django.db.models import Sum
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 
 
 # Create your views here.
@@ -329,26 +331,26 @@ def chosen_answer(request, question_answer_id):
 
 #--------------------------------------------------------------------------------------------------
 # 도움이 되었어요, 스크랩 개수 count 하기 위한 axios
-@csrf_exempt
-def count_like_scrap_question(request):
-    req = json.loads(request.body)
-    question_post_id = req["id"]
-    button_type = req["type"]
-    question_post = Question_post.objects.get(id=question_post_id)
-    question_host = question_post.user
-    print(question_host)
-    me = request.user
-    if button_type == "like":
-        question_post.helped_num += 1
-        print(question_host)
-        new_sand = Sand.objects.create(user=question_host, amount=20, reason="도움이 되었어요") # 이거 하는지 안하는지 모름
-        new_alarm = Alarm.objects.create(user=question_host, reason="내가 남긴 질문 "+question_post.title+"이 "+me.user_nickname+" 님께 도움이 되었어요.")
+# @csrf_exempt
+# def count_like_scrap_question(request):
+#     req = json.loads(request.body)
+#     question_post_id = req["id"]
+#     button_type = req["type"]
+#     question_post = Question_post.objects.get(id=question_post_id)
+#     question_host = question_post.user
+#     print(question_host)
+#     me = request.user
+#     if button_type == "like":
+#         question_post.helped_num += 1
+#         print(question_host)
+#         new_sand = Sand.objects.create(user=question_host, amount=20, reason="도움이 되었어요") # 이거 하는지 안하는지 모름
+#         new_alarm = Alarm.objects.create(user=question_host, reason="내가 남긴 질문 "+question_post.title+"이 "+me.user_nickname+" 님께 도움이 되었어요.")
     
-    elif button_type == "퍼오기":
-        question_post.scrap_num += 1
-    question_post.save()
+#     elif button_type == "퍼오기":
+#         question_post.scrap_num += 1
+#     question_post.save()
 
-    return JsonResponse({"id": question_post_id, "type": button_type})
+#     return JsonResponse({"id": question_post_id, "type": button_type})
 
 # 내가 남긴 답변 목록 ajax
 @csrf_exempt
@@ -368,3 +370,40 @@ def answer_ajax(request):
         "user": user_list
     }
     return JsonResponse(ctx, safe=False)
+
+# question like
+@login_required
+@require_POST
+def question_like(request):
+    pk = request.POST.get("pk", None)
+    question = get_object_or_404(Question_post, pk=pk)
+    user = request.user
+
+    if question.likes_user.filter(id=user.id).exists():
+        question.likes_user.remove(user)
+        message = "좋아요 취소"
+    else:
+        question.likes_user.add(user)
+        message = "좋아요"
+
+    ctx = {"likes_count": question.count_likes_user(), "message": message}
+    return HttpResponse(json.dumps(ctx), content_type="application/json")
+
+
+@login_required
+@require_POST
+def question_scrap(request):
+    pk = request.POST.get("pk", None)
+    question = get_object_or_404(Question_post, pk=pk)
+    user = request.user
+
+    if question.scarps_user.filter(id=user.id).exists():
+        question.scarps_user.remove(user)
+        message = "퍼가기 취소"
+    else:
+        question.scarps_user.add(user)
+        message = "퍼가기"
+
+    ctx = {"scarps_count": question.count_scarps_user(), "message": message}
+    return HttpResponse(json.dumps(ctx), content_type="application/json")
+
