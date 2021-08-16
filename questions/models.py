@@ -19,6 +19,9 @@ class Question_post(core_models.PostParent):
 
         return answer_selection_count
 
+    #def question_create(user, title, problem_solving, os, language, framework, error_message, image, desc, code, folder, is_public, is_friend, scrap_num, helped_num, likes_user, scarps_user):
+    #    new_post = Question_post(user=user, title=title, problem_solving=problem_solving, os=os, language=language, framework=framework, error_message=error_message, image=image, desc=desc, code=code, folder=folder, is_public=is_public, is_friend=is_friend, scrap_num=scrap_num, helped_num=helped_num, likes_user=likes_user, scarps_user=scarps_user)
+
 class Answer(core_models.TimeStampModel):
     user = models.ForeignKey(
         "users.User", related_name="answer_user", on_delete=models.CASCADE
