@@ -8,10 +8,10 @@
 
 {% block content %}
 <div class="post_container" id="scroll-element">
-    <button onclick="a()" >스크랩 /</button>
-    <button onclick="b()" id="helped" href="#">도움 /</button>
-    <button onclick="c()" >내 최신순 /</button>
-    <button onclick="d()" >이웃 /</button>
+    <a href="{% url 'posts:main' %}" >스크랩 /</a>
+    <a href="{% url 'posts:helped' %}" id="helped" href="#">도움 /</a>
+    <a href="{% url 'posts:my_recent' %} ">내 최신순 /</a>
+    <a href="{% url 'posts:follow' %}">이웃 /</a>
 
     {% include 'posts/_posts.html' with posts=posts %}
 
@@ -22,32 +22,12 @@
 <script>
     // 페이지별로 데이터 보내주는 비동기
     // 그 데이터를 또 무한 비동기 
-    
-    let baseUrl = "{% url 'posts:scrap_axios' %}"; //baseUrl만 바꿔주면 동기가 될꺼 같은데?
-    const a = () => {
-        const baseUrl = "{% url 'posts:scrap_axios' %}";
-        return baseUrl;
-    }
-
-    const b = () => {
-        const baseUrl = "{% url 'posts:helped_axios' %}";
-        return baseUrl;
-    }
-    
-    const c = () => {
-        const baseUrl = "{% url 'posts:follow_axios' %}";
-        return baseUrl;
-    }
-    const d = () => {
-        const baseUrl = "{% url 'posts:my_recent_axios' %}";
-        return baseUrl;
-    }
 
     document.addEventListener('DOMContentLoaded', () => {
         console.log( 'document was not ready, place code here' );
         let bottomSentinal = document.querySelector("#bottom-sentinel");
         let scrollElement = document.querySelector("#scroll-element");
-        
+        let baseUrl = "{% url 'posts:scrap_axios' %}"; //baseUrl만 바꿔주면 동기가 될꺼 같은데?
         attachInfiniteScroll(bottomSentinal, scrollElement, baseUrl);
         console.log(baseUrl);
     });
