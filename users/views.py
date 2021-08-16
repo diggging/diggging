@@ -317,6 +317,41 @@ def my_page(request, pk):
     }
     return render(request, template_name="users/my_page.html", context=ctx)
 
+
+
+def my_posts(request, host_id):
+    host = User.objects.get(id=host_id)
+    language_folders = Folder.objects.filter(folder_user=host, folder_kind="language")
+    framework_folders = Folder.objects.filter(folder_user=host, folder_kind="framework")
+    solve_folders = Folder.objects.filter(folder_user=host, folder_kind="solved")
+    ctx ={
+        'lang_folder' : language_folders,
+        'frame_folder' : framework_folders,
+        'solve_folder' : solve_folders,
+    }
+    return render(request, template_name="users/my_posts.html", context=ctx)
+
+def my_questions(request, host_id):
+    host = User.objects.get(id=host_id)
+    my_questions = Question_post.objects.filter(user=host)
+    questions_language_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="language")
+    questions_framework_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
+    ctx ={
+        'my_questions' : my_questions,
+        'q_lang_folder' : questions_language_folder,
+        'q_frame_folder' : questions_framework_folder,
+    }
+    return render(request, template_name="users/my_questions.html", context=ctx)
+
+def my_answers(request, host_id):
+    host = User.objects.get(id=host_id)
+    my_answers = Answer.objects.all(user=host)
+    ctx ={
+        'my_answers' : my_answers,
+    }
+    return render(request, template_name="users/my_answers.html", context=ctx)
+
+
 #-----삽질 기록모음
 @csrf_exempt
 def digging_folder(request, pk):

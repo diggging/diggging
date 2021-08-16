@@ -51,4 +51,9 @@ urlpatterns = [
     path('<int:pk>/questions_folder/', views.questions_folder, name="questions_folder"),
     path('<int:pk>/questions_lang_folder/', views.questions_lang_folder, name="questions_lang_folder"),
 
+    # my page
+    path('<int:host_id>/my_page/my_posts', view=views.my_posts, name="my_posts"),
+    path('<int:host_id>/my_page/my_questions', view=views.my_questions, name="my_questions"),
+    path('<int:host_id>/my_page/my_answers', view=views.my_answers, name="my_answers"),
+
 ] 
