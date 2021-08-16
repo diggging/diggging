@@ -4,7 +4,7 @@ from . import views
 app_name = "posts"
 urlpatterns = [
     # path("", views.post_list, name="post_list"),
-    path("main/", view=views.main, name="main"),  # main 페이지로 가는 api
+    path("main/", views.main, name="main"),
     path("main/helped/", views.helped, name="helped"),
     path("main/follow/", views.follow, name="follow"),
     path("main/my_recent/", views.my_recent, name="my_recent"),

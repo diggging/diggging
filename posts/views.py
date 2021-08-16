@@ -48,6 +48,10 @@ def main(request):
     #     "followings_posts": all_followings_posts,  # 내가 follow하는 사람들의 최신순 포스트
     #     "my_recent_post": my_recent_post,  # 내 글 최신순
     # }
+
+    # ctx = {
+    #     "user": request.user
+    # }
     return render(request, "posts/post_list.html")
 
 def helped(request):

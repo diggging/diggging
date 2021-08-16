@@ -12,13 +12,15 @@
             <div class="user_profile">
 
                 <div class="flex_col profile_image">
-                    {% if host.user_profile_image %}
-                        <img class="user_profile_image" src="{{ host.user_profile_image.url }}" width="200">
-                    {% endif %}
                     <form method="POST" action="{% url 'users:change_img' host.id %}" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <input type="file" name="new_img" accept="image/*"> 
-                        <button type="submit"> 이미지 변경하기 </button>
+                        <label for="new_img">
+                            {% if host.user_profile_image %}
+                                <img class="user_profile_image" src="{{ host.user_profile_image.url }}" width="200">
+                            {% endif %}
+                            <input type="file" id="new_img" name="new_img" accept="image/*"> 
+                        </label>
+                        <button class="img_btn"type="submit"> 이미지 변경하기 </button>
                     </form>
                 </div>
                 
