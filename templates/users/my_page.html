@@ -10,7 +10,6 @@
 <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script> -->
 
 <script src="{% static 'js/삽질기록모음.js' %}"></script>
-<script src="{% static 'js/질문모음.js' %}"></script>
 
 <script>
     const modal = document.querySelector('.point_modal');
@@ -266,9 +265,8 @@
         </div>
         <hr>
         <div class="btn_list_area">
-            <button class="list_btn" id="log_folder_btn" value="{{host.id}}">삽질 기록 모음 > </button>
-            <button class="list_btn" id="question_folder_btn" value="{{host.id}}">질문 모음 > </button>
-            <button class="list_btn" value="{{host.id}}">내가 남긴 답변 목록 > </button>
+            <a href="{% url 'users:my_posts' host.id %}" class="list_btn" id="log_folder_btn" value="{{host.id}}">삽질 기록 모음 > </a>
+            <a href="{% url 'users:my_questions' host.id %}" class="list_btn" id="question_folder_btn" value="{{host.id}}">질문 모음 > </a>
             {% if request.user.pk == host.pk %}
             <a href = '{% url "users:account_detail" host.id %}'><button class="list_btn">계정 관리 > </button></a>
             {% else %}

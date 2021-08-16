@@ -1,62 +1,42 @@
-//언어별 폴더
-const questionFolderBtn = document.getElementById('question_folder_btn');
+// 언어별 폴더
+const logFolderBtn = document.getElementById('log_folder_btn');
+const categoryTab = document.querySelector('.folder_category');
+const btnTap = document.getElementById('btn_tap');
 
-const questionsBtnReset = (host_id) => {
-    btnTap.innerHTML = `
-            <button id="questions_language_btn" value="${host_id}">언어</button>
-            <button id="questions_problem_btn" value="${host_id}">해결/미해결</button>
-            <button id="questions_framework_btn" value="${host_id}">프레임워크</button>
-        `
-}  
+console.log(btnTap.childElementCount)
 
-const setClassQuestions = () => {
-    const btn1 = document.getElementById('btn1');
-    const btn2 = document.getElementById('btn2');
-    const btn3 = document.getElementById('btn3');
+// const removeId = () => {
+//     while (btnTap.hasChildNodes()) {
+//         btnTap.removeChild(btnTap.firstChild);
+//     }
+// }  
 
-    btn1.setAttribute('class', 'questions_language_btn');
-    btn2.setAttribute('class', 'questions_problem_btn');
-    btn3.setAttribute('class', 'questions_framework_btn');
-}  
+// const createId = (id) => {
+//     const idName = ['language_btn', 'problem_btn', 'framework_btn'];
+//     const idText = ['언어', '해결/미해결', '프레임워크'];
+//     for(let i=0; i < 3; i++) {
+//         let btn = document.createElement('button');
+//         btn.setAttribute('id', idName[i]);
+//         btn.setAttribute('value', id);
+//         let btnText = document.createTextNode(idText[i]);
+//         btn.appendChild(btnText);
+//         btnTap.appendChild(btn);
+//     }
+// }
 
+// const setClassDigging = () => {
+//     const btn1 = document.getElementById('btn1');
+//     const btn2 = document.getElementById('btn2');
+//     const btn3 = document.getElementById('btn3');
 
-questionFolderBtn.addEventListener('click', () => {
-    id = questionFolderBtn.value;
-    var a = "http://127.0.0.1:8000/users/" + id
-    var url = a + "/questions_folder/"
-    fetch(url, {
-        method: "GET",
-        headers : { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-    })
-    .then(res => res.json())
-    .then(data => {
-        console.log(data)
-        setClassQuestions()
-        abc()
-        if (data.length === 0) {
-            categoryTab.innerHTML = "폴더없음"
-        } else {
-            const txt = data.map(folder => {
-                return `
-                <button class="lang_post_btn" id="${folder.id}" value="${folder.id}">
-                    ${folder.folder_name}
-                </button>
-                엥  
-                `
-            })
-            categoryTab.innerHTML = txt;
-        }
-    })
-})
+//     btn1.setAttribute('class', 'language_btn');
+//     btn2.setAttribute('class', 'problem_btn');
+//     btn3.setAttribute('class', 'framework_btn');
+// }   
 
-const a = () => {
-    const questionsLangBtn = document.querySelector('.questions_language_btn')
-    console.log(questionsLangBtn)
-    questionsLangBtn.addEventListener('click', () => {
-    console.log(questionsLangBtn)
+const langBtn = document.querySelector('.language_btn');
+
+langBtn.addEventListener('click', () => {
     id =langBtn.value;
     var a = "http://127.0.0.1:8000/users/" + id
     var url = a + "/questions_lang_folder/"
@@ -70,7 +50,7 @@ const a = () => {
     })
     .then(res => res.json())
     .then(data => {
-        console.log(data);
+
         if (data.length === 0) {
             categoryTab.innerHTML = "폴더없음"
         } else {
@@ -78,7 +58,6 @@ const a = () => {
                 return `
                 <button class="lang_post_btn" id="${folder.id}" value="${folder.id}">
                     ${folder.folder_name}
-                    엥????
                 </button>    
                 `
             })
@@ -87,8 +66,176 @@ const a = () => {
         langPost()
     })
 })
+
+const langPost = () => {
+    const langPostBtn = document.querySelectorAll('.lang_post_btn');
+    const thirdContainer = document.querySelector('.third_container');
+    for(let i=0; i < langPostBtn.length; i++) {
+        langPostBtn[i].addEventListener('click', () => {
+
+            id =langPostBtn[i].value;
+            var a = "http://127.0.0.1:8000/users/" + id
+            var url = a + "/questions_lang_post/"
+            fetch(url, {
+                method: "GET",
+                headers : { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                if (data.length === 0) {
+                    thirdContainer.innerHTML = "파일없음"
+                } else {
+                    const txt = data.map(post => {
+                        return `
+                        ${post.title}    
+                        `
+                    })
+                    thirdContainer.innerHTML = txt;
+                }
+            })
+        });
+    }
 }
+
+//해결 미해결
+
+const problemBtn = document.querySelector('.problem_btn');
+
+problemBtn.addEventListener('click', () => {
+    id =problemBtn.value;
+
+    var a = "http://127.0.0.1:8000/users/" + id
+    var url = a + "/questions_problem_folder/"
     
+    fetch(url, {
+        method: "GET",
+        headers : { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+    })
+    .then(res => res.json())
+    .then(data => {
+        
+        if (data.length === 0) {
+            categoryTab.innerHTML = "폴더없음"
+        } else {
+            const txt = data.map(folder => {
+                return `
+                <button class="problem_post_btn" id="${folder.id}" value="${folder.id}">
+                    ${folder.folder_name}
+                </button>    
+                `
+            })
+            categoryTab.innerHTML = txt;
+        }
+        problemPost()
+    })
+})
 
+const problemPost = () => {
+    const problemBtn = document.querySelectorAll('.problem_post_btn');
+    const thirdContainer = document.querySelector('.third_container');
+    for(let i=0; i < problemBtn.length; i++) {
+        problemBtn[i].addEventListener('click', () => {
 
+            id =problemBtn[i].value;
+            var a = "http://127.0.0.1:8000/users/" + id
+            var url = a + "/questions_problem_post/"
+            
+            fetch(url, {
+                method: "GET",
+                headers : { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.length === 0) {
+                    thirdContainer.innerHTML = "파일없음";
+                } else {
+                    const txt = data.map(post => {
+                        return `
+                        ${post.title}    
+                        `
+                    })
+                    thirdContainer.innerHTML = txt;
+                }
+            })
+        });
+    }
+}
+
+//프레임 워크
+const frameworkBtn = document.querySelector('.framework_btn');
+    frameworkBtn.addEventListener('click', () => {
+        id =frameworkBtn.value;
+        var a = "http://127.0.0.1:8000/users/" + id
+        var url = a + "/questions_framework_folder/"
+        
+        fetch(url, {
+            method: "GET",
+            headers : { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.length === 0) {
+                categoryTab.innerHTML = "폴더없음"
+            } else {
+                
+                const txt = data.map(folder => {
+                    return `
+                    <button class="framework_post_btn" id="${folder.id}" value="${folder.id}">
+                        ${folder.folder_name}
+                    </button>    
+                    `
+                })
+                categoryTab.innerHTML = txt;
+            }
+            framePost()
+        })
+    })
+
+const framePost = () => {
+    const framePostBtn = document.querySelectorAll('.framework_post_btn');
+    const thirdContainer = document.querySelector('.third_container');
+    for(let i=0; i < framePostBtn.length; i++) {
+        framePostBtn[i].addEventListener('click', () => {
+
+            id =framePostBtn[i].value;
+            var a = "http://127.0.0.1:8000/users/" + id
+            var url = a + "/questions_framework_post/"
+            
+            fetch(url, {
+                method: "GET",
+                headers : { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+            })
+            .then(res => res.json())
+            .then(data => {
+
+                if (data.length === 0) {
+                    thirdContainer.innerHTML = "파일없음"
+                } else {
+                    const txt = data.map(post => {
+                        return `
+                        ${post.title}    
+                        `
+                    })
+                    thirdContainer.innerHTML = txt;
+                }
+            })
+        });
+    }
+}
 

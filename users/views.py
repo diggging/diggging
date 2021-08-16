@@ -320,47 +320,184 @@ def my_page(request, pk):
 
 
 def my_posts(request, host_id):
-    host = User.objects.get(id=host_id)
+    # 왼쪽 상단 - host의 상태를 위한 변수들
+    host = get_object_or_404(User,pk=host_id)
+    host_following = host.user_following.all()
+    host_follower = host.user_followed.all()
+
+    # 폴더 보여주기위한 변수
     language_folders = Folder.objects.filter(folder_user=host, folder_kind="language")
     framework_folders = Folder.objects.filter(folder_user=host, folder_kind="framework")
     solve_folders = Folder.objects.filter(folder_user=host, folder_kind="solved")
-    ctx ={
-        'lang_folder' : language_folders,
-        'frame_folder' : framework_folders,
-        'solve_folder' : solve_folders,
+    
+    # 질문 모음
+    my_questions = Question_post.objects.filter(user=host)
+    questions_language_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="language")
+    questions_framework_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
+
+    # 최근에 남긴 질문
+    my_recent_questions = Question_post.objects.filter(user=host).order_by("-created")
+    # 지수가 필요해서 넣었음
+    my_recent_logs = Post.objects.filter(user=host).order_by("-created")
+
+    # 모래
+    my_sand = Sand.objects.filter(user = host)
+    my_sand_sum = my_sand.aggregate(Sum('amount'))
+    print(my_sand_sum)
+    if my_sand_sum['amount__sum'] == None:
+        my_sand_sum = 0
+    else:
+        if int(my_sand_sum['amount__sum']) < 2000:
+            host.user_level = 0
+        elif int(my_sand_sum['amount__sum']) <7000:
+            host.user_level=1
+        elif int(my_sand_sum['amount__sum']) <18000:
+            host.user_level=2
+        else:
+            host.user_level=3
+
+    print(my_sand)
+    print(my_sand_sum)
+
+    ctx = {
+        # 왼쪽 상단을 위한 변수
+        'host': host,
+        'host_follower' : host_follower,
+        'host_following' : host_following,
+        'language_folders' : language_folders,
+        'framework_folders' : framework_folders,
+        'solve_folders': solve_folders,
+        'questions_language_folder' : questions_language_folder,
+        'questions_framework_folder' : questions_framework_folder,
+
+        #'my_questions': my_questions,
+        'my_recent_questions' : my_recent_questions,
+        'my_recent_logs' : my_recent_logs,
+        'my_all_sands': my_sand,    # sand 모든 object list
+        'my_sand_sum' : my_sand_sum,    # 현재까지 sand 총합
     }
     return render(request, template_name="users/my_posts.html", context=ctx)
 
 def my_questions(request, host_id):
-    host = User.objects.get(id=host_id)
+    # 왼쪽 상단 - host의 상태를 위한 변수들
+    host = get_object_or_404(User,pk=host_id)
+    host_following = host.user_following.all()
+    host_follower = host.user_followed.all()
+
+    # 폴더 보여주기위한 변수
+    language_folders = Folder.objects.filter(folder_user=host, folder_kind="language")
+    framework_folders = Folder.objects.filter(folder_user=host, folder_kind="framework")
+    solve_folders = Folder.objects.filter(folder_user=host, folder_kind="solved")
+    
+    # 질문 모음
     my_questions = Question_post.objects.filter(user=host)
     questions_language_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="language")
     questions_framework_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
-    ctx ={
-        'my_questions' : my_questions,
-        'q_lang_folder' : questions_language_folder,
-        'q_frame_folder' : questions_framework_folder,
+
+    # 최근에 남긴 질문
+    my_recent_questions = Question_post.objects.filter(user=host).order_by("-created")
+    # 지수가 필요해서 넣었음
+    my_recent_logs = Post.objects.filter(user=host).order_by("-created")
+
+    # 모래
+    my_sand = Sand.objects.filter(user = host)
+    my_sand_sum = my_sand.aggregate(Sum('amount'))
+    print(my_sand_sum)
+    if my_sand_sum['amount__sum'] == None:
+        my_sand_sum = 0
+    else:
+        if int(my_sand_sum['amount__sum']) < 2000:
+            host.user_level = 0
+        elif int(my_sand_sum['amount__sum']) <7000:
+            host.user_level=1
+        elif int(my_sand_sum['amount__sum']) <18000:
+            host.user_level=2
+        else:
+            host.user_level=3
+
+    print(my_sand)
+    print(my_sand_sum)
+
+    ctx = {
+        # 왼쪽 상단을 위한 변수
+        'host': host,
+        'host_follower' : host_follower,
+        'host_following' : host_following,
+        'language_folders' : language_folders,
+        'framework_folders' : framework_folders,
+        'solve_folders': solve_folders,
+        'questions_language_folder' : questions_language_folder,
+        'questions_framework_folder' : questions_framework_folder,
+
+        #'my_questions': my_questions,
+        'my_recent_questions' : my_recent_questions,
+        'my_recent_logs' : my_recent_logs,
+        'my_all_sands': my_sand,    # sand 모든 object list
+        'my_sand_sum' : my_sand_sum,    # 현재까지 sand 총합
     }
     return render(request, template_name="users/my_questions.html", context=ctx)
 
 def my_answers(request, host_id):
-    host = User.objects.get(id=host_id)
-    my_answers = Answer.objects.all(user=host)
-    ctx ={
-        'my_answers' : my_answers,
+    # 왼쪽 상단 - host의 상태를 위한 변수들
+    host = get_object_or_404(User,pk=host_id)
+    host_following = host.user_following.all()
+    host_follower = host.user_followed.all()
+
+    # 폴더 보여주기위한 변수
+    language_folders = Folder.objects.filter(folder_user=host, folder_kind="language")
+    framework_folders = Folder.objects.filter(folder_user=host, folder_kind="framework")
+    solve_folders = Folder.objects.filter(folder_user=host, folder_kind="solved")
+    
+    # 질문 모음
+    my_questions = Question_post.objects.filter(user=host)
+    questions_language_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="language")
+    questions_framework_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
+
+    # 최근에 남긴 질문
+    my_recent_questions = Question_post.objects.filter(user=host).order_by("-created")
+    # 지수가 필요해서 넣었음
+    my_recent_logs = Post.objects.filter(user=host).order_by("-created")
+
+    # 모래
+    my_sand = Sand.objects.filter(user = host)
+    my_sand_sum = my_sand.aggregate(Sum('amount'))
+    print(my_sand_sum)
+    if my_sand_sum['amount__sum'] == None:
+        my_sand_sum = 0
+    else:
+        if int(my_sand_sum['amount__sum']) < 2000:
+            host.user_level = 0
+        elif int(my_sand_sum['amount__sum']) <7000:
+            host.user_level=1
+        elif int(my_sand_sum['amount__sum']) <18000:
+            host.user_level=2
+        else:
+            host.user_level=3
+
+    print(my_sand)
+    print(my_sand_sum)
+
+    ctx = {
+        # 왼쪽 상단을 위한 변수
+        'host': host,
+        'host_follower' : host_follower,
+        'host_following' : host_following,
+        'language_folders' : language_folders,
+        'framework_folders' : framework_folders,
+        'solve_folders': solve_folders,
+        'questions_language_folder' : questions_language_folder,
+        'questions_framework_folder' : questions_framework_folder,
+
+        #'my_questions': my_questions,
+        'my_recent_questions' : my_recent_questions,
+        'my_recent_logs' : my_recent_logs,
+        'my_all_sands': my_sand,    # sand 모든 object list
+        'my_sand_sum' : my_sand_sum,    # 현재까지 sand 총합
     }
     return render(request, template_name="users/my_answers.html", context=ctx)
 
 
-#-----삽질 기록모음
-@csrf_exempt
-def digging_folder(request, pk):
-    host = get_object_or_404(User, pk=pk)
-    folder = Folder.objects.filter(folder_user=host, folder_kind="language")
-    data = folder.values()
-    
-    return JsonResponse(list(data), safe=False)
-
+#-----삽질 기록모음, mypage
 @csrf_exempt
 def lang_folder(request, pk):
     host = get_object_or_404(User, pk=pk)
@@ -412,14 +549,6 @@ def framework_folder_posts(request, pk):
 
 #---------질문 모음
 @csrf_exempt
-def questions_folder(request, pk):
-    host = get_object_or_404(User, pk=pk)
-    folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="language")
-    data = folder.values()
-    
-    return JsonResponse(list(data), safe=False)
-
-@csrf_exempt
 def questions_lang_folder(request, pk):
     host = get_object_or_404(User, pk=pk)
     folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="language")
@@ -427,6 +556,40 @@ def questions_lang_folder(request, pk):
 
     return JsonResponse(list(data), safe=False)
 
+def questions_lang_post(request, pk):
+    folder = QuestionFolder.objects.get(pk=pk)
+    posts = Question_post.objects.filter(folder=folder)
+    data = posts.values()
+
+    return JsonResponse(list(data), safe=False)
+
+def questions_problem_folder(request, pk):
+    host = get_object_or_404(User, pk=pk)
+    folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="solved")
+    data = folder.values()
+    
+    return JsonResponse(list(data), safe=False)
+
+def questions_problem_post(request, pk):
+    folder = QuestionFolder.objects.get(pk=pk)
+    posts = Question_post.objects.filter(folder=folder)
+    data = posts.values()
+
+    return JsonResponse(list(data), safe=False)
+
+def questions_framework_folder(request, pk):
+    host = get_object_or_404(User, pk=pk)
+    folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="solved")
+    data = folder.values()
+    
+    return JsonResponse(list(data), safe=False)
+
+def questions_framework_post(request, pk):
+    folder = QuestionFolder.objects.get(pk=pk)
+    posts = Question_post.objects.filter(folder=folder)
+    data = posts.values()
+
+    return JsonResponse(list(data), safe=False)
 
 
 # 한번 누르면 follow, 두번 누르면 unfollow

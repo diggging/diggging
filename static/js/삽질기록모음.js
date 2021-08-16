@@ -24,55 +24,19 @@ console.log(btnTap.childElementCount)
 //     }
 // }
 
-const setClassDigging = () => {
-    const btn1 = document.getElementById('btn1');
-    const btn2 = document.getElementById('btn2');
-    const btn3 = document.getElementById('btn3');
+// const setClassDigging = () => {
+//     const btn1 = document.getElementById('btn1');
+//     const btn2 = document.getElementById('btn2');
+//     const btn3 = document.getElementById('btn3');
 
-    btn1.setAttribute('class', 'language_btn');
-    btn2.setAttribute('class', 'problem_btn');
-    btn3.setAttribute('class', 'framework_btn');
-}   
-
-logFolderBtn.addEventListener('click', () => {
-    //url를 user.pk로 설정해줘야 한다.
-    id =logFolderBtn.value;
-    
-    var a = "http://127.0.0.1:8000/users/" + id
-    var url = a + "/digging_folder/"
-    
-    fetch(url, {
-        method: "GET",
-        headers : { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-    })
-    .then(res => res.json())
-    .then(data => {
-        setClassDigging()
-        console.log(data)
-        if (data.length === 0) {
-            categoryTab.innerHTML = "폴더없음"
-        } else {
-            const txt = data.map(folder => {
-                return `
-                <button class="lang_post_btn" id="${folder.id}" value="${folder.id}">
-                    ${folder.folder_name}
-                </button>    
-                `
-            })
-            categoryTab.innerHTML = txt;
-        }
-        langPost()
-        console.log()
-    })
-})
+//     btn1.setAttribute('class', 'language_btn');
+//     btn2.setAttribute('class', 'problem_btn');
+//     btn3.setAttribute('class', 'framework_btn');
+// }   
 
 const langBtn = document.querySelector('.language_btn');
 
 langBtn.addEventListener('click', () => {
-    console.log(langBtn)
     id =langBtn.value;
     var a = "http://127.0.0.1:8000/users/" + id
     var url = a + "/lang_folder/"
@@ -86,7 +50,6 @@ langBtn.addEventListener('click', () => {
     })
     .then(res => res.json())
     .then(data => {
-        console.log(data);
 
         if (data.length === 0) {
             categoryTab.innerHTML = "폴더없음"
@@ -104,16 +67,11 @@ langBtn.addEventListener('click', () => {
     })
 })
 
-
-
-
-
 const langPost = () => {
     const langPostBtn = document.querySelectorAll('.lang_post_btn');
     const thirdContainer = document.querySelector('.third_container');
     for(let i=0; i < langPostBtn.length; i++) {
         langPostBtn[i].addEventListener('click', () => {
-            console.log(langPostBtn[i])
 
             id =langPostBtn[i].value;
             var a = "http://127.0.0.1:8000/users/" + id
@@ -127,7 +85,6 @@ const langPost = () => {
             })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
 
                 if (data.length === 0) {
                     thirdContainer.innerHTML = "파일없음"
@@ -163,7 +120,6 @@ problemBtn.addEventListener('click', () => {
     })
     .then(res => res.json())
     .then(data => {
-        console.log(data)
         
         if (data.length === 0) {
             categoryTab.innerHTML = "폴더없음"
@@ -186,7 +142,6 @@ const problemPost = () => {
     const thirdContainer = document.querySelector('.third_container');
     for(let i=0; i < problemBtn.length; i++) {
         problemBtn[i].addEventListener('click', () => {
-            console.log(problemBtn[i])
 
             id =problemBtn[i].value;
             var a = "http://127.0.0.1:8000/users/" + id
@@ -201,7 +156,6 @@ const problemPost = () => {
             })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
                 if (data.length === 0) {
                     thirdContainer.innerHTML = "파일없음";
                 } else {
@@ -233,7 +187,6 @@ const frameworkBtn = document.querySelector('.framework_btn');
         })
         .then(res => res.json())
         .then(data => {
-            console.log(data[0].folder_name)
             if (data.length === 0) {
                 categoryTab.innerHTML = "폴더없음"
             } else {
@@ -256,7 +209,6 @@ const framePost = () => {
     const thirdContainer = document.querySelector('.third_container');
     for(let i=0; i < framePostBtn.length; i++) {
         framePostBtn[i].addEventListener('click', () => {
-            console.log(framePostBtn[i])
 
             id =framePostBtn[i].value;
             var a = "http://127.0.0.1:8000/users/" + id
@@ -271,7 +223,6 @@ const framePost = () => {
             })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
 
                 if (data.length === 0) {
                     thirdContainer.innerHTML = "파일없음"
