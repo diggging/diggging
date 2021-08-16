@@ -366,11 +366,11 @@ def chosen_answer(request, question_answer_id):
     return redirect("questions:question_detail", is_answer_chosen.question.id)
 
 
-# 내가 남긴 답변 목록 ajax
 @csrf_exempt
 def answer_ajax(request):
     req = json.loads(request.body)
     user_id = req["id"]
     users = User.objects.get(id=user_id)
     answer = list(Answer.objects.filter(user=users).values())
+    print(answer)
     return JsonResponse(answer, safe=False)
