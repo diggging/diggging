@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <script src="{% static 'js/base.js' %}"></script>
-
 </head>
 <body>
     <nav class="nav">
@@ -35,7 +34,7 @@
         <div class="nav_right">
             {% if user.is_authenticated %}
                 <div class="nav_vertical">
-                    <div>
+                    <div class="alarm" onclick="alarmMessage()">
                         <a href="#"><i class="far fa-comment-alt fa-2x" style="font-size: 1.6rem; margin-top: 3px;"></i></a>
                     </div>
                     <h6>알림</h6>

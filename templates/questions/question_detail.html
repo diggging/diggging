@@ -205,6 +205,8 @@
 <!-- 질문 코멘트 댓글 -->
 <script type="text/javascript">
     // 빈 코멘트 게시 시 알람창 뜨게 할 div
+    const test = document.querySelector('.addComment');
+    const body = document.querySelector('body');
     const nullComment = (input) => {
             const newDiv = document.createElement('div');
             const newText = document.createTextNode('댓글을 입력하세여!!');
@@ -212,11 +214,15 @@
             //newDiv 커스텀
             newDiv.style.width = "100px";
             newDiv.style.height = "30px";
-            input.appendChild(newDiv);
-            setTimeout(()=> {
-                newDiv.remove()
-            }, 2000)
+
+            newDiv.setAttribute('class', 'comment_alert');
+            
+            body.appendChild(newDiv);
+            //setTimeout(()=> {
+            //    newDiv.remove()
+            //}, 2000)
         }
+
     //--------------------------------------------------------------------------------------------------------
      // 질문 코멘트 추가 부분
     const requestComment = new XMLHttpRequest();

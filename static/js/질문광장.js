@@ -131,17 +131,7 @@ const framePost = () => {
                 } else {
                     const txt = data.map(post => {
                         return `
-                        <div class="no_answer_list">
-                        <a href="{% url 'question:question_post_detail' post.user.id post.id %}">
-                            <div class="no_user_info">
-                                <img src="{{ post.user.user_profile_image.url }}">
-                                <span class="no_answer_username">{{post.user.user_nickname}}</span>
-                            </div>
-                            <span class="no_answer_title">{{post.title|truncatechars:20}}</span>
-                            <span class="no_answer_username">{{post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;" }}</span>
-                        </a>
-                        <!--채택이 false인거만 나오게 한다.-->
-                    </div>   
+                        ${post}
                         `
                     })
                     noAnswerListBox.innerHTML = txt;

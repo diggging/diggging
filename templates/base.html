@@ -6,9 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="{% static 'js/base.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-    <script src="{% static 'js/base.js' %}"></script>
 </head>
 <body>
     <nav class="nav">
@@ -28,10 +28,12 @@
         <div class="nav_right">
             {% if user.is_authenticated %}
                 <div class="nav_vertical">
-                    <div>
-                        <a href="#"><i class="far fa-comment-alt fa-2x" style="font-size: 1.6rem; margin-top: 3px;"></i></a>
+                    <div class="alarm" onclick="alarmMessage()" value="{{user.id}}">
+                        <a ><i class="far fa-comment-alt fa-2x" style="font-size: 1.6rem; margin-top: 3px;"></i></a>
                     </div>
                     <h6>알림</h6>
+                    <!-- 알람이 뜨는 공간 -->
+                    <div class="alarm_toggle" style="display: none;"></div>
                 </div>
                 <div class="nav_vertical">
                     <div>
@@ -53,7 +55,7 @@
                 </div>
             {% else %}
                 <div class="nav_vertical">
-                    <div>
+                    <div class="">
                         <a href="">💡</a>
                     </div>
                     <h6>알림</h6>

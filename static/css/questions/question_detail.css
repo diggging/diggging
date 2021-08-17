@@ -399,3 +399,16 @@ body {
     width: 20px;
     height: 20px;
 }
+
+/* 댓글 경고창 */
+.comment_alert {
+    width: 500px;
+    height: 180px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: block;
+    margin-left: auto;
+    margin-bottom: auto;
+    background-color: var(--border-color);
+}

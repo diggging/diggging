@@ -32,7 +32,7 @@ from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 
 from django.http.response import JsonResponse
-# import json
+from django.core import serializers
 
 
 # Create your views here.
@@ -631,6 +631,7 @@ def change_img(request, pk):
 
 
 # ________________________________________________ alarm ________________________________________________
+@csrf_exempt
 def alarm(request, pk):
     me = User.objects.get(id=pk)    # 누구의 alarm인지
     my_alarm = Alarm.objects.filter(user=me)    # 주인의 alarm 모두 가져오기
@@ -638,7 +639,9 @@ def alarm(request, pk):
     for alarm in not_check_alarm:
         alarm.is_checked = True
         alarm.save()
-    ctx = {
-        'alarms' : my_alarm,
-    }
-    return render(request, template_name="users/alarm.html", context=ctx)
+
+    data = serializers.serialize('json', my_alarm)
+
+    return JsonResponse({
+        "data": data,
+    })
