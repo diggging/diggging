@@ -36,6 +36,7 @@
         <div class="desc_area">
             {{ post.desc|safe|escape }}
         </div>
+        {% if not request.user.id == post.user.id %}
         <div class="post_{{post.id}}">
             <div>
                 <input type="button" class="like" name="{{ post.id }}" value="Like"
@@ -43,38 +44,40 @@
                 <button id="count-{{ post.id }}" style="font:bold 1em; margin-top: 3px">
                     도움이되었어요.{{ post.likes_user.all.count }}개</button>
             </div>
-            <div class="accordion_area">
-                <button class="btn btn_toggle">공유하기</button>
-                <div class="content_area">
-                    <span class="sociallink ml-1">
-                        <a href="javascript:sendLinkFacebook()" title="페이스북으로 공유">
-                        <img src="{% static 'images/facebook.png' %}" width=36 alt="Facebook">
-                        </a>
-                    </span>
-                    <span class="sociallink ml-1">
-                        <a href="javascript:sendLinkTwitter()" title="트위터로 공유">
-                        <img src="{% static 'images/twitter.png' %}" width=36 alt="Twitter">
-                        </a>
-                    </span>
-                    <span class="sociallink ml-1">
-                        <a href="javascript:sendLinkNaver()" title="네이버로 공유">
-                        <img src="{% static 'images/naver.png' %}" width=36 alt="Naver">
-                        </a>
-                    </span>
-                    <span class="sociallink ml-1">
-                        <a href="javascript:sendLinkKakao()" id="kakao-link-btn" title="카카오톡으로 공유">
-                        <img src="{% static 'images/kakaotalk.png' %}" width=36 alt="Kakaotalk"> <!--이거는 도메인이없어서 못하는중임당... 배포하면 수정 할 예정.-->
-                        </a>
-                    </span>
-                </div>
+        </div>
+        {% endif %}
+        <div class="accordion_area">
+            <button class="btn btn_toggle">공유하기</button>
+            <div class="content_area">
+                <span class="sociallink ml-1">
+                    <a href="javascript:sendLinkFacebook()" title="페이스북으로 공유">
+                    <img src="{% static 'images/facebook.png' %}" width=36 alt="Facebook">
+                    </a>
+                </span>
+                <span class="sociallink ml-1">
+                    <a href="javascript:sendLinkTwitter()" title="트위터로 공유">
+                    <img src="{% static 'images/twitter.png' %}" width=36 alt="Twitter">
+                    </a>
+                </span>
+                <span class="sociallink ml-1">
+                    <a href="javascript:sendLinkNaver()" title="네이버로 공유">
+                    <img src="{% static 'images/naver.png' %}" width=36 alt="Naver">
+                    </a>
+                </span>
+                <span class="sociallink ml-1">
+                    <a href="javascript:sendLinkKakao()" id="kakao-link-btn" title="카카오톡으로 공유">
+                    <img src="{% static 'images/kakaotalk.png' %}" width=36 alt="Kakaotalk"> <!--이거는 도메인이없어서 못하는중임당... 배포하면 수정 할 예정.-->
+                    </a>
+                </span>
             </div>
-
+            {% if not request.user.id == post.user.id %}
             <div>
                 <input type="button" class="btn btn-info btn-sm scrap" name="{{ post.id }}" value="scrap"
                     style="margin-top: 7px">
                 <button id="scarp-{{ post.id }}" style="font:bold 1em; margin-top: 3px">
                     퍼가기{{ post.scarps_user.all.count }}개</button>
             </div>
+            {% endif %}
         </div>
         <!-- <div class="post_{{post.id}}">
             <a class="like_button post__like" onclick="onClickLikeScrap({{ post.id }}, 'like')">도움이-되었어요
@@ -534,9 +537,19 @@ noSelect.addEventListener('click', () => {
 });
     
 
+// ---------------------------퍼오기 팝업창 ---------------
+const scrapPopup = document.querySelector('.scrap_popup')
+const scrapButton = document.querySelector('.scrap');
 
-// function closePopUp('click', () => {
-//     modalBody.style.visibility = "hidden";
-// } ) 
+scrapButton.addEventListener('click', () => {
+    scrapPopup.style.visibility = "visible";
+    scrapPopup.style.opacity = "1";
+});
+
+scrapPopup.addEventListener('click', () => {
+    scrapPopup.style.opacity = "0";
+    scrapPopup.style.display = "hidden";
+
+})
 </script>
 {% endblock script %}
