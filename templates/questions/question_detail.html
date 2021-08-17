@@ -230,17 +230,17 @@
             //유저 데이터 직렬화
             const userData = JSON.parse(user); 
             const userImg = userData[0].fields.user_profile_image;
+            const userImgUrl = userImg.slice(2)
             const userName = userData[0].fields.user_nickname;
             const createDate = comment_date;
             
-
             const addComment = document.querySelector(`.addComment`);
             console.log(comment_id);
             addComment.innerHTML += `
             <div class='comment_id_${comment_id}'>
                 <div class="comment_info">
                     <div class="comment_profile">
-                        <img src="${userImg}">
+                        <img src="${userImgUrl}">
                         <span class="user_nicknamme">
                         ${userName}
                         </span>
