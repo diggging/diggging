@@ -204,19 +204,40 @@
 
 <!-- 질문 코멘트 댓글 -->
 <script type="text/javascript">
+    // 빈 코멘트 게시 시 알람창 뜨게 할 div
+    const nullComment = (input) => {
+            const newDiv = document.createElement('div');
+            const newText = document.createTextNode('댓글을 입력하세여!!');
+            newDiv.appendChild(newText);
+            //newDiv 커스텀
+            newDiv.style.width = "100px";
+            newDiv.style.height = "30px";
+            input.appendChild(newDiv);
+            setTimeout(()=> {
+                newDiv.remove()
+            }, 2000)
+        }
     //--------------------------------------------------------------------------------------------------------
      // 질문 코멘트 추가 부분
     const requestComment = new XMLHttpRequest();
+    const commentInput = document.querySelector(`.comment_input`)
+
     const onClickComment = (id) => {
-        const url = '/comments/add_question_comment/';
-        requestComment.open('POST', url, true);
-        requestComment.setRequestHeader(
-            'Content-Type',
-            'application/x-www-form-urlencoded'
-        );
-        const text = document.querySelector(`.comment_input`).value;
-        requestComment.send(JSON.stringify({ id: id, text: text}));
-        console.log(requestComment);
+
+        if (!commentInput.value) {
+            nullComment(commentInput)
+            return false
+        } else {
+            const url = '/comments/add_question_comment/';
+            requestComment.open('POST', url, true);
+            requestComment.setRequestHeader(
+                'Content-Type',
+                'application/x-www-form-urlencoded'
+            );
+            const text = document.querySelector(`.comment_input`).value;
+            requestComment.send(JSON.stringify({ id: id, text: text}));
+            console.log(requestComment);
+        }
     };
     
     const commentHandleResponse = () => {
@@ -233,34 +254,35 @@
             const userImgUrl = userImg.slice(2)
             const userName = userData[0].fields.user_nickname;
             const createDate = comment_date;
-            
+
             const addComment = document.querySelector(`.addComment`);
-            console.log(comment_id);
-            addComment.innerHTML += `
-            <div class='comment_id_${comment_id}'>
-                <div class="comment_info">
-                    <div class="comment_profile">
-                        <img src="${userImgUrl}">
-                        <span class="user_nicknamme">
-                        ${userName}
-                        </span>
+            console.log(commentInput.value)
+            // 아무것도 입력안했을 때, 댓글 안달림
+
+                addComment.innerHTML += `
+                <div class='comment_id_${comment_id}'>
+                    <div class="comment_info">
+                        <div class="comment_profile">
+                            <img src="${userImgUrl}">
+                            <span class="user_nicknamme">
+                            ${userName}
+                            </span>
+                        </div>
+                        <div class="comment_content">
+                            <div class="comment_created">
+                                ${createDate}
+                            </div>
+                            <div class="comment_text">
+                                ${text}
+                            </div>
+                        </div>
                     </div>
-                    <div class="comment_content">
-                        <div class="comment_created">
-                            ${createDate}
-                        </div>
-                        <div class="comment_text">
-                            ${text}
-                        </div>
+                    <div class="delete_btn">
+                        <button onclick="onClickDelete(${id}, ${comment_id})">삭제</button>
                     </div>
                 </div>
-                <div class="delete_btn">
-                    <button onclick="onClickDelete(${id}, ${comment_id})">삭제</button>
-                </div>
-            </div>
             `
-            const cmt_input = document.querySelector('.comment_input');
-            cmt_input.value = null
+            commentInput.value = null
         };
     };
     requestComment.onreadystatechange = () => {
@@ -268,7 +290,6 @@
             commentHandleResponse();
         };
     };
-   
     // <div class='comment_id_${comment.id}'>
     //     <div class="comment_info">
     //         <div class="comment_profile">
@@ -356,17 +377,24 @@
     //------------------------------------------------------------------------------------------------------
     // 답변 코멘트 추가 부분
     const requestAnswerComment = new XMLHttpRequest();
+    const cmt_input = document.querySelector('.answer_comment_input');
+
     const onClickAnswerComment = (id) => {
-        const url = '/comments/add_answer_comment/';
-        requestAnswerComment.open('POST', url, true);
-        requestAnswerComment.setRequestHeader(
-            'Content-Type',
-            'application/x-www-form-urlencoded'
-        );
-        console.log(id)
-        const text = document.querySelector(`.answer-id-${id} .answer_comment_input`).value
-        
-        requestAnswerComment.send(JSON.stringify({ id: id, text: text }));
+        if(!cmt_input.value) {
+            nullComment(cmt_input);
+            return false
+        } else {
+            const url = '/comments/add_answer_comment/';
+            requestAnswerComment.open('POST', url, true);
+            requestAnswerComment.setRequestHeader(
+                'Content-Type',
+                'application/x-www-form-urlencoded'
+            );
+            console.log(id)
+            const text = document.querySelector(`.answer-id-${id} .answer_comment_input`).value
+
+            requestAnswerComment.send(JSON.stringify({ id: id, text: text }));
+        }
     };
     const AnswercommentHandleResponse = () => {
         if (requestComment.status < 400) {
@@ -386,7 +414,6 @@
             const createDate = comment_date;
             
             const addAnswerComment = document.querySelector(`.answer-id-${id} .addAnswerComment`);
-            const cmt_input = document.querySelector('.answer_comment_input');
             const comment_profile = document.querySelector(`.comment_profile`);
             // 코멘트 작성자의 프로필 사진을 받아와야함
             
@@ -394,8 +421,11 @@
             // comment_profile.innerHTML = `
             // <div>
             //코멘트 작성자의 닉네임이
-            
-            addAnswerComment.innerHTML += `
+            if (cmt_input.value === "") {
+                nullComment(cmt_input)
+                return
+            } else {
+                addAnswerComment.innerHTML += `
             <div class='answer_comment_id_${comment_id}'>
                 <div class="comment_info">
                     <div class="comment_profile">
@@ -410,6 +440,7 @@
                 </div>
             </div>
             `
+            }
             cmt_input.value = ''
         }
 
