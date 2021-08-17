@@ -3,8 +3,10 @@ from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Comment
 from posts.models import Post
+from users.models import User
 from questions.models import Question_post, Answer
 from users.models import Alarm
+from django.core import serializers
 import json
 # Create your views here.
 # Comment section
@@ -55,11 +57,18 @@ def add_question_comment(request):
     total_num_comments = post.question_comments.count()
     # TODO: 삽질 기록 부분 comment 부분과 마찬가지로 잘 작동하는지 봐주세요.
     new_alarm = Alarm.objects.create(user=post.user, reason="내가 남긴 질문 \""+post.title+'\" 에 '+request.user.user_nickname+' 님이 댓글을 남겼어요.')
+
+    #댓글을 단 유저의 정보를 담았음!
+    user = User.objects.filter(id=comment.user.id)
+    data = serializers.serialize('json', user)
+
     return JsonResponse({
         "id": post_id, 
         "text": comment_content,
         "comment_id": comment.id,
-        "count" : total_num_comments,
+        "comment_date": comment.created,
+        # "count" : total_num_comments,
+        "user": data,
     })
 
 
