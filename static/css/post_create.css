@@ -90,7 +90,7 @@ form {
 #image {
     height: 100%;
     width: 100%;
-    background-image: url('../image/thumbnail_image.svg');
+    /* background-image: url('../image/thumbnail_image.svg'); */
     background-repeat: no-repeat;
     background-position-x: center;
     
