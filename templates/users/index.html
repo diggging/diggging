@@ -232,34 +232,35 @@
         }
 
         function getRandomTimeStamps(min, max, fromDate, isObject) {
-            
-            
+
+
             return_list = []
 
-            const sands = {{ sands|safe }}
-            //console.log(sands)
-            //var sandCount = 
-            for(var i=0; i< sands.length; i++){
-                sand = sands[i];
-                sand_time = sand.fields.created;
-                sand_time_year = sand_time.substr(0, 4);
-                sand_time_month = sand_time.substr(5, 2);
-                sand_time_day = sand_time.substr(8, 2);
-                
-                
-                let sand_time_js = new Date(sand_time_year, sand_time_month-1, sand_time_day, '1');
-                let day = new Date();
-                console.log(day);
-                console.log(sand_time_js);
+            const sands = {{ sands| safe
+        }}
+        //console.log(sands)
+        //var sandCount = 
+        for (var i = 0; i < sands.length; i++) {
+            sand = sands[i];
+            sand_time = sand.fields.created;
+            sand_time_year = sand_time.substr(0, 4);
+            sand_time_month = sand_time.substr(5, 2);
+            sand_time_day = sand_time.substr(8, 2);
 
-                return_list.push({
+
+            let sand_time_js = new Date(sand_time_year, sand_time_month - 1, sand_time_day, '1');
+            let day = new Date();
+            console.log(day);
+            console.log(sand_time_js);
+
+            return_list.push({
                 timestamp: sand_time_js,
                 count: 1,
-                })
-                
-            }
+            })
 
-            return return_list;
+        }
+
+        return return_list;
 
         }
         var start_date = new Date()
@@ -286,16 +287,14 @@
     <h2>GITHUB CONTRIBUTION GRAPH DEMO</h2>
 
     <div id="github_chart_1"><svg width="721" height="110" viewBox="0 0 721 110" class="js-calendar-graph-svg">
-
-                    <text x="39" y="-5" class="month">Sep</text><text x="91" y="-5" class="month">Oct</text><text 
-                    x="143" y="-5" class="month">Nov</text><text x="208" y="-5" class="month">Dec</text><text x="260"
-                    y="-5" class="month">Jan</text><text x="325" y="-5" class="month">Feb</text><text x="377" y="-5"
-                    class="month">Mar</text><text x="429" y="-5" class="month">Apr</text><text x="481" y="-5"
-                    class="month">May</text><text x="546" y="-5" class="month">Jun</text><text x="598" y="-5"
-                    class="month">Jul</text><text x="650" y="-5" class="month">Aug</text><text text-anchor="middle"
-                    class="wday" dx="-10" dy="22">M</text><text text-anchor="middle" class="wday" dx="-10"
-                    dy="48">W</text><text text-anchor="middle" class="wday" dx="-10" dy="74">F</text>
-            </g>
+            <text x="39" y="-5" class="month">Sep</text><text x="91" y="-5" class="month">Oct</text><text x="143" y="-5"
+                class="month">Nov</text><text x="208" y="-5" class="month">Dec</text><text x="260" y="-5"
+                class="month">Jan</text><text x="325" y="-5" class="month">Feb</text><text x="377" y="-5"
+                class="month">Mar</text><text x="429" y="-5" class="month">Apr</text><text x="481" y="-5"
+                class="month">May</text><text x="546" y="-5" class="month">Jun</text><text x="598" y="-5"
+                class="month">Jul</text><text x="650" y="-5" class="month">Aug</text><text text-anchor="middle"
+                class="wday" dx="-10" dy="22">M</text><text text-anchor="middle" class="wday" dx="-10"
+                dy="48">W</text><text text-anchor="middle" class="wday" dx="-10" dy="74">F</text>
         </svg></div>
     <div class="svg-tip svg-tip-one-line" style="top: 479.25px; left: 567px; display: none;">0 category on 2022-10-15
     </div>

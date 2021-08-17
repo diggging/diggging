@@ -651,8 +651,6 @@ def index(request):
     sands = Sand.objects.filter(user=request.user)
     snad = Sand.objects.get(pk=25)
     sands = serializers.serialize('json', sands)
-    print(snad.updated)
-    print(sands)
     context = {'sands': sands}
 
     #return HttpResponse(template.render(ctx, request))
