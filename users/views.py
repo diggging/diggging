@@ -30,9 +30,12 @@ from django.contrib import messages
 # from django.contrib.messages.views import SuccessMessageMixin
 # from django.contrib.sites.models import Site
 from django.views.decorators.csrf import csrf_exempt
+from django.core import serializers
 
 from django.http.response import JsonResponse
-# import json
+from django.template import loader
+import json
+import time
 
 
 # Create your views here.
@@ -645,4 +648,12 @@ def alarm(request, pk):
 
 
 def index(request):
-    return render(request, 'users/index.html')
+    sands = Sand.objects.filter(user=request.user)
+    snad = Sand.objects.get(pk=25)
+    sands = serializers.serialize('json', sands)
+    print(snad.updated)
+    print(sands)
+    context = {'sands': sands}
+
+    #return HttpResponse(template.render(ctx, request))
+    return render(request, 'users/index.html', context=context)
