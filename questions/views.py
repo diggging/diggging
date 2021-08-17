@@ -1,5 +1,6 @@
 import json
 from django.http.response import JsonResponse
+
 # from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from users.models import User
@@ -7,11 +8,13 @@ from .forms import AnswerPostForm, QuestionPostForm
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Question_post, Answer, QuestionFolder
 from users.models import Sand, Alarm
-#from django.core import serializers
+
+
+# from django.core import serializers
 # from django.core.serializers.json import DjangoJSONEncoder
-from django.http import HttpResponse #, JsonResponse
+from django.http import HttpResponse  # , JsonResponse
 from django.db.models import Sum
-from django.contrib.auth.decorators import login_required 
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 
 # Create your views here.
@@ -36,32 +39,38 @@ def question_main(request):
     str_search = "".join(search)
     answer = Answer.objects.all()
 
-    #지수가 필요해서 넣은 것 : 질문 관련 폴더
+    # 지수가 필요해서 넣은 것 : 질문 관련 폴더
     # 질문 모음
     my_questions = Question_post.objects.filter(user=request.user)
-    questions_language_folder = QuestionFolder.objects.filter(folder_user=request.user, folder_kind="language")
-    questions_framework_folder = QuestionFolder.objects.filter(folder_user=request.user, folder_kind="framework")
+    questions_language_folder = QuestionFolder.objects.filter(
+        folder_user=request.user, folder_kind="language"
+    )
+    questions_framework_folder = QuestionFolder.objects.filter(
+        folder_user=request.user, folder_kind="framework"
+    )
 
     # 최근에 남긴 질문
-    my_recent_questions = Question_post.objects.filter(user=request.user).order_by("-created")
+    my_recent_questions = Question_post.objects.filter(user=request.user).order_by(
+        "-created"
+    )
 
     question_folder = QuestionFolder.objects.filter(folder_user=request.user)
 
-    #지수가 필요해서 넣은 것 : 모래 포인트
-    my_sand = Sand.objects.filter(user = request.user)
-    my_sand_sum = my_sand.aggregate(Sum('amount'))
+    # 지수가 필요해서 넣은 것 : 모래 포인트
+    my_sand = Sand.objects.filter(user=request.user)
+    my_sand_sum = my_sand.aggregate(Sum("amount"))
     print(my_sand_sum)
-    if my_sand_sum['amount__sum'] == None:
+    if my_sand_sum["amount__sum"] == None:
         my_sand_sum = 0
     else:
-        if int(my_sand_sum['amount__sum']) < 2000:
+        if int(my_sand_sum["amount__sum"]) < 2000:
             request.user.user_level = 0
-        elif int(my_sand_sum['amount__sum']) <7000:
-            request.user.user_level=1
-        elif int(my_sand_sum['amount__sum']) <18000:
-            request.user.user_level=2
+        elif int(my_sand_sum["amount__sum"]) < 7000:
+            request.user.user_level = 1
+        elif int(my_sand_sum["amount__sum"]) < 18000:
+            request.user.user_level = 2
         else:
-            request.user.user_level=3
+            request.user.user_level = 3
     ctx = {
         "selected_answer_posts": selected_answer_posts,
         "posts": question_posts,
@@ -69,10 +78,10 @@ def question_main(request):
         "str_search": str_search,
         "answer": answer,
         # 내 모래포인트와 질문 관련한 폴더 접근 가능해야해요,,
-        'my_all_sands': my_sand,    # sand 모든 object list
-        'my_sand_sum' : my_sand_sum,    # 현재까지 sand 총합
+        "my_all_sands": my_sand,  # sand 모든 object list
+        "my_sand_sum": my_sand_sum,  # 현재까지 sand 총합
         #  질문 관련한 폴더 접근 가능해야해요,, -> 헸습니다. 현주
-        'question_folder' : question_folder,
+        "question_folder": question_folder,
     }
     return render(request, "questions/main.html", ctx)
 
@@ -224,19 +233,28 @@ def question_update(request, pk):
 
 def question_delete(request, pk):
     question_post = Question_post.objects.get(pk=pk)
-    
-    lang_folder = QuestionFolder.objects.get(folder_user=question_post.user, question_folder=question_post, folder_kind="language")
-    frame_folder = QuestionFolder.objects.get(folder_user=question_post.user, question_folder=question_post, folder_kind="framework")
+
+    lang_folder = QuestionFolder.objects.get(
+        folder_user=question_post.user,
+        question_folder=question_post,
+        folder_kind="language",
+    )
+    frame_folder = QuestionFolder.objects.get(
+        folder_user=question_post.user,
+        question_folder=question_post,
+        folder_kind="framework",
+    )
 
     question_post.delete()
 
     if not lang_folder.question_folder.exists():
         lang_folder.delete()
-    
+
     if not frame_folder.question_folder.exists():
         frame_folder.delete()
 
     return redirect("question:question_main")
+
 
 # ------------------------------------------------------------------------------------------------------------------
 def question_post_detail(request, user_id, post_id):
@@ -387,19 +405,25 @@ def chosen_answer(request, question_answer_id):
     # if request.method == "POST": #채택할래? 예
     is_answer_chosen.selection = True
     is_answer_chosen.save()
-    new_sand1 = Sand.objects.create(user=is_answer_chosen.user, amount=300, reason="내 답변 채택")
+    new_sand1 = Sand.objects.create(
+        user=is_answer_chosen.user, amount=300, reason="내 답변 채택"
+    )
     new_sand2 = Sand.objects.create(user=question.user, amount=50, reason="내 질문의 답변 채택")
-    new_alarm = Alarm.objects.create(user=is_answer_chosen.user, reason="질문 " + question.title + " 에 남긴 답변이 채택되었어요.")
+    new_alarm = Alarm.objects.create(
+        user=is_answer_chosen.user, reason="질문 " + question.title + " 에 남긴 답변이 채택되었어요."
+    )
 
+    ctx = {"is_answer_chosen": is_answer_chosen}
 
-    ctx = {
-        'is_answer_chosen': is_answer_chosen
-    }
-
-            # 선택 후에는 다시 question detail 페이지로 돌아감.
+    # 선택 후에는 다시 question detail 페이지로 돌아감.
     # return render(request, 'questions/question_detail.html', ctx)
-    # TODO: 의문점? else가 필요한가? 안필요할듯 
-    return redirect('question:question_post_detail', is_answer_chosen.question.user.id, is_answer_chosen.question.id)
+    # TODO: 의문점? else가 필요한가? 안필요할듯
+    return redirect(
+        "question:question_post_detail",
+        is_answer_chosen.question.user.id,
+        is_answer_chosen.question.id,
+    )
+
 
 # question like
 @login_required
@@ -417,6 +441,7 @@ def question_like(request):
     ctx = {"likes_count": post.count_likes_user(), "message": message}
     return HttpResponse(json.dumps(ctx), content_type="application/json")
 
+
 @login_required
 @require_POST
 def question_scrap(request):
@@ -431,3 +456,11 @@ def question_scrap(request):
         message = "퍼가기"
     ctx = {"scarps_count": post.count_scarps_user(), "message": message}
     return HttpResponse(json.dumps(ctx), content_type="application/json")
+
+
+def sort_help_ajax(request):
+    pass
+
+
+def sort_scrap(request):
+    pass
