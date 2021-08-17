@@ -207,7 +207,7 @@
     //--------------------------------------------------------------------------------------------------------
      // 질문 코멘트 추가 부분
     const requestComment = new XMLHttpRequest();
-    const onClickComment = (id, user) => {
+    const onClickComment = (id) => {
         const url = '/comments/add_question_comment/';
         requestComment.open('POST', url, true);
         requestComment.setRequestHeader(
@@ -215,7 +215,7 @@
             'application/x-www-form-urlencoded'
         );
         const text = document.querySelector(`.comment_input`).value;
-        requestComment.send(JSON.stringify({ id: id, text: text, user:user }));
+        requestComment.send(JSON.stringify({ id: id, text: text}));
         console.log(requestComment);
     };
     
@@ -373,6 +373,18 @@
             const { id } = JSON.parse(requestAnswerComment.response);
             const { text } = JSON.parse(requestAnswerComment.response);
             const { comment_id } = JSON.parse(requestAnswerComment.response);
+            const { comment_date } = JSON.parse(requestAnswerComment.response);
+            const { user } = JSON.parse(requestAnswerComment.response);
+            
+            //유저 데이터
+            const userData = JSON.parse(user); 
+            console.log(userData)
+            const userImg = userData[0].fields.user_profile_image;
+            //이거 세개 사용하면 돼!
+            const userImgUrl = userImg.slice(2)
+            const userName = userData[0].fields.user_nickname;
+            const createDate = comment_date;
+            
             const addAnswerComment = document.querySelector(`.answer-id-${id} .addAnswerComment`);
             const cmt_input = document.querySelector('.answer_comment_input');
             const comment_profile = document.querySelector(`.comment_profile`);
@@ -384,10 +396,12 @@
             //코멘트 작성자의 닉네임이
             
             addAnswerComment.innerHTML += `
-            <div class='answer_comment_id_${comment_id}'>\
+            <div class='answer_comment_id_${comment_id}'>
                 <div class="comment_info">
                     <div class="comment_profile">
-                        <img src=""
+                        <img src="${userImgUrl}">
+                            ${userName}
+                            ${createDate}
                 <div class="answer_comment_text">
                     ${text}
                 </div>

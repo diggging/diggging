@@ -100,10 +100,16 @@ def add_answer_comment(request):
     answer_comment = Comment.objects.create(answer=answer, text=answer_comment_content, user=request.user)
     answer_comment.save()
     new_alarm = Alarm.objects.create(user=answer.user, reason="내가 남긴 답변 \""+ answer.title+'\" 에 ' + request.user.user_nickname+' 님이 댓글을 남겼어요.')
+
+    user = User.objects.filter(id=answer_comment.user.id)
+    data = serializers.serialize('json', user)
+
     return JsonResponse({
         "id": answer_id,
         "text": answer_comment_content,
         "comment_id": answer_comment.id,
+        "comment_date": answer_comment.created,
+        "user": data,
     })
     
 @csrf_exempt
