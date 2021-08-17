@@ -52,7 +52,6 @@ urlpatterns = [
     path('<int:pk>/questions_framework_folder/', views.questions_framework_folder, name="questions_framework_folder"),
     path('<int:pk>/questions_framework_post/', views.questions_framework_post, name="questions_framework_post"),
 
-
     # my page
     path('<int:host_id>/my_page/my_posts', view=views.my_posts, name="my_posts"),
     path('<int:host_id>/my_page/my_questions', view=views.my_questions, name="my_questions"),

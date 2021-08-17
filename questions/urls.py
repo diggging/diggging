@@ -15,6 +15,11 @@ urlpatterns = [
     path("<int:question_post_id>/get_question", views.get_question, name="get_question"),
     path("<int:question_answer_id>/chosen_answer", views.chosen_answer, name="chosen_answer"),
 
+    #질문 폴더
+    path('<int:pk>/questions_lang_folder/', views.questions_lang_folder, name="questions_lang_folder"),
+    path('<int:pk>/questions_lang_post/', views.questions_lang_post, name="questions_lang_post"),
+    path('<int:pk>/questions_framework_folder/', views.questions_framework_folder, name="questions_framework_folder"),
+    path('<int:pk>/questions_framework_post/', views.questions_framework_post, name="questions_framework_post"),
 
     path("<int:answer_id>/get_answer_comments", views.get_answer_comments, name="get_answer_comments"),
 

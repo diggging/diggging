@@ -8,7 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script type="text/javascript">hljs.highlightAll();</script>
 <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
-
+<script src="{% static 'js/질문광장.js' %}"></script>
 
 {% endblock %}
 {% block content %}
@@ -142,13 +142,13 @@
             <!-- 디렉토리영역 -->
             <!-- 탭 버튼 누르면 그에 해당하는 폴더 목록이 뜬다. -->
             <div class="category_tab">
-                <button>언어</button>
-                <button>프레임워크</button>
+                <button class="language_btn" value="{{user.id}}">언어</button>
+                <button class="framework_btn" value="{{user.id}}">프레임워크</button>
             </div>
             <div class="folder_area">
-                {% for folder in question_folder %}
+                <!-- {% for folder in question_folder %}
                     {{folder.folder_name}}
-                {% endfor %}
+                {% endfor %} -->
             </div>
             <div class="my_answer_container">
                 <button class="accordion">내가 남긴 답변</button>

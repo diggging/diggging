@@ -1,6 +1,6 @@
 import json
 from django.http.response import JsonResponse
-# from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from users.models import User
 from .forms import AnswerPostForm, QuestionPostForm
@@ -431,3 +431,32 @@ def question_scrap(request):
         message = "퍼가기"
     ctx = {"scarps_count": post.count_scarps_user(), "message": message}
     return HttpResponse(json.dumps(ctx), content_type="application/json")
+
+#---------------질문광장 질문 모음
+@csrf_exempt
+def questions_lang_folder(request, pk):
+    host = get_object_or_404(User, pk=pk)
+    folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="language")
+    data = folder.values()
+
+    return JsonResponse(list(data), safe=False)
+
+def questions_lang_post(request, pk):
+    folder = QuestionFolder.objects.get(pk=pk)
+    posts = Question_post.objects.filter(question_folder=folder)
+    data = posts.values()
+    return JsonResponse(list(data), safe=False)
+
+def questions_framework_folder(request, pk):
+    host = get_object_or_404(User, pk=pk)
+    folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
+    data = folder.values()
+    
+    return JsonResponse(list(data), safe=False)
+
+def questions_framework_post(request, pk):
+    folder = QuestionFolder.objects.get(pk=pk)
+    posts = Question_post.objects.filter(question_folder=folder)
+    data = posts.values()
+
+    return JsonResponse(list(data), safe=False)
