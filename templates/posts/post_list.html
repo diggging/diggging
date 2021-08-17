@@ -12,10 +12,10 @@
 
 {% block content %}
 <div class="post_container" id="scroll-element">
-    <a href="{% url 'posts:main' %}" >스크랩 /</a>
-    <a href="{% url 'posts:helped' %}" id="helped" href="#">도움 /</a>
-    <a href="{% url 'posts:my_recent' %} ">내 최신순 /</a>
-    <a href="{% url 'posts:follow' %}">이웃 /</a>
+    <a href="{% url 'posts:main' %}"  onclick="a()">스크랩 /</a>
+    <a href="{% url 'posts:helped' %}" id="helped" href="#"  onclick="b()">도움 /</a>
+    <a href="{% url 'posts:my_recent' %} "  onclick="c()">내 최신순 /</a>
+    <a href="{% url 'posts:follow' %}"  onclick="d()">이웃 /</a>
 
     {% include 'posts/_posts.html' with posts=posts %}
 
@@ -26,12 +26,63 @@
     // 페이지별로 데이터 보내주는 비동기
     // 그 데이터를 또 무한 비동기 
 
+    
     document.addEventListener('DOMContentLoaded', () => {
         let bottomSentinal = document.querySelector("#bottom-sentinel");
         let scrollElement = document.querySelector("#scroll-element");
         let baseUrl = "{% url 'posts:scrap_axios' %}"; //baseUrl만 바꿔주면 동기가 될꺼 같은데?
         attachInfiniteScroll(bottomSentinal, scrollElement, baseUrl);
     });
+    
+
+    let baseUrl = "{% url 'posts:scrap_axios' %}"; //baseUrl만 바꿔주면 동기가 될꺼 같은데?
+    const a = () => {
+        document.addEventListener('DOMContentLoaded', () => {
+        let bottomSentinal = document.querySelector("#bottom-sentinel");
+        let scrollElement = document.querySelector("#scroll-element");
+        let baseUrl = "{% url 'posts:scrap_axios' %}"; //baseUrl만 바꿔주면 동기가 될꺼 같은데?
+        attachInfiniteScroll(bottomSentinal, scrollElement, baseUrl);
+        
+    });
+    console.log(baseUrl)
+
+    }
+
+    const b = () => {
+        document.addEventListener('DOMContentLoaded', () => {
+        let bottomSentinal = document.querySelector("#bottom-sentinel");
+        let scrollElement = document.querySelector("#scroll-element");
+        let baseUrl = "{% url 'posts:helped_axios' %}";
+        attachInfiniteScroll(bottomSentinal, scrollElement, baseUrl);
+        console.log(baseUrl)
+    });
+    console.log(baseUrl)
+    }
+    
+    const c = () => {
+        document.addEventListener('DOMContentLoaded', () => {
+        let bottomSentinal = document.querySelector("#bottom-sentinel");
+        let scrollElement = document.querySelector("#scroll-element");
+        let baseUrl =  "{% url 'posts:follow_axios' %}";
+        attachInfiniteScroll(bottomSentinal, scrollElement, baseUrl);
+        console.log(baseUrl)
+    });
+    console.log(baseUrl)
+    }
+    const d = () => {
+        document.addEventListener('DOMContentLoaded', () => {
+        let bottomSentinal = document.querySelector("#bottom-sentinel");
+        let scrollElement = document.querySelector("#scroll-element");
+        let baseUrl =  "{% url 'posts:my_recent_axios' %}";
+        attachInfiniteScroll(bottomSentinal, scrollElement, baseUrl);
+        console.log(baseUrl)
+    });
+    console.log(baseUrl)
+    }
+
+
+
+
 </script>
 {% endblock %}
 
