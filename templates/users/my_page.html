@@ -3,13 +3,15 @@
 
 {% block script %}
 <link rel="stylesheet" href="{% static 'css/my_page.css' %}">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+    integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
 <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css"> -->
 <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script> -->
 <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script> -->
 
 <script src="{% static 'js/삽질기록모음.js' %}"></script>
+<script src="{% static 'js/follow_following_list.js' %}"></script>
 
 <script>
     const modal = document.querySelector('.point_modal');
@@ -35,15 +37,15 @@
         let followModal = document.querySelector('.follow_modal');
         let followBody = document.querySelector('.follow_body');
         let closeModal = document.querySelector('.close_btn');
-       
+
         let followOpenPopup = document.querySelector('#follow_btn');
-    
+
         followOpenPopup.addEventListener('click', () => {
             followModal.style.display = 'block';
             body.style.overflow = 'hidden';
             followBody.style.display = 'block';
         });
-    
+
         closeModal.addEventListener('click', () => {
             followModal.style.display = 'none';
             body.style.overflow = 'auto';
@@ -56,21 +58,20 @@
         let followModal = document.querySelector('.follow_modal');
         let followBody = document.querySelector('.follow_body');
         let closeModal = document.querySelector('.close_btn');
-       
+
         let followOpenPopup = document.querySelector('#follower_btn');
-    
+
         followOpenPopup.addEventListener('click', () => {
             followModal.style.display = 'block';
             body.style.overflow = 'hidden';
             followBody.style.display = 'block';
         });
-    
+
         closeModal.addEventListener('click', () => {
             followModal.style.display = 'none';
             body.style.overflow = 'auto';
         })
     }
-</script>
 </script>
 
 <!-- 최근 (기록/질문) 뜨게하기 -->
@@ -78,7 +79,7 @@
 {%comment%}
 <script>
     const requestLastList = new XMLHttpRequest();
-    
+
     const onClickLastList = (type) => { //함수정의 : 어떤 버튼을 눌렀는지 받아온다. (삽질모음이냐 질문모음이냐)
         const url = '/posts/last_log_questions/'; //어느 url로 요청할 것인지.
         requestLastList.open('POST', url, true); //post방식으로 이 url에 ajax방식으로 요청을보내는데, 
@@ -86,12 +87,12 @@
             'Content-Type',
             'application/x-www-form-urlencoded'
         );
-        requestLastList.send(JSON.stringify({type: type})); //요청할 때 필요한 정보들. ajax방식으로 할 땐 무.조.건 JSON방식으로 보내야함.
+        requestLastList.send(JSON.stringify({ type: type })); //요청할 때 필요한 정보들. ajax방식으로 할 땐 무.조.건 JSON방식으로 보내야함.
     };
-    
+
     const lastListHandleResponse = () => {  //응답 처리해주는 함수 (최근 남긴 삽질 기록 / 질문 )보여주는 함수
         if (requestLastList.status < 400) {
-            const {type} = JSON.parse(requestLastList.response);    // {'type': 'dig'} or {'type': 'question'}
+            const { type } = JSON.parse(requestLastList.response);    // {'type': 'dig'} or {'type': 'question'}
             const addLastList = document.querySelector(`.post__${type}`);
 
             addLastList.innerHTML = `
@@ -111,11 +112,11 @@
         <div class="modal_body">
             <h2>내 포인트 기록</h2>
             {% for sand in my_all_sands %}
-                <div class="log_box">
-                    <p>{{sand.user}}</p>
-                    <p>{{sand.amout}}</p>
-                    <p>{{sand.reason}}</p>
-                </div>
+            <div class="log_box">
+                <p>{{sand.user}}</p>
+                <p>{{sand.amout}}</p>
+                <p>{{sand.reason}}</p>
+            </div>
             {% endfor%}
         </div>
     </div>
@@ -123,8 +124,14 @@
     <!-- 팔로우모달창 -->
     <div class="follow_modal">
         <div class="follow_container follow_body">
-            <div class="follower">
-                <button class="close_btn">닫기X</button>
+            <button class="close_btn">닫기X</button>
+            <!--Tab links-->
+            <div class="tab">
+                <button class="tablinks" onclick="openList(event, 'follow')">팔로워</button>
+                <button class="tablinks" onclick="openList(event, 'following')">팔로잉</button>
+            </div>
+            <!--Tab Content follow-->
+            <div id="follow" class="tabcontent">
                 <div class="follow_count">
                     <h3>{{request.user.username}}님을 팔로우하는 사람 </h3>
                     <h3>{{ host_follower|length }}명</h3>
@@ -132,9 +139,9 @@
                 {% for follower in host_follower %}
                 <div class="follow_list">
                     {% if follower.user_profile_image %}
-                        <img class="follow_image" src="{{ follower.user_profile_image.url }}" width="200">
+                    <img class="follow_image" src="{{ follower.user_profile_image.url }}" width="200">
                     {% else %}
-                        <div class="follow_image" ></div>
+                    <div class="follow_image"></div>
                     {% endif %}
                     <div class="flex_col">
                         <h3>{{follower.user_level}}</h3>
@@ -146,158 +153,169 @@
                 </div>
                 {% endfor %}
             </div>
-            <div class="following">
-                <div class="follow_count">
-                    <h3>{{request.user.username}}님이 팔로우하는 사람 </h3>
-                    <h3>{{ host_following|length }}명</h3>
+            <!--Tab content follow-->
+            <div id="following" class="tabcontent">
+                <div class="following_count">
+                    <h3>{{request.user.username}}님이 팔로우하는 사람</h3>
+                    <h3>{{host_following|length}}</h3>
                 </div>
                 {% for following in host_following %}
-                <div class="follow_list">
-                    {% if follower.user_profile_image %}
-                        <img class="follow_image" src="{{ following.user_profile_image.url }}" width="200">
+                <div class="following_list">
+                    {% if following.user_profile_image %}
+                    <img class="following_image" src="{{following.user_profile_image.url}}" width="200">
                     {% else %}
-                        <div class="follow_image" ></div>
+                    <div class="following-image"></div>
                     {% endif %}
                     <div class="flex_col">
                         <h3>{{following.user_level}}</h3>
-                        <h3>{{ following.username }}</h3>
+                        <h3>{{following.username}}</h3>
                     </div>
-                    <div class="follow_desc">
-                        <h3>{{ following.email }}</h3>
+                    <div class="following_desc">
+                        <h3>{{following.email}}</h3>
                     </div>
                 </div>
                 {% endfor %}
             </div>
         </div>
     </div>
-    
+
     <!-- 내 마이페이지 -->
     <div class="first_container my_container">
         <div class="profile_container">
             {% if request.user.pk == host.pk %}
-                <div class="profile_area">
-                    <div class="profile_username">
-                        {% if host.user_profile_image %}
-                            <span class="profile_image">
-                                <img src="{{ host.user_profile_image.url}}">
-                            </span>
-                        {% else %}
-                            <i class="fas fa-user-circle fa-3x"></i>
-                        {% endif %}
-                        <div class="flex_col">
-                            <span class="user_nickname">{{ request.user.username }}님의 모래상자</span>
-                            <div class="point_gage">
-                                <label for="value_low">{{my_sand_sum.amount__sum}} 모래포인트</label>
-                                {% if host.user_level == 0 %}
-                                <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500" value="{{my_sand_sum.amount__sum}}"></meter>
-                                {% elif host.user_level == 1 %}
-                                <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500" value="{{my_sand_sum.amount__sum}}"></meter>
-                                {% else%}
-                                <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000" value="{{my_sand_sum.amount__sum}}"></meter>
-                                {% endif %}
-                            </div>
+            <div class="profile_area">
+                <div class="profile_username">
+                    {% if host.user_profile_image %}
+                    <span class="profile_image">
+                        <img src="{{ host.user_profile_image.url}}">
+                    </span>
+                    {% else %}
+                    <i class="fas fa-user-circle fa-3x"></i>
+                    {% endif %}
+                    <div class="flex_col">
+                        <span class="user_nickname">{{ request.user.username }}님의 모래상자</span>
+                        <div class="point_gage">
+                            <label for="value_low">{{my_sand_sum.amount__sum}} 모래포인트</label>
+                            {% if host.user_level == 0 %}
+                            <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500"
+                                value="{{my_sand_sum.amount__sum}}"></meter>
+                            {% elif host.user_level == 1 %}
+                            <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500"
+                                value="{{my_sand_sum.amount__sum}}"></meter>
+                            {% else%}
+                            <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000"
+                                value="{{my_sand_sum.amount__sum}}"></meter>
+                            {% endif %}
                         </div>
                     </div>
-                    <div class="sand_level_area">
-                        <div class="level_badge">
-                            <a href="#" class="badge_img">
-                                {% if host.user_level == 0 %}
-                                <img src="{% static 'image/sandbox.png' %}" style="height: 24px;" >
-                                <span>Lv. {{host.user_level}} 맨바닥</span>
-                                {% elif host.user_level == 1 %}
-                                <img src="{% static 'image/sand-castle.png' %}" style="height: 24px;">
-                                <span>Lv. {{host.user_level}} 모래성</span>
-                                {% elif host.user_level == 2 %}
-                                <img src="{% static 'image/home.png' %}" style="height: 24px;">
-                                <span>Lv. {{host.user_level}} 벽돌집</span>
-                                {% else %}
-                                <img src="{% static 'image/building.png' %}" style="height: 24px;">
-                                <span>Lv. {{host.user_level}} 아파트</span>
-                                {% endif %}
-                                <!-- 레벨 기준 알려주는 모달창 -->
-                                <div class="level_modal">
-                                    <div class="desc_box">
-                                        <div class="level_list">
-                                            <img src="{% static 'image/sandbox.png' %}" style="height: 16px;">
-                                            <span>Lv.맨바닥</span>
-                                            <p>모래 포인트 2000미만</p>
-                                        </div>
-                                        <div class="level_list">
-                                            <img src="{% static 'image/sand-castle.png' %}" style="height: 16px;">
-                                            <span>Lv.모래성</span>
-                                            <p>모래 포인트 2000이상 7000미만</p>
-                                        </div>
-                                        <div class="level_list">
-                                            <img src="{% static 'image/home.png' %}" style="height: 16px;">
-                                            <span>Lv.벽돌집</span>
-                                            <p>모래 포인트 7000이상 18000미만</p>
-                                        </div>
-                                        <div class="level_list">
-                                            <img src="{% static 'image/building.png' %}" style="height: 16px;">
-                                            <span>Lv.아파트</span>
-                                            <p>모래 포인트 18000이상</p>
-                                        </div>
+                </div>
+                <div class="sand_level_area">
+                    <div class="level_badge">
+                        <a href="#" class="badge_img">
+                            {% if host.user_level == 0 %}
+                            <img src="{% static 'image/sandbox.png' %}" style="height: 24px;">
+                            <span>Lv. {{host.user_level}} 맨바닥</span>
+                            {% elif host.user_level == 1 %}
+                            <img src="{% static 'image/sand-castle.png' %}" style="height: 24px;">
+                            <span>Lv. {{host.user_level}} 모래성</span>
+                            {% elif host.user_level == 2 %}
+                            <img src="{% static 'image/home.png' %}" style="height: 24px;">
+                            <span>Lv. {{host.user_level}} 벽돌집</span>
+                            {% else %}
+                            <img src="{% static 'image/building.png' %}" style="height: 24px;">
+                            <span>Lv. {{host.user_level}} 아파트</span>
+                            {% endif %}
+                            <!-- 레벨 기준 알려주는 모달창 -->
+                            <div class="level_modal">
+                                <div class="desc_box">
+                                    <div class="level_list">
+                                        <img src="{% static 'image/sandbox.png' %}" style="height: 16px;">
+                                        <span>Lv.맨바닥</span>
+                                        <p>모래 포인트 2000미만</p>
+                                    </div>
+                                    <div class="level_list">
+                                        <img src="{% static 'image/sand-castle.png' %}" style="height: 16px;">
+                                        <span>Lv.모래성</span>
+                                        <p>모래 포인트 2000이상 7000미만</p>
+                                    </div>
+                                    <div class="level_list">
+                                        <img src="{% static 'image/home.png' %}" style="height: 16px;">
+                                        <span>Lv.벽돌집</span>
+                                        <p>모래 포인트 7000이상 18000미만</p>
+                                    </div>
+                                    <div class="level_list">
+                                        <img src="{% static 'image/building.png' %}" style="height: 16px;">
+                                        <span>Lv.아파트</span>
+                                        <p>모래 포인트 18000이상</p>
                                     </div>
                                 </div>
-                                <!-- 레벨 기준 모달창 끝 -->
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <div class="proflie_text">    
-                    {% if request.user.user_profile_content %}    
-                        {{request.user.user_profile_content}}
-                    {% else %}
-                        <p>
-                            아직 자기소개가 없습니다.
-                        </p>
-                    {% endif %}
-                    </div>
-                    <div class="follow_area">
-                        <div class="follow_btn_area">
-                            <button id="follow_btn" onclick="followModalPopup()">팔로잉 {{request.user.user_following|length}}</button>
-                            <button id="follower_btn" onclick="followerModalPopup()">팔로워 {{request.user.user_followed|length}}</button>
-                        </div>
+                            </div>
+                            <!-- 레벨 기준 모달창 끝 -->
+                        </a>
                     </div>
                 </div>
-            {% else %}    
-                <!-- 다른유저 마이페이지 -->
-                <div class="profile_area">
-                    <h1> {{ host.user_nickname}}님의 모래상자 </h1>
-                </div>
-                <a href = '{% url "users:follow" host.id %}'>팔로우하기</a>
-                <div>
-                    <label for="value_low">{{user.user_point}} 모래포인트</label>
-                    <!-- value값이 내 모래포인트에 따라서 반영되어야함. max기준도 레벨에 따라 바뀌어야함.(아직구현X) -->
-                    <meter id="value_low" min="0" max="100" low="30" high="60" optimum="90" value="10"></meter>
-                    {% if host.user_level == 0 %}
-                    <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500" value="{{my_sand_sum.amount__sum}}"></meter>
-                    {% elif host.user_level == 1 %}
-                    <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500" value="{{my_sand_sum.amount__sum}}"></meter>
-                    {% else %}
-                    <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000" value="{{my_sand_sum.amount__sum}}"></meter>
-                    {% endif %}
-                </div>
-                <div class="proflie_text">    
-                {% if request.user.user_profile_content %}    
+
+                <div class="proflie_text">
+                    {% if request.user.user_profile_content %}
                     {{request.user.user_profile_content}}
-                {% else %}
+                    {% else %}
                     <p>
                         아직 자기소개가 없습니다.
                     </p>
-                {% endif %}
+                    {% endif %}
                 </div>
                 <div class="follow_area">
-                    <button id="follow_btn">팔로잉 {{ host_following|length }}</button>
-                    <button id="follower_btn">팔로워 {{ host_follower|length }}</button>
+                    <div class="follow_btn_area">
+                        <button id="follow_btn" onclick="followModalPopup()">팔로잉
+                            {{request.user.user_following|length}}</button>
+                        <button id="follower_btn" onclick="followerModalPopup()">팔로워
+                            {{request.user.user_followed|length}}</button>
+                    </div>
                 </div>
+            </div>
+            {% else %}
+            <!-- 다른유저 마이페이지 -->
+            <div class="profile_area">
+                <h1> {{ host.user_nickname}}님의 모래상자 </h1>
+            </div>
+            <a href='{% url "users:follow" host.id %}'>팔로우하기</a>
+            <div>
+                <label for="value_low">{{user.user_point}} 모래포인트</label>
+                <!-- value값이 내 모래포인트에 따라서 반영되어야함. max기준도 레벨에 따라 바뀌어야함.(아직구현X) -->
+                <meter id="value_low" min="0" max="100" low="30" high="60" optimum="90" value="10"></meter>
+                {% if host.user_level == 0 %}
+                <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500"
+                    value="{{my_sand_sum.amount__sum}}"></meter>
+                {% elif host.user_level == 1 %}
+                <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500"
+                    value="{{my_sand_sum.amount__sum}}"></meter>
+                {% else %}
+                <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000"
+                    value="{{my_sand_sum.amount__sum}}"></meter>
+                {% endif %}
+            </div>
+            <div class="proflie_text">
+                {% if request.user.user_profile_content %}
+                {{request.user.user_profile_content}}
+                {% else %}
+                <p>
+                    아직 자기소개가 없습니다.
+                </p>
+                {% endif %}
+            </div>
+            <div class="follow_area">
+                <button id="follow_btn">팔로잉 {{ host_following|length }}</button>
+                <button id="follower_btn">팔로워 {{ host_follower|length }}</button>
+            </div>
             {% endif %}
         </div>
         <div class="btn_list_area">
-            <a href="{% url 'users:my_posts' host.id %}" class="list_btn" id="log_folder_btn" value="{{host.id}}">삽질 기록 모음</a>
-            <a href="{% url 'users:my_questions' host.id %}" class="list_btn" id="question_folder_btn" value="{{host.id}}">질문 모음</a>
+            <a href="{% url 'users:my_posts' host.id %}" class="list_btn" id="log_folder_btn" value="{{host.id}}">삽질 기록
+                모음</a>
+            <a href="{% url 'users:my_questions' host.id %}" class="list_btn" id="question_folder_btn"
+                value="{{host.id}}">질문 모음</a>
             {% if request.user.pk == host.pk %}
-            <a href = '{% url "users:account_detail" host.id %}' class="list_btn">계정 관리</a>
+            <a href='{% url "users:account_detail" host.id %}' class="list_btn">계정 관리</a>
             {% else %}
             {% endif %}
         </div>
@@ -308,7 +326,7 @@
             <div id="btn_tap">
                 <button id="btn1" class="language_btn" value="{{host.id}}">언어</button>
                 <button id="btn2" class="problem_btn" value="{{host.id}}">해결/미해결</button>
-                <button id="btn3" class="framework_btn"  value="{{host.id}}">프레임워크</button>
+                <button id="btn3" class="framework_btn" value="{{host.id}}">프레임워크</button>
             </div>
             <div class="category_tab">
                 <div class="folder_category">
@@ -318,12 +336,12 @@
             <div class="folder_area">
                 {%comment%}
                 {% for folder in framework_folders %}
-                    <div class="folder_space">
-                        <button type="button" class="{{folder}}">
-                            <i class="far fa-folder folder_icon fa-2x"></i>  
-                            <span class="folder_name">{{folder}}</span>\
-                        </button>
-                    </div>
+                <div class="folder_space">
+                    <button type="button" class="{{folder}}">
+                        <i class="far fa-folder folder_icon fa-2x"></i>
+                        <span class="folder_name">{{folder}}</span>\
+                    </button>
+                </div>
                 {% endfor %}
                 {%endcomment%}
             </div>
@@ -332,25 +350,25 @@
         {%comment%}
         <div class="last_log_box post__dig">
             {% for log in my_recent_logs %}
-                <div class="last_log_list">
-                    {{log.title}}
-                </div>
+            <div class="last_log_list">
+                {{log.title}}
+            </div>
             {% endfor %}
         </div>
         <div class="last_question_box post__question">
             <!-- 질문버튼 누르면 최근 질문 기록도 같이 뜸 -->
             {% for question in my_recent_questions %}
-                <div class="last_question_list">
-                    {{question.title}}
-                </div>
+            <div class="last_question_list">
+                {{question.title}}
+            </div>
             {% endfor %}
         </div>
-        </div>
-        {%endcomment%}
-        <!-- 폴더 눌렀을 때 글 목록 뜨는 곳 -->
-        <div class="third_container">
-            <div class="my_post_list">
-            </div>
+    </div>
+    {%endcomment%}
+    <!-- 폴더 눌렀을 때 글 목록 뜨는 곳 -->
+    <div class="third_container">
+        <div class="my_post_list">
         </div>
     </div>
+</div>
 {% endblock %}
