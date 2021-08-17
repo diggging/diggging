@@ -53,6 +53,8 @@ body {
 
     transition-timing-function: ease-in;
     transition-duration: 1s;
+
+    z-index: 1001;
     
 }
 
@@ -88,6 +90,8 @@ body {
 
     transition-timing-function: ease-in;
     transition-duration: 1s;
+
+    z-index: 1001;
 }
 
 
@@ -275,7 +279,7 @@ meter {
     font-family: var(--content-font);
     color: var(--text-color);
     position: relative;
-    top: 20px;
+    top: 22px;
     left: 75px;
 }
 
@@ -288,8 +292,11 @@ meter {
 
 .profile_text p {
     font-family: var(--content-font);
-    color: var(--text-color);
     font-size: 0.75rem;
+    background: floralwhite;
+    padding: 1rem;
+    border-radius: 8px;
+    color: var(--logo-color);
 }
 
 /* -----------리스트버튼 영역--------------------------- */
@@ -357,9 +364,13 @@ meter {
     height: 10rem;
 }
 
+#btn_tap {
+    width: 20rem;
+}
+
 #btn_tap button {
-    padding: 5px 25px 5px 20px;
-    border-radius: 8px 0px 0px 0px;
+    padding: 5px 30px 5px 20px;
+    border-radius: 8px 8px 0px 0px;
     background: var(--hover-color);
     font-family: var(--btn-font);
     color: var(--sand-color);
@@ -367,6 +378,7 @@ meter {
     margin: 0px -4px;
     position: relative;
     top: -2.7rem;
+    left: -10rem;
     border-left: solid 1.5px white;
 }
 
