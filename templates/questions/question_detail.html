@@ -157,7 +157,7 @@
                     <button class="modal_delete">x</button>
                     <h3>해당 답변을 채택하시겠습니까?</h3>
                     <a href="{% url 'question:chosen_answer' answer.id %}" class="yes_choice">예</a>
-                    <a href="#">아니오</a>
+                    <button onclick="closePopUp()">아니오</button>
                 </div>
         </div>
         <div class="answer_desc_box">
@@ -506,19 +506,23 @@ $(".scrap").click(function () { // .scarp 버튼을 클릭 감지
 
 
     // 채택팝업
-// const body = document.querySelector('body')
-// const answerChoicePopup = document.querySelector('.popup')
-// let modalBody = document.querySelector('.choice_modal_body');
-// const modalDelete = document.querySelector('.modal_delete');
-// answerChoicePopup.addEventListener('click', () => {
-//     if(modalBody.style.visibility === "hidden") {
-//         modalBody.style.visibility = "visible"
-//     } else {
-//         modalBody.style.visibility = "hidden"
-//     }
-// });
-// modalDelete.addEventListener('click', () => {
-//     modalBody.style.visibility = "hidden";
-// });
+const body = document.querySelector('body')
+const answerChoicePopup = document.querySelector('.popup')
+let modalBody = document.querySelector('.choice_modal_body');
+const modalDelete = document.querySelector('.modal_delete');
+answerChoicePopup.addEventListener('click', () => {
+    if(modalBody.style.visibility === "hidden") {
+        modalBody.style.visibility = "visible"
+    } else {
+        modalBody.style.visibility = "hidden"
+    }
+});
+modalDelete.addEventListener('click', () => {
+    modalBody.style.visibility = "hidden";
+});
+
+function closePopUp() => {
+   modalBody.style.visibility = "hidden"
+}
 </script>
 {% endblock script %}

@@ -31,37 +31,46 @@
 </script>
 <!-- 팔로우 모달 창 뜨기 -->
 <script>
-    const followModal = document.querySelector('.follow_modal');
-    const followBody = document.querySelector('.follow_body');
-    const followOpenPopup = document.querySelector('#follow_btn');
-
-    followOpenPopup.addEventListener('click', () => {
-        followModal.style.display = 'block';
-        body.style.overflow = 'hidden';
-        followBody.style.display = 'block';
-    });
-
-    followBody.addEventListener('click', () => {
-        followModal.style.display = 'none';
-        body.style.overflow = auto
-    })
+    function followModalPopup() {
+        let followModal = document.querySelector('.follow_modal');
+        let followBody = document.querySelector('.follow_body');
+        let closeModal = document.querySelector('.close_btn');
+       
+        let followOpenPopup = document.querySelector('#follow_btn');
+    
+        followOpenPopup.addEventListener('click', () => {
+            followModal.style.display = 'block';
+            body.style.overflow = 'hidden';
+            followBody.style.display = 'block';
+        });
+    
+        closeModal.addEventListener('click', () => {
+            followModal.style.display = 'none';
+            body.style.overflow = 'auto';
+        })
+    }
 </script>
 <!-- 팔로워 모달창 뜨기 -->
 <script>
-    const followerModal = document.querySelector('.follow_modal');
-    const followerBody = document.querySelector('.follow_body');
-    const followerOpenPopup = document.querySelector('#follower_btn');
-
-    followerOpenPopup.addEventListener('click', () => {
-        followerModal.style.display = 'block';
-        body.style.overflow = 'hidden';
-        followerBody.style.display = 'block';
-    });
-
-    followerBody.addEventListener('click', () => {
-        followerModal.style.display = 'none';
-        body.style.overflow = auto
-    })
+    function followerModalPopup() {
+        let followModal = document.querySelector('.follow_modal');
+        let followBody = document.querySelector('.follow_body');
+        let closeModal = document.querySelector('.close_btn');
+       
+        let followOpenPopup = document.querySelector('#follower_btn');
+    
+        followOpenPopup.addEventListener('click', () => {
+            followModal.style.display = 'block';
+            body.style.overflow = 'hidden';
+            followBody.style.display = 'block';
+        });
+    
+        closeModal.addEventListener('click', () => {
+            followModal.style.display = 'none';
+            body.style.overflow = 'auto';
+        })
+    }
+</script>
 </script>
 
 <!-- 최근 (기록/질문) 뜨게하기 -->
@@ -115,6 +124,7 @@
     <div class="follow_modal">
         <div class="follow_container follow_body">
             <div class="follower">
+                <button class="close_btn">닫기X</button>
                 <div class="follow_count">
                     <h3>{{request.user.username}}님을 팔로우하는 사람 </h3>
                     <h3>{{ host_follower|length }}명</h3>
@@ -245,8 +255,8 @@
                     </div>
                     <div class="follow_area">
                         <div class="follow_btn_area">
-                            <button id="follow_btn">팔로잉 {{request.user.user_following|length}}</button>
-                            <button id="follower_btn">팔로워 {{request.user.user_followed|length}}</button>
+                            <button id="follow_btn" onclick="followModalPopup()">팔로잉 {{request.user.user_following|length}}</button>
+                            <button id="follower_btn" onclick="followerModalPopup()">팔로워 {{request.user.user_followed|length}}</button>
                         </div>
                     </div>
                 </div>
