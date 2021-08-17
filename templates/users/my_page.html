@@ -157,7 +157,19 @@
                         {% else %}
                             <i class="fas fa-user-circle fa-3x"></i>
                         {% endif %}
-                        <span class="user_nickname">{{ request.user.username }}님의 모래상자<span>
+                        <div class="flex_col">
+                            <span class="user_nickname">{{ request.user.username }}님의 모래상자</span>
+                            <div class="point_gage">
+                                <label for="value_low">{{my_sand_sum.amount__sum}} 모래포인트</label>
+                                {% if host.user_level == 0 %}
+                                <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500" value="{{my_sand_sum.amount__sum}}"></meter>
+                                {% elif host.user_level == 1 %}
+                                <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500" value="{{my_sand_sum.amount__sum}}"></meter>
+                                {% else%}
+                                <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000" value="{{my_sand_sum.amount__sum}}"></meter>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
                     <div class="sand_level_area">
                         <div class="level_badge">
@@ -204,16 +216,7 @@
                             </a>
                         </div>
                     </div>
-                    <div class="point_gage">
-                        <label for="value_low">{{my_sand_sum.amount__sum}} 모래포인트</label>
-                        {% if host.user_level == 0 %}
-                        <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500" value="{{my_sand_sum.amount__sum}}"></meter>
-                        {% elif host.user_level == 1 %}
-                        <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500" value="{{my_sand_sum.amount__sum}}"></meter>
-                        {% else%}
-                        <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000" value="{{my_sand_sum.amount__sum}}"></meter>
-                        {% endif %}
-                    </div>
+                    
                     <div class="proflie_text">    
                     {% if request.user.user_profile_content %}    
                         {{request.user.user_profile_content}}
@@ -263,33 +266,30 @@
                 </div>
             {% endif %}
         </div>
-        <hr>
         <div class="btn_list_area">
-            <a href="{% url 'users:my_posts' host.id %}" class="list_btn" id="log_folder_btn" value="{{host.id}}">삽질 기록 모음 > </a>
-            <a href="{% url 'users:my_questions' host.id %}" class="list_btn" id="question_folder_btn" value="{{host.id}}">질문 모음 > </a>
+            <a href="{% url 'users:my_posts' host.id %}" class="list_btn" id="log_folder_btn" value="{{host.id}}">삽질 기록 모음</a>
+            <a href="{% url 'users:my_questions' host.id %}" class="list_btn" id="question_folder_btn" value="{{host.id}}">질문 모음</a>
             {% if request.user.pk == host.pk %}
-            <a href = '{% url "users:account_detail" host.id %}'><button class="list_btn">계정 관리 > </button></a>
+            <a href = '{% url "users:account_detail" host.id %}' class="list_btn">계정 관리</a>
             {% else %}
             {% endif %}
         </div>
         <div class="sand_pour_area"></div>
     </div>
-    <div class="second_container my_container">
-        <div class="category_tab">
+    <div class="right_container">
+        <div class="second_container">
             <div id="btn_tap">
                 <button id="btn1" class="language_btn" value="{{host.id}}">언어</button>
                 <button id="btn2" class="problem_btn" value="{{host.id}}">해결/미해결</button>
                 <button id="btn3" class="framework_btn"  value="{{host.id}}">프레임워크</button>
             </div>
-            <div class="folder_category">
-                </button>
+            <div class="category_tab">
+                <div class="folder_category">
+                    </button>
+                </div>
             </div>
-        </div>
-
-
-        <div class="folder_area">
-            <div id="myCarousel" class="carousel slide" data-ride="carousel">
-                <!-- Wrapper for slides -->
+            <div class="folder_area">
+                {%comment%}
                 {% for folder in framework_folders %}
                     <div class="folder_space">
                         <button type="button" class="{{folder}}">
@@ -298,33 +298,32 @@
                         </button>
                     </div>
                 {% endfor %}
+                {%endcomment%}
             </div>
         </div>
-
-
-    </div>
-    <!-- 질문버튼 눌렀을 때도 그에 해당하는 디렉토리들이 다르게 떠야함 -->
+        <!-- 질문버튼 눌렀을 때도 그에 해당하는 디렉토리들이 다르게 떠야함 -->
         {%comment%}
-    <div class="last_log_box post__dig">
-        {% for log in my_recent_logs %}
-            <div class="last_log_list">
-                {{log.title}}
+        <div class="last_log_box post__dig">
+            {% for log in my_recent_logs %}
+                <div class="last_log_list">
+                    {{log.title}}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="last_question_box post__question">
+            <!-- 질문버튼 누르면 최근 질문 기록도 같이 뜸 -->
+            {% for question in my_recent_questions %}
+                <div class="last_question_list">
+                    {{question.title}}
+                </div>
+            {% endfor %}
+        </div>
+        </div>
+        {%endcomment%}
+        <!-- 폴더 눌렀을 때 글 목록 뜨는 곳 -->
+        <div class="third_container">
+            <div class="my_post_list">
             </div>
-        {% endfor %}
-    </div>
-    <div class="last_question_box post__question">
-        <!-- 질문버튼 누르면 최근 질문 기록도 같이 뜸 -->
-        {% for question in my_recent_questions %}
-            <div class="last_question_list">
-                {{question.title}}
-            </div>
-        {% endfor %}
-    </div>
-    </div>
-    {%endcomment%}
-    <!-- 폴더 눌렀을 때 글 목록 뜨는 곳 -->
-    <div class="third_container my_container">
-        <div class="my_post_list">
         </div>
     </div>
 {% endblock %}
