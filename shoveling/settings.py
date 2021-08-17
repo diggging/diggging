@@ -66,6 +66,7 @@ INSTALLED_APPS = [
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 
+CKEDITOR_ALLOW_NONIMAGE_FILES = True
 
 CKEDITOR_CONFIGS = {
     'default': {
@@ -79,7 +80,7 @@ CKEDITOR_CONFIGS = {
             ],
         'extraPlugins': ','.join(
             [
-                'codesnippet', 'uploadwidget',
+                'codesnippet', 'autoembed',
             ]
         ),
         'codeSnippet_theme': 'monokai_sublime',

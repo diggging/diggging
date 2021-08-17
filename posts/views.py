@@ -203,7 +203,10 @@ def post_create(request):
             if solve == "해결":
                 existed_folder = Folder.objects.get(folder_user=me, folder_name=solve, folder_kind="solved")
                 posts.folder.add(existed_folder)
+
             else:
+                print(solve)
+                print(me)
                 existed_folder = Folder.objects.get(folder_user=me, folder_name=solve, folder_kind="solved")
                 posts.folder.add(existed_folder)
 

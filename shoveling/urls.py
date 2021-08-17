@@ -19,6 +19,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import include
 from posts import views as posts_views
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
 
 urlpatterns = [
     path("ckeditor/", include("ckeditor_uploader.urls")),
