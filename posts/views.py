@@ -19,23 +19,28 @@ from questions.models import Question_post
 def main(request):
     return render(request, "posts/post_list.html")
 
+
 def helped(request):
     return render(request, "posts/post_helped.html")
+
 
 def follow(request):
     return render(request, "posts/post_follow.html")
 
+
 def my_recent(request):
     return render(request, "posts/my_recent.html")
 
-#-----------------------------------------------------------------------
+
+# -----------------------------------------------------------------------
 def is_ajax(request):
     return request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest"
 
+
 # main axios
 @require_GET
-def scrap_axios(request):    
-    posts = Question_post.objects.all() ##질문만 받아오기
+def scrap_axios(request):
+    posts = Question_post.objects.all()  ##질문만 받아오기
     all_posts_scrap = Post.objects.all().order_by("-scrap_num")
 
     post = Post.objects.filter()
@@ -45,15 +50,16 @@ def scrap_axios(request):
     posts_scrap = paginator.page(page_num)
 
     if is_ajax(request):
-        return render(request, 'posts/_posts.html', {'posts': posts_scrap})
+        return render(request, "posts/_posts.html", {"posts": posts_scrap})
         # return JsonResponse(ctx, safe=False)
 
-    return render(request, 'posts/post_list.html', {'posts': posts_scrap})
+    return render(request, "posts/post_list.html", {"posts": posts_scrap})
+
 
 @csrf_exempt
 def test(request):
-    
-    return render(request, 'posts/test.html')
+
+    return render(request, "posts/test.html")
 
 
 @require_GET
@@ -64,13 +70,14 @@ def helped_axios(request):
     posts_helped = paginator.page(page_num)
 
     if is_ajax(request):
-        return render(request, 'posts/_posts.html', {'posts': posts_helped})
+        return render(request, "posts/_posts.html", {"posts": posts_helped})
 
-    return render(request, 'posts/post_helped.html', {'posts': posts_helped})
+    return render(request, "posts/post_helped.html", {"posts": posts_helped})
+
 
 @require_GET
 def follow_axios(request):
-    
+
     me = request.user
     followings = me.user_following.all()
     if followings:
@@ -83,15 +90,16 @@ def follow_axios(request):
         )  # 생성 기준으로 listing
     else:
         all_followings_posts = []
-    
+
     paginator = Paginator(all_followings_posts, 8)
     page_num = request.GET.get("page")
     posts_follow = paginator.page(page_num)
 
     if is_ajax(request):
-        return render(request, 'posts/_posts.html', {'posts': posts_follow})
+        return render(request, "posts/_posts.html", {"posts": posts_follow})
 
-    return render(request, 'posts/post_list.html', {'posts': posts_follow})
+    return render(request, "posts/post_list.html", {"posts": posts_follow})
+
 
 @require_GET
 def my_recent_axios(request):
@@ -102,11 +110,12 @@ def my_recent_axios(request):
     posts_my = paginator.page(page_num)
 
     if is_ajax(request):
-        return render(request, 'posts/_posts.html', {'posts': posts_my})
+        return render(request, "posts/_posts.html", {"posts": posts_my})
 
-    return render(request, 'posts/post_list.html', {'posts': posts_my})
+    return render(request, "posts/post_list.html", {"posts": posts_my})
 
-#-----------------------------------------------------------------------
+
+# -----------------------------------------------------------------------
 
 # 프론트에서 해당 포스트 id 넘겨주면
 
@@ -146,24 +155,6 @@ def post_like(request):
     return HttpResponse(json.dumps(ctx), content_type="application/json")
 
 
-@login_required
-@require_POST
-def post_scrap(request):
-    pk = request.POST.get("pk", None)
-    post = get_object_or_404(Post, pk=pk)
-    user = request.user
-
-    if post.scarps_user.filter(id=user.id).exists():
-        post.scarps_user.remove(user)
-        message = "퍼가기 취소"
-    else:
-        post.scarps_user.add(user)
-        message = "퍼가기"
-
-    ctx = {"scarps_count": post.count_scarps_user(), "message": message}
-    return HttpResponse(json.dumps(ctx), content_type="application/json")
-
-
 def post_create(request):
     if request.method == "POST":
         form = PostForm(request.POST, request.FILES)
@@ -178,33 +169,49 @@ def post_create(request):
             framework = request.POST.get("framework")  # framework 가져옴
             solve = request.POST.get("problem_solving")  # 해결 여부
 
-            lang_folder = Folder.objects.filter(folder_name=language, folder_user=me, folder_kind="language")  # lang folder 가져옴
-            frame_folder = Folder.objects.filter(folder_name=framework, folder_user=me, folder_kind="framework")  # frameworkd folder 가져옴
+            lang_folder = Folder.objects.filter(
+                folder_name=language, folder_user=me, folder_kind="language"
+            )  # lang folder 가져옴
+            frame_folder = Folder.objects.filter(
+                folder_name=framework, folder_user=me, folder_kind="framework"
+            )  # frameworkd folder 가져옴
 
             if lang_folder.exists():
                 # 있으면 foriegn key 연결
-                existed_folder = Folder.objects.get(folder_name=language, folder_user=me, folder_kind="language")
+                existed_folder = Folder.objects.get(
+                    folder_name=language, folder_user=me, folder_kind="language"
+                )
                 posts.folder.add(existed_folder)
             else:
                 # 없으면 folder 만들어서
-                new_folder = Folder.objects.create(folder_name=language, folder_user=me, folder_kind="language")
+                new_folder = Folder.objects.create(
+                    folder_name=language, folder_user=me, folder_kind="language"
+                )
                 posts.folder.add(new_folder)
 
             if frame_folder.exists():
                 # 있으면 foriegn key 연결
-                existed_folder = Folder.objects.get(folder_name=framework, folder_user=me, folder_kind="framework")
+                existed_folder = Folder.objects.get(
+                    folder_name=framework, folder_user=me, folder_kind="framework"
+                )
                 posts.folder.add(existed_folder)
             else:
                 # 없으면 folder 만들어서
-                new_folder = Folder.objects.create(folder_name=framework, folder_user=me, folder_kind="framework")
+                new_folder = Folder.objects.create(
+                    folder_name=framework, folder_user=me, folder_kind="framework"
+                )
                 posts.folder.add(new_folder)
 
             # 해결, 미해결 폴더에 넣기
             if solve == "해결":
-                existed_folder = Folder.objects.get(folder_user=me, folder_name=solve, folder_kind="solved")
+                existed_folder = Folder.objects.get(
+                    folder_user=me, folder_name=solve, folder_kind="solved"
+                )
                 posts.folder.add(existed_folder)
             else:
-                existed_folder = Folder.objects.get(folder_user=me, folder_name=solve, folder_kind="solved")
+                existed_folder = Folder.objects.get(
+                    folder_user=me, folder_name=solve, folder_kind="solved"
+                )
                 posts.folder.add(existed_folder)
 
             posts.save()
@@ -213,7 +220,7 @@ def post_create(request):
 
             # 지수언니가 말한대로 고침!
             return redirect("posts:post_detail", posts.user.id, posts.id)
-        
+
     form = PostForm()
     ctx = {"form": form}
     return render(request, "posts/post_create.html", context=ctx)
@@ -242,14 +249,24 @@ def post_update(request, pk):
                 origin_lang_fol.related_posts.remove(post)
                 # 2. post와 새로운 폴더와의 연결
                 # 이미 있는 폴더면 걍 넣어주고 아니면 생성후 넣어줌
-                lang_folder = Folder.objects.filter(folder_name=new_lang, folder_user=post.user, folder_kind="language")
+                lang_folder = Folder.objects.filter(
+                    folder_name=new_lang, folder_user=post.user, folder_kind="language"
+                )
                 if lang_folder.exists():
                     # 있으면 foriegn key 연결
-                    existed_folder = Folder.objects.get(folder_name=new_lang, folder_user=post.user, folder_kind="language")
+                    existed_folder = Folder.objects.get(
+                        folder_name=new_lang,
+                        folder_user=post.user,
+                        folder_kind="language",
+                    )
                     post.folder.add(existed_folder)
                 else:
-                # 없으면 folder 만들어서
-                    new_folder = Folder.objects.create(folder_name=new_lang, folder_user=post.user, folder_kind="language")
+                    # 없으면 folder 만들어서
+                    new_folder = Folder.objects.create(
+                        folder_name=new_lang,
+                        folder_user=post.user,
+                        folder_kind="language",
+                    )
                     post.folder.add(new_folder)
                 # 원래 폴더에 더이상 연결된 post가 없다면? 폴더삭제 / 있다면? 냅두기
                 print(origin_lang_fol.related_posts.all())
@@ -259,24 +276,38 @@ def post_update(request, pk):
             # framework
             if new_frame != origin_frame_fol.folder_name:
                 origin_frame_fol.related_posts.remove(post)
-                frame_folder = Folder.objects.filter(folder_name=new_frame, folder_user=post.user, folder_kind="framework")
+                frame_folder = Folder.objects.filter(
+                    folder_name=new_frame,
+                    folder_user=post.user,
+                    folder_kind="framework",
+                )
                 if frame_folder.exists():
-                    existed_folder = Folder.objects.get(folder_name=new_frame, folder_user=post.user, folder_kind="framework")
+                    existed_folder = Folder.objects.get(
+                        folder_name=new_frame,
+                        folder_user=post.user,
+                        folder_kind="framework",
+                    )
                     post.folder.add(existed_folder)
                 else:
-                    new_folder = Folder.objects.create(folder_name=new_frame, folder_user=post.user, folder_kind="framework")
+                    new_folder = Folder.objects.create(
+                        folder_name=new_frame,
+                        folder_user=post.user,
+                        folder_kind="framework",
+                    )
                     post.folder.add(new_folder)
                 if not origin_frame_fol.related_posts.all():
                     origin_frame_fol.delete()
-            
+
             # solve
             if new_solve != origin_solve_fol.folder_name:
-                origin_solve_fol.related_posts.remove(post)    # 지우고
-                solve_folder = Folder.objects.get(folder_name=new_solve, folder_user=post.user, folder_kind="solved")
+                origin_solve_fol.related_posts.remove(post)  # 지우고
+                solve_folder = Folder.objects.get(
+                    folder_name=new_solve, folder_user=post.user, folder_kind="solved"
+                )
                 post.folder.add(solve_folder)
 
             post.save()
-            return redirect("posts:main") #수정
+            return redirect("posts:main")  # 수정
     else:
         form = PostForm(instance=post)
         ctx = {
@@ -287,21 +318,25 @@ def post_update(request, pk):
 
 def post_delete(request, pk):
     post = Post.objects.get(pk=pk)
-    
+
     # post가 들어있던 폴더를 보고 비어져있으면 지움
-    lang_folder = Folder.objects.get(folder_user=post.user, related_posts=post, folder_kind="language")
-    frame_folder = Folder.objects.get(folder_user=post.user, related_posts=post, folder_kind="framework")
+    lang_folder = Folder.objects.get(
+        folder_user=post.user, related_posts=post, folder_kind="language"
+    )
+    frame_folder = Folder.objects.get(
+        folder_user=post.user, related_posts=post, folder_kind="framework"
+    )
 
     post.delete()
 
     if not lang_folder.related_posts.exists():
         lang_folder.delete()
-    
+
     if not frame_folder.related_posts.exists():
         frame_folder.delete()
 
-    
     return redirect("posts:main")
+
 
 ## search input ajax
 @csrf_exempt
@@ -309,12 +344,13 @@ def search_input(request):
     if request.method == "POST":
         search_str = json.loads(request.body).get("text")
 
-        post = Post.objects.filter(
-            title__icontains=search_str) | Post.objects.filter(
-            desc__icontains=search_str)
+        post = Post.objects.filter(title__icontains=search_str) | Post.objects.filter(
+            desc__icontains=search_str
+        )
 
         data = post.values()
         return JsonResponse(list(data), safe=False)
+
 
 ## search select ajax
 @csrf_exempt
@@ -333,16 +369,16 @@ def search_select(request):
 
         ##전체 선택
         fields = Post._meta.get_fields()
-        lang_fields = Post._meta.get_field('language')
-        os_fields = Post._meta.get_field('os')
-        frameword_fields = Post._meta.get_field('framework')
-        problem_fields = Post._meta.get_field('problem_solving')
+        lang_fields = Post._meta.get_field("language")
+        os_fields = Post._meta.get_field("os")
+        frameword_fields = Post._meta.get_field("framework")
+        problem_fields = Post._meta.get_field("problem_solving")
 
         result = Post.objects.none()
 
         if language == "전체":
             lang_filter = Post.objects.all()
-        
+
         if lang_filter.exists():
             result = lang_filter
 
@@ -377,32 +413,38 @@ def search_select(request):
 
     return JsonResponse(list(data), safe=False)
 
+
 def search(request):
     posts = Post.objects.all()
 
     form = SelectForm()
     ctx = {
-            'posts': posts,
-            'form': form,
-        }
+        "posts": posts,
+        "form": form,
+    }
     return render(request, "posts/search.html", ctx)
 
-#post data 보내주기
+
+# post data 보내주기
 @csrf_exempt
 def search_post_axios(request):
     post = Post.objects.all()
-    post_list = serializers.serialize('json', post)
+    post_list = serializers.serialize("json", post)
 
     return HttpResponse(post_list, content_type="text/json-comment-filtered")
 
-#user data 보내주기
+
+# user data 보내주기
 @csrf_exempt
 def search_user_axios(request):
     user = User.objects.all()
-    user_list = serializers.serialize('json', user)
+    user_list = serializers.serialize("json", user)
     return HttpResponse(user_list, content_type="text/json-comment-filtered")
 
+
 # 삽질 기록 퍼오기
+@login_required
+@require_POST
 def get_post(request, user_id, post_id):
     post = get_object_or_404(Post, pk=post_id)  # 어떤 post인지 가져오기
     target_language = post.language  # 어떤 language인지 - 폴더 생성용
@@ -411,8 +453,12 @@ def get_post(request, user_id, post_id):
     post_host = User.objects.get(id=user_id)
 
     # get: object-없는걸 가져오면 오류 , filter: queryset- 없어도 빈 queryset 오류 x
-    lang_folder = Folder.objects.filter(folder_name=target_language, folder_user=me, folder_kind="language")
-    frame_folder = Folder.objects.filter(folder_name=target_framework, folder_user=me, folder_kind="framework")
+    lang_folder = Folder.objects.filter(
+        folder_name=target_language, folder_user=me, folder_kind="language"
+    )
+    frame_folder = Folder.objects.filter(
+        folder_name=target_framework, folder_user=me, folder_kind="framework"
+    )
 
     # 만약 나, language로 된 폴더 있으면
     if lang_folder.exists():
@@ -457,5 +503,8 @@ def get_post(request, user_id, post_id):
     new_alarm = Alarm.objects.create(
         user=post_host, reason=me.user_nickname + "님이 내 기록 " + post.title + "을 퍼갔어요."
     )
+    pk = request.POST.get("pk", None)
+    post = get_object_or_404(Post, pk=pk)
+    ctx = {"scarps_count": post.count_scarps_user()}
     # url: 저장 후 post_detail 페이지에 남아있음.
-    return redirect("posts:post_detail", user_id, post_id)
+    return render(request, "posts/post_detail.html", json.dumps(ctx))

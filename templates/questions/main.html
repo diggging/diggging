@@ -8,6 +8,69 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script type="text/javascript">hljs.highlightAll();</script>
 <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+<script>
+    const requestSorthelp = new XMLHttpRequest();
+    
+    const onClickSorthelp = (id) =>{
+        const url = '/questions/help_ajax/';
+        requestSorthelp.open('POST',url,true);
+        requestSorthelp.setRequestHeader(
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
+        requestSorthelp.send(JSON.stringify({id:id}));
+    };
+
+    const SorthelpHandleResponse = () =>{
+        if(requestSorthelp.status < 400){
+            const posts = requestSorthelp.response;
+            console.log(posts)
+            const answerabc = document.querySelector('.answerabcd');
+            answerabc.innerHTML =`
+            <div>
+                ${posts}
+            </div>
+            `
+        };
+    };
+    requestSorthelp.onreadystatechange = () =>{
+        if(requestSorthelp.readyState === XMLHttpRequest.DONE){
+            SorthelpHandleResponse();
+        };
+    };
+</script>
+<script>
+    const requestSortscrap = new XMLHttpRequest();
+    
+    const onClickSortscrap = (id) =>{
+        const url = '/questions/scrap_ajax/';
+        requestSortscrap.open('POST',url,true);
+        requestSortscrap.setRequestHeader(
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
+        requestSortscrap.send(JSON.stringify({id:id}));
+    };
+
+    const SortscrapHandleResponse = () =>{
+        if(requestSortscrap.status < 400){
+            const post_scrap = requestSortscrap.response;
+            console.log(post_scrap)
+            const scarp_sort1 = document.querySelector('.scarp_sort');
+            scarp_sort1.innerHTML =`
+            <div>
+                ${post_scrap}
+            </div>
+            `
+        };
+    };
+    requestSortscrap.onreadystatechange = () =>{
+        if(requestSortscrap.readyState === XMLHttpRequest.DONE){
+            SortscrapHandleResponse();
+        };
+    };
+</script>
+
 
 
 {% endblock %}
@@ -61,8 +124,19 @@
                     <!-- 체크박스끝 --> 
                     <!-- 관심사에 따른 질문 목록들 -->
                     <div class="recommend_list_box">
-                        <button type='submithelp'>도움 순</button>
-                        <button type='submit'> 스크랩 순</button>
+                        <button onclick ="onClickSorthelp({{ request.user.id }})">도움 순</button>
+                        <div class ="answerabcd">
+                            {% for posts in post %}
+                                {{posts}}<br/>
+                            {% endfor %}
+                        </div>
+                        <button onclick ="onClickSortscrap({{ request.user.id }})">스크랩순</button>
+                        <div class ="scarp_sort">
+                            {% for scrap in post_scrap %}
+                                {{scrap}}
+                                <br/>
+                        {% endfor %}
+                        </div>
                         {% for post in posts%}
                         {%if str_search == post.language %}
                         <div class="recommend_list">

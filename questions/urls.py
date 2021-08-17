@@ -43,7 +43,8 @@ urlpatterns = [
     ),
     path("like/", views.question_like, name="question_like"),
     path("scrap/", views.question_scrap, name="question_scrap"),
-    path("help_ajax/", views.sort_help_ajax, name="question_like"),
+    path("help_ajax/", views.sorthelp_ajax, name="help_ajax"),
+    path("scrap_ajax/", views.sort_scrap, name="scrap_ajax"),
     # path("scrap_ajax/", views.question_scrap, name="question_scrap"),
     # path("actionUrlscrap/", views.sort_scrap, name="actionUrlscrap"),
 ]

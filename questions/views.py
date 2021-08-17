@@ -1,5 +1,6 @@
 import json
 from django.http.response import JsonResponse
+from django.core import serializers
 
 # from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -8,6 +9,7 @@ from .forms import AnswerPostForm, QuestionPostForm
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Question_post, Answer, QuestionFolder
 from users.models import Sand, Alarm
+from django.views.decorators.csrf import csrf_exempt
 
 
 # from django.core import serializers
@@ -458,9 +460,28 @@ def question_scrap(request):
     return HttpResponse(json.dumps(ctx), content_type="application/json")
 
 
-def sort_help_ajax(request):
-    pass
+@csrf_exempt
+def sorthelp_ajax(request):
+    req = json.loads(request.body)
+    user_id = req["id"]
+    users = User.objects.get(id=user_id)
+    post = list(
+        Question_post.objects.filter(user=users)
+        .values("title", "desc")
+        .order_by("-helped_num")
+    )
+
+    return HttpResponse(post, content_type="application/json; charset=utf-8")
 
 
+@csrf_exempt
 def sort_scrap(request):
-    pass
+    req = json.loads(request.body)
+    user_id = req["id"]
+    users = User.objects.get(id=user_id)
+    post_scrap = (
+        Question_post.objects.filter(user=users)
+        .values("title", "desc")
+        .order_by("-scrap_num")
+    )
+    return HttpResponse(post_scrap, content_type="application/json; charset=utf-8")
