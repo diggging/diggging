@@ -23,14 +23,10 @@ def question_main(request):
     all_question_scrap = Question_post.objects.all().order_by("-scrap_num")
     # 모든 전체 질문에서 도움 순위대로 추천
     all_posts_helped = Question_post.objects.all().order_by("-helped_num")
-    # 답변 채택 안되거나 답변이 아직 달리지 않은 질문들을 모아두는 list
-    selected_answer_posts = []
-    for post in question_posts:
-        # Question_Post에 정의된 answer_selection_count() 함수 이용하여 개수 파악
-        if post.answer_selection_count() > 0:
-            selected_answer_posts.append(post)
-        elif post.answer_selection_count() == 0:
-            selected_answer_posts.append(post)
+    
+    not_selected_questions = Question_post.objects.filter(is_selected=False)
+    
+        
 
     languages = [langs[0] for langs in Question_post.language_choices]
     search = request.POST.getlist("answers[]")
@@ -64,7 +60,7 @@ def question_main(request):
         else:
             request.user.user_level=3
     ctx = {
-        "selected_answer_posts": selected_answer_posts,
+        "not_selected_questions": not_selected_questions,
         "posts": question_posts,
         "language": languages,
         "str_search": str_search,
@@ -244,12 +240,6 @@ def question_post_detail(request, user_id, post_id):
     post_details = Question_post.objects.get(pk=post_id)
     me = get_object_or_404(User, pk=user_id)
 
-    selected_answer_posts = []
-    if post_details.answer_selection_count() > 0:
-        selected_answer_posts.append(post_details)
-    elif post_details.answers.count() == 0:
-        selected_answer_posts.append(post_details)
-
     folder = post_details.question_folder.get(
         folder_name=post_details.language, folder_user=post_details.user
     )
@@ -265,8 +255,6 @@ def question_post_detail(request, user_id, post_id):
         "folder": folder,
         "post_answers": post_answers,
         "comments": comments,
-        "selected_answer_posts": selected_answer_posts,
-
     }
     return render(request, "questions/question_detail.html", ctx)
 
@@ -393,6 +381,7 @@ def get_question(request, question_post_id):
 def chosen_answer(request, question_answer_id):
     is_answer_chosen = Answer.objects.get(pk=question_answer_id)
     question = is_answer_chosen.question
+    question.is_selected = True
     # if request.method == "POST": #채택할래? 예
     is_answer_chosen.selection = True
     is_answer_chosen.save()

@@ -191,6 +191,7 @@ class Question_post(core_models.TimeStampModel):
         related_name="question_scarps_user",
     )
     sand_point = models.IntegerField(default=0)
+    is_selected = models.BooleanField(default=False)
     objects = models.Manager()
 
     def count_likes_user(self):
@@ -200,14 +201,6 @@ class Question_post(core_models.TimeStampModel):
         return self.scarps_user.count()
 
 # sand_point_count.short_description = "current sand point"
-
-# 답변개수세는 함수 2차
-def answer_selection_count(self):
-    answer_selection_count = 0
-    for answer_selected in self.answers.all():
-        if answer_selected.selection:
-            answer_selection_count += 1
-    return answer_selection_count
 
 # 채택된 답변의 개수 세는 함수 이걸로 답변 채택 여부 확인 할 것임.
     # def answer_selection_count(self):
