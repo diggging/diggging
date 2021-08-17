@@ -52,7 +52,7 @@ def add_question_comment(request):
     post = Question_post.objects.get(id=post_id)
     comment = Comment.objects.create(question=post, text=comment_content, user=request.user)
     comment.save()
-    total_num_comments = post.comments.count()
+    total_num_comments = post.question_comments.count()
     # TODO: 삽질 기록 부분 comment 부분과 마찬가지로 잘 작동하는지 봐주세요.
     new_alarm = Alarm.objects.create(user=post.user, reason="내가 남긴 질문 \""+post.title+'\" 에 '+request.user.user_nickname+' 님이 댓글을 남겼어요.')
     return JsonResponse({
@@ -73,7 +73,7 @@ def delete_question_comment(request):
     post = Question_post.objects.get(id=post_id)
     comment = Comment.objects.get(id=comment_id)
     comment.delete()
-    total_num_comments = post.comments.count()
+    total_num_comments = post.question_comments.count()
     
     return JsonResponse({
         "id": post_id, 

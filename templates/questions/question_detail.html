@@ -205,7 +205,7 @@
 <!-- 질문 코멘트 댓글 -->
 <script type="text/javascript">
     //--------------------------------------------------------------------------------------------------------
-    // 질문 코멘트 추가 부분
+     // 질문 코멘트 추가 부분
     const requestComment = new XMLHttpRequest();
     const onClickComment = (id) => {
         const url = '/comments/add_question_comment/';
@@ -218,6 +218,7 @@
         requestComment.send(JSON.stringify({ id: id, text: text }));
         console.log(requestComment);
     };
+    
     const commentHandleResponse = () => {
         if (requestComment.status < 400) {
             const { id } = JSON.parse(requestComment.response);
@@ -258,7 +259,7 @@
             commentHandleResponse();
         };
     };
-
+   
     // <div class='comment_id_${comment.id}'>
     //     <div class="comment_info">
     //         <div class="comment_profile">
@@ -292,6 +293,29 @@
     //         </div>
     //     </div>
     
+
+
+    // <div class='comment_id_${comment_id}'>
+    //             <div class="comment_info">
+    //                 <div class="comment_profile">
+    //                     <img src="{{comment.user.user_profile_image.url}}">
+    //                     <span class="user_nicknamme">
+    //                     {{comment.user.user_nickname}}
+    //                     </span>
+    //                 </div>
+    //                 <div class="comment_content">
+    //                     <div class="comment_created">
+    //                         {{comment.created}}
+    //                     </div>
+    //                     <div class="comment_text">
+    //                         ${text}
+    //                     </div>
+    //                 </div>
+    //             </div>
+    //             <div class="delete_btn">
+    //                 <button onclick="onClickDelete(${id}, ${comment_id})">삭제</button>
+    //             </div>
+    //         </div>
 
     //-------------------------------------------------------------------------------------------
     // 질문 코멘트 삭제 부분
