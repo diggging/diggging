@@ -623,7 +623,8 @@ def change_img(request, pk):
         new_img = request.FILES.get("new_img",None)
         if new_img:
             # 원래 이미지 삭제
-            user.user_profile_image.delete()
+            if user.user_profile_image != "../static/image/profile_img.svg":
+                user.user_profile_image.delete()
             # 새이미지로 바꿈
             user.user_profile_image = new_img
             user.save()
