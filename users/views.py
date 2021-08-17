@@ -59,15 +59,13 @@ def signup(request):
             email.send()
 
             # user가 생기자마자 바로 해결, 미해결 폴더 만들기
-            solved = Folder.objects.create(folder_user=user, folder_name="해결")
-            not_solved = Folder.objects.create(folder_user=user, folder_name="미해결")
+            solved = Folder.objects.create(folder_user=user, folder_name="해결", folder_kind="solved")
+            not_solved = Folder.objects.create(folder_user=user, folder_name="미해결", folder_kind="solved")
             # return HttpResponse('Please confirm your email address to complete the registration') -> 이메일 인증 성공 확인 가능 메세지
 
             return redirect('users:login')
     else:
         user_form = UserCustomCreationForm()
-
-    
     
     ctx={'signup_form' : user_form}
     return render(request, "users/signup.html", context=ctx)
@@ -642,3 +640,9 @@ def alarm(request, pk):
         'alarms' : my_alarm,
     }
     return render(request, template_name="users/alarm.html", context=ctx)
+
+
+
+
+def index(request):
+    return render(request, 'users/index.html')
