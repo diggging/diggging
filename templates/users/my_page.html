@@ -33,7 +33,7 @@
 <script>
     const followModal = document.querySelector('.follow_modal');
     const followBody = document.querySelector('.follow_body');
-    const followOpenPopup = document.querySelector('.follow_btn');
+    const followOpenPopup = document.querySelector('#follow_btn');
 
     followOpenPopup.addEventListener('click', () => {
         followModal.style.display = 'block';
@@ -43,6 +43,23 @@
 
     followBody.addEventListener('click', () => {
         followModal.style.display = 'none';
+        body.style.overflow = auto
+    })
+</script>
+<!-- 팔로워 모달창 뜨기 -->
+<script>
+    const followerModal = document.querySelector('.follow_modal');
+    const followerBody = document.querySelector('.follow_body');
+    const followerOpenPopup = document.querySelector('#follower_btn');
+
+    followerOpenPopup.addEventListener('click', () => {
+        followerModal.style.display = 'block';
+        body.style.overflow = 'hidden';
+        followerBody.style.display = 'block';
+    });
+
+    followerBody.addEventListener('click', () => {
+        followerModal.style.display = 'none';
         body.style.overflow = auto
     })
 </script>
@@ -228,8 +245,8 @@
                     </div>
                     <div class="follow_area">
                         <div class="follow_btn_area">
-                            <button class="follow_btn">팔로잉 {{request.user.user_following|length}}</button>
-                            <button class="follow_btn">팔로워 {{request.user.user_followed|length}}</button>
+                            <button id="follow_btn">팔로잉 {{request.user.user_following|length}}</button>
+                            <button id="follower_btn">팔로워 {{request.user.user_followed|length}}</button>
                         </div>
                     </div>
                 </div>
@@ -238,7 +255,7 @@
                 <div class="profile_area">
                     <h1> {{ host.user_nickname}}님의 모래상자 </h1>
                 </div>
-                <a href = '{% url "users:follow" host.id %}'><button class="follow_btn">팔로우하기</button></a>
+                <a href = '{% url "users:follow" host.id %}'>팔로우하기</a>
                 <div>
                     <label for="value_low">{{user.user_point}} 모래포인트</label>
                     <!-- value값이 내 모래포인트에 따라서 반영되어야함. max기준도 레벨에 따라 바뀌어야함.(아직구현X) -->
@@ -261,8 +278,8 @@
                 {% endif %}
                 </div>
                 <div class="follow_area">
-                    <a href=""><button class="follow_btn">팔로잉 {{ host_following|length }}</button></a>
-                    <a href=""><button class="follow_btn">팔로워 {{ host_follower|length }}</button></a>
+                    <button id="follow_btn">팔로잉 {{ host_following|length }}</button>
+                    <button id="follower_btn">팔로워 {{ host_follower|length }}</button>
                 </div>
             {% endif %}
         </div>
