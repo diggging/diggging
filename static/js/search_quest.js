@@ -9,7 +9,7 @@ searchField.addEventListener('keyup', (e) => {
     if(searchValue.trim().length > 0) {
         console.log('searchValue', searchValue);
 
-        fetch('/posts/search_input/', {
+        fetch('/posts/search_quests_input/', {
             body: JSON.stringify({text:searchValue}),
             method: "POST",
             headers : { 
@@ -23,11 +23,9 @@ searchField.addEventListener('keyup', (e) => {
             if (data.length === 0){
                 searchContainer.innerHTML = "검색어와 맞는 글이 없어요"
             } else {
-                
                 const txt = data.map(post => {
-                    var a = "{% if post.image %}";
                     return `
-                        <img src="' + ${post.image} + '" />
+                        <img src='${post.image.url}' alt="">
                         ${post.title}
                         ${post.desc}
                         ${post.created}
@@ -48,18 +46,16 @@ const language = document.getElementById('id_field');
 const os = document.getElementById('id_field2');
 const problem_solving = document.getElementById('id_field3');
 const framework = document.getElementById('id_field4');
+
 const select = document.getElementById('select');
 
 
 select.addEventListener('change', () => {
     const langValue = language.options[language.selectedIndex].value;
-    const osValue = os.options[os.selectedIndex].value;
-    const solveValue = problem_solving.options[problem_solving.selectedIndex].value;
     const frameValue = framework.options[framework.selectedIndex].value;
 
-    fetch('/posts/search_select/', {
-        body: JSON.stringify({language:langValue ,os:osValue,
-                            problem_solving:solveValue, framework:frameValue}),
+    fetch('/posts/search_quests_select/', {
+        body: JSON.stringify({language:langValue,framework:frameValue}),
         method: "POST",
         headers : { 
             'Content-Type': 'application/json',
@@ -89,4 +85,3 @@ select.addEventListener('change', () => {
         }
     })
 })
-

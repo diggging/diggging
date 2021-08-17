@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block script %}
-<script src="{% static 'js/search.js' %}"></script>
+<script src="{% static 'js/search_quest.js' %}"></script>
 <link rel="stylesheet" href="{% static 'css/search.css' %}">
 {% endblock %}
 
@@ -10,7 +10,7 @@
 
 <body>
     <div class="main_container">
-        삽질 검색
+        질문 검색
         <a href="{% url 'posts:search'%}">삽질 검색</a>
         <a href="{% url 'posts:search_quest'%}">질문 검색</a>
         <div class="input_container">
@@ -24,14 +24,13 @@
             <form id="select" method="post" action="">
                 {% csrf_token %}
                 {{form.field}}
-                {{form.field2}}
-                {{form.field3}}
+                
                 {{form.field4}}
             </form>
         </div>
-
             <div class="post_container">
-                
+
             </div>
+        
 </div>
 {% endblock %}

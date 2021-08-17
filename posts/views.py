@@ -11,8 +11,9 @@ from .forms import SelectForm, PostForm
 import json
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger
 from questions.models import Question_post
+import math
 
 
 # main 페이지
@@ -50,10 +51,6 @@ def scrap_axios(request):
 
     return render(request, 'posts/post_list.html', {'posts': posts_scrap})
 
-@csrf_exempt
-def test(request):
-    
-    return render(request, 'posts/test.html')
 
 
 @require_GET
@@ -309,12 +306,42 @@ def search_input(request):
     if request.method == "POST":
         search_str = json.loads(request.body).get("text")
 
-        post = Post.objects.filter(
-            title__icontains=search_str) | Post.objects.filter(
-            desc__icontains=search_str)
+        posts = Post.objects.filter(
+            title__icontains=search_str).values() | Post.objects.filter(
+            desc__icontains=search_str).values()
+        
+        # paginator = Paginator(posts, 10)
+        # try:
+        #     page_num = request.GET.get("page")
+        #     posts_list = paginator.page(page_num)
+        # except PageNotAnInteger:
+        #     posts_list = paginator.page(1)
 
-        data = post.values()
+        data = posts.values()
+        
         return JsonResponse(list(data), safe=False)
+
+@csrf_exempt
+def search_quests_input(request):
+    if request.method == "POST":
+        search_str = json.loads(request.body).get("text")
+
+        questions = Question_post.objects.filter(
+            title__icontains=search_str).values() | Question_post.objects.filter(
+            desc__icontains=search_str).values()
+        
+        #페이지
+        # paginator = Paginator(questions, 10)
+        # try:
+        #     page_num = request.GET.get("page")
+        #     questions_list = paginator.page(page_num)
+        # except PageNotAnInteger:
+        #     questions_list = paginator.page(1)
+        
+        data = questions.values()
+
+        return JsonResponse(list(data), safe=False)
+
 
 ## search select ajax
 @csrf_exempt
@@ -330,13 +357,6 @@ def search_select(request):
         os_filter = Post.objects.filter(os__exact=os)
         frame_filter = Post.objects.filter(framework__exact=framework)
         problem_filter = Post.objects.filter(problem_solving__exact=problem_solving)
-
-        ##전체 선택
-        fields = Post._meta.get_fields()
-        lang_fields = Post._meta.get_field('language')
-        os_fields = Post._meta.get_field('os')
-        frameword_fields = Post._meta.get_field('framework')
-        problem_fields = Post._meta.get_field('problem_solving')
 
         result = Post.objects.none()
 
@@ -373,6 +393,57 @@ def search_select(request):
         else:
             result = result
 
+        # posts = result.values()
+        ##페이지네이터
+        # paginator = Paginator(posts, 10)
+        # try:
+        #     page_num = request.GET.get("page")
+        #     posts_list = paginator.page(page_num)
+        # except PageNotAnInteger:
+        #     posts_list = paginator.page(1)
+
+        data = result.values()
+
+    return JsonResponse(list(data), safe=False)
+
+
+@csrf_exempt
+def search_quests_select(request):
+    if request.method == "POST":
+
+        language = json.loads(request.body).get("language")
+        framework = json.loads(request.body).get("framework")
+
+        lang_filter = Question_post.objects.filter(language__exact=language)
+        frame_filter = Question_post.objects.filter(framework__exact=framework)
+
+        result = Question_post.objects.none()
+
+        if language == "전체":
+            lang_filter = Question_post.objects.all()
+        
+        if lang_filter.exists():
+            result = lang_filter
+
+        if framework == "전체":
+            frame_filter = Question_post.objects.all()
+
+        if frame_filter.exists() and result.exists():
+            result = result & frame_filter
+        elif frame_filter.exists():
+            result = frame_filter
+        else:
+            result = result
+
+        # questions = result.values()
+        # ##페이지네이터
+        # paginator = Paginator(questions, 10)
+        # try:
+        #     page_num = request.GET.get("page")
+        #     questions_list = paginator.page(page_num)
+        # except PageNotAnInteger:
+        #     questions_list = paginator.page(1)
+
         data = result.values()
 
     return JsonResponse(list(data), safe=False)
@@ -387,7 +458,18 @@ def search(request):
         }
     return render(request, "posts/search.html", ctx)
 
-#post data 보내주기
+def search_quest(request):
+    questions = Question_post.objects.all() ##질문만 받아오기
+    form = SelectForm()
+    
+    ctx = {
+            'questions': questions,
+            'form': form,
+        }
+
+    return render(request, "posts/search_quest.html", ctx)
+
+#post data 보내주기 -> 지워도 무방
 @csrf_exempt
 def search_post_axios(request):
     post = Post.objects.all()
