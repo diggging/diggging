@@ -13,21 +13,24 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator, PageNotAnInteger
 from questions.models import Question_post
-import math
 
 
 # main 페이지
 def main(request):
-    return render(request, "posts/post_list.html")
+    me = request.user   
+    return render(request, "posts/post_list.html", {"user":me})
 
 def helped(request):
-    return render(request, "posts/post_helped.html")
+    me = request.user 
+    return render(request, "posts/post_helped.html", {"user":me})
 
 def follow(request):
-    return render(request, "posts/post_follow.html")
+    me = request.user 
+    return render(request, "posts/post_follow.html", {"user":me})
 
 def my_recent(request):
-    return render(request, "posts/my_recent.html")
+    me = request.user 
+    return render(request, "posts/my_recent.html", {"user":me})
 
 #-----------------------------------------------------------------------
 def is_ajax(request):
@@ -35,7 +38,8 @@ def is_ajax(request):
 
 # main axios
 @require_GET
-def scrap_axios(request):    
+def scrap_axios(request):
+    me = request.user    
     posts = Question_post.objects.all() ##질문만 받아오기
     all_posts_scrap = Post.objects.all().order_by("-scrap_num")
 
@@ -46,24 +50,25 @@ def scrap_axios(request):
     posts_scrap = paginator.page(page_num)
 
     if is_ajax(request):
-        return render(request, 'posts/_posts.html', {'posts': posts_scrap})
+        return render(request, 'posts/_posts.html', {'posts': posts_scrap, "user":me})
         # return JsonResponse(ctx, safe=False)
 
-    return render(request, 'posts/post_list.html', {'posts': posts_scrap})
+    return render(request, 'posts/post_list.html', {'posts': posts_scrap, "user":me})
 
 
 
 @require_GET
 def helped_axios(request):
+    me = request.user
     all_posts_helped = Post.objects.all().order_by("-helped_num")
     paginator = Paginator(all_posts_helped, 8)
     page_num = request.GET.get("page")
     posts_helped = paginator.page(page_num)
 
     if is_ajax(request):
-        return render(request, 'posts/_posts.html', {'posts': posts_helped})
+        return render(request, 'posts/_posts.html', {'posts': posts_helped, "user":me})
 
-    return render(request, 'posts/post_helped.html', {'posts': posts_helped})
+    return render(request, 'posts/post_helped.html', {'posts': posts_helped , "user":me})
 
 @require_GET
 def follow_axios(request):
