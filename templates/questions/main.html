@@ -25,6 +25,9 @@
                 </div>
                 <div class="no_answer_list_box">
                     {% if not not_selected_questions|length %}
+
+                    {% else %}
+                    {% for post in not_selected_questions %}
                     <div class="no_answer_list">
                         <a href="{% url 'question:question_post_detail' post.user.id post.id %}">
                             <div class="no_user_info">
@@ -38,9 +41,7 @@
                         </a>
                         <!--채택이 false인거만 나오게 한다.-->
                     </div>
-                    {% else %}
-                    {% for question in not_selected_questions %}
-                    {{question.title}}
+                    
                     {% endfor %}
                     {% endif %}
                 </div>

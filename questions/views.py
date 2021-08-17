@@ -384,6 +384,7 @@ def chosen_answer(request, question_answer_id):
     question.is_selected = True
     # if request.method == "POST": #채택할래? 예
     is_answer_chosen.selection = True
+    question.save()
     is_answer_chosen.save()
     new_sand1 = Sand.objects.create(user=is_answer_chosen.user, amount=300, reason="내 답변 채택")
     new_sand2 = Sand.objects.create(user=question.user, amount=50, reason="내 질문의 답변 채택")
