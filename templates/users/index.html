@@ -1,0 +1,3102 @@
+<html>
+
+<head>
+    <title>Calendar Yearview with Blocks demo page</title>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="../js/calendar_yearview_blocks.js"></script>
+    <link href="../css/calendar_yearview_blocks.css" media="all" rel="stylesheet">
+    <script>
+        (function ($) {
+
+            $.fn.calendar_yearview_blocks = function (options) {
+
+                // Format string
+                if (!String.prototype.formatString) {
+                    String.prototype.formatString = function () {
+                        var args = arguments;
+                        return this.replace(/{(\d+)}/g, function (match, number) {
+                            return typeof args[number] !== 'undefined'
+                                ? args[number]
+                                : match
+                                ;
+                        });
+                    };
+                }
+
+                // If the number less than 10, add a zero before it
+                var prettyNumber = function (number) {
+                    return number < 10 ? '0' + number.toString() : number = number.toString();
+                };
+
+                var getDisplayDate = function (date_obj) {
+                    var pretty_month = prettyNumber(date_obj.getMonth() + 1);
+                    var pretty_date = prettyNumber(date_obj.getDate());
+                    return "{0}-{1}-{2}".formatString(date_obj.getFullYear(), pretty_month, pretty_date);
+                };
+
+                var start = function () {
+                    obj_timestamp = JSON.parse(settings.data);
+
+                    var wrap_chart = _this;
+
+                    var end_date = new Date(settings.final_date);
+                    var current_date = new Date();
+                    var start_date = new Date();
+                    start_date.setMonth(end_date.getMonth() - 12);
+
+                    var start_weekday = settings.start_monday === true ? 1 : 0;
+                    for (var i = 0; i < 7; i++) {
+                        var day = start_date.getDay();
+                        if (day === start_weekday) {
+                            break;
+                        }
+                        else {
+                            // Loop until start_weekday
+                            start_date.setDate(start_date.getDate() + 1);
+                        }
+                    }
+                    var loop_html = "";
+
+                    // One year has 52 weeks
+                    var step = 13; // Amount of pixels to move
+
+                    var month_position = [];
+                    month_position.push({ month_index: start_date.getMonth(), x: 0 });
+                    var using_month = start_date.getMonth();
+                    for (var i = 0; i <= 52; i++) { // For each week, generate a column
+                        var g_x = i * step;
+                        var item_html = '<g transform="translate(' + g_x.toString() + ',0)">';
+
+                        for (var j = 0; j < 7; j++) { // For each weekday, generate a row
+
+                            if (start_date > end_date) {
+                                // Break the loop when today's date is found
+                                break;
+                            }
+                            var y = j * step;
+
+                            var month_in_day = start_date.getMonth();
+                            var data_date = getDisplayDate(start_date);
+
+                            // Check first day in week
+                            if (j === start_weekday && month_in_day !== using_month) {
+                                using_month = month_in_day;
+                                month_position.push({ month_index: using_month, x: g_x });
+                            }
+
+                            // Put a box around today's date
+                            if (settings.stylize_today) {
+                                var match_today = current_date.getTime() === start_date.getTime() ? '" style="stroke:black;stroke-width:2;opacity:0.5"' : '';
+                            } else {
+                                var match_today = "";
+                            }
+
+                            var items = [];
+                            var legend = '', items_str = '';
+                            if (obj_timestamp[data_date]) {
+                                if (obj_timestamp[data_date].items) {
+                                    items = obj_timestamp[data_date].items;
+                                    items_str = items.join(", ")
+                                    items_str = items_str.replaceAll('&', '&amp;');
+                                    items_str = items_str.replaceAll('"', '&quot;');
+                                }
+                                if (obj_timestamp[data_date].legend) {
+                                    legend = obj_timestamp[data_date].legend;
+                                    legend = legend.replaceAll('&', '&amp;');
+                                    legend = legend.replaceAll('"', '&quot;');
+                                }
+                            }
+
+                            var item_name = items[0] ? items[0] : false;
+                            var color = settings.colors[item_name] ? settings.colors[item_name] : settings.colors['default'];
+
+                            // Fill a square for the 1st item
+                            item_html += '<rect class="day" width="11" height="11" y="' + y + '" fill="' + color + match_today + '" data-items="' + items_str + '" data-legend="' + legend + '" data-date="' + data_date + '"/>';
+                            if (items.length === 2) { // Fill a trangle for the 2nd
+                                var item_name_1 = items[1] ? items[1] : false;
+                                var color_1 = settings.colors[item_name_1] ? settings.colors[item_name_1] : settings.colors['default'];
+                                item_html += '<polygon points="' + 0 + ',' + (y + 11) + ' ' + 0 + ',' + y + ' ' + 11 + ',' + y + '" fill="' + color_1 + '" data-items="' + items_str + '" data-legend="' + legend + '" data-date="' + data_date + '"/>';
+                            } else if (items.length === 3) { // Fill 2 rectangles for 2nd and 3rd
+                                var item_name_1 = items[1] ? items[1] : false;
+                                var color_1 = settings.colors[item_name_1] ? settings.colors[item_name_1] : settings.colors['default'];
+                                var item_name_2 = items[2] ? items[2] : false;
+                                var color_2 = settings.colors[item_name_2] ? settings.colors[item_name_2] : settings.colors['default'];
+                                item_html += '<polygon points="' + 0 + ',' + (y + 8) + ' ' + 0 + ',' + y + ' ' + 11 + ',' + y + ' ' + 11 + ',' + (y + 8) + '" fill="' + color_1 + '" data-items="' + items_str + '" data-legend="' + legend + '" data-date="' + data_date + '"/>';
+                                item_html += '<polygon points="' + 0 + ',' + (y + 4) + ' ' + 0 + ',' + y + ' ' + 11 + ',' + y + ' ' + 11 + ',' + (y + 4) + '" fill="' + color_2 + '" data-items="' + items_str + '" data-legend="' + legend + '" data-date="' + data_date + '"/>';
+                            } else if (items.length === 4) { // Fill 3 cubes for 2nd, 3rd and 4th
+                                var item_name_1 = items[1] ? items[1] : false;
+                                var color_1 = settings.colors[item_name_1] ? settings.colors[item_name_1] : settings.colors['default'];
+                                var item_name_2 = items[2] ? items[2] : false;
+                                var color_2 = settings.colors[item_name_2] ? settings.colors[item_name_2] : settings.colors['default'];
+                                var item_name_3 = items[3] ? items[3] : false;
+                                var color_3 = settings.colors[item_name_3] ? settings.colors[item_name_3] : settings.colors['default'];
+                                item_html += '<polygon points="' + 0 + ',' + (y + 11) + ' ' + 0 + ',' + (y + 6) + ' ' + 6 + ',' + (y + 6) + ' ' + 6 + ',' + (y + 11) + '" fill="' + color_1 + '" data-items="' + items_str + '" data-legend="' + legend + '" data-date="' + data_date + '"/>';
+                                item_html += '<polygon points="' + 0 + ',' + (y + 6) + ' ' + 0 + ',' + y + ' ' + 6 + ',' + y + ' ' + 6 + ',' + (y + 6) + '" fill="' + color_2 + '" data-items="' + items_str + '" data-legend="' + legend + '" data-date="' + data_date + '"/>';
+                                item_html += '<polygon points="' + 6 + ',' + (y + 6) + ' ' + 6 + ',' + y + ' ' + 11 + ',' + y + ' ' + 11 + ',' + (y + 6) + '" fill="' + color_3 + '" data-items="' + items_str + '" data-legend="' + legend + '" data-date="' + data_date + '"/>';
+                            }
+
+                            // Move on to the next day
+                            start_date.setDate(start_date.getDate() + 1);
+
+                        }
+
+                        item_html += "</g>";
+
+                        loop_html += item_html;
+
+                    }
+
+                    // Trick
+                    if (month_position[1].x - month_position[0].x < 40) {
+                        // Fix ugly graph by removing the first item
+                        month_position.shift(0);
+                    }
+
+                    // Add labels for Months
+                    for (var i = 0; i < month_position.length; i++) {
+                        var item = month_position[i];
+                        var month_name = settings.month_names[item.month_index];
+                        loop_html += '<text x="' + item.x + '" y="-5" class="month">' + month_name + '</text>';
+                    }
+
+                    // Add labels for Weekdays
+                    if (settings.start_monday === true) {
+                        loop_html += '<text text-anchor="middle" class="wday" dx="-12" dy="11">{0}</text>'.formatString(settings.day_names[0]) +
+                            '<text text-anchor="middle" class="wday" dx="-12" dy="36">{0}</text>'.formatString(settings.day_names[1]) +
+                            '<text text-anchor="middle" class="wday" dx="-12" dy="61">{0}</text>'.formatString(settings.day_names[2]) +
+                            '<text text-anchor="middle" class="wday" dx="-12" dy="86">{0}</text>'.formatString(settings.day_names[3]);
+                    } else {
+                        loop_html += '<text text-anchor="middle" class="wday" dx="-10" dy="22">{0}</text>'.formatString(settings.day_names[0]) +
+                            '<text text-anchor="middle" class="wday" dx="-10" dy="48">{0}</text>'.formatString(settings.day_names[1]) +
+                            '<text text-anchor="middle" class="wday" dx="-10" dy="74">{0}</text>'.formatString(settings.day_names[2]);
+                    }
+
+                    // Fixed size with width= 721 and height = 110
+                    var wire_html =
+                        '<svg width="721" height="110">' +
+                        '<g transform="translate(25, 20)">' +
+                        loop_html +
+                        '</g>' + '"Your browser does not support inline SVG."' +
+                        '</svg>';
+
+                    wrap_chart.html(wire_html);
+
+                    _this.find('rect, polygon').on("mouseenter", mouseEnter);
+                    _this.find('rect, polygon').on("mouseleave", mouseLeave);
+                    _this.find('rect, polygon').on("click", mouseClick);
+                    appendTooltip();
+
+                };
+
+                var mouseLeave = function (evt) {
+                    $('.svg-tip').hide();
+                };
+
+                var mouseClick = function (evt) {
+                    var items = $(evt.target).attr('data-items');
+                    var date = $(evt.target).attr('data-date');
+                    $("#moreinfo").text("On {0}, following items are seen: {1}".formatString(date, items))
+                };
+
+                // Handle mouseEnter event when entering into rect element
+                var mouseEnter = function (evt) {
+
+                    var target_offset = $(evt.target).offset();
+                    var items = $(evt.target).attr('data-items');
+                    var legend = $(evt.target).attr('data-legend');
+                    var date = $(evt.target).attr('data-date');
+
+                    var text = settings.tooltip_style === 'default' ? "{0}: <br />{1}".formatString(date, legend ? legend : items) : (legend ? legend : items);
+
+                    // Depending on settings, only show a tooltip when there's something to be shown
+                    if (items.length >= 1 || settings.always_show_tooltip === true) {
+                        var svg_tip = $('.svg-tip').show();
+                        svg_tip.html(text);
+                        var svg_width = Math.round(svg_tip.width() / 2 + 5);
+                        var svg_height = svg_tip.height() * 2 + 10;
+
+                        svg_tip.css({ top: target_offset.top - svg_height - 5 });
+                        svg_tip.css({ left: target_offset.left - svg_width });
+                    }
+
+                };
+
+                // Append tooltip to display when the mouse enters the rect element
+                // Default is display:none
+                var appendTooltip = function () {
+                    if ($('.svg-tip').length === 0) {
+                        $('body').append('<div class="svg-tip svg-tip-one-line" style="display:none" ></div>');
+                    }
+                };
+
+                // Default settings which can be overridden by the user
+                var settings = $.extend({
+                    colors: {
+                        'default': '#eeeeee'
+                    },
+                    month_names: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    day_names: ['M', 'W', 'F', 'S'],
+                    start_monday: true,
+                    always_show_tooltip: false,
+                    stylize_today: false,
+                    final_date: new Date().toISOString().slice(0, 10),
+                    tooltip_style: 'default', // or 'custom'
+                    data: []
+                }, options);
+
+                var _this = $(this);
+
+                start();
+
+            };
+
+        }(jQuery));
+
+    </script>
+    <script type="text/javascript">
+
+        /* START DEMO PURPOSES */
+        // Format string
+        if (!String.prototype.formatString) {
+            String.prototype.formatString = function () {
+                var args = arguments;
+                return this.replace(/{(\d+)}/g, function (match, number) {
+                    return typeof args[number] !== 'undefined'
+                        ? args[number]
+                        : match
+                        ;
+                });
+            };
+        }
+        // If the number less than 10, add a zero before it
+        var prettyNumber = function (number) {
+            return number < 10 ? '0' + number.toString() : number = number.toString();
+        };
+
+        var getDisplayDate = function (date_obj) {
+            var pretty_month = prettyNumber(date_obj.getMonth() + 1);
+            var pretty_date = prettyNumber(date_obj.getDate());
+            return "{0}-{1}-{2}".formatString(date_obj.getFullYear(), pretty_month, pretty_date);
+        };
+
+        // Generate random number between min and max
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+
+        function getRandomData(min, max, items) {
+            var return_object = {};
+
+            var entries = randomInt(min, max);
+            for (var i = 0; i < entries; i++) {
+                var day = new Date();
+
+                var previous_date = randomInt(0, 365);
+                day.setDate(day.getDate() - previous_date);
+
+                var display_date = getDisplayDate(day);
+                return_object[display_date] = {};
+                return_object[display_date].items = [];
+                var random_elements = randomInt(1, 3);
+                for (var j = 0; j < random_elements; j++) {
+                    var random_item = items[randomInt(0, items.length - 1)];
+                    if (!return_object[display_date].items.includes(random_item)) {
+                        return_object[display_date].items.push(random_item);
+                    }
+                }
+
+            }
+            console.log(return_object);
+            return JSON.stringify(return_object);
+
+        }
+        /* END DEMO PURPOSES */
+
+        $(document).ready(function () {
+
+            $('#calendar_yearview_blocks_chart_1').calendar_yearview_blocks({
+                //data: '{"2020-08-01": {"items": ["banana", "apple"]}, "2020-05-05": {"items": ["apple"]}, "2020-05-01": {"items": ["banana"]}, "2020-05-03": {"items": ["banana", "apple", "orange"]}, "2020-05-22": {"items": ["banana", "apple", "orange", "pear"]}}',
+                data: getRandomData(10, 40, ["banana", "apple", "orange", "pear"]),
+                start_monday: true,
+                always_show_tooltip: true,
+                month_names: ['jan', 'feb', 'maa', 'apr', 'mei', 'jun', 'jul', 'aug', 'sept', 'okt', 'nov', 'dec'],
+                day_names: ['ma', 'wo', 'vr', 'zo'],
+                colors: {
+                    'default': '#eeeeee', // Default color
+                    'apple': 'green',
+                    'banana': 'yellow',
+                    'orange': 'orange',
+                    'pear': 'lightgreen'
+                }
+            });
+
+            $('#calendar_yearview_blocks_chart_2').calendar_yearview_blocks({
+                data: getRandomData(20, 80, ["rain", "sunshine", "fog", "thunder", "hail"]),
+                start_monday: false,
+                always_show_tooltip: false,
+                month_names: ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
+                day_names: ['mo', 'wed', 'fri'],
+                colors: {
+                    'default': '#eeeeee', // Default color
+                    'rain': 'lightblue',
+                    'sunshine': 'lightyellow',
+                    'fog': 'gray',
+                    'thunder': 'brown',
+                    'hail': 'white'
+                }
+            });
+
+        });
+
+    </script>
+    <style type="text/css">
+        .seperate {
+            height: 20px;
+        }
+
+        body {
+            padding: 50px;
+            font-family: Helvetica;
+        }
+
+        .svg-tip {
+            padding: 10px;
+            background: #191919;
+            opacity: 0.8;
+            color: #eee;
+            font-size: 12px;
+            position: absolute;
+            z-index: 99999;
+            text-align: center;
+            border-radius: 3px;
+        }
+
+        .svg-tip:after {
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            position: absolute;
+            left: 50%;
+            height: 5px;
+            width: 5px;
+            bottom: -10px;
+            margin: 0 0 0 -5px;
+            content: " ";
+            border: 5px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .wday,
+        .month {
+            font-variant: small-caps;
+            color: #222222;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+
+
+<body>
+    <h2>Calendar Yearview with Blocks</h2>
+    <div id="calendar_yearview_blocks_chart_1">
+        <svg width="721" height="110">
+            <g transform="translate(25, 20)">
+                <g transform="translate(0,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-08-17">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-08-18">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-08-19">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-08-20">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-08-21">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-08-22">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-08-23">
+                    </rect>
+                </g>
+                <g transform="translate(13,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-08-24">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-08-25">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-08-26">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-08-27">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-08-28">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-08-29">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-08-30">
+                    </rect>
+                </g>
+                <g transform="translate(26,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="green" data-items="apple, banana"
+                        data-legend="" data-date="2020-08-31">
+                    </rect>
+                    <polygon points="0,11 0,0 11,0" fill="yellow" data-items="apple, banana" data-legend=""
+                        data-date="2020-08-31">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-01">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-02">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-03">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="lightgreen" data-items="pear" data-legend=""
+                        data-date="2020-09-04">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-05">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-06">
+                    </rect>
+                </g>
+                <g transform="translate(39,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-07">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-08">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-09">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-10">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-11">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-12">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-13">
+                    </rect>
+                </g>
+                <g transform="translate(52,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-14">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-15">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-16">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-17">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-18">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-19">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-20">
+                    </rect>
+                </g>
+                <g transform="translate(65,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="lightgreen" data-items="pear" data-legend=""
+                        data-date="2020-09-21">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-22">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="yellow" data-items="banana, orange"
+                        data-legend="" data-date="2020-09-23">
+                    </rect>
+                    <polygon points="0,37 0,26 11,26" fill="orange" data-items="banana, orange" data-legend=""
+                        data-date="2020-09-23">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-24">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-25">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="orange" data-items="orange, pear"
+                        data-legend="" data-date="2020-09-26">
+                    </rect>
+                    <polygon points="0,76 0,65 11,65" fill="lightgreen" data-items="orange, pear" data-legend=""
+                        data-date="2020-09-26">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-27">
+                    </rect>
+                </g>
+                <g transform="translate(78,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-28">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="orange" data-items="orange, banana"
+                        data-legend="" data-date="2020-09-29">
+                    </rect>
+                    <polygon points="0,24 0,13 11,13" fill="yellow" data-items="orange, banana" data-legend=""
+                        data-date="2020-09-29">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-30">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-01">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-02">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-03">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="yellow" data-items="banana" data-legend=""
+                        data-date="2020-10-04">
+                    </rect>
+                </g>
+                <g transform="translate(91,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-05">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-06">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-07">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-08">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-09">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-10">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-11">
+                    </rect>
+                </g>
+                <g transform="translate(104,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-12">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-13">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-14">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-15">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-16">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-17">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-18">
+                    </rect>
+                </g>
+                <g transform="translate(117,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="lightgreen" data-items="pear, banana"
+                        data-legend="" data-date="2020-10-19">
+                    </rect>
+                    <polygon points="0,11 0,0 11,0" fill="yellow" data-items="pear, banana" data-legend=""
+                        data-date="2020-10-19">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-20">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-21">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-22">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-23">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-24">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-25">
+                    </rect>
+                </g>
+                <g transform="translate(130,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-26">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-27">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="lightgreen" data-items="pear, apple"
+                        data-legend="" data-date="2020-10-28">
+                    </rect>
+                    <polygon points="0,37 0,26 11,26" fill="green" data-items="pear, apple" data-legend=""
+                        data-date="2020-10-28">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-29">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-30">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-31">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-01">
+                    </rect>
+                </g>
+                <g transform="translate(143,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-02">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-03">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-04">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-05">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-06">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-07">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-08">
+                    </rect>
+                </g>
+                <g transform="translate(156,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-09">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-10">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-11">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-12">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-13">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-14">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-15">
+                    </rect>
+                </g>
+                <g transform="translate(169,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-16">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-17">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-18">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-19">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-20">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-21">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-22">
+                    </rect>
+                </g>
+                <g transform="translate(182,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-23">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="yellow" data-items="banana, pear"
+                        data-legend="" data-date="2020-11-24">
+                    </rect>
+                    <polygon points="0,24 0,13 11,13" fill="lightgreen" data-items="banana, pear" data-legend=""
+                        data-date="2020-11-24">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-25">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-26">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-27">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-28">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="green" data-items="apple, banana"
+                        data-legend="" data-date="2020-11-29">
+                    </rect>
+                    <polygon points="0,89 0,78 11,78" fill="yellow" data-items="apple, banana" data-legend=""
+                        data-date="2020-11-29">
+                    </polygon>
+                </g>
+                <g transform="translate(195,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-30">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-01">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-02">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-03">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="green" data-items="apple, banana, orange"
+                        data-legend="" data-date="2020-12-04">
+                    </rect>
+                    <polygon points="0,60 0,52 11,52 11,60" fill="yellow" data-items="apple, banana, orange"
+                        data-legend="" data-date="2020-12-04">
+                    </polygon>
+                    <polygon points="0,56 0,52 11,52 11,56" fill="orange" data-items="apple, banana, orange"
+                        data-legend="" data-date="2020-12-04">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-05">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-06">
+                    </rect>
+                </g>
+                <g transform="translate(208,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-07">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-08">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="yellow" data-items="banana, orange"
+                        data-legend="" data-date="2020-12-09">
+                    </rect>
+                    <polygon points="0,37 0,26 11,26" fill="orange" data-items="banana, orange" data-legend=""
+                        data-date="2020-12-09">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-10">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-11">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-12">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-13">
+                    </rect>
+                </g>
+                <g transform="translate(221,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-14">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-15">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-16">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-17">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-18">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-19">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-20">
+                    </rect>
+                </g>
+                <g transform="translate(234,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-21">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-22">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-23">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-24">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-25">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-26">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-27">
+                    </rect>
+                </g>
+                <g transform="translate(247,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-28">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-29">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-30">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-31">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-01">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-02">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-03">
+                    </rect>
+                </g>
+                <g transform="translate(260,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-04">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="lightgreen" data-items="pear, banana"
+                        data-legend="" data-date="2021-01-05">
+                    </rect>
+                    <polygon points="0,24 0,13 11,13" fill="yellow" data-items="pear, banana" data-legend=""
+                        data-date="2021-01-05">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-06">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-07">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-08">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-09">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-10">
+                    </rect>
+                </g>
+                <g transform="translate(273,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-11">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-12">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-13">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-14">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-15">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-16">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-17">
+                    </rect>
+                </g>
+                <g transform="translate(286,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-18">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-19">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-20">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-21">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-22">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-23">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-24">
+                    </rect>
+                </g>
+                <g transform="translate(299,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-25">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-26">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-27">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-28">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="lightgreen" data-items="pear" data-legend=""
+                        data-date="2021-01-29">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-30">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-31">
+                    </rect>
+                </g>
+                <g transform="translate(312,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="green" data-items="apple" data-legend=""
+                        data-date="2021-02-01">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-02">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-03">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="green" data-items="apple, pear" data-legend=""
+                        data-date="2021-02-04">
+                    </rect>
+                    <polygon points="0,50 0,39 11,39" fill="lightgreen" data-items="apple, pear" data-legend=""
+                        data-date="2021-02-04">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-05">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-06">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-07">
+                    </rect>
+                </g>
+                <g transform="translate(325,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-08">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="orange" data-items="orange" data-legend=""
+                        data-date="2021-02-09">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-10">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-11">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-12">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-13">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-14">
+                    </rect>
+                </g>
+                <g transform="translate(338,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-15">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-16">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="green" data-items="apple, pear, orange"
+                        data-legend="" data-date="2021-02-17">
+                    </rect>
+                    <polygon points="0,34 0,26 11,26 11,34" fill="lightgreen" data-items="apple, pear, orange"
+                        data-legend="" data-date="2021-02-17">
+                    </polygon>
+                    <polygon points="0,30 0,26 11,26 11,30" fill="orange" data-items="apple, pear, orange"
+                        data-legend="" data-date="2021-02-17">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-18">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="lightgreen" data-items="pear, banana"
+                        data-legend="" data-date="2021-02-19">
+                    </rect>
+                    <polygon points="0,63 0,52 11,52" fill="yellow" data-items="pear, banana" data-legend=""
+                        data-date="2021-02-19">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-20">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-21">
+                    </rect>
+                </g>
+                <g transform="translate(351,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="orange" data-items="orange, banana"
+                        data-legend="" data-date="2021-02-22">
+                    </rect>
+                    <polygon points="0,11 0,0 11,0" fill="yellow" data-items="orange, banana" data-legend=""
+                        data-date="2021-02-22">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-23">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-24">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="orange" data-items="orange, pear"
+                        data-legend="" data-date="2021-02-25">
+                    </rect>
+                    <polygon points="0,50 0,39 11,39" fill="lightgreen" data-items="orange, pear" data-legend=""
+                        data-date="2021-02-25">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-26">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-27">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-28">
+                    </rect>
+                </g>
+                <g transform="translate(364,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-01">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-02">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-03">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-04">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-05">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-06">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-07">
+                    </rect>
+                </g>
+                <g transform="translate(377,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-08">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-09">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-10">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-11">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-12">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-13">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-14">
+                    </rect>
+                </g>
+                <g transform="translate(390,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-15">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-16">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-17">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-18">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-19">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-20">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-21">
+                    </rect>
+                </g>
+                <g transform="translate(403,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-22">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-23">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-24">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-25">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="orange" data-items="orange, pear"
+                        data-legend="" data-date="2021-03-26">
+                    </rect>
+                    <polygon points="0,63 0,52 11,52" fill="lightgreen" data-items="orange, pear" data-legend=""
+                        data-date="2021-03-26">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-27">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-28">
+                    </rect>
+                </g>
+                <g transform="translate(416,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-29">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-30">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-31">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-01">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-02">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-03">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-04">
+                    </rect>
+                </g>
+                <g transform="translate(429,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-05">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-06">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-07">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="lightgreen" data-items="pear, orange"
+                        data-legend="" data-date="2021-04-08">
+                    </rect>
+                    <polygon points="0,50 0,39 11,39" fill="orange" data-items="pear, orange" data-legend=""
+                        data-date="2021-04-08">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="52" fill="yellow" data-items="banana, apple"
+                        data-legend="" data-date="2021-04-09">
+                    </rect>
+                    <polygon points="0,63 0,52 11,52" fill="green" data-items="banana, apple" data-legend=""
+                        data-date="2021-04-09">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-10">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-11">
+                    </rect>
+                </g>
+                <g transform="translate(442,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-12">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-13">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-14">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-15">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-16">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-17">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-18">
+                    </rect>
+                </g>
+                <g transform="translate(455,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-19">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-20">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-21">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="orange" data-items="orange, apple"
+                        data-legend="" data-date="2021-04-22">
+                    </rect>
+                    <polygon points="0,50 0,39 11,39" fill="green" data-items="orange, apple" data-legend=""
+                        data-date="2021-04-22">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-23">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-24">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-25">
+                    </rect>
+                </g>
+                <g transform="translate(468,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-26">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-27">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-28">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-29">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-30">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-01">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-02">
+                    </rect>
+                </g>
+                <g transform="translate(481,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-03">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-04">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-05">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-06">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-07">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-08">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-09">
+                    </rect>
+                </g>
+                <g transform="translate(494,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-10">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-11">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-12">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-13">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-14">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-15">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-16">
+                    </rect>
+                </g>
+                <g transform="translate(507,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-17">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-18">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-19">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-20">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-21">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-22">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-23">
+                    </rect>
+                </g>
+                <g transform="translate(520,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-24">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-25">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-26">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-27">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="orange" data-items="orange" data-legend=""
+                        data-date="2021-05-28">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-29">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-30">
+                    </rect>
+                </g>
+                <g transform="translate(533,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-31">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-01">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-02">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-03">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-04">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-05">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-06">
+                    </rect>
+                </g>
+                <g transform="translate(546,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-07">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-08">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-09">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-10">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-11">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-12">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-13">
+                    </rect>
+                </g>
+                <g transform="translate(559,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-14">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-15">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-16">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-17">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-18">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-19">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-20">
+                    </rect>
+                </g>
+                <g transform="translate(572,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-21">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-22">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-23">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-24">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-25">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-26">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-27">
+                    </rect>
+                </g>
+                <g transform="translate(585,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-28">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-29">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-30">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-01">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-02">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-03">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="orange" data-items="orange, apple, banana"
+                        data-legend="" data-date="2021-07-04">
+                    </rect>
+                    <polygon points="0,86 0,78 11,78 11,86" fill="green" data-items="orange, apple, banana"
+                        data-legend="" data-date="2021-07-04">
+                    </polygon>
+                    <polygon points="0,82 0,78 11,78 11,82" fill="yellow" data-items="orange, apple, banana"
+                        data-legend="" data-date="2021-07-04">
+                    </polygon>
+                </g>
+                <g transform="translate(598,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-05">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-06">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-07">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="orange" data-items="orange" data-legend=""
+                        data-date="2021-07-08">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="yellow" data-items="banana" data-legend=""
+                        data-date="2021-07-09">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-10">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-11">
+                    </rect>
+                </g>
+                <g transform="translate(611,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-12">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-13">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-14">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="green" data-items="apple" data-legend=""
+                        data-date="2021-07-15">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-16">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-17">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-18">
+                    </rect>
+                </g>
+                <g transform="translate(624,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-19">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-20">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-21">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="green" data-items="apple, pear" data-legend=""
+                        data-date="2021-07-22">
+                    </rect>
+                    <polygon points="0,50 0,39 11,39" fill="lightgreen" data-items="apple, pear" data-legend=""
+                        data-date="2021-07-22">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-23">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-24">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-25">
+                    </rect>
+                </g>
+                <g transform="translate(637,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-26">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-27">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-28">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-29">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-30">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-31">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="orange" data-items="orange, pear"
+                        data-legend="" data-date="2021-08-01">
+                    </rect>
+                    <polygon points="0,89 0,78 11,78" fill="lightgreen" data-items="orange, pear" data-legend=""
+                        data-date="2021-08-01">
+                    </polygon>
+                </g>
+                <g transform="translate(650,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-02">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-03">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-04">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-05">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-06">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-07">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-08">
+                    </rect>
+                </g>
+                <g transform="translate(663,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-09">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-10">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-11">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-12">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-13">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-14">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="lightgreen" data-items="pear, orange"
+                        data-legend="" data-date="2021-08-15">
+                    </rect>
+                    <polygon points="0,89 0,78 11,78" fill="orange" data-items="pear, orange" data-legend=""
+                        data-date="2021-08-15">
+                    </polygon>
+                </g>
+                <g transform="translate(676,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-16">
+                    </rect>
+                </g>
+                <text x="26" y="-5" class="month">
+                    sept</text>
+                <text x="91" y="-5" class="month">
+                    okt</text>
+                <text x="143" y="-5" class="month">
+                    nov</text>
+                <text x="195" y="-5" class="month">
+                    dec</text>
+                <text x="260" y="-5" class="month">
+                    jan</text>
+                <text x="312" y="-5" class="month">
+                    feb</text>
+                <text x="364" y="-5" class="month">
+                    maa</text>
+                <text x="429" y="-5" class="month">
+                    apr</text>
+                <text x="481" y="-5" class="month">
+                    mei</text>
+                <text x="533" y="-5" class="month">
+                    jun</text>
+                <text x="598" y="-5" class="month">
+                    jul</text>
+                <text x="650" y="-5" class="month">
+                    aug</text>
+                <text text-anchor="middle" class="wday" dx="-12" dy="11">
+                    ma</text>
+                <text text-anchor="middle" class="wday" dx="-12" dy="36">
+                    wo</text>
+                <text text-anchor="middle" class="wday" dx="-12" dy="61">
+                    vr</text>
+                <text text-anchor="middle" class="wday" dx="-12" dy="86">
+                    zo</text>
+            </g>
+            "Your browser does not support inline SVG."
+        </svg>
+    </div>
+
+    <div class="seperate">
+    </div>
+
+    <div id="calendar_yearview_blocks_chart_2">
+        <svg width="721" height="110">
+            <g transform="translate(25, 20)">
+                <g transform="translate(0,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-08-23">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-08-24">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-08-25">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="lightyellow" data-items="sunshine"
+                        data-legend="" data-date="2020-08-26">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-08-27">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-08-28">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="lightblue" data-items="rain" data-legend=""
+                        data-date="2020-08-29">
+                    </rect>
+                </g>
+                <g transform="translate(13,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-08-30">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-08-31">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-01">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-02">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-03">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-04">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="brown" data-items="thunder, fog"
+                        data-legend="" data-date="2020-09-05">
+                    </rect>
+                    <polygon points="0,89 0,78 11,78" fill="gray" data-items="thunder, fog" data-legend=""
+                        data-date="2020-09-05">
+                    </polygon>
+                </g>
+                <g transform="translate(26,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-06">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-07">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-08">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-09">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-10">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-11">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-12">
+                    </rect>
+                </g>
+                <g transform="translate(39,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-13">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="white" data-items="hail, rain" data-legend=""
+                        data-date="2020-09-14">
+                    </rect>
+                    <polygon points="0,24 0,13 11,13" fill="lightblue" data-items="hail, rain" data-legend=""
+                        data-date="2020-09-14">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-15">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-16">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-17">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-18">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-19">
+                    </rect>
+                </g>
+                <g transform="translate(52,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-20">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-21">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-22">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-23">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="lightblue" data-items="rain, fog"
+                        data-legend="" data-date="2020-09-24">
+                    </rect>
+                    <polygon points="0,63 0,52 11,52" fill="gray" data-items="rain, fog" data-legend=""
+                        data-date="2020-09-24">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="65" fill="white" data-items="hail, thunder"
+                        data-legend="" data-date="2020-09-25">
+                    </rect>
+                    <polygon points="0,76 0,65 11,65" fill="brown" data-items="hail, thunder" data-legend=""
+                        data-date="2020-09-25">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="78" fill="lightyellow" data-items="sunshine, fog, hail"
+                        data-legend="" data-date="2020-09-26">
+                    </rect>
+                    <polygon points="0,86 0,78 11,78 11,86" fill="gray" data-items="sunshine, fog, hail" data-legend=""
+                        data-date="2020-09-26">
+                    </polygon>
+                    <polygon points="0,82 0,78 11,78 11,82" fill="white" data-items="sunshine, fog, hail" data-legend=""
+                        data-date="2020-09-26">
+                    </polygon>
+                </g>
+                <g transform="translate(65,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-27">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-28">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="lightyellow" data-items="sunshine, fog"
+                        data-legend="" data-date="2020-09-29">
+                    </rect>
+                    <polygon points="0,37 0,26 11,26" fill="gray" data-items="sunshine, fog" data-legend=""
+                        data-date="2020-09-29">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-09-30">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="white" data-items="hail, rain" data-legend=""
+                        data-date="2020-10-01">
+                    </rect>
+                    <polygon points="0,63 0,52 11,52" fill="lightblue" data-items="hail, rain" data-legend=""
+                        data-date="2020-10-01">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-02">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-03">
+                    </rect>
+                </g>
+                <g transform="translate(78,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-04">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-05">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-06">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="gray" data-items="fog" data-legend=""
+                        data-date="2020-10-07">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="brown" data-items="thunder" data-legend=""
+                        data-date="2020-10-08">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-09">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-10">
+                    </rect>
+                </g>
+                <g transform="translate(91,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-11">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-12">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-13">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-14">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-15">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-16">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-17">
+                    </rect>
+                </g>
+                <g transform="translate(104,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-18">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="lightyellow" data-items="sunshine"
+                        data-legend="" data-date="2020-10-19">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-20">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-21">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-22">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-23">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-24">
+                    </rect>
+                </g>
+                <g transform="translate(117,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-25">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-26">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-27">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-28">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="brown" data-items="thunder" data-legend=""
+                        data-date="2020-10-29">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-30">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-10-31">
+                    </rect>
+                </g>
+                <g transform="translate(130,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-01">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-02">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-03">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-04">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-05">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-06">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-07">
+                    </rect>
+                </g>
+                <g transform="translate(143,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-08">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-09">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-10">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-11">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="lightblue" data-items="rain" data-legend=""
+                        data-date="2020-11-12">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-13">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="lightblue" data-items="rain" data-legend=""
+                        data-date="2020-11-14">
+                    </rect>
+                </g>
+                <g transform="translate(156,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-15">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-16">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-17">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-18">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-19">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-20">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-21">
+                    </rect>
+                </g>
+                <g transform="translate(169,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-22">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-23">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-24">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-25">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="gray" data-items="fog, hail" data-legend=""
+                        data-date="2020-11-26">
+                    </rect>
+                    <polygon points="0,63 0,52 11,52" fill="white" data-items="fog, hail" data-legend=""
+                        data-date="2020-11-26">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-27">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-28">
+                    </rect>
+                </g>
+                <g transform="translate(182,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-11-29">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="lightblue" data-items="rain, sunshine"
+                        data-legend="" data-date="2020-11-30">
+                    </rect>
+                    <polygon points="0,24 0,13 11,13" fill="lightyellow" data-items="rain, sunshine" data-legend=""
+                        data-date="2020-11-30">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-01">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-02">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-03">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-04">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-05">
+                    </rect>
+                </g>
+                <g transform="translate(195,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-06">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-07">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-08">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-09">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-10">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-11">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-12">
+                    </rect>
+                </g>
+                <g transform="translate(208,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-13">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="brown" data-items="thunder, rain"
+                        data-legend="" data-date="2020-12-14">
+                    </rect>
+                    <polygon points="0,24 0,13 11,13" fill="lightblue" data-items="thunder, rain" data-legend=""
+                        data-date="2020-12-14">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-15">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-16">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-17">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-18">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-19">
+                    </rect>
+                </g>
+                <g transform="translate(221,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-20">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-21">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-22">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-23">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-24">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-25">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-26">
+                    </rect>
+                </g>
+                <g transform="translate(234,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-27">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-28">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="brown" data-items="thunder, sunshine"
+                        data-legend="" data-date="2020-12-29">
+                    </rect>
+                    <polygon points="0,37 0,26 11,26" fill="lightyellow" data-items="thunder, sunshine" data-legend=""
+                        data-date="2020-12-29">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="39" fill="lightyellow" data-items="sunshine, fog"
+                        data-legend="" data-date="2020-12-30">
+                    </rect>
+                    <polygon points="0,50 0,39 11,39" fill="gray" data-items="sunshine, fog" data-legend=""
+                        data-date="2020-12-30">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2020-12-31">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-01">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="lightyellow" data-items="sunshine, rain"
+                        data-legend="" data-date="2021-01-02">
+                    </rect>
+                    <polygon points="0,89 0,78 11,78" fill="lightblue" data-items="sunshine, rain" data-legend=""
+                        data-date="2021-01-02">
+                    </polygon>
+                </g>
+                <g transform="translate(247,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-03">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-04">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-05">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-06">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-07">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-08">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-09">
+                    </rect>
+                </g>
+                <g transform="translate(260,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-10">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="brown" data-items="thunder" data-legend=""
+                        data-date="2021-01-11">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="gray" data-items="fog, thunder" data-legend=""
+                        data-date="2021-01-12">
+                    </rect>
+                    <polygon points="0,37 0,26 11,26" fill="brown" data-items="fog, thunder" data-legend=""
+                        data-date="2021-01-12">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-13">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-14">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-15">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-16">
+                    </rect>
+                </g>
+                <g transform="translate(273,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="lightblue" data-items="rain, thunder, hail"
+                        data-legend="" data-date="2021-01-17">
+                    </rect>
+                    <polygon points="0,8 0,0 11,0 11,8" fill="brown" data-items="rain, thunder, hail" data-legend=""
+                        data-date="2021-01-17">
+                    </polygon>
+                    <polygon points="0,4 0,0 11,0 11,4" fill="white" data-items="rain, thunder, hail" data-legend=""
+                        data-date="2021-01-17">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-18">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-19">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-20">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-21">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="lightyellow" data-items="sunshine"
+                        data-legend="" data-date="2021-01-22">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-23">
+                    </rect>
+                </g>
+                <g transform="translate(286,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-24">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-25">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-26">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-27">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-28">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-29">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-30">
+                    </rect>
+                </g>
+                <g transform="translate(299,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-01-31">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="white" data-items="hail" data-legend=""
+                        data-date="2021-02-01">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-02">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-03">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-04">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-05">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-06">
+                    </rect>
+                </g>
+                <g transform="translate(312,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-07">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-08">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-09">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-10">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-11">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-12">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-13">
+                    </rect>
+                </g>
+                <g transform="translate(325,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-14">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-15">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-16">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-17">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-18">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-19">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-20">
+                    </rect>
+                </g>
+                <g transform="translate(338,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-21">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="brown" data-items="thunder, sunshine, fog"
+                        data-legend="" data-date="2021-02-22">
+                    </rect>
+                    <polygon points="0,21 0,13 11,13 11,21" fill="lightyellow" data-items="thunder, sunshine, fog"
+                        data-legend="" data-date="2021-02-22">
+                    </polygon>
+                    <polygon points="0,17 0,13 11,13 11,17" fill="gray" data-items="thunder, sunshine, fog"
+                        data-legend="" data-date="2021-02-22">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-23">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-24">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-02-25">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="lightyellow" data-items="sunshine, thunder"
+                        data-legend="" data-date="2021-02-26">
+                    </rect>
+                    <polygon points="0,76 0,65 11,65" fill="brown" data-items="sunshine, thunder" data-legend=""
+                        data-date="2021-02-26">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="78" fill="lightblue" data-items="rain, sunshine"
+                        data-legend="" data-date="2021-02-27">
+                    </rect>
+                    <polygon points="0,89 0,78 11,78" fill="lightyellow" data-items="rain, sunshine" data-legend=""
+                        data-date="2021-02-27">
+                    </polygon>
+                </g>
+                <g transform="translate(351,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="brown" data-items="thunder, hail"
+                        data-legend="" data-date="2021-02-28">
+                    </rect>
+                    <polygon points="0,11 0,0 11,0" fill="white" data-items="thunder, hail" data-legend=""
+                        data-date="2021-02-28">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-01">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-02">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-03">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="lightyellow" data-items="sunshine, thunder"
+                        data-legend="" data-date="2021-03-04">
+                    </rect>
+                    <polygon points="0,63 0,52 11,52" fill="brown" data-items="sunshine, thunder" data-legend=""
+                        data-date="2021-03-04">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="65" fill="gray" data-items="fog, rain" data-legend=""
+                        data-date="2021-03-05">
+                    </rect>
+                    <polygon points="0,76 0,65 11,65" fill="lightblue" data-items="fog, rain" data-legend=""
+                        data-date="2021-03-05">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-06">
+                    </rect>
+                </g>
+                <g transform="translate(364,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-07">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="brown" data-items="thunder, sunshine"
+                        data-legend="" data-date="2021-03-08">
+                    </rect>
+                    <polygon points="0,24 0,13 11,13" fill="lightyellow" data-items="thunder, sunshine" data-legend=""
+                        data-date="2021-03-08">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-09">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="gray" data-items="fog" data-legend=""
+                        data-date="2021-03-10">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="lightyellow" data-items="sunshine, thunder"
+                        data-legend="" data-date="2021-03-11">
+                    </rect>
+                    <polygon points="0,63 0,52 11,52" fill="brown" data-items="sunshine, thunder" data-legend=""
+                        data-date="2021-03-11">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-12">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-13">
+                    </rect>
+                </g>
+                <g transform="translate(377,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-14">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-15">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-16">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-17">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-18">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-19">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-20">
+                    </rect>
+                </g>
+                <g transform="translate(390,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-21">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-22">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-23">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-24">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-25">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-26">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-27">
+                    </rect>
+                </g>
+                <g transform="translate(403,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-28">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-29">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-30">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-03-31">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-01">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-02">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-03">
+                    </rect>
+                </g>
+                <g transform="translate(416,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-04">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-05">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-06">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-07">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-08">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-09">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-10">
+                    </rect>
+                </g>
+                <g transform="translate(429,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-11">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-12">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="white" data-items="hail, thunder"
+                        data-legend="" data-date="2021-04-13">
+                    </rect>
+                    <polygon points="0,37 0,26 11,26" fill="brown" data-items="hail, thunder" data-legend=""
+                        data-date="2021-04-13">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-14">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-15">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="gray" data-items="fog, thunder" data-legend=""
+                        data-date="2021-04-16">
+                    </rect>
+                    <polygon points="0,76 0,65 11,65" fill="brown" data-items="fog, thunder" data-legend=""
+                        data-date="2021-04-16">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-17">
+                    </rect>
+                </g>
+                <g transform="translate(442,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-18">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-19">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-20">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-21">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-22">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-23">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-24">
+                    </rect>
+                </g>
+                <g transform="translate(455,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-25">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="brown" data-items="thunder, sunshine"
+                        data-legend="" data-date="2021-04-26">
+                    </rect>
+                    <polygon points="0,24 0,13 11,13" fill="lightyellow" data-items="thunder, sunshine" data-legend=""
+                        data-date="2021-04-26">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-27">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="white" data-items="hail" data-legend=""
+                        data-date="2021-04-28">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-29">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-04-30">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-01">
+                    </rect>
+                </g>
+                <g transform="translate(468,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-02">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-03">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-04">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-05">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-06">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-07">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-08">
+                    </rect>
+                </g>
+                <g transform="translate(481,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="lightyellow" data-items="sunshine, fog"
+                        data-legend="" data-date="2021-05-09">
+                    </rect>
+                    <polygon points="0,11 0,0 11,0" fill="gray" data-items="sunshine, fog" data-legend=""
+                        data-date="2021-05-09">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="13" fill="lightblue" data-items="rain, hail, fog"
+                        data-legend="" data-date="2021-05-10">
+                    </rect>
+                    <polygon points="0,21 0,13 11,13 11,21" fill="white" data-items="rain, hail, fog" data-legend=""
+                        data-date="2021-05-10">
+                    </polygon>
+                    <polygon points="0,17 0,13 11,13 11,17" fill="gray" data-items="rain, hail, fog" data-legend=""
+                        data-date="2021-05-10">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-11">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-12">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-13">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-14">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-15">
+                    </rect>
+                </g>
+                <g transform="translate(494,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-16">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-17">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-18">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-19">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-20">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-21">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-22">
+                    </rect>
+                </g>
+                <g transform="translate(507,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-23">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-24">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-25">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-26">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-27">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-28">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-29">
+                    </rect>
+                </g>
+                <g transform="translate(520,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-30">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-05-31">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-01">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-02">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-03">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-04">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-05">
+                    </rect>
+                </g>
+                <g transform="translate(533,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-06">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-07">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-08">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-09">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-10">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="lightblue" data-items="rain, hail"
+                        data-legend="" data-date="2021-06-11">
+                    </rect>
+                    <polygon points="0,76 0,65 11,65" fill="white" data-items="rain, hail" data-legend=""
+                        data-date="2021-06-11">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-12">
+                    </rect>
+                </g>
+                <g transform="translate(546,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="brown" data-items="thunder, sunshine"
+                        data-legend="" data-date="2021-06-13">
+                    </rect>
+                    <polygon points="0,11 0,0 11,0" fill="lightyellow" data-items="thunder, sunshine" data-legend=""
+                        data-date="2021-06-13">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-14">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-15">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="lightyellow" data-items="sunshine"
+                        data-legend="" data-date="2021-06-16">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-17">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-18">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-19">
+                    </rect>
+                </g>
+                <g transform="translate(559,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-20">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="lightyellow"
+                        data-items="sunshine, hail, thunder" data-legend="" data-date="2021-06-21">
+                    </rect>
+                    <polygon points="0,21 0,13 11,13 11,21" fill="white" data-items="sunshine, hail, thunder"
+                        data-legend="" data-date="2021-06-21">
+                    </polygon>
+                    <polygon points="0,17 0,13 11,13 11,17" fill="brown" data-items="sunshine, hail, thunder"
+                        data-legend="" data-date="2021-06-21">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="26" fill="gray" data-items="fog, hail" data-legend=""
+                        data-date="2021-06-22">
+                    </rect>
+                    <polygon points="0,37 0,26 11,26" fill="white" data-items="fog, hail" data-legend=""
+                        data-date="2021-06-22">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-23">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-24">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-25">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-26">
+                    </rect>
+                </g>
+                <g transform="translate(572,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-27">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="lightyellow" data-items="sunshine"
+                        data-legend="" data-date="2021-06-28">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-29">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-06-30">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-01">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-02">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-03">
+                    </rect>
+                </g>
+                <g transform="translate(585,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="white" data-items="hail" data-legend=""
+                        data-date="2021-07-04">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-05">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="white" data-items="hail, rain, fog"
+                        data-legend="" data-date="2021-07-06">
+                    </rect>
+                    <polygon points="0,34 0,26 11,26 11,34" fill="lightblue" data-items="hail, rain, fog" data-legend=""
+                        data-date="2021-07-06">
+                    </polygon>
+                    <polygon points="0,30 0,26 11,26 11,30" fill="gray" data-items="hail, rain, fog" data-legend=""
+                        data-date="2021-07-06">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="39" fill="white" data-items="hail" data-legend=""
+                        data-date="2021-07-07">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-08">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-09">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-10">
+                    </rect>
+                </g>
+                <g transform="translate(598,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-11">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-12">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-13">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-14">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-15">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-16">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="brown" data-items="thunder" data-legend=""
+                        data-date="2021-07-17">
+                    </rect>
+                </g>
+                <g transform="translate(611,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-18">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="brown" data-items="thunder" data-legend=""
+                        data-date="2021-07-19">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-20">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="white" data-items="hail, fog, sunshine"
+                        data-legend="" data-date="2021-07-21">
+                    </rect>
+                    <polygon points="0,47 0,39 11,39 11,47" fill="gray" data-items="hail, fog, sunshine" data-legend=""
+                        data-date="2021-07-21">
+                    </polygon>
+                    <polygon points="0,43 0,39 11,39 11,43" fill="lightyellow" data-items="hail, fog, sunshine"
+                        data-legend="" data-date="2021-07-21">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-22">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-23">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-24">
+                    </rect>
+                </g>
+                <g transform="translate(624,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-25">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-26">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-27">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-28">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-29">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-30">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-07-31">
+                    </rect>
+                </g>
+                <g transform="translate(637,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-01">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="gray" data-items="fog, rain" data-legend=""
+                        data-date="2021-08-02">
+                    </rect>
+                    <polygon points="0,24 0,13 11,13" fill="lightblue" data-items="fog, rain" data-legend=""
+                        data-date="2021-08-02">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-03">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-04">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-05">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-06">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-07">
+                    </rect>
+                </g>
+                <g transform="translate(650,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-08">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="brown" data-items="thunder, hail"
+                        data-legend="" data-date="2021-08-09">
+                    </rect>
+                    <polygon points="0,24 0,13 11,13" fill="white" data-items="thunder, hail" data-legend=""
+                        data-date="2021-08-09">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="26" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-10">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="39" fill="lightblue" data-items="rain, fog, sunshine"
+                        data-legend="" data-date="2021-08-11">
+                    </rect>
+                    <polygon points="0,47 0,39 11,39 11,47" fill="gray" data-items="rain, fog, sunshine" data-legend=""
+                        data-date="2021-08-11">
+                    </polygon>
+                    <polygon points="0,43 0,39 11,39 11,43" fill="lightyellow" data-items="rain, fog, sunshine"
+                        data-legend="" data-date="2021-08-11">
+                    </polygon>
+                    <rect class="day" width="11" height="11" y="52" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-12">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="65" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-13">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="78" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-14">
+                    </rect>
+                </g>
+                <g transform="translate(663,0)">
+                    <rect class="day" width="11" height="11" y="0" fill="white" data-items="hail" data-legend=""
+                        data-date="2021-08-15">
+                    </rect>
+                    <rect class="day" width="11" height="11" y="13" fill="#eeeeee" data-items="" data-legend=""
+                        data-date="2021-08-16">
+                    </rect>
+                </g>
+                <g transform="translate(676,0)">
+                </g>
+                <text x="26" y="-5" class="month">
+                    sep</text>
+                <text x="78" y="-5" class="month">
+                    oct</text>
+                <text x="130" y="-5" class="month">
+                    nov</text>
+                <text x="195" y="-5" class="month">
+                    dec</text>
+                <text x="247" y="-5" class="month">
+                    jan</text>
+                <text x="312" y="-5" class="month">
+                    feb</text>
+                <text x="364" y="-5" class="month">
+                    mar</text>
+                <text x="416" y="-5" class="month">
+                    apr</text>
+                <text x="468" y="-5" class="month">
+                    may</text>
+                <text x="533" y="-5" class="month">
+                    jun</text>
+                <text x="585" y="-5" class="month">
+                    jul</text>
+                <text x="637" y="-5" class="month">
+                    aug</text>
+                <text text-anchor="middle" class="wday" dx="-10" dy="22">
+                    mo</text>
+                <text text-anchor="middle" class="wday" dx="-10" dy="48">
+                    wed</text>
+                <text text-anchor="middle" class="wday" dx="-10" dy="74">
+                    fri</text>
+            </g>
+            "Your browser does not support inline SVG."
+        </svg>
+    </div>
+    <div class="seperate"></div>
+
+    <br>
+    &gt;&gt; Click info: <div id="moreinfo">(Hover or click an item to get more information)</div>
+
+    <br>
+
+    <h3>TODO/IDEA:</h3>
+    <ul>
+        <li>A bit of spacing or a line between months, as seen on https://observablehq.com/@d3/calendar-view and
+            https://communities.sas.com/t5/Graphics-Programming/Fun-With-SAS-ODS-Graphics-Calendar-Heatmap/td-p/468258
+        </li>
+        <li>Allow for different date formats</li>
+        <li>Allow navigation between years (past &amp; future)</li>
+    </ul>
+
+
+    <div class="svg-tip svg-tip-one-line" style="display:none"></div>
+</body>
+
+</html>
