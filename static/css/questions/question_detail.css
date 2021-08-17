@@ -379,9 +379,9 @@ body {
     color: #A9A59F;
 }
 
-.choice_modal_body {
+.choice_popup {
     visibility: hidden;
-    position: absolute;
+    position: relative;
     width: 300px;
     height: 100px;
     line-height: 2rem;
@@ -390,9 +390,9 @@ body {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
-
-    transition-timing-function: ease-in;
-    transition-duration: 1s;
+    opacity: 0;
+    transition-timing-function: ease-out;
+    transition-duration: 0.2ss;
 }
 
 .modal_delete {

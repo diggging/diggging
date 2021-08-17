@@ -29,8 +29,9 @@ def question_main(request):
         # Question_Post에 정의된 answer_selection_count() 함수 이용하여 개수 파악
         if post.answer_selection_count() > 0:
             selected_answer_posts.append(post)
-        elif post.answers.count() == 0:
+        elif post.answer_selection_count() == 0:
             selected_answer_posts.append(post)
+
     languages = [langs[0] for langs in Question_post.language_choices]
     search = request.POST.getlist("answers[]")
     str_search = "".join(search)
@@ -243,6 +244,12 @@ def question_post_detail(request, user_id, post_id):
     post_details = Question_post.objects.get(pk=post_id)
     me = get_object_or_404(User, pk=user_id)
 
+    selected_answer_posts = []
+    if post_details.answer_selection_count() > 0:
+        selected_answer_posts.append(post_details)
+    elif post_details.answers.count() == 0:
+        selected_answer_posts.append(post_details)
+
     folder = post_details.question_folder.get(
         folder_name=post_details.language, folder_user=post_details.user
     )
@@ -258,6 +265,8 @@ def question_post_detail(request, user_id, post_id):
         "folder": folder,
         "post_answers": post_answers,
         "comments": comments,
+        "selected_answer_posts": selected_answer_posts,
+
     }
     return render(request, "questions/question_detail.html", ctx)
 

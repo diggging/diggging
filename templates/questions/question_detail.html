@@ -82,7 +82,6 @@
             <a href="{% url 'question:get_question' post.id %}" class="post__scrap"
                 onclick="onClickLikeScrap({{ post.id }}, 'scrap')">퍼가기 {{post.scrap_num}}</a> -->
         
-            
         <a href="javascript:doDisplay();" class="comment_btn">댓글 {{comments|length}}</a>
         <!-- 질문-댓글창 영역 -->
         <div id="comment_box">
@@ -144,20 +143,22 @@
             </div>
             {% endif %}
             {% if request.user.id == post.user.id %}
-                {% if answer.selection == False %}
-                    <div class="choice_btn">
-                        <button class="popup">채택하기</button>
-                    </div>
-                    채택안된 답변
-                {% else %}
-                채택되었어요
+                {% if post.selected_answer_posts|length == 0 %}
+                    {% if answer.selection == False %}
+                        <div class="choice_btn">
+                            <button class="popup">채택하기</button>
+                        </div>
+                        채택안된 답변
+                    {% else %}
+                    채택되었어요
+                    {% endif %}
                 {% endif %}
-                {% endif %}
-                <div class="choice_modal_body" style="visibility: hidden;" >
+            {% endif %}
+                <div class="choice_modal_body choice_popup" style="visibility: hidden;" >
                     <button class="modal_delete">x</button>
                     <h3>해당 답변을 채택하시겠습니까?</h3>
                     <a href="{% url 'question:chosen_answer' answer.id %}" class="yes_choice">예</a>
-                    <button onclick="closePopUp()">아니오</button>
+                    <button class="no_select">아니오</button>
                 </div>
         </div>
         <div class="answer_desc_box">
@@ -199,7 +200,7 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/vs2015.min.css" /> 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script type="text/javascript">hljs.highlightAll();</script>
+<!-- <script type="text/javascript">hljs.highlightAll();</script> -->
 <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
 
 <!-- 질문 코멘트 댓글 -->
@@ -510,19 +511,32 @@ const body = document.querySelector('body')
 const answerChoicePopup = document.querySelector('.popup')
 let modalBody = document.querySelector('.choice_modal_body');
 const modalDelete = document.querySelector('.modal_delete');
+const noSelect = document.querySelector('.no_select');
+
 answerChoicePopup.addEventListener('click', () => {
     if(modalBody.style.visibility === "hidden") {
         modalBody.style.visibility = "visible"
+        modalBody.style.opacity = "1"
     } else {
         modalBody.style.visibility = "hidden"
+        modalBody.style.opacity = "0"
     }
 });
+
 modalDelete.addEventListener('click', () => {
     modalBody.style.visibility = "hidden";
+    modalBody.style.opacity = "0"
 });
 
-function closePopUp() => {
-   modalBody.style.visibility = "hidden"
-}
+noSelect.addEventListener('click', () => {
+    modalBody.style.visibility = "hidden";
+    modalBody.style.opacity = "0"
+});
+    
+
+
+// function closePopUp('click', () => {
+//     modalBody.style.visibility = "hidden";
+// } ) 
 </script>
 {% endblock script %}
