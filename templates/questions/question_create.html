@@ -24,8 +24,8 @@
                 {{ form.media }}
                 <div class="thumbnail_area">
                     <label for="id_image">
-                        <img src="{% static 'image/thumbnail_image.svg' %}" />
-                    </label>
+                        <img id="image" src="" alt=""
+                        onError="this.onerror=null;this.src='../../static/image/thumbnail_image.svg';" />                    </label>
                     {{ form.image }}
                 </div>
                 {{ form.title }}
@@ -52,6 +52,12 @@
             </form>
         </div>
     </div>
+    <script>
+        document.getElementById('id_image').onchange = function () {
+            var src = URL.createObjectURL(this.files[0])
+            document.getElementById('image').src = src
+        }
+    </script>
 </body>
 </html>
 

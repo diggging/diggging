@@ -85,7 +85,18 @@ form {
     width: 18em;
 }
 
+#image {
+    height: 100%;
+    width: 100%;
+    /* background-image: url('../image/thumbnail_image.svg'); */
+    background-repeat: no-repeat;
+    background-position-x: center;
+    
+}
+
 #id_image {
+    width: 100%;
+    height: 100%;
     display: none;
 }
 

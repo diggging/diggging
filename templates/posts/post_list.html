@@ -26,12 +26,13 @@
     // 페이지별로 데이터 보내주는 비동기
     // 그 데이터를 또 무한 비동기 
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => { // 함수 자체를 변경 -> 다다시  작작성성을  하하인건거 같습니다.
         let bottomSentinal = document.querySelector("#bottom-sentinel");
         let scrollElement = document.querySelector("#scroll-element");
         let baseUrl = "{% url 'posts:scrap_axios' %}"; //baseUrl만 바꿔주면 동기가 될꺼 같은데?
         attachInfiniteScroll(bottomSentinal, scrollElement, baseUrl);
     });
+
 </script>
 {% endblock %}
 
