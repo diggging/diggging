@@ -155,7 +155,7 @@
 
                 //Fixed size for now with width= 721 and height = 110
                 var wire_html =
-                    '<svg width="721" height="110" viewBox="0 0 721 110"  class="js-calendar-graph-svg">' +
+                    '<svg viewBox="0 0 721 110"  class="js-calendar-graph-svg">' +
                     '<g transform="translate(20, 20)">' +
                     loop_html +
                     '</g>' +
@@ -271,12 +271,6 @@
         });
     });
 </script>
-
-<style type="text/css">
-    body {
-        padding: 50px;
-    }
-</style>
 <script>
     const modal = document.querySelector('.point_modal');
     const modalBody = document.querySelector('.modal_body');
@@ -312,36 +306,6 @@
         body.style.overflow = auto
     })
 </script>
-
-<!-- 최근 (기록/질문) 뜨게하기 -->
-<!-- 구현하려다가 어려워서 넘김.. 기존데이터를 가져와서 출력해주는거 알아보기....ajax어렵당.. -->
-{%comment%}
-<script>
-    const requestLastList = new XMLHttpRequest();
-
-    const onClickLastList = (type) => { //함수정의 : 어떤 버튼을 눌렀는지 받아온다. (삽질모음이냐 질문모음이냐)
-        const url = '/posts/last_log_questions/'; //어느 url로 요청할 것인지.
-        requestLastList.open('POST', url, true); //post방식으로 이 url에 ajax방식으로 요청을보내는데, 
-        requestLastList.setRequestHeader( // requestheader로 이 요청을 보낸다. 자세한건 나중에
-            'Content-Type',
-            'application/x-www-form-urlencoded'
-        );
-        requestLastList.send(JSON.stringify({ type: type })); //요청할 때 필요한 정보들. ajax방식으로 할 땐 무.조.건 JSON방식으로 보내야함.
-    };
-
-    const lastListHandleResponse = () => {  //응답 처리해주는 함수 (최근 남긴 삽질 기록 / 질문 )보여주는 함수
-        if (requestLastList.status < 400) {
-            const { type } = JSON.parse(requestLastList.response);    // {'type': 'dig'} or {'type': 'question'}
-            const addLastList = document.querySelector(`.post__${type}`);
-
-            addLastList.innerHTML = `
-            `;
-        }
-    };
-</script>
-{%endcomment%}
-
-
 {% endblock script %}
 
 {% block content %}
@@ -548,7 +512,22 @@
             {% else %}
             {% endif %}
         </div>
-        <div class="sand_pour_area"></div>
+        <div class="sand_pour_area">
+            <div id="github_chart_1">
+                <svg width="721" height="110" viewBox="0 0 721 110" class="js-calendar-graph-svg">
+                    <text x="39" y="-5" class="month">Sep</text><text x="91" y="-5" class="month">Oct</text><text x="143" y="-5"
+                        class="month">Nov</text><text x="208" y="-5" class="month">Dec</text><text x="260" y="-5"
+                        class="month">Jan</text><text x="325" y="-5" class="month">Feb</text><text x="377" y="-5"
+                        class="month">Mar</text><text x="429" y="-5" class="month">Apr</text><text x="481" y="-5"
+                        class="month">May</text><text x="546" y="-5" class="month">Jun</text><text x="598" y="-5"
+                        class="month">Jul</text><text x="650" y="-5" class="month">Aug</text><text text-anchor="middle" class="wday"
+                        dx="-10" dy="22">M</text><text text-anchor="middle" class="wday" dx="-10" dy="48">W</text><text
+                        text-anchor="middle" class="wday" dx="-10" dy="74">F</text>
+                </svg>
+            </div>
+            <div class="svg-tip svg-tip-one-line" style="top: 479.25px; left: 567px; display: none;">0 category on 2022-10-15
+            </div>
+        </div>
     </div>
     <div class="right_container">
         <div class="second_container">
@@ -600,18 +579,5 @@
         </div>
     </div>
 </div>
-<div id="github_chart_1">
-    <svg width="721" height="110" viewBox="0 0 721 110" class="js-calendar-graph-svg">
-        <text x="39" y="-5" class="month">Sep</text><text x="91" y="-5" class="month">Oct</text><text x="143" y="-5"
-            class="month">Nov</text><text x="208" y="-5" class="month">Dec</text><text x="260" y="-5"
-            class="month">Jan</text><text x="325" y="-5" class="month">Feb</text><text x="377" y="-5"
-            class="month">Mar</text><text x="429" y="-5" class="month">Apr</text><text x="481" y="-5"
-            class="month">May</text><text x="546" y="-5" class="month">Jun</text><text x="598" y="-5"
-            class="month">Jul</text><text x="650" y="-5" class="month">Aug</text><text text-anchor="middle" class="wday"
-            dx="-10" dy="22">M</text><text text-anchor="middle" class="wday" dx="-10" dy="48">W</text><text
-            text-anchor="middle" class="wday" dx="-10" dy="74">F</text>
-    </svg>
-</div>
-<div class="svg-tip svg-tip-one-line" style="top: 479.25px; left: 567px; display: none;">0 category on 2022-10-15
-</div>
+
 {% endblock %}

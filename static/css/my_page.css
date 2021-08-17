@@ -355,6 +355,25 @@ meter {
     
 }
 
+/* 모래쌓기 영역---------------------- */
+#github_chart_1 {
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+    width: 100%;
+    height: 240px;
+}
+
+#github_chart_1 svg {
+    height: 210px;
+    margin-left: 40px;
+}
+
+#github_chart_1 svg g {
+    font-size: 6px;
+    font-family: var(--content-font);
+    color: var(--hover-color);
+}
+
 
 
 /* --------------------디렉토리 영역 ------------------*/
