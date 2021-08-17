@@ -224,9 +224,19 @@ def question_update(request, pk):
 
 def question_delete(request, pk):
     question_post = Question_post.objects.get(pk=pk)
-    question_post.delete()
-    return redirect("question:question_main")
+    
+    lang_folder = QuestionFolder.objects.get(folder_user=question_post.user, question_folder=question_post, folder_kind="language")
+    frame_folder = QuestionFolder.objects.get(folder_user=question_post.user, question_folder=question_post, folder_kind="framework")
 
+    question_post.delete()
+
+    if not lang_folder.question_folder.exists():
+        lang_folder.delete()
+    
+    if not frame_folder.question_folder.exists():
+        frame_folder.delete()
+
+    return redirect("question:question_main")
 
 # ------------------------------------------------------------------------------------------------------------------
 def question_post_detail(request, user_id, post_id):

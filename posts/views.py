@@ -286,8 +286,21 @@ def post_update(request, pk):
 
 
 def post_delete(request, pk):
-    posts = Post.objects.get(pk=pk)
-    posts.delete()
+    post = Post.objects.get(pk=pk)
+    
+    # post가 들어있던 폴더를 보고 비어져있으면 지움
+    lang_folder = Folder.objects.get(folder_user=post.user, related_posts=post, folder_kind="language")
+    frame_folder = Folder.objects.get(folder_user=post.user, related_posts=post, folder_kind="framework")
+
+    post.delete()
+
+    if not lang_folder.related_posts.exists():
+        lang_folder.delete()
+    
+    if not frame_folder.related_posts.exists():
+        frame_folder.delete()
+
+    
     return redirect("posts:main")
 
 ## search input ajax
