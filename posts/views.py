@@ -127,11 +127,14 @@ def post_detail(request, user_id, post_id):
         folder_name=post_details.language, folder_user=post_details.user
     )
     comments = post_details.comments.all()
+    
     ctx = {
         "post": post_details,
         "host": me,
         "folder": folder,
         "comments": comments,
+        "user_id" : user_id,
+        "post_id" : post_id,
     }
     # html added by 종권
     return render(request, "posts/post_detail.html", ctx)
@@ -150,8 +153,84 @@ def post_like(request):
     else:
         post.likes_user.add(user)
         message = "좋아요"
-
+    post.helped_num = post.count_likes_user()
+    post.save()
     ctx = {"likes_count": post.count_likes_user(), "message": message}
+    return HttpResponse(json.dumps(ctx), content_type="application/json")
+
+
+@login_required
+@require_POST
+def post_scrap(request,user_id,post_id):
+    post = get_object_or_404(Post, pk=post_id)  # 어떤 post인지 가져오기
+    target_language = post.language  # 어떤 language인지 - 폴더 생성용
+    target_framework = post.framework  # 어떤 framework인지 - 프레임워크 생성용
+    me = request.user  # 누구의 폴더를 만들것인지
+    post_host = User.objects.get(id=user_id)
+
+    # get: object-없는걸 가져오면 오류 , filter: queryset- 없어도 빈 queryset 오류 x
+    lang_folder = Folder.objects.filter(folder_name=target_language, folder_user=me, folder_kind="language")
+    frame_folder = Folder.objects.filter(folder_name=target_framework, folder_user=me, folder_kind="framework")
+
+    # 만약 나, language로 된 폴더 있으면
+    if lang_folder.exists():
+        # 그 폴더에 포스트 그냥 추가하기
+        folder = Folder.objects.get(
+            folder_name=target_language, folder_user=me, folder_kind="language"
+        )  # query set은 object가 아니므로 object 다시 가져옴
+        folder.related_posts.add(post)  # add 는 저장 x 명시적 저장 필요
+        folder.save()
+    # 없으면
+    else:
+        # 폴더를 생성한 뒤, 거기에 추가하기
+        new_folder = Folder.objects.create(
+            folder_name=target_language, folder_user=me, folder_kind="language"
+        )  # create - 자동저장
+        post.folder.add(new_folder)
+    post.save()
+
+    # framework 동일
+    if frame_folder.exists():
+        # 그 폴더에 포스트 그냥 추가하기
+        folder = Folder.objects.get(
+            folder_name=target_framework, folder_user=me, folder_kind="framework"
+        )  # query set은 object가 아니므로 object 다시 가져옴
+        folder.related_posts.add(post)  # add 는 저장 x 명시적 저장 필요
+        folder.save()
+    # 없으면
+    else:
+        # 폴더를 생성한 뒤, 거기에 추가하기
+        new_folder = Folder.objects.create(
+            folder_name=target_framework, folder_user=me, folder_kind="framework"
+        )  # create - 자동저장
+        post.folder.add(new_folder)
+    post.save()
+
+    # 퍼가기 할 때 sand 생성하기 - host꺼 생성해줘야함
+    new_sand = Sand.objects.create(
+        user=post.user, amount=50, reason=me.user_nickname + "님의 내 기록 퍼가기"
+    )
+
+    # 퍼가기 -> host 에게 alarm감
+    new_alarm = Alarm.objects.create(
+        user=post_host, reason=me.user_nickname + "님이 내 기록 " + post.title + "을 퍼갔어요."
+    )
+    # url: 저장 후 post_detail 페이지에 남아있음.
+    pk = request.POST.get("pk", None)
+    post = get_object_or_404(Post, pk=pk)
+    user = request.user
+
+    if post.scarps_user.filter(id=user.id).exists():
+        post.scarps_user.remove(user)
+        message = "퍼가기 취소"
+    else:
+        post.scarps_user.add(user)
+        message = "퍼가기"
+
+    post.scrap_num = post.count_scarps_user()
+    post.save()
+
+    ctx = {"scarps_count": post.count_scarps_user(), "message": message}
     return HttpResponse(json.dumps(ctx), content_type="application/json")
 
 

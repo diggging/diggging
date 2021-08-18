@@ -25,6 +25,7 @@ urlpatterns = [
     path("follow_axios/", views.follow_axios, name="follow_axios"),
     path("my_recent_axios/", views.my_recent_axios, name="my_recent_axios"),
     path("like/", views.post_like, name="post_like"),
-    # test
+    path("<int:user_id>/<int:post_id>/scrap/", views.post_scrap, name="post_scrap"),
+    #test
     path("test/", views.test, name="test"),
 ]
