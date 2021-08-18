@@ -19,6 +19,7 @@ class QuestionPostAdmin(admin.ModelAdmin):
         "question_folder",
         "scrap_num",
         "helped_num",
+        "is_selected",
     )
     list_display = [
         "pk",
@@ -45,6 +46,7 @@ class AnswerAdmin(admin.ModelAdmin):
     fields = (
         "user",
         "desc",
+        'selection',
     )
     list_display = [
         "user",

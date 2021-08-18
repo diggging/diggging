@@ -11,12 +11,8 @@ config.fillEmptyBlocks = function( element )
         return false;
 }
 
-CKEDITOR.replace( 'editor1', {
-    extraPlugins: 'codesnippetgeshi',
-    codeSnippetGeshi_url: '../lib/colorize.php'
-} );
+config.filebrowserUploadMethod = 'form';
 
-config.codeSnippetGeshi_url = 'http:\/\/example.com\/geshi\/colorize.php';
 
 CKEDITOR.editorConfig = function( config ) {
 

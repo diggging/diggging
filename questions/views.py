@@ -13,6 +13,7 @@ from django.http import HttpResponse #, JsonResponse
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required 
 from django.views.decorators.http import require_POST
+from django.core import serializers
 
 # Create your views here.
 @login_required
@@ -23,14 +24,11 @@ def question_main(request):
     all_question_scrap = Question_post.objects.all().order_by("-scrap_num")
     # 모든 전체 질문에서 도움 순위대로 추천
     all_posts_helped = Question_post.objects.all().order_by("-helped_num")
-    # 답변 채택 안되거나 답변이 아직 달리지 않은 질문들을 모아두는 list
-    selected_answer_posts = []
-    for post in question_posts:
-        # Question_Post에 정의된 answer_selection_count() 함수 이용하여 개수 파악
-        if post.answer_selection_count() > 0:
-            selected_answer_posts.append(post)
-        elif post.answers.count() == 0:
-            selected_answer_posts.append(post)
+    
+    not_selected_questions = Question_post.objects.filter(is_selected=False)
+    
+        
+
     languages = [langs[0] for langs in Question_post.language_choices]
     search = request.POST.getlist("answers[]")
     str_search = "".join(search)
@@ -63,7 +61,7 @@ def question_main(request):
         else:
             request.user.user_level=3
     ctx = {
-        "selected_answer_posts": selected_answer_posts,
+        "not_selected_questions": not_selected_questions,
         "posts": question_posts,
         "language": languages,
         "str_search": str_search,
@@ -249,6 +247,8 @@ def question_post_detail(request, user_id, post_id):
     # comments = post_details.comments.all() comments는 ajax로 따로 띄워준다고 해서 지웠습니다
     # post_answers: 질문 포스트에 해당 되는 답변들
     post_answers = post_details.answers.all().order_by("-created")
+    answers = serializers.serialize('json', post_answers)
+    
     # question_comments 역참조
     comments = post_details.question_comments.all()
     # answer_comments = [answer.answer_comments for answer in post_answers]
@@ -258,6 +258,7 @@ def question_post_detail(request, user_id, post_id):
         "folder": folder,
         "post_answers": post_answers,
         "comments": comments,
+        "answers": answers,
     }
     return render(request, "questions/question_detail.html", ctx)
 
@@ -384,8 +385,10 @@ def get_question(request, question_post_id):
 def chosen_answer(request, question_answer_id):
     is_answer_chosen = Answer.objects.get(pk=question_answer_id)
     question = is_answer_chosen.question
+    question.is_selected = True
     # if request.method == "POST": #채택할래? 예
     is_answer_chosen.selection = True
+    question.save()
     is_answer_chosen.save()
     new_sand1 = Sand.objects.create(user=is_answer_chosen.user, amount=300, reason="내 답변 채택")
     new_sand2 = Sand.objects.create(user=question.user, amount=50, reason="내 질문의 답변 채택")

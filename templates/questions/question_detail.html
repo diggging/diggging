@@ -3,7 +3,7 @@
 {% block content %}
 <div class="question_container">
     {% if post.image %}
-        <img src="{{ post.image.url }}" class="thumbnail_area">
+    <img src="{{ post.image.url }}" class="thumbnail_area">
     {% endif %}
     <div class="post_container">
         <!-- 제목영역 -->
@@ -38,8 +38,7 @@
         </div>
         <div class="post_{{post.id}}">
             <div>
-                <input type="button" class="like" name="{{ post.id }}" value="Like"
-                    style="margin-top: 7px">
+                <input type="button" class="like" name="{{ post.id }}" value="Like" style="margin-top: 7px">
                 <button id="count-{{ post.id }}" style="font:bold 1em; margin-top: 3px">
                     도움이되었어요.{{ post.likes_user.all.count }}개</button>
             </div>
@@ -48,22 +47,23 @@
                 <div class="content_area">
                     <span class="sociallink ml-1">
                         <a href="javascript:sendLinkFacebook()" title="페이스북으로 공유">
-                        <img src="{% static 'images/facebook.png' %}" width=36 alt="Facebook">
+                            <img src="{% static 'images/facebook.png' %}" width=36 alt="Facebook">
                         </a>
                     </span>
                     <span class="sociallink ml-1">
                         <a href="javascript:sendLinkTwitter()" title="트위터로 공유">
-                        <img src="{% static 'images/twitter.png' %}" width=36 alt="Twitter">
+                            <img src="{% static 'images/twitter.png' %}" width=36 alt="Twitter">
                         </a>
                     </span>
                     <span class="sociallink ml-1">
                         <a href="javascript:sendLinkNaver()" title="네이버로 공유">
-                        <img src="{% static 'images/naver.png' %}" width=36 alt="Naver">
+                            <img src="{% static 'images/naver.png' %}" width=36 alt="Naver">
                         </a>
                     </span>
                     <span class="sociallink ml-1">
                         <a href="javascript:sendLinkKakao()" id="kakao-link-btn" title="카카오톡으로 공유">
-                        <img src="{% static 'images/kakaotalk.png' %}" width=36 alt="Kakaotalk"> <!--이거는 도메인이없어서 못하는중임당... 배포하면 수정 할 예정.-->
+                            <img src="{% static 'images/kakaotalk.png' %}" width=36 alt="Kakaotalk">
+                            <!--이거는 도메인이없어서 못하는중임당... 배포하면 수정 할 예정.-->
                         </a>
                     </span>
                 </div>
@@ -81,8 +81,7 @@
                 {{post.helped_num}}</a>
             <a href="{% url 'question:get_question' post.id %}" class="post__scrap"
                 onclick="onClickLikeScrap({{ post.id }}, 'scrap')">퍼가기 {{post.scrap_num}}</a> -->
-        
-            
+
         <a href="javascript:doDisplay();" class="comment_btn">댓글 {{comments|length}}</a>
         <!-- 질문-댓글창 영역 -->
         <div id="comment_box">
@@ -93,7 +92,7 @@
                         <div class="comment_profile">
                             <img src="{{comment.user.user_profile_image.url}}">
                             <span class="user_nicknamme">
-                            {{comment.user.user_nickname}}
+                                {{comment.user.user_nickname}}
                             </span>
                         </div>
                         <div class="comment_content">
@@ -107,11 +106,12 @@
                     </div>
                     {% if request.user == comment.user %}
                     <div class="delete_btn">
-                        <button onclick="onClickDelete({{post.id}},{{comment.id}})">삭제</button> <!--comment 별로 id 준당-->
+                        <button onclick="onClickDelete({{post.id}},{{comment.id}})">삭제</button>
+                        <!--comment 별로 id 준당-->
                     </div>
                     {% endif %}
                 </div>
-                {% endfor %}   
+                {% endfor %}
             </div>
             <div class="comment_input_area">
                 <input class="comment_input" type="text" placeholder="댓글달기" />
@@ -121,8 +121,8 @@
     </div>
     <a href="{% url 'question:answer_create' post.id %}" class="btn_control">답변 남기기</a>
 </div>
-    <!-- 질문-댓글창영역 끝 -->
-    <!-- 질문에 대한 답변 영역 답변답변답변 -->
+<!-- 질문-댓글창영역 끝 -->
+<!-- 질문에 대한 답변 영역 답변답변답변 -->
 <div class="answer_area">
     {% if post_answers %}
     {% for answer in post_answers %}
@@ -143,37 +143,47 @@
                 </div>
             </div>
             {% endif %}
+            <!--하나라도 채택되면 채택 버튼 삭제 기능-->
+            {% if not answer.question.is_selected %}
             {% if request.user.id == post.user.id %}
-                {% if answer.selection == False %}
-                    <div class="choice_btn">
-                        <button class="popup">채택하기</button>
-                    </div>
-                    채택안된 답변
-                {% else %}
-                채택되었어요
-                {% endif %}
-                {% endif %}
-                <div class="choice_modal_body" style="visibility: hidden;" >
-                    <button class="modal_delete">x</button>
-                    <h3>해당 답변을 채택하시겠습니까?</h3>
-                    <a href="{% url 'question:chosen_answer' answer.id %}" class="yes_choice">예</a>
-                    <a href="#">아니오</a>
-                </div>
+            {% if answer.selection == False %}
+            <div class="choice_btn">
+                <button onclick="answerChoicePopup()" value="{{answer.id}}">채택하기</button>
+            </div>
+            채택안된 답변
+            {% else %}
+            {% if answer.selection == True %}
+            채택되었어요
+            {% endif %}
+            {% endif %}
+            {% endif %}
+            <div class="choice_modal_body_{{answer.id}} choice_popup" style="visibility: hidden;">
+                <button class="modal_delete_{{answer.id}}">x</button>
+                <h3>해당 답변을 채택하시겠습니까?</h3>
+                <a href="{% url 'question:chosen_answer' answer.id %}" class="yes_choice">예</a>
+                <button class="no_select_{{answer.id}}">아니오</button>
+            </div>
+            {% else %}
+            {% if answer.selection == True %}
+            채택되었어요
+            {% endif %}
+            {% endif %}
         </div>
         <div class="answer_desc_box">
             {{ answer.desc|safe|escape|linebreaks}}
         </div>
-        <a href="javascript:doDisplayAnswer({{answer.id}})">댓글창 열기</a>
+        <a href="javascript:doDisplayAnswer({{answer.id}})">댓글 {{answer.comments|length}}</a>
         <!-- 답변의 댓글창영역 -->
         <div id="comment_box{{answer.id}}">
-        <div id="answer_comment_box">
-            <div class='addAnswerComment'>
-                <div>
-                    <input class="answer_comment_input" type="text" placeholder="댓글달기" />
-                    <button onclick="onClickAnswerComment({{ answer.id }})">게시</button>
-                    <!--comment 별로 id 준당-->
-                </div>
-                    {% for comment in answer.answer_comments.all.reverse %}
+            <div id="answer_comment_box">
+                <div class='addAnswerComment'>
+                    <div>
+                        <input class="answer_comment_input" type="text" placeholder="댓글달기" />
+                        <button onclick="onClickAnswerComment({{ answer.id }})">게시</button>
+                        <!--comment 별로 id 준당-->
+                    </div>
+                    <div>
+                        {% for comment in answer.answer_comments.all.reverse %}
                         <div class='answer_comment_id_{{comment.id}}'>
                             <div class="answer_comment_text">
                                 {{comment.text}}
@@ -184,23 +194,24 @@
                             </div>
                             {%endif%}
                         </div>
-                    {% endfor %}
-                </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
+        </div>
     </div>
     {% endfor %}
     {% endif %}
 </div>
 {% endblock %}
 
-{% block script %}
-<link rel="stylesheet" href="{% static 'css/questions/question_detail.css' %}">
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/vs2015.min.css" /> 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script type="text/javascript">hljs.highlightAll();</script>
-<script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+    {% block script %}
+    <link rel="stylesheet" href="{% static 'css/questions/question_detail.css' %}">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/vs2015.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <!-- <script type="text/javascript">hljs.highlightAll();</script> -->
+    <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
 
 <!-- 질문 코멘트 댓글 -->
 <script type="text/javascript">
@@ -290,92 +301,88 @@
             `
             commentInput.value = null
         };
-    };
-    requestComment.onreadystatechange = () => {
-        if (requestComment.readyState === XMLHttpRequest.DONE) {
-            commentHandleResponse();
+        requestComment.onreadystatechange = () => {
+            if (requestComment.readyState === XMLHttpRequest.DONE) {
+                commentHandleResponse();
+            };
         };
-    };
-    // <div class='comment_id_${comment.id}'>
-    //     <div class="comment_info">
-    //         <div class="comment_profile">
-    //             <img src="{{comment.user.user_profile_image.url}}">
-    //             <span class="user_nicknamme">
-    //             {{comment.user.user_nickname}}
-    //             </span>
-    //         </div>
-    //         <div class="comment_content">
-    //             <div class="comment_created">
-    //                 {{comment.created}}
-    //             </div>
-    //             <div class="comment_text">
-    //                 ${text}
-    //             </div>
-    //         </div>
-    //     </div>
-    //     <div class="delete_btn">
-    //         <button onclick="onClickDelete(${id}, ${comment.id})">삭제</button>
-    //     </div>
-    // </div>
+
+        // <div class='comment_id_${comment.id}'>
+        //     <div class="comment_info">
+        //         <div class="comment_profile">
+        //             <img src="{{comment.user.user_profile_image.url}}">
+        //             <span class="user_nicknamme">
+        //             {{comment.user.user_nickname}}
+        //             </span>
+        //         </div>
+        //         <div class="comment_content">
+        //             <div class="comment_created">
+        //                 {{comment.created}}
+        //             </div>
+        //             <div class="comment_text">
+        //                 ${text}
+        //             </div>
+        //         </div>
+        //     </div>
+        //     <div class="delete_btn">
+        //         <button onclick="onClickDelete(${id}, ${comment.id})">삭제</button>
+        //     </div>
+        // </div>
 
 
-    //     <div class='comment_id_${comment_id}'>
-    //         <div class="comment_info">
-    //             <div class="comment_text">
-    //             ${text}
-    //         </div>
-    //         <div class="delete_btn">
-    //             <button onclick="onClickDelete(${id}, ${comment_id})">삭제</button>
-    //         </div>
-    //     </div>
-    
+        //     <div class='comment_id_${comment_id}'>
+        //         <div class="comment_info">
+        //             <div class="comment_text">
+        //             ${text}
+        //         </div>
+        //         <div class="delete_btn">
+        //             <button onclick="onClickDelete(${id}, ${comment_id})">삭제</button>
+        //         </div>
+        //     </div>
 
 
-    // <div class='comment_id_${comment_id}'>
-    //             <div class="comment_info">
-    //                 <div class="comment_profile">
-    //                     <img src="{{comment.user.user_profile_image.url}}">
-    //                     <span class="user_nicknamme">
-    //                     {{comment.user.user_nickname}}
-    //                     </span>
-    //                 </div>
-    //                 <div class="comment_content">
-    //                     <div class="comment_created">
-    //                         {{comment.created}}
-    //                     </div>
-    //                     <div class="comment_text">
-    //                         ${text}
-    //                     </div>
-    //                 </div>
-    //             </div>
-    //             <div class="delete_btn">
-    //                 <button onclick="onClickDelete(${id}, ${comment_id})">삭제</button>
-    //             </div>
-    //         </div>
 
-    //-------------------------------------------------------------------------------------------
-    // 질문 코멘트 삭제 부분
-    const requestDelComment = new XMLHttpRequest();
-    const onClickDelete = (id, comment_id) => {
-        const url = '/comments/delete_question_comment/';
-        requestDelComment.open('POST', url, true);
-        requestDelComment.setRequestHeader(
-            'Content-Type',
-            'application/x-www-form-urlencoded'
-        );
-        requestDelComment.send(JSON.stringify({ id: id, comment_id: comment_id }));
-    };
-    const commentdelHandleResponse = () => {
-        if (requestDelComment.status < 400) {
-            const { id } = JSON.parse(requestDelComment.response);
-            const { comment_id } = JSON.parse(requestDelComment.response);
-            const element = document.querySelector(`.comment_id_${comment_id}`);
-            element.remove();
+        // <div class='comment_id_${comment_id}'>
+        //             <div class="comment_info">
+        //                 <div class="comment_profile">
+        //                     <img src="{{comment.user.user_profile_image.url}}">
+        //                     <span class="user_nicknamme">
+        //                     {{comment.user.user_nickname}}
+        //                     </span>
+        //                 </div>
+        //                 <div class="comment_content">
+        //                     <div class="comment_created">
+        //                         {{comment.created}}
+        //                     </div>
+        //                     <div class="comment_text">
+        //                         ${text}
+        //                     </div>
+        //                 </div>
+        //             </div>
+        //             <div class="delete_btn">
+        //                 <button onclick="onClickDelete(${id}, ${comment_id})">삭제</button>
+        //             </div>
+        //         </div>
+
+        //-------------------------------------------------------------------------------------------
+        // 질문 코멘트 삭제 부분
+        const requestDelComment = new XMLHttpRequest();
+        const onClickDelete = (id, comment_id) => {
+            const url = '/comments/delete_question_comment/';
+            requestDelComment.open('POST', url, true);
+            requestDelComment.setRequestHeader(
+                'Content-Type',
+                'application/x-www-form-urlencoded'
+            );
+            requestDelComment.send(JSON.stringify({ id: id, comment_id: comment_id }));
         };
-    };
-    requestDelComment.onreadystatechange = () => {
-        if (requestDelComment.readyState === XMLHttpRequest.DONE) {
-            commentdelHandleResponse();
+        const commentdelHandleResponse = () => {
+            if (requestDelComment.status < 400) {
+                const { id } = JSON.parse(requestDelComment.response);
+                const { comment_id } = JSON.parse(requestDelComment.response);
+                const element = document.querySelector(`.comment_id_${comment_id}`);
+                element.remove();
+            };
         };
     };
 // <!-- 질문 코멘트 끝 -->
@@ -450,135 +457,157 @@
             cmt_input.value = ''
         }
 
-    };
-    requestAnswerComment.onreadystatechange = () => {
-        if (requestAnswerComment.readyState === XMLHttpRequest.DONE) {
-            AnswercommentHandleResponse();
-        }
-    };
-
-    /*------------------------------------------------------------------------------------------------*/
-    // 답변 코멘트 삭제 부분
-    const requestDelAnswerComment = new XMLHttpRequest();
-
-    const onClickAnswerCommentDelete = (id, comment_id) => {
-        const url = '/comments/delete_answer_comment/';
-        requestDelAnswerComment.open('POST', url, true);
-        requestDelAnswerComment.setRequestHeader(
-            'Content-Type',
-            'application/x-www-form-urlencoded'
-        );
-        requestDelAnswerComment.send(JSON.stringify({ id: id, comment_id: comment_id }));
-    };
-    const AnswerCommentDelHandleResponse = () => {
-        if (requestDelAnswerComment.status < 400) {
-            const { id } = JSON.parse(requestDelAnswerComment.response);
-            const { comment_id } = JSON.parse(requestDelAnswerComment.response);
-            const element = document.querySelector(`.answer_comment_id_${comment_id}`);
-            console.log(element)
-            element.remove();
         };
-    };
-    requestDelAnswerComment.onreadystatechange = () => {
-        if (requestDelAnswerComment.readyState === XMLHttpRequest.DONE) {
-            AnswerCommentDelHandleResponse();
+        requestAnswerComment.onreadystatechange = () => {
+            if (requestAnswerComment.readyState === XMLHttpRequest.DONE) {
+                AnswercommentHandleResponse();
+            }
         };
-    };
+
+        /*------------------------------------------------------------------------------------------------*/
+        // 답변 코멘트 삭제 부분
+        const requestDelAnswerComment = new XMLHttpRequest();
+
+        const onClickAnswerCommentDelete = (id, comment_id) => {
+            const url = '/comments/delete_answer_comment/';
+            requestDelAnswerComment.open('POST', url, true);
+            requestDelAnswerComment.setRequestHeader(
+                'Content-Type',
+                'application/x-www-form-urlencoded'
+            );
+            requestDelAnswerComment.send(JSON.stringify({ id: id, comment_id: comment_id }));
+        };
+        const AnswerCommentDelHandleResponse = () => {
+            if (requestDelAnswerComment.status < 400) {
+                const { id } = JSON.parse(requestDelAnswerComment.response);
+                const { comment_id } = JSON.parse(requestDelAnswerComment.response);
+                const element = document.querySelector(`.answer_comment_id_${comment_id}`);
+                console.log(element)
+                element.remove();
+            };
+        };
+        requestDelAnswerComment.onreadystatechange = () => {
+            if (requestDelAnswerComment.readyState === XMLHttpRequest.DONE) {
+                AnswerCommentDelHandleResponse();
+            };
+        };
 
 
-    function doDisplay() {
-        var commentBox = document.getElementById("comment_box");
-        if (commentBox.style.display == 'none') {
-            commentBox.style.display = 'block';
-        } else {
-            commentBox.style.display = 'none';
+        function doDisplay() {
+            var commentBox = document.getElementById("comment_box");
+            if (commentBox.style.display == 'none') {
+                commentBox.style.display = 'block';
+            } else {
+                commentBox.style.display = 'none';
+            }
         }
-    }
-    function doDisplayAnswer(id) {
-        var boxName = "comment_box"+String(id);
-        var commentBox = document.getElementById(boxName);
-        if (commentBox.style.display == 'none') {
-            commentBox.style.display = 'block';
-        } else {
-            commentBox.style.display = 'none';
+        function doDisplayAnswer(id) {
+            var boxName = "comment_box" + String(id);
+            var commentBox = document.getElementById(boxName);
+            if (commentBox.style.display == 'none') {
+                commentBox.style.display = 'block';
+            } else {
+                commentBox.style.display = 'none';
+            }
         }
-    }
 
 
-// <!-- 좋아요 , 스크랩 버튼 바뀐것 -->
+        // <!-- 좋아요 , 스크랩 버튼 바뀐것 -->
 
-// function sendLinkFacebook(){
-// var facebook_share_url = "https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}";
-// window.open(facebook_share_url,
-//             'Share on Facebook',
-//             'scrollbars=no, width=500, height=500');
-// }    
-// function sendLinkTwitter(){
-//     var twitter_share_text="{{ post.title }}";
-//     var twitter_share_url="{{ request.build_absolute_uri }}";
-//     window.open("https://twitter.com/share?text="+twitter_share_text+"&url="+twitter_share_url,
-//                 'Share on Twitter',
-//                 'scrollbars=no, width=500, height=500');
-// }
-// function sendLinkNaver(){
-//     var raw_url = "{{ request.build_absolute_uri }}";
-//     var raw_title = "{{ post.title }}"
-//     var naver_root_url = "http://share.naver.com/web/shareView.nhn?url="
-//     var naver_share_url = naver_root_url+encodeURI(raw_url)+"&title="+encodeURI(raw_title);
-//     window.open(naver_share_url,
-//                 'Share on Naver',
-//                 'scrollbars=no, width=500, height=500');    
-// }
-
-
-$(".like").click(function () {
-    var pk = $(this).attr('name')
-    console.log(".like")
-    $.ajax({ // ajax로 서버와 통신 \
-        type: "POST", // 데이터를 전송하는 방법 \
-        url:"{% url 'question:question_like' %}", // 통신할 url을 지정 
-        data: { 'pk': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}' }, // 서버로 데이터 전송시 옵션, pk를 넘겨야 어떤 post인지 알 수 있음
-        dataType: "json",
-        success: function (response) { // 성공;
-            $("#count-" + pk).html("도움이되었어요" + response.likes_count + "개"); // 좋아요 개수 변경
-        },
-        error: function (request, status, error) { // 실패
-            window.location.replace('/users/login')// 로그인 페이지로 넘어가기
-        },
-    });
-})
-
-$(".scrap").click(function () { // .scarp 버튼을 클릭 감지
-    var pk = $(this).attr('name')
-    $.ajax({ // ajax로 서버와 통신 \
-        type: "POST", // 데이터를 전송하는 방법 \
-        url:"{% url 'question:question_scrap' %}", // 통신할 url을 지정 
-        data: { 'pk': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}' }, // 서버로 데이터 전송시 옵션, pk를 넘겨야 어떤 post인지 알 수 있음
-        dataType: "json",
-        success: function (response) { // 성공;
-            $("#scarp-" + pk).html("퍼가기" + response.scarps_count + "개"); // 좋아요 개수 변경
-        },
-        error: function (request, status, error) { // 실패
-            window.location.replace('/users/login')// 로그인 페이지로 넘어가기
-        },
-    });
-})
+        // function sendLinkFacebook(){
+        // var facebook_share_url = "https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}";
+        // window.open(facebook_share_url,
+        //             'Share on Facebook',
+        //             'scrollbars=no, width=500, height=500');
+        // }    
+        // function sendLinkTwitter(){
+        //     var twitter_share_text="{{ post.title }}";
+        //     var twitter_share_url="{{ request.build_absolute_uri }}";
+        //     window.open("https://twitter.com/share?text="+twitter_share_text+"&url="+twitter_share_url,
+        //                 'Share on Twitter',
+        //                 'scrollbars=no, width=500, height=500');
+        // }
+        // function sendLinkNaver(){
+        //     var raw_url = "{{ request.build_absolute_uri }}";
+        //     var raw_title = "{{ post.title }}"
+        //     var naver_root_url = "http://share.naver.com/web/shareView.nhn?url="
+        //     var naver_share_url = naver_root_url+encodeURI(raw_url)+"&title="+encodeURI(raw_title);
+        //     window.open(naver_share_url,
+        //                 'Share on Naver',
+        //                 'scrollbars=no, width=500, height=500');    
+        // }
 
 
-    // 채택팝업
-// const body = document.querySelector('body')
-// const answerChoicePopup = document.querySelector('.popup')
-// let modalBody = document.querySelector('.choice_modal_body');
-// const modalDelete = document.querySelector('.modal_delete');
-// answerChoicePopup.addEventListener('click', () => {
-//     if(modalBody.style.visibility === "hidden") {
-//         modalBody.style.visibility = "visible"
-//     } else {
-//         modalBody.style.visibility = "hidden"
-//     }
-// });
-// modalDelete.addEventListener('click', () => {
-//     modalBody.style.visibility = "hidden";
-// });
-</script>
-{% endblock script %}
+        $(".like").click(function () {
+            var pk = $(this).attr('name')
+            console.log(".like")
+            $.ajax({ // ajax로 서버와 통신 \
+                type: "POST", // 데이터를 전송하는 방법 \
+                url: "{% url 'question:question_like' %}", // 통신할 url을 지정 
+                data: { 'pk': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}' }, // 서버로 데이터 전송시 옵션, pk를 넘겨야 어떤 post인지 알 수 있음
+                dataType: "json",
+                success: function (response) { // 성공;
+                    $("#count-" + pk).html("도움이되었어요" + response.likes_count + "개"); // 좋아요 개수 변경
+                },
+                error: function (request, status, error) { // 실패
+                    window.location.replace('/users/login')// 로그인 페이지로 넘어가기
+                },
+            });
+        })
+
+        $(".scrap").click(function () { // .scarp 버튼을 클릭 감지
+            var pk = $(this).attr('name')
+            $.ajax({ // ajax로 서버와 통신 \
+                type: "POST", // 데이터를 전송하는 방법 \
+                url: "{% url 'question:question_scrap' %}", // 통신할 url을 지정 
+                data: { 'pk': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}' }, // 서버로 데이터 전송시 옵션, pk를 넘겨야 어떤 post인지 알 수 있음
+                dataType: "json",
+                success: function (response) { // 성공;
+                    $("#scarp-" + pk).html("퍼가기" + response.scarps_count + "개"); // 좋아요 개수 변경
+                },
+                error: function (request, status, error) { // 실패
+                    window.location.replace('/users/login')// 로그인 페이지로 넘어가기
+                },
+            });
+        })
+
+
+        // 채택팝업
+        // let answers = {{post_answers|safe}};
+        
+        const answerChoicePopup = () => {
+
+            const answers = {{ answers| safe }};
+            console.log(answers);
+            let body = document.querySelector('body');
+
+            for (answer in answers) {
+                let answer_id = answer.pk;
+                // let answerChoicePopup = document.querySelector(`.choice_btn_${answer_id}`);
+                let modalBody = document.querySelector(`.choice_modal_body_${answer_id}`);
+                let modalDelete = document.querySelector(`.modal_delete_${answer_id}`);
+                let noSelect = document.querySelector(`.no_select_${answer_id}`);
+            
+                if (modalBody.style.visibility === "hidden") {
+                    modalBody.style.visibility = "visible"
+                    modalBody.style.opacity = "1"
+                } else {
+                    modalBody.style.visibility = "hidden"
+                    modalBody.style.opacity = "0"
+                };
+                
+                modalDelete.addEventListener('click', () => {
+                    modalBody.style.visibility = "hidden";
+                    modalBody.style.opacity = "0"
+                });
+        
+                noSelect.addEventListener('click', () => {
+                    modalBody.style.visibility = "hidden";
+                    modalBody.style.opacity = "0"
+                });
+            };
+        }
+    
+
+    </script>
+    {% endblock script %}

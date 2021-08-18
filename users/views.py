@@ -59,8 +59,8 @@ def signup(request):
             email.send()
 
             # user가 생기자마자 바로 해결, 미해결 폴더 만들기
-            solved = Folder.objects.create(folder_user=user, folder_name="해결")
-            not_solved = Folder.objects.create(folder_user=user, folder_name="미해결")
+            solved = Folder.objects.create(folder_user=user, folder_name="해결", folder_kind="solved")
+            not_solved = Folder.objects.create(folder_user=user, folder_name="미해결", folder_kind="solved")
             # return HttpResponse('Please confirm your email address to complete the registration') -> 이메일 인증 성공 확인 가능 메세지
 
             return redirect('users:login')
@@ -623,7 +623,8 @@ def change_img(request, pk):
         new_img = request.FILES.get("new_img",None)
         if new_img:
             # 원래 이미지 삭제
-            user.user_profile_image.delete()
+            if user.user_profile_image != "../static/image/profile_img.svg":
+                user.user_profile_image.delete()
             # 새이미지로 바꿈
             user.user_profile_image = new_img
             user.save()
