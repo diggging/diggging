@@ -8,7 +8,7 @@ from .models import Alarm, Sand, User
 @admin.register(User)
 class CustomUserAdmin(admin.ModelAdmin):
     fields = ("username", "password", "last_login", "email", "user_nickname",
-              "user_profile_content", "user_profile_image", "user_following", "login_method", "is_active")
+              "user_profile_content", "user_profile_image", "user_following", "login_method", "is_active", )
     list_display = ("username", "user_nickname",
                     "user_level", "user_point",  "following_count","id", "is_active", "login_method")
 
@@ -18,5 +18,6 @@ class CustomAlarmAdmin(admin.ModelAdmin):
     fields = ("reason", "is_checked")
 
 @admin.register(Sand)
-class CustomAlarmAdmin(admin.ModelAdmin):
+class CustomSandAdmin(admin.ModelAdmin):
     fields = ("user", "reason","amount")
+    list_display = ("pk","user", "reason","amount", "created")

@@ -154,7 +154,7 @@ body {
 
 .first_container {
     width: 20rem;
-    height: 96vh;
+    height: 120vh;
     flex-direction: column;
     border: solid 1px var(--border-color);
     border-radius: 8px;
@@ -174,7 +174,7 @@ body {
     border: solid 1px var(--border-color);
     border-radius: 8px;
     display: flex;
-    height: 20vh;
+    height: 30vh;
     flex-direction: column;
     align-items: center;
     padding: 1rem;
@@ -185,7 +185,7 @@ body {
     border: solid 1px var(--border-color);
     border-radius: 8px;
     display: flex;
-    height: 72vh;
+    height: 85vh;
     padding: 1rem;
     margin: 1rem;
     align-content: space-around;
@@ -306,6 +306,7 @@ meter {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    margin-bottom: 8px;
 }
 
 .list_btn {
@@ -355,6 +356,25 @@ meter {
     
 }
 
+/* 모래쌓기 영역---------------------- */
+#github_chart_1 {
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+    width: 100%;
+    height: 38vh;
+}
+
+#github_chart_1 svg {
+    height: 210px;
+    margin-left: 40px;
+}
+
+#github_chart_1 svg g {
+    font-size: 6px;
+    font-family: var(--content-font);
+    color: var(--hover-color);
+}
+
 
 
 /* --------------------디렉토리 영역 ------------------*/
@@ -365,6 +385,9 @@ meter {
 }
 
 #btn_tap {
+    position: absolute;
+    top: 35.6vh;
+    left: 41.5rem;
     width: 20rem;
 }
 

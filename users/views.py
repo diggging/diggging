@@ -30,9 +30,13 @@ from django.contrib import messages
 # from django.contrib.messages.views import SuccessMessageMixin
 # from django.contrib.sites.models import Site
 from django.views.decorators.csrf import csrf_exempt
+from django.core import serializers
 
 from django.http.response import JsonResponse
 from django.core import serializers
+from django.template import loader
+import json
+import time
 
 
 # Create your views here.
@@ -66,8 +70,6 @@ def signup(request):
             return redirect('users:login')
     else:
         user_form = UserCustomCreationForm()
-
-    
     
     ctx={'signup_form' : user_form}
     return render(request, "users/signup.html", context=ctx)
@@ -265,6 +267,7 @@ def my_page(request, pk):
 
     # 모래
     my_sand = Sand.objects.filter(user = host)
+    sands = serializers.serialize('json', my_sand)
     my_sand_sum = my_sand.aggregate(Sum('amount'))
     if my_sand_sum['amount__sum'] == None:
         my_sand_sum = 0
@@ -294,6 +297,7 @@ def my_page(request, pk):
         'my_recent_logs' : my_recent_logs,
         'my_all_sands': my_sand,    # sand 모든 object list
         'my_sand_sum' : my_sand_sum,    # 현재까지 sand 총합
+        'sands' : sands,
     }
     return render(request, template_name="users/my_page.html", context=ctx)
 
