@@ -169,7 +169,7 @@ const problemPost = () => {
                         return `
                         ${post.title}    
                         `
-                    }).join('')
+                    }).join(' ')
                     thirdContainer.innerHTML = txt;
                 }
             })

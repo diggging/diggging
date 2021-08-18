@@ -595,3 +595,7 @@ a.badge_img:hover .level_modal{
     color: var(—text-color);
     font-family: var(—content-font);
 }
+
+.folder_category{
+    font-size: 0px;
+}
