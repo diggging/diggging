@@ -162,7 +162,7 @@
             data: { 'pk': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}' }, // 서버로 데이터 전송시 옵션, pk를 넘겨야 어떤 post인지 알 수 있음
             dataType: "json",
             success: function (response) { // 성공;
-                $("#count-" + pk).html("도움이되었어요" + response.likes_count + "개"); // 좋아요 개수 변경
+                $(".count-" + pk).html("도움이되었어요" + response.likes_count + "개"); // 좋아요 개수 변경
             },
             error: function (request, status, error) { // 실패
                 window.location.replace('/users/login')// 로그인 페이지로 넘어가기
@@ -171,14 +171,16 @@
     })
 
     $(".scrap").click(function () { // .scarp 버튼을 클릭 감지
-        var pk = $(this).attr('name')
+        var pk = $(this).attr('name');
+        var user_id = {{user_id}};
+        var post_id = {{post_id}};
         $.ajax({ // ajax로 서버와 통신 \
             type: "POST", // 데이터를 전송하는 방법 \
-            url: "{% url 'posts:post_scrap' %}", // 통신할 url을 지정 
+            url: "{% url 'posts:post_scrap' user_id=user_id post_id=post_id %}", // 통신할 url을 지정 
             data: { 'pk': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}' }, // 서버로 데이터 전송시 옵션, pk를 넘겨야 어떤 post인지 알 수 있음
             dataType: "json",
             success: function (response) { // 성공;
-                $("#scarp-" + pk).html("퍼가기" + response.scarps_count + "개"); // 좋아요 개수 변경
+                $(".scarp-" + pk).html("퍼가기" + response.scarps_count + "개"); // 좋아요 개수 변경
             },
             error: function (request, status, error) { // 실패
                 window.location.replace('/users/login')// 로그인 페이지로 넘어가기
@@ -245,8 +247,7 @@ scrapPopup.addEventListener('click', () => {
         {% if not request.user.id == post.user.id %}
         <div class="post_{{post.id}}">
             <div>
-                <input type="button" class="like" name="{{ post.id }}" value="Like" style="margin-top: 7px">
-                <button id="count-{{ post.id }}" style="font:bold 1em; margin-top: 3px">
+                <button class="count-{{ post.id }} like" name="{{ post.id }}" value="Like" >
                     도움이되었어요.{{ post.likes_user.all.count }}개</button>
             </div>
         </div>
@@ -278,9 +279,7 @@ scrapPopup.addEventListener('click', () => {
             </div>
             {% if not request.user.id == post.user.id %}
             <div>
-                <input type="button" class="scrap" name="{{ post.id }}" value="scrap"
-                    style="margin-top: 7px">
-                <button id="scarp-{{ post.id }}" style="font:bold 1em; margin-top: 3px">
+                <button  name="{{ post.id }}" value="scrap" class="scarp-{{ post.id }} scrap" >
                     퍼가기{{ post.scarps_user.all.count }}개</button>
             </div>
             <div class="scrap_popup" style="opacity: 0;" >

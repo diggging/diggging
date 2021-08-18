@@ -14,7 +14,6 @@ urlpatterns = [
     path("create/", views.post_create, name="post_create"),
     path("<int:pk>/update", views.post_update, name="post_update"),
     path("<int:pk>/delete", views.post_delete, name="post_delete"),
-
     path("search/", views.search, name="search"),
     path("search_post_axios/", views.search_post_axios, name="search_post_axios"),
     path("search_user_axios/", views.search_user_axios, name="search_user_axios"),
@@ -30,7 +29,8 @@ urlpatterns = [
     path("helped_axios/", views.helped_axios, name="helped_axios"),
     path("follow_axios/", views.follow_axios, name="follow_axios"),
     path("my_recent_axios/", views.my_recent_axios, name="my_recent_axios"),
-
     path("like/", views.post_like, name="post_like"),
-    path("scrap/", views.post_scrap, name="post_scrap"),
+    path("<int:user_id>/<int:post_id>/scrap/", views.post_scrap, name="post_scrap"),
+    # test
+    path("test/", views.test, name="test"),
 ]
