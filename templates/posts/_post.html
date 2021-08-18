@@ -11,9 +11,6 @@
                 <div class="post_title">
                     {{ post.title|truncatechars:26 }}
                 </div>
-                <div class="post_tag">
-                    # {{ post.tag }}
-                </div>
                 <p class="post_desc">
                     {{ post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;" }}
                 </p>
@@ -29,9 +26,11 @@
                 </span>
             </a>
             <div class="likes">
-                :+1:
                 <div class="likes_count">
                     {{post.scrap_num}}
+                </div>
+                <div class="helped_count">
+                    {{post.helped_num}}
                 </div>
             </div>
         </div>
