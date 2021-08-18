@@ -11,6 +11,7 @@ django-dotenv==1.4.2
 django-email-verification==0.1.0
 django-filter==2.4.0
 django-js-asset==1.2.2
+django-resized==0.3.11
 django-tagging==0.5.0
 idna==3.2
 nodeenv==1.6.0

@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.conf import settings
 from core import models as core_model
 import os
+from django_resized import ResizedImageField
 # Create your models here.
 
 class User(AbstractUser):
@@ -21,8 +22,8 @@ class User(AbstractUser):
     #user_followed = models.ManyToManyField("self", symmetrical=False, blank=True, default=0)
     user_profile_content = models.TextField(
         verbose_name="personal description", blank=True)
-    user_profile_image = models.ImageField(
-        verbose_name="대표 사진", upload_to="images/", blank=True, null=True , default='../static/image/profile_img.svg')
+    user_profile_image = ResizedImageField(
+        size=[50,50], verbose_name="대표 사진", upload_to="images/", blank=True, null=True , default='../static/image/profile_img.jpg')
     is_staff = models.BooleanField(verbose_name="staff status", default=False, help_text="Designates whther the user can log into admin site")
     is_active = models.BooleanField(verbose_name="active", default=True) # 이메일 인증 완료되기 전까지 False로 설정
     email = models.EmailField(blank=True, max_length=254, verbose_name='email address', null=False)
