@@ -19,7 +19,16 @@ searchField.addEventListener('keyup', (e) => {
         })
             .then((res) => res.json())
             .then((data) => {
-            console.log(data)
+            let list = [];
+            for(i=0; i<data.length; i++){
+                if(data[i].is_public) {
+                    list[i] = data[i]
+                } else {
+                    return
+                }
+            }
+
+            console.log(list)
             if (data.length === 0){
                 searchContainer.innerHTML = "검색어와 맞는 글이 없어요"
             } else {
@@ -68,8 +77,7 @@ select.addEventListener('change', () => {
     })
     .then(res => res.json())
     .then(data => {
-        console.log(data)                
-        
+                
         if (data.length === 0){
             searchContainer.innerHTML = "검색어와 맞는 글이 없어요"
         } else {

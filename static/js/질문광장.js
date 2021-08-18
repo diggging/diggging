@@ -60,7 +60,9 @@ const langPost = () => {
                 } else {
                     const txt = data.map(post => {
                         return `
-                        ${post.title}    
+                        ${post.image}
+                        ${post.title}
+                        ${post.desc}
                         `
                     }).join('')
                     noAnswerListBox.innerHTML = txt;
@@ -131,7 +133,9 @@ const framePost = () => {
                 } else {
                     const txt = data.map(post => {
                         return `
-                        ${post}
+                        ${post.image}
+                        ${post.title}
+                        ${post.desc}
                         `
                     }).join('')
                     noAnswerListBox.innerHTML = txt;
