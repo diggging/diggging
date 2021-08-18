@@ -169,7 +169,7 @@ def password_reset_form(request, pk):
     if request.method == "POST":
         new_password = request.POST.get("password1")
         password_confirm = request.POST.get("password2")
-        if new_password == password_confirm:
+        if new_password == password_confirm and len(new_password) >= 8:
             user.set_password(new_password)
             user.save()
             login(request, user, backend='django.contrib.auth.backends.ModelBackend' )
@@ -606,7 +606,7 @@ def change_pw(request, pk):
         if check_password(current_password, user.password):
             new_password = request.POST.get("password1")
             password_confirm = request.POST.get("password2")
-            if new_password == password_confirm:
+            if new_password == password_confirm and len(new_password) >= 8:
                 user.set_password(new_password)
                 user.save()
                 # backend 인자 추가
