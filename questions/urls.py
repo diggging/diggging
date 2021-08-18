@@ -42,7 +42,11 @@ urlpatterns = [
         name="get_answer_comments",
     ),
     path("like/", views.question_like, name="question_like"),
-    path("scrap/", views.question_scrap, name="question_scrap"),
+    path(
+        "<int:user_id>/<int:post_id>/scrap/",
+        views.question_scrap,
+        name="question_scrap",
+    ),
     path("help_ajax/", views.sorthelp_ajax, name="help_ajax"),
     path("scrap_ajax/", views.sort_scrap, name="scrap_ajax"),
     # path("scrap_ajax/", views.question_scrap, name="question_scrap"),

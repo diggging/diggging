@@ -127,14 +127,14 @@ def post_detail(request, user_id, post_id):
         folder_name=post_details.language, folder_user=post_details.user
     )
     comments = post_details.comments.all()
-    
+
     ctx = {
         "post": post_details,
         "host": me,
         "folder": folder,
         "comments": comments,
-        "user_id" : user_id,
-        "post_id" : post_id,
+        "user_id": user_id,
+        "post_id": post_id,
     }
     # html added by 종권
     return render(request, "posts/post_detail.html", ctx)
@@ -161,7 +161,7 @@ def post_like(request):
 
 @login_required
 @require_POST
-def post_scrap(request,user_id,post_id):
+def post_scrap(request, user_id, post_id):
     post = get_object_or_404(Post, pk=post_id)  # 어떤 post인지 가져오기
     target_language = post.language  # 어떤 language인지 - 폴더 생성용
     target_framework = post.framework  # 어떤 framework인지 - 프레임워크 생성용
@@ -169,8 +169,12 @@ def post_scrap(request,user_id,post_id):
     post_host = User.objects.get(id=user_id)
 
     # get: object-없는걸 가져오면 오류 , filter: queryset- 없어도 빈 queryset 오류 x
-    lang_folder = Folder.objects.filter(folder_name=target_language, folder_user=me, folder_kind="language")
-    frame_folder = Folder.objects.filter(folder_name=target_framework, folder_user=me, folder_kind="framework")
+    lang_folder = Folder.objects.filter(
+        folder_name=target_language, folder_user=me, folder_kind="language"
+    )
+    frame_folder = Folder.objects.filter(
+        folder_name=target_framework, folder_user=me, folder_kind="framework"
+    )
 
     # 만약 나, language로 된 폴더 있으면
     if lang_folder.exists():
@@ -522,8 +526,6 @@ def search_user_axios(request):
 
 
 # 삽질 기록 퍼오기
-@login_required
-@require_POST
 def get_post(request, user_id, post_id):
     post = get_object_or_404(Post, pk=post_id)  # 어떤 post인지 가져오기
     target_language = post.language  # 어떤 language인지 - 폴더 생성용
@@ -582,8 +584,5 @@ def get_post(request, user_id, post_id):
     new_alarm = Alarm.objects.create(
         user=post_host, reason=me.user_nickname + "님이 내 기록 " + post.title + "을 퍼갔어요."
     )
-    pk = request.POST.get("pk", None)
-    post = get_object_or_404(Post, pk=pk)
-    ctx = {"scarps_count": post.count_scarps_user()}
     # url: 저장 후 post_detail 페이지에 남아있음.
-    return render(request, "posts/post_detail.html", json.dumps(ctx))
+    return redirect("posts:post_detail", user_id, post_id)

@@ -278,6 +278,8 @@ def question_post_detail(request, user_id, post_id):
         "folder": folder,
         "post_answers": post_answers,
         "comments": comments,
+        "user_id": user_id,
+        "post_id": post_id,
     }
     return render(request, "questions/question_detail.html", ctx)
 
@@ -446,7 +448,60 @@ def question_like(request):
 
 @login_required
 @require_POST
-def question_scrap(request):
+def question_scrap(request, user_id, post_id):
+    question_post = get_object_or_404(Question_post, pk=post_id)
+    target_language = question_post.language
+    target_framework = question_post.framework  # 어떤 framework인지 - 프레임워크 생성용
+    me = request.user
+
+    lang_folder = QuestionFolder.objects.filter(
+        folder_name=target_language, folder_user=me, folder_kind="language"
+    )
+    frame_folder = QuestionFolder.objects.filter(
+        folder_name=target_framework, folder_user=me, folder_kind="framework"
+    )
+
+    if lang_folder.exists():
+        folder = QuestionFolder.objects.get(
+            folder_name=target_language, folder_user=me, folder_kind="language"
+        )
+        folder.question_folder.add(question_post)
+        folder.save()
+    else:
+        new_folder = QuestionFolder.objects.create(
+            folder_name=target_language, folder_user=me, folder_kind="language"
+        )
+        question_post.folder.add(new_folder)
+    question_post.save()
+
+    # framework 동일
+    if frame_folder.exists():
+        # 그 폴더에 포스트 그냥 추가하기
+        folder = QuestionFolder.objects.get(
+            folder_name=target_framework, folder_user=me, folder_kind="framework"
+        )  # query set은 object가 아니므로 object 다시 가져옴
+        folder.question_folder.add(question_post)  # add 는 저장 x 명시적 저장 필요
+        folder.save()
+    # 없으면
+    else:
+        # 폴더를 생성한 뒤, 거기에 추가하기
+        new_folder = QuestionFolder.objects.create(
+            folder_name=target_framework, folder_user=me, folder_kind="framework"
+        )  # create - 자동저장
+        question_post.folder.add(new_folder)
+    question_post.save()
+
+    # 퍼가기 할 때 sand 생성하기 - host꺼 생성해줘야함
+    new_sand = Sand.objects.create(
+        user=question_post.user, amount=50, reason=me.user_nickname + "님의 내 질문 퍼가기"
+    )
+    new_alarm = Alarm.objects.create(
+        user=question_post.user,
+        reason=request.user.user_nickname
+        + " 님이 내 질문 "
+        + question_post.title
+        + "을 퍼갔어요.",
+    )
     pk = request.POST.get("pk", None)
     post = get_object_or_404(Question_post, pk=pk)
     user = request.user
@@ -456,6 +511,10 @@ def question_scrap(request):
     else:
         post.scarps_user.add(user)
         message = "퍼가기"
+
+    post.scrap_num = post.count_scarps_user()
+    print(post.scrap_num)
+    post.save()
     ctx = {"scarps_count": post.count_scarps_user(), "message": message}
     return HttpResponse(json.dumps(ctx), content_type="application/json")
 
