@@ -223,12 +223,13 @@ body {
 }
 
 .scrap_popup {
-    padding: 20px;
+    position: relative;
+    top: 50%;
     opacity: 0;
-    display: none;
+    /* visibility: hidden; */
     width: 300px;
     height: 80px;
-    background: white;
+    background: rgb(231, 231, 230);
     border: solid 1px var(--border-color);
     transition-duration: 2s;
 }

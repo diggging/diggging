@@ -323,20 +323,18 @@ body {
 .scrap:visited {
     background-color: var(--hover-color);
 }
-
 .scrap_popup {
-    position: absolute;
+    position: relative;
     top: 50%;
-    left: 50%;
-    padding: 20px;
     opacity: 0;
     /* visibility: hidden; */
     width: 300px;
     height: 80px;
     background: rgb(231, 231, 230);
     border: solid 1px var(--border-color);
-    /* transition-duration: 2s; */
+    transition-duration: 2s;
 }
+
 
 .scrap_popup p {
     font-size: 14px;
