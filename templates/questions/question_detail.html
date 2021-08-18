@@ -41,45 +41,43 @@
                 <button name="{{ post.id }}" value="Like" class="count-{{ post.id }} like" style="font:bold 1em; margin-top: 3px">
                     도움이되었어요.{{ post.likes_user.all.count }}개</button>
             </div>
-            <div class="accordion_area">
-                <button class="btn btn_toggle">공유하기</button>
-                <div class="content_area">
-                    <span class="sociallink ml-1">
-                        <a href="javascript:sendLinkFacebook()" title="페이스북으로 공유">
-                            <img src="{% static 'images/facebook.png' %}" width=36 alt="Facebook">
-                        </a>
-                    </span>
-                    <span class="sociallink ml-1">
-                        <a href="javascript:sendLinkTwitter()" title="트위터로 공유">
-                            <img src="{% static 'images/twitter.png' %}" width=36 alt="Twitter">
-                        </a>
-                    </span>
-                    <span class="sociallink ml-1">
-                        <a href="javascript:sendLinkNaver()" title="네이버로 공유">
-                            <img src="{% static 'images/naver.png' %}" width=36 alt="Naver">
-                        </a>
-                    </span>
-                    <span class="sociallink ml-1">
-                        <a href="javascript:sendLinkKakao()" id="kakao-link-btn" title="카카오톡으로 공유">
-                            <img src="{% static 'images/kakaotalk.png' %}" width=36 alt="Kakaotalk">
-                            <!--이거는 도메인이없어서 못하는중임당... 배포하면 수정 할 예정.-->
-                        </a>
-                    </span>
+            <!-- 공유하기 버튼영역 -->
+            <div class="share_box">
+                <button class="accordion">공유하기</button>
+                <div class="panel">
+                    <div class="content_area">
+                        <span class="sociallink ml-1">
+                            <a href="javascript:sendLinkFacebook()" title="페이스북으로 공유">
+                                <img src="{% static 'image/facebook.png' %}" width=31 alt="Facebook">
+                            </a>
+                        </span>
+                        <span class="sociallink ml-1">
+                            <a href="javascript:sendLinkTwitter()" title="트위터로 공유">
+                                <img src="{% static 'image/twitter.png' %}" width=34 alt="Twitter">
+                            </a>
+                        </span>
+                        <span class="sociallink ml-1">
+                            <a href="javascript:sendLinkNaver()" title="네이버로 공유">
+                                <img src="{% static 'image/naver.png' %}" width=42 alt="Naver">
+                            </a>
+                        </span>
+                        <span class="sociallink ml-1">
+                            <a href="javascript:sendLinkKakao()" id="kakao-link-btn" title="카카오톡으로 공유">
+                                <img src="{% static 'image/kakaotalk.png' %}" width=34 alt="Kakaotalk">
+                                <!--이거는 도메인이없어서 못하는중임당... 배포하면 수정 할 예정.-->
+                            </a>
+                        </span>
+                        <button class="close_btn"> 닫기 X </button>
+                    </div>
                 </div>
             </div>
-
-            <div>
-                <button name="{{ post.id }}" class="scarp-{{ post.id }} scrap" value="scrap">
+            <!-- 공유하기버튼 영역 끝 -->
+            <div class="scrap_box">
+                <button name="{{ post.id }}" class="scarp-{{ post.id }} scrap" id="scrap_btn"value="scrap">
                     퍼가기{{ post.scarps_user.all.count }}개</button>
             </div>
         </div>
-        <!-- <div class="post_{{post.id}}">
-            <a class="like_button post__like" onclick="onClickLikeScrap({{ post.id }}, 'like')">도움이-되었어요
-                {{post.helped_num}}</a>
-            <a href="{% url 'question:get_question' post.id %}" class="post__scrap"
-                onclick="onClickLikeScrap({{ post.id }}, 'scrap')">퍼가기 {{post.scrap_num}}</a> -->
-
-        <a href="javascript:doDisplay();" class="comment_btn">댓글 {{comments|length}}</a>
+        <a href="javascript:doDisplay();" class="comment_btn">댓글 {{comments.count}}</a>
         <!-- 질문-댓글창 영역 -->
         <div id="comment_box">
             <div class='addComment'>
@@ -116,7 +114,9 @@
             </div>
         </div>
     </div>
+    {% if not request.user.id == post.user.id %}
     <a href="{% url 'question:answer_create' post.id %}" class="btn_control">답변 남기기</a>
+    {% endif %}
 </div>
 <!-- 질문-댓글창영역 끝 -->
 <!-- 질문에 대한 답변 영역 답변답변답변 -->
@@ -572,19 +572,62 @@ $(".scrap").click(function () { // .scarp 버튼을 클릭 감지
 
 
 // ---------------------------퍼오기 팝업창 ---------------
-const scrapPopup = document.querySelector('.scrap_popup')
-const scrapButton = document.querySelector('.scrap');
+function scrapPopup() {
+    let scrapButton = document.querySelector('#scrap_btn');
+    let scrapBody = document.querySelector('.share_popup');
+    let closeBtn = document.querySelector('.close_btn');
 
-scrapButton.addEventListener('click', () => {
-    scrapPopup.style.visibility = "visible";
-    scrapPopup.style.opacity = "1";
-});
+    shareButton.addEventListener('click', () => {
+        if (sharePopup.style.opacity === "0") {
+            sharePopup.style.opacity = "1"
+            sharePopup.style.visibility = "visibile"
+        } else {
+            sharePopup.style.opacity = "0"
+            sharePopup.style.visibility = 'hidden'
+        }
+    });
 
-scrapPopup.addEventListener('click', () => {
-    scrapPopup.style.opacity = "0";
-    scrapPopup.style.display = "hidden";
+    closeBtn.addEventListener('click', () => {
+        sharePopup.style.opacity = "0"
+        sharePopup.style.visibility = "hidden"
+    });
+}
 
-})
+// -----------------------------공유하기 팝업
+// function sharePopup() {
+//     let shareButton = document.querySelector('.share_button');
+//     let popupBody = document.querySelector('.share_popup');
+//     let closeBtn = document.querySelector('.close_btn');
+
+//     shareButton.addEventListener('click', () => {
+//         if (sharePopup.style.opacity === "0") {
+//             sharePopup.style.opacity = "1"
+//             sharePopup.style.visibility = "visibile"
+//         } else {
+//             sharePopup.style.opacity = "0"
+//             sharePopup.style.visibility = 'hidden'
+//         }
+//     });
+
+//     closeBtn.addEventListener('click', () => {
+//         sharePopup.style.opacity = "0"
+//         sharePopup.style.visibility = "hidden"
+//     });
+// }
+var acc = document.getElementsByClassName("accordion");
+var i;
+for (i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function () {
+        this.classList.toggle("active");
+        var panel = this.nextElementSibling;
+        if (panel.style.maxHeight) {
+            panel.style.maxHeight = null;
+        } else {
+            panel.style.maxHeight = panel.scrollHeight + "px";
+        }
+    });
+}
+// -------------------------------
 
 function sendLinkFacebook() {
     var facebook_share_url = "https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}";
