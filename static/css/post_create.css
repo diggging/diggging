@@ -56,6 +56,8 @@ form {
     display: flex;
     width: 90%;
     justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 .create_title {
@@ -174,8 +176,9 @@ form {
 
 .btn_area {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     margin-top: 20px;
+    
 }
 
 .btn_control {
