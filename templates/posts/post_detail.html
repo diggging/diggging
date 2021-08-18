@@ -138,6 +138,23 @@
     })
 
 
+    // -------------------------------퍼오기 눌렀을 때 알림창------------------     
+const scrapPopup = document.querySelector('.scrap_popup')
+const scrapButton = document.querySelector('.scrap');
+
+scrapButton.addEventListener('click', () => {
+    if (scrapPopup.style.opacity === "0") {
+        scrapPopup.style.opacity = "1";
+        scrapPopup.style.visibility = "visibile";
+    } else {
+        scrapPopup.style.opacity = "0"
+    }
+});
+
+scrapPopup.addEventListener('click', () => {
+    scrapPopup.style.opacity = "0";
+    scrapPopup.style.visibility = "hidden";
+})
 </script>
 {% endblock %}
 
@@ -176,46 +193,52 @@
         <div class="desc_area">
             {{ post.desc|safe|escape }}
         </div>
+        {% if not request.user.id == post.user.id %}
         <div class="post_{{post.id}}">
             <div>
                 <input type="button" class="like" name="{{ post.id }}" value="Like" style="margin-top: 7px">
                 <button id="count-{{ post.id }}" style="font:bold 1em; margin-top: 3px">
                     도움이되었어요.{{ post.likes_user.all.count }}개</button>
             </div>
-            <div class="accordion_area">
-                <button class="btn btn_toggle">공유하기</button>
-                <div class="content_area">
-                    <span class="sociallink ml-1">
-                        <a href="javascript:sendLinkFacebook()" title="페이스북으로 공유">
-                            <img src="{% static 'images/facebook.png' %}" width=36 alt="Facebook">
-                        </a>
-                    </span>
-                    <span class="sociallink ml-1">
-                        <a href="javascript:sendLinkTwitter()" title="트위터로 공유">
-                            <img src="{% static 'images/twitter.png' %}" width=36 alt="Twitter">
-                        </a>
-                    </span>
-                    <span class="sociallink ml-1">
-                        <a href="javascript:sendLinkNaver()" title="네이버로 공유">
-                            <img src="{% static 'images/naver.png' %}" width=36 alt="Naver">
-                        </a>
-                    </span>
-                    <span class="sociallink ml-1">
-                        <a href="javascript:sendLinkKakao()" id="kakao-link-btn" title="카카오톡으로 공유">
-                            <img src="{% static 'images/kakaotalk.png' %}" width=36 alt="Kakaotalk">
-                            <!--이거는 도메인이없어서 못하는중임당... 배포하면 수정 할 예정.-->
-                        </a>
-                    </span>
-                </div>
+        </div>
+        {% endif %}
+        <div class="accordion_area">
+            <button class="btn btn_toggle">공유하기</button>
+            <div class="content_area">
+                <span class="sociallink ml-1">
+                    <a href="javascript:sendLinkFacebook()" title="페이스북으로 공유">
+                        <img src="{% static 'image/facebook.png' %}" width=36 alt="Facebook">
+                    </a>
+                </span>
+                <span class="sociallink ml-1">
+                    <a href="javascript:sendLinkTwitter()" title="트위터로 공유">
+                        <img src="{% static 'image/twitter.png' %}" width=36 alt="Twitter">
+                    </a>
+                </span>
+                <span class="sociallink ml-1">
+                    <a href="javascript:sendLinkNaver()" title="네이버로 공유">
+                        <img src="{% static 'image/naver.png' %}" width=36 alt="Naver">
+                    </a>
+                </span>
+                <span class="sociallink ml-1">
+                    <a href="javascript:sendLinkKakao()" id="kakao-link-btn" title="카카오톡으로 공유">
+                        <img src="{% static 'image/kakaotalk.png' %}" width=36 alt="Kakaotalk">
+                        <!--이거는 도메인이없어서 못하는중임당... 배포하면 수정 할 예정.-->
+                    </a>
+                </span>
             </div>
-
+            {% if not request.user.id == post.user.id %}
             <div>
                 <input type="button" class="btn btn-info btn-sm scrap" name="{{ post.id }}" value="scrap"
                     style="margin-top: 7px">
                 <button id="scarp-{{ post.id }}" style="font:bold 1em; margin-top: 3px">
                     퍼가기{{ post.scarps_user.all.count }}개</button>
             </div>
-
+            <div class="scrap_popup">
+                <p>언어📁 {{post.language}} 프레임워크📁 {{post.framework}}으로 퍼왔습니다.
+                마이페이지에서 확인해보세요!</p>
+            </div>
+            {% endif %}
         </div>
         <div class="comment_area">
             <div class='addComment'>
@@ -256,8 +279,6 @@
 </div>
 
 <script>
-
-
 //     // axios try
 // const likeButton = document.querySelector('.like_button')
 // likeButton.forEach(button => {
