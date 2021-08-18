@@ -191,6 +191,42 @@ body {
     align-content: space-around;
 }
 
+/* 모달 창 내부 follow, following list css */
+/*Styling the tab*/
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* tab content 열때 사용되는 button styling*/
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+
+/* button 위로 hover 시 background color change */
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* tablink class로 만들어놓은 것들 중 active/current 로 만들기*/
+.tab button.active {
+    background-color: #ccc;
+}
+
+/* tab content styling */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
 
 /*---------------------- 프로필영역 ----------------------*/
 .profile_username {
