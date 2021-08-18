@@ -53,7 +53,7 @@
                             {% for languages in language %}
                             <div class="input_wrap">
                                 <input type="checkbox" name="answers[]" id="answer1"
-                                    value={{languages}}>{{languages}}</input>
+                                    value={{languages}}>{{languages}}
                             </div>
                             {%endfor%}
                         </div>
@@ -61,7 +61,6 @@
                     <!-- 체크박스끝 --> 
                     <!-- 관심사에 따른 질문 목록들 -->
                     <div class="recommend_list_box">
-                        <a href="#">도움 순</a> / <a href="">스크랩 순</a>
                         {% for post in posts%}
                         {%if str_search == post.language %}
                         <div class="recommend_list">
