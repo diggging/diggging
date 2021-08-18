@@ -99,7 +99,12 @@ p {
     height: 3rem;
 }
 
-.login_top > .login_question {
+.question_box {
+    display: flex;
+    flex-direction: column;
+}
+
+.login_top .login_question {
     width: 100%;
     display: flex;
     padding: 0.625em;
@@ -107,8 +112,10 @@ p {
 }
 
 .login_question h4 {
-    font-size: 16px;
-    margin-right: 1.5rem;
+    margin-right: 2rem;
+    font-size: 1rem;
+    font-family: var(--btn-font);
+    color: var(--text-color);
 }
 
 .login_question > a {
@@ -122,6 +129,7 @@ p {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: -1.5rem;
 }
 
 .login_input {
@@ -191,6 +199,7 @@ p {
     font-size: 0.825rem;
     font-family: var(--btn-font);
     align-items: center;
+    margin-right: 20px;
 }
 .login_bottom img {
     width: 30px;
