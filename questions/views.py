@@ -13,6 +13,7 @@ from django.http import HttpResponse #, JsonResponse
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required 
 from django.views.decorators.http import require_POST
+from django.core import serializers
 
 # Create your views here.
 @login_required
@@ -246,6 +247,8 @@ def question_post_detail(request, user_id, post_id):
     # comments = post_details.comments.all() comments는 ajax로 따로 띄워준다고 해서 지웠습니다
     # post_answers: 질문 포스트에 해당 되는 답변들
     post_answers = post_details.answers.all().order_by("-created")
+    answers = serializers.serialize('json', post_answers)
+    
     # question_comments 역참조
     comments = post_details.question_comments.all()
     # answer_comments = [answer.answer_comments for answer in post_answers]
@@ -255,6 +258,7 @@ def question_post_detail(request, user_id, post_id):
         "folder": folder,
         "post_answers": post_answers,
         "comments": comments,
+        "answers": answers,
     }
     return render(request, "questions/question_detail.html", ctx)
 

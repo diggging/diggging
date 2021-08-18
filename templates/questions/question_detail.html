@@ -148,7 +148,7 @@
             {% if request.user.id == post.user.id %}
             {% if answer.selection == False %}
             <div class="choice_btn">
-                <button class="popup">채택하기</button>
+                <button onclick="answerChoicePopup()" value="{{answer.id}}">채택하기</button>
             </div>
             채택안된 답변
             {% else %}
@@ -157,11 +157,11 @@
             {% endif %}
             {% endif %}
             {% endif %}
-            <div class="choice_modal_body choice_popup" style="visibility: hidden;">
-                <button class="modal_delete">x</button>
+            <div class="choice_modal_body_{{answer.id}} choice_popup" style="visibility: hidden;">
+                <button class="modal_delete_{{answer.id}}">x</button>
                 <h3>해당 답변을 채택하시겠습니까?</h3>
                 <a href="{% url 'question:chosen_answer' answer.id %}" class="yes_choice">예</a>
-                <button class="no_select">아니오</button>
+                <button class="no_select_{{answer.id}}">아니오</button>
             </div>
             {% else %}
             {% if answer.selection == True %}
@@ -172,7 +172,7 @@
         <div class="answer_desc_box">
             {{ answer.desc|safe|escape|linebreaks}}
         </div>
-        <a href="javascript:doDisplayAnswer({{answer.id}})">댓글창 열기</a>
+        <a href="javascript:doDisplayAnswer({{answer.id}})">댓글 {{answer.comments|length}}</a>
         <!-- 답변의 댓글창영역 -->
         <div id="comment_box{{answer.id}}">
             <div id="answer_comment_box">
@@ -199,10 +199,11 @@
                 </div>
             </div>
         </div>
-        {% endfor %}
-        {% endif %}
     </div>
-    {% endblock %}
+    {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}
 
     {% block script %}
     <link rel="stylesheet" href="{% static 'css/questions/question_detail.css' %}">
@@ -516,36 +517,41 @@
 
 
         // 채택팝업
-        const body = document.querySelector('body')
-        const answerChoicePopup = document.querySelector('.popup')
-        let modalBody = document.querySelector('.choice_modal_body');
-        const modalDelete = document.querySelector('.modal_delete');
-        const noSelect = document.querySelector('.no_select');
+        // let answers = {{post_answers|safe}};
+        
+        const answerChoicePopup = () => {
 
-        answerChoicePopup.addEventListener('click', () => {
-            if (modalBody.style.visibility === "hidden") {
-                modalBody.style.visibility = "visible"
-                modalBody.style.opacity = "1"
-            } else {
-                modalBody.style.visibility = "hidden"
-                modalBody.style.opacity = "0"
-            }
-        });
+            const answers = {{ answers| safe }};
+            console.log(answers);
+            let body = document.querySelector('body');
 
-        modalDelete.addEventListener('click', () => {
-            modalBody.style.visibility = "hidden";
-            modalBody.style.opacity = "0"
-        });
+            for (answer in answers) {
+                let answer_id = answer.pk;
+                // let answerChoicePopup = document.querySelector(`.choice_btn_${answer_id}`);
+                let modalBody = document.querySelector(`.choice_modal_body_${answer_id}`);
+                let modalDelete = document.querySelector(`.modal_delete_${answer_id}`);
+                let noSelect = document.querySelector(`.no_select_${answer_id}`);
+            
+                if (modalBody.style.visibility === "hidden") {
+                    modalBody.style.visibility = "visible"
+                    modalBody.style.opacity = "1"
+                } else {
+                    modalBody.style.visibility = "hidden"
+                    modalBody.style.opacity = "0"
+                };
+                
+                modalDelete.addEventListener('click', () => {
+                    modalBody.style.visibility = "hidden";
+                    modalBody.style.opacity = "0"
+                });
+        
+                noSelect.addEventListener('click', () => {
+                    modalBody.style.visibility = "hidden";
+                    modalBody.style.opacity = "0"
+                });
+            };
+        }
+    
 
-        noSelect.addEventListener('click', () => {
-            modalBody.style.visibility = "hidden";
-            modalBody.style.opacity = "0"
-        });
-
-
-
-// function closePopUp('click', () => {
-//     modalBody.style.visibility = "hidden";
-// } ) 
     </script>
     {% endblock script %}
