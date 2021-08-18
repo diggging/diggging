@@ -28,7 +28,7 @@ langBtn.addEventListener('click', () => {
                     ${folder.folder_name}
                 </button>    
                 `
-            })
+            }).join('')
             categoryTab.innerHTML = txt;
         }
         langPost()
@@ -62,7 +62,7 @@ const langPost = () => {
                         return `
                         ${post.title}    
                         `
-                    })
+                    }).join('')
                     noAnswerListBox.innerHTML = txt;
                 }
             })
@@ -99,7 +99,7 @@ const frameworkBtn = document.querySelector('.framework_btn');
                         ${folder.folder_name}
                     </button>    
                     `
-                })
+                }).join('')
                 categoryTab.innerHTML = txt;
             }
             framePost()
@@ -133,7 +133,7 @@ const framePost = () => {
                         return `
                         ${post}
                         `
-                    })
+                    }).join('')
                     noAnswerListBox.innerHTML = txt;
                 }
             })

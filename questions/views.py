@@ -27,8 +27,10 @@ def question_main(request):
     
     not_selected_questions = Question_post.objects.filter(is_selected=False)
     
+    ##개수 제한
+    if len(not_selected_questions) > 20:
+        not_selected_questions = not_selected_questions[:20]
         
-
     languages = [langs[0] for langs in Question_post.language_choices]
     search = request.POST.getlist("answers[]")
     str_search = "".join(search)
@@ -135,6 +137,7 @@ def question_create(request):
 def get_answer_comments(request, answer_id):
     answer = Answer.objects.get(pk=answer_id)
     answer_comments = answer.answer_comments.all()
+
     ctx = {
         "post": answer,
         "comments": answer_comments,

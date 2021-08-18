@@ -34,7 +34,7 @@ searchField.addEventListener('keyup', (e) => {
                         ${post.helped_num}
                         ${post.scrap_num}
                     `
-                })
+                }).join('')
                 searchContainer.innerHTML = txt;
 
             }
@@ -83,7 +83,7 @@ select.addEventListener('change', () => {
                 ${post.helped_num}
                 ${post.scrap_num}
                 `
-            })
+            }).join('')
             searchContainer.innerHTML = txt;
             //여기에 삽입
         }

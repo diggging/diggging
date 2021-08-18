@@ -27,8 +27,6 @@ const getPostScrap = async() => {
 const morePostScrap = async() => {
     const url = '/posts/scrap_axios/';
     const data = await axios.post(url);
-    
-
 }
 
 const displayScrap = () => {
@@ -75,7 +73,7 @@ const displayScrap = () => {
             </div>
         </div>
         `
-    })
+    }).join('')
 
     element.innerHTML = html
 }
@@ -138,7 +136,7 @@ const displayhelped = () => {
             </div>
         </div>
         `
-    })
+    }).join('')
 
     element.innerHTML = html
 }
@@ -201,7 +199,7 @@ const displayFollow = () => {
             </div>
         </div>
         `
-    })
+    }).join('')
 
     element.innerHTML = html
 }
@@ -263,7 +261,7 @@ const displayPost = () => {
             </div>
         </div>
         `
-    })
+    }).join('')
 
     element.innerHTML = html
 }
