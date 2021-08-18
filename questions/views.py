@@ -471,7 +471,7 @@ def sorthelp_ajax(request):
         .order_by("-helped_num")
     )
 
-    return HttpResponse(post, content_type="application/json; charset=utf-8")
+    return JsonResponse({"post": post}, content_type="application/json; charset=utf-8")
 
 
 @csrf_exempt

@@ -23,12 +23,24 @@
 
     const SorthelpHandleResponse = () =>{
         if(requestSorthelp.status < 400){
-            const posts = requestSorthelp.response;
-            console.log(posts)
+            const {post} = JSON.parse(requestSorthelp.response);
+            const post_title =[]    
+            for(i=0;i<post.length;i++)
+            {   
+                console.log("aa")
+                title=post[i].title
+                post_title.push(title)
+            }
+            console.log(post_title)
             const answerabc = document.querySelector('.answerabcd');
+
             answerabc.innerHTML =`
             <div>
-                ${posts}
+                {% for posts in post %}
+                {{posts.title}}
+                {{posts.desc}}
+                <br/>
+            {% endfor %}
             </div>
             `
         };
@@ -125,11 +137,13 @@
                     <!-- 관심사에 따른 질문 목록들 -->
                     <div class="recommend_list_box">
                         <button onclick ="onClickSorthelp({{ request.user.id }})">도움 순</button>
-                        <div class ="answerabcd">
-                            {% for posts in post %}
-                                {{posts}}<br/>
-                            {% endfor %}
-                        </div>
+                            <div class ="answerabcd">
+                                {% for posts in post %}
+                                    {{posts.title}}
+                                    {{posts.desc}}
+                                    <br/>
+                                {% endfor %}
+                            </div>
                         <button onclick ="onClickSortscrap({{ request.user.id }})">스크랩순</button>
                         <div class ="scarp_sort">
                             {% for scrap in post_scrap %}
