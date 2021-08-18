@@ -24,20 +24,16 @@
                 <a href="{% url 'users:account_detail' user.id %}">계정 설정</a>
                 <a href="{% url 'users:logout' %}">로그아웃</a>
             </div>
-        {% else %}
-            <div class="toggle" style="display: none;">
-                <a href="">내 디렉토리</a>
-                <a href="">계정 설정</a>
-                <a href="{% url 'users:logout' %}">로그아웃</a>
-            </div>
         {% endif %}    
         <div class="nav_right">
             {% if user.is_authenticated %}
                 <div class="nav_vertical">
-                    <div class="alarm" onclick="alarmMessage()">
-                        <a href="#"><i class="far fa-comment-alt fa-2x" style="font-size: 1.6rem; margin-top: 3px;"></i></a>
+                    <div class="alarm" onclick="alarmMessage()" value="{{user.id}}">
+                        <a ><i class="far fa-comment-alt fa-2x" style="font-size: 1.6rem; margin-top: 3px;"></i></a>
                     </div>
                     <h6>알림</h6>
+                    <!-- 알람이 뜨는 공간 -->
+                    <div class="alarm_toggle" style="display: none;"></div>
                 </div>
                 <div class="nav_vertical">
                     <div>
@@ -60,25 +56,19 @@
             {% else %}
                 <div class="nav_vertical">
                     <div>
-                        <a href="">💡</a>
-                    </div>
-                    <h6>알림</h6>
-                </div>
-                <div class="nav_vertical">
-                    <div>
                         <a href="{% url 'posts:main' %}"><i class="fas fa-question-circle"></i></a>
                     </div>
-                    <h6>질문광장</h6>
+                    <h6>삽질모음 홈</h6>
                 </div>
                 <div class="nav_vertical">
                     <div>
-                        <a href="{% url 'users:login' %}">🗝</a>
+                        <a href="{% url 'users:login' %}"><i class="fas fa-question-circle"></i></a>
                     </div>
                     <h6>로그인</h6>
                 </div>
                 <div class="nav_vertical">
                     <div>
-                        <a href="{% url 'users:signup' %}">📌</a>
+                        <a href="{% url 'users:signup' %}"><i class="fas fa-question-circle"></i></a>
                     </div>
                     <h6>회원가입</h6>
                 </div>

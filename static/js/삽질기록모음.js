@@ -92,8 +92,11 @@ const langPost = () => {
                 } else {
                     const txt = data.map(post => {
                         return `
+                        <img src="${post.image}" alt="">
+                        ${post.image}
                         ${post.title}
                         ${post.desc}
+
                         `
                     }).join('')
                     thirdContainer.innerHTML = txt;

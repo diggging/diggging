@@ -24,7 +24,7 @@
                 <a href="{% url 'users:account_detail' user.id %}">계정 설정</a>
                 <a href="{% url 'users:logout' %}">로그아웃</a>
             </div>
-        {% endif %}
+        {% endif %}  
         <div class="nav_right">
             {% if user.is_authenticated %}
                 <div class="nav_vertical">
@@ -55,26 +55,20 @@
                 </div>
             {% else %}
                 <div class="nav_vertical">
-                    <div class="">
-                        <a href="">💡</a>
-                    </div>
-                    <h6>알림</h6>
-                </div>
-                <div class="nav_vertical">
                     <div>
-                        <a href="{% url 'question:question_main' %}"><i class="fas fa-question-circle"></i></a>
+                        <a href="{% url 'question:question_main' %}"><i class="fas fa-question-circle fa-2x"></i></a>
                     </div>
                     <h6>질문광장</h6>
                 </div>
                 <div class="nav_vertical">
                     <div>
-                        <a href="{% url 'users:login' %}">🗝</a>
+                        <a href="{% url 'users:login' %}"><i class="fas fa-question-circle"></i></a>
                     </div>
                     <h6>로그인</h6>
                 </div>
                 <div class="nav_vertical">
                     <div>
-                        <a href="{% url 'users:signup' %}">📌</a>
+                        <a href="{% url 'users:signup' %}"><i class="fas fa-question-circle"></i></a>
                     </div>
                     <h6>회원가입</h6>
                 </div>
