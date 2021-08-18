@@ -273,9 +273,8 @@
             const createDate = comment_date;
 
             const addComment = document.querySelector(`.addComment`);
-            console.log(commentInput.value)
+            console.log(userImgUrl)
             // 아무것도 입력안했을 때, 댓글 안달림
-
                 addComment.innerHTML += `
                 <div class='comment_id_${comment_id}'>
                     <div class="comment_info">
@@ -332,7 +331,6 @@
         // </div>
 
 
-       
         //-------------------------------------------------------------------------------------------
       // 질문 코멘트 삭제 부분
     const requestDelComment = new XMLHttpRequest();
