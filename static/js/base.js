@@ -50,7 +50,7 @@ const alarmMessage = () => {
 
         console.log(alarmReason)
 
-        if (alarmReason.length === 0) {
+        if (data.length === 0) {
             alarmToggle.innerHTML = "알람이 없습니다."
         } else {
             const txt = alarmReason.map(alarm => {

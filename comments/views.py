@@ -24,10 +24,17 @@ def comment(request):        #! 이름 바꿈!
     comment = Comment.objects.create(post=post, text=comment_content, user=request.user)
     comment.save() 
     new_alarm = Alarm.objects.create(user=post.user, reason="내가 남긴 기록 \""+post.title+'\" 에 '+request.user.user_nickname+' 님이 댓글을 남겼어요.')
+    #댓글을 단 유저의 정보를 담았음!
+    user = User.objects.filter(id=comment.user.id)
+    data = serializers.serialize('json', user)
+
     return JsonResponse({
         "id": post_id, 
         "text": comment_content,
         "comment_id": comment.id,
+        "comment_date": comment.created,
+        # "count" : total_num_comments,
+        "user": data,
     })
 
 # delete comment

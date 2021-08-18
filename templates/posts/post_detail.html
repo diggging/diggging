@@ -12,48 +12,97 @@
 <script type="text/javascript">hljs.highlightAll();</script>
 <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
 <script>
+    //빈 코멘트 게시 시 알람창 뜨게할 div
+    const test = document.querySelector('.addComment');
+    const body = document.querySelector('body');
+    const nullComment = (input) => {
+            const newDiv = document.createElement('div');
+            const newText = document.createTextNode('댓글을 입력하세여!!');
+            newDiv.appendChild(newText);
+            //newDiv 커스텀
+            newDiv.style.width = "100px";
+            newDiv.style.height = "30px";
 
-    const requestComment = new XMLHttpRequest();
-
-    const onClickComment = (id) => {
-        const url = '/comments/comment/';
-        requestComment.open('POST', url, true);
-        requestComment.setRequestHeader(
-            'Content-Type',
-            'application/x-www-form-urlencoded'
-        );
-        const text = document.querySelector(`.comment_input`).value;
-        requestComment.send(JSON.stringify({ id: id, text: text }));
-        console.log(requestComment);
-    };
-
-    const commentHandleResponse = () => {
-        if (requestComment.status < 400) {
-            const { id } = JSON.parse(requestComment.response);
-            const { text } = JSON.parse(requestComment.response);
-            const { comment_id } = JSON.parse(requestComment.response);
-            const addComment = document.querySelector(`.addComment`)
-            addComment.innerHTML += `
-        <div class='comment_id_${comment_id}'>
-            <div class="comment_text">
-                ${text}
-            </div>
-            <div class="delete_btn">
-                <button onclick="onClickDelete(${id}, ${comment_id})">삭제</button>
-            </div>
-        </div>
-    `
-            const cmt_input = document.querySelector('.comment_input');
-            cmt_input.value = null
+            newDiv.setAttribute('class', 'comment_alert');
+            
+            body.appendChild(newDiv);
+            setTimeout(()=> {
+                newDiv.remove()
+            }, 2000)
+        }
+        //댓글 생성
+        const requestComment = new XMLHttpRequest();
+        const commentInput = document.querySelector(`.comment_input`)
+    
+        const onClickComment = (id) => {
+    
+            if (!commentInput.value) {
+                nullComment(commentInput)
+                return false
+            } else {
+                const url = '/comments/comment/';
+                requestComment.open('POST', url, true);
+                requestComment.setRequestHeader(
+                    'Content-Type',
+                    'application/x-www-form-urlencoded'
+                );
+                const text = document.querySelector(`.comment_input`).value;
+                requestComment.send(JSON.stringify({ id: id, text: text}));
+                console.log(requestComment);
+            }
         };
-
-    };
-
-    requestComment.onreadystatechange = () => {
-        if (requestComment.readyState === XMLHttpRequest.DONE) {
-            commentHandleResponse();
+        
+        const commentHandleResponse = () => {
+            if (requestComment.status < 400) {
+                const { id } = JSON.parse(requestComment.response);
+                const { text } = JSON.parse(requestComment.response);
+                const { comment_id } = JSON.parse(requestComment.response);
+                const { comment_date } = JSON.parse(requestComment.response);
+                const {user} = JSON.parse(requestComment.response);
+                
+                //유저 데이터 직렬화
+                const userData = JSON.parse(user); 
+                const userImg = userData[0].fields.user_profile_image;
+                const userImgUrl = userImg.slice(2)
+                const userName = userData[0].fields.user_nickname;
+                const createDate = comment_date;
+    
+                const addComment = document.querySelector(`.addComment`);
+                console.log(commentInput.value)
+                // 아무것도 입력안했을 때, 댓글 안달림
+    
+                    addComment.innerHTML += `
+                    <div class='comment_id_${comment_id}'>
+                        <div class="comment_info">
+                            <div class="comment_profile">
+                                <img src="${userImgUrl}">
+                                <span class="user_nicknamme">
+                                ${userName}
+                                </span>
+                            </div>
+                            <div class="comment_content">
+                                <div class="comment_created">
+                                    ${createDate}
+                                </div>
+                                <div class="comment_text">
+                                    ${text}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="delete_btn">
+                            <button onclick="onClickDelete(${id}, ${comment_id})">삭제</button>
+                        </div>
+                    </div>
+                `
+                commentInput.value = null
+            };
         };
-    };
+    
+        requestComment.onreadystatechange = () => {
+            if (requestComment.readyState === XMLHttpRequest.DONE) {
+                commentHandleResponse();
+            };
+        };
 
     const requestDelComment = new XMLHttpRequest();
 
