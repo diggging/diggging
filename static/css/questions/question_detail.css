@@ -199,8 +199,45 @@ body {
     min-height: 8rem;
 }
 
+.desc_area img {
+    max-width: 90%;
+}
+
 .tag_area {
     margin-bottom: 30px;
+}
+
+
+
+.scrap {
+    color: var(--sand-color);
+    font-family: var(--btn-font);
+    background-color: var(--btn-color);
+    border: solid 1px var(--border-color);
+    border-radius: 4px;
+    padding: 10px 4px;
+}
+
+.scrap:visited {
+    background-color: var(--hover-color);
+}
+
+.scrap_popup {
+    padding: 20px;
+    opacity: 0;
+    display: none;
+    width: 300px;
+    height: 80px;
+    background: white;
+    border: solid 1px var(--border-color);
+    transition-duration: 2s;
+}
+
+.scrap_popup p {
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--text-color);
+    font-family: var(--content-font);
 }
 
 .comment_box {
@@ -398,17 +435,4 @@ body {
 .modal_delete {
     width: 20px;
     height: 20px;
-}
-
-/* 댓글 경고창 */
-.comment_alert {
-    width: 500px;
-    height: 180px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    display: block;
-    margin-left: auto;
-    margin-bottom: auto;
-    background-color: var(--border-color);
 }

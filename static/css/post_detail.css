@@ -187,7 +187,10 @@ body {
     min-height: 8rem;
     font-size: 1rem;
     margin-top: 2rem;
-    
+}
+
+.desc_area img {
+    max-width: 90%;
 }
 
 .tag_area {
@@ -306,4 +309,38 @@ body {
     border: 1px solid var(--border-color);
     background: floralwhite;
     border-radius: 8px;
+}
+
+.scrap {
+    color: var(--sand-color);
+    font-family: var(--btn-font);
+    background-color: var(--btn-color);
+    border: solid 1px var(--border-color);
+    border-radius: 4px;
+    padding: 10px 4px;
+}
+
+.scrap:visited {
+    background-color: var(--hover-color);
+}
+
+.scrap_popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 20px;
+    opacity: 0;
+    /* visibility: hidden; */
+    width: 300px;
+    height: 80px;
+    background: rgb(231, 231, 230);
+    border: solid 1px var(--border-color);
+    /* transition-duration: 2s; */
+}
+
+.scrap_popup p {
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--text-color);
+    font-family: var(--content-font);
 }
