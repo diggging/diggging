@@ -229,12 +229,12 @@ scrapPopup.addEventListener('click', () => {
             </div>
             {% if not request.user.id == post.user.id %}
             <div>
-                <input type="button" class="btn btn-info btn-sm scrap" name="{{ post.id }}" value="scrap"
+                <input type="button" class="scrap" name="{{ post.id }}" value="scrap"
                     style="margin-top: 7px">
                 <button id="scarp-{{ post.id }}" style="font:bold 1em; margin-top: 3px">
                     퍼가기{{ post.scarps_user.all.count }}개</button>
             </div>
-            <div class="scrap_popup">
+            <div class="scrap_popup" style="opacity: 0;" >
                 <p>언어📁 {{post.language}} 프레임워크📁 {{post.framework}}으로 퍼왔습니다.
                 마이페이지에서 확인해보세요!</p>
             </div>
