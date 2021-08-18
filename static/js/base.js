@@ -29,7 +29,6 @@ const alarmMessage = () => {
         let alarmReason = [];
         //혹시 몰라서 날짜도 넣어 놨음
         let alarmDate = [];
-        console.log(alarmJson)
         // 알람 목록, date 추출
         for (i=0; i < alarmJson.length; i++) {
             alarmReason[i] = alarmJson[i].fields.reason;
@@ -38,15 +37,18 @@ const alarmMessage = () => {
 
         // 글자수 제한
         for (i=0; i < alarmReason.length; i++) {
-            alarmReason[i] = alarmReason[i].substr(0,19);
-            alarmReason[i] += '...';
-            console.log(alarmReason[i])
+            alarmReason[i] = alarmReason[i].substr(0,35);
+            if(alarmReason[i].length > 35) {
+                alarmReason[i] += '...';
+            }
         }
 
         // 알람 9개 삭제
-        if(alarmReason.length === 9) {
-            alarmReason.pop()
+        if(alarmReason.length > 9) {
+            alarmReason = alarmReason.slice(0, 9);
         }
+
+        console.log(alarmReason)
 
         if (data.length === 0) {
             alarmToggle.innerHTML = "알람이 없습니다."

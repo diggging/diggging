@@ -36,47 +36,45 @@
         <div class="desc_area">
             {{ post.desc|safe|escape }}
         </div>
-        {% if not request.user.id == post.user.id %}
         <div class="post_{{post.id}}">
             <div>
                 <input type="button" class="like" name="{{ post.id }}" value="Like" style="margin-top: 7px">
                 <button id="count-{{ post.id }}" style="font:bold 1em; margin-top: 3px">
                     도움이되었어요.{{ post.likes_user.all.count }}개</button>
             </div>
-        </div>
-        {% endif %}
-        <div class="accordion_area">
-            <button class="btn btn_toggle">공유하기</button>
-            <div class="content_area">
-                <span class="sociallink ml-1">
-                    <a href="javascript:sendLinkFacebook()" title="페이스북으로 공유">
-                    <img src="{% static 'images/facebook.png' %}" width=36 alt="Facebook">
-                    </a>
-                </span>
-                <span class="sociallink ml-1">
-                    <a href="javascript:sendLinkTwitter()" title="트위터로 공유">
-                    <img src="{% static 'images/twitter.png' %}" width=36 alt="Twitter">
-                    </a>
-                </span>
-                <span class="sociallink ml-1">
-                    <a href="javascript:sendLinkNaver()" title="네이버로 공유">
-                    <img src="{% static 'images/naver.png' %}" width=36 alt="Naver">
-                    </a>
-                </span>
-                <span class="sociallink ml-1">
-                    <a href="javascript:sendLinkKakao()" id="kakao-link-btn" title="카카오톡으로 공유">
-                    <img src="{% static 'images/kakaotalk.png' %}" width=36 alt="Kakaotalk"> <!--이거는 도메인이없어서 못하는중임당... 배포하면 수정 할 예정.-->
-                    </a>
-                </span>
+            <div class="accordion_area">
+                <button class="btn btn_toggle">공유하기</button>
+                <div class="content_area">
+                    <span class="sociallink ml-1">
+                        <a href="javascript:sendLinkFacebook()" title="페이스북으로 공유">
+                            <img src="{% static 'images/facebook.png' %}" width=36 alt="Facebook">
+                        </a>
+                    </span>
+                    <span class="sociallink ml-1">
+                        <a href="javascript:sendLinkTwitter()" title="트위터로 공유">
+                            <img src="{% static 'images/twitter.png' %}" width=36 alt="Twitter">
+                        </a>
+                    </span>
+                    <span class="sociallink ml-1">
+                        <a href="javascript:sendLinkNaver()" title="네이버로 공유">
+                            <img src="{% static 'images/naver.png' %}" width=36 alt="Naver">
+                        </a>
+                    </span>
+                    <span class="sociallink ml-1">
+                        <a href="javascript:sendLinkKakao()" id="kakao-link-btn" title="카카오톡으로 공유">
+                            <img src="{% static 'images/kakaotalk.png' %}" width=36 alt="Kakaotalk">
+                            <!--이거는 도메인이없어서 못하는중임당... 배포하면 수정 할 예정.-->
+                        </a>
+                    </span>
+                </div>
             </div>
-            {% if not request.user.id == post.user.id %}
+
             <div>
                 <input type="button" class="btn btn-info btn-sm scrap" name="{{ post.id }}" value="scrap"
                     style="margin-top: 7px">
                 <button id="scarp-{{ post.id }}" style="font:bold 1em; margin-top: 3px">
                     퍼가기{{ post.scarps_user.all.count }}개</button>
             </div>
-            {% endif %}
         </div>
         <!-- <div class="post_{{post.id}}">
             <a class="like_button post__like" onclick="onClickLikeScrap({{ post.id }}, 'like')">도움이-되었어요
@@ -84,7 +82,7 @@
             <a href="{% url 'question:get_question' post.id %}" class="post__scrap"
                 onclick="onClickLikeScrap({{ post.id }}, 'scrap')">퍼가기 {{post.scrap_num}}</a> -->
 
-        <a href="javascript:doDisplay();" class="comment_btn">댓글 {{post.question_comments.count}}개</a>
+        <a href="javascript:doDisplay();" class="comment_btn">댓글 {{comments|length}}</a>
         <!-- 질문-댓글창 영역 -->
         <div id="comment_box">
             <div class='addComment'>
@@ -174,7 +172,7 @@
         <div class="answer_desc_box">
             {{ answer.desc|safe|escape|linebreaks}}
         </div>
-        <a href="javascript:doDisplayAnswer({{answer.id}})">댓글 {{answer.answer_comments.count}}</a>
+        <a href="javascript:doDisplayAnswer({{answer.id}})">댓글 {{answer.comments|length}}</a>
         <!-- 답변의 댓글창영역 -->
         <div id="comment_box{{answer.id}}">
             <div id="answer_comment_box">
@@ -259,89 +257,84 @@
         }
     };
     
-                newDiv.setAttribute('class', 'comment_alert');
-                
-                body.appendChild(newDiv);
-                //setTimeout(()=> {
-                //    newDiv.remove()
-                //}, 2000)
-            }
-    
-        //--------------------------------------------------------------------------------------------------------
-         // 질문 코멘트 추가 부분
-        const requestComment = new XMLHttpRequest();
-        const commentInput = document.querySelector(`.comment_input`)
-    
-        const onClickComment = (id) => {
-    
-            if (!commentInput.value) {
-                nullComment(commentInput)
-                return false
-            } else {
-                const url = '/comments/add_question_comment/';
-                requestComment.open('POST', url, true);
-                requestComment.setRequestHeader(
-                    'Content-Type',
-                    'application/x-www-form-urlencoded'
-                );
-                const text = document.querySelector(`.comment_input`).value;
-                requestComment.send(JSON.stringify({ id: id, text: text}));
-                console.log(requestComment);
-            }
-        };
-        
-        const commentHandleResponse = () => {
-            if (requestComment.status < 400) {
-                const { id } = JSON.parse(requestComment.response);
-                const { text } = JSON.parse(requestComment.response);
-                const { comment_id } = JSON.parse(requestComment.response);
-                const { comment_date } = JSON.parse(requestComment.response);
-                const {user} = JSON.parse(requestComment.response);
-                
-                //유저 데이터 직렬화
-                const userData = JSON.parse(user); 
-                const userImg = userData[0].fields.user_profile_image;
-                const userImgUrl = userImg.slice(2)
-                const userName = userData[0].fields.user_nickname;
-                const createDate = comment_date;
-    
-                const addComment = document.querySelector(`.addComment`);
-                console.log(commentInput.value)
-                // 아무것도 입력안했을 때, 댓글 안달림
-    
-                    addComment.innerHTML += `
-                    <div class='comment_id_${comment_id}'>
-                        <div class="comment_info">
-                            <div class="comment_profile">
-                                <img src="${userImgUrl}">
-                                <span class="user_nicknamme">
-                                ${userName}
-                                </span>
-                            </div>
-                            <div class="comment_content">
-                                <div class="comment_created">
-                                    ${createDate}
-                                </div>
-                                <div class="comment_text">
-                                    ${text}
-                                </div>
-                            </div>
+    const commentHandleResponse = () => {
+        if (requestComment.status < 400) {
+            const { id } = JSON.parse(requestComment.response);
+            const { text } = JSON.parse(requestComment.response);
+            const { comment_id } = JSON.parse(requestComment.response);
+            const { comment_date } = JSON.parse(requestComment.response);
+            const {user} = JSON.parse(requestComment.response);
+            
+            //유저 데이터 직렬화
+            const userData = JSON.parse(user); 
+            const userImg = userData[0].fields.user_profile_image;
+            const userImgUrl = userImg.slice(2)
+            const userName = userData[0].fields.user_nickname;
+            const createDate = comment_date;
+
+            const addComment = document.querySelector(`.addComment`);
+            console.log(commentInput.value)
+            // 아무것도 입력안했을 때, 댓글 안달림
+
+                addComment.innerHTML += `
+                <div class='comment_id_${comment_id}'>
+                    <div class="comment_info">
+                        <div class="comment_profile">
+                            <img src="${userImgUrl}">
+                            <span class="user_nicknamme">
+                            ${userName}
+                            </span>
                         </div>
-                        <div class="delete_btn">
-                            <button onclick="onClickDelete(${id}, ${comment_id})">삭제</button>
+                        <div class="comment_content">
+                            <div class="comment_created">
+                                ${createDate}
+                            </div>
+                            <div class="comment_text">
+                                ${text}
+                            </div>
                         </div>
                     </div>
-                `
-                commentInput.value = null
-            };
+                    <div class="delete_btn">
+                        <button onclick="onClickDelete(${id}, ${comment_id})">삭제</button>
+                    </div>
+                </div>
+            `
+            commentInput.value = null
         };
-        requestComment.onreadystatechange = () => {
-            if (requestComment.readyState === XMLHttpRequest.DONE) {
-                commentHandleResponse();
-            };
+    };
+
+    requestComment.onreadystatechange = () => {
+        if (requestComment.readyState === XMLHttpRequest.DONE) {
+            commentHandleResponse();
         };
+    };
+
+        // <div class='comment_id_${comment.id}'>
+        //     <div class="comment_info">
+        //         <div class="comment_profile">
+        //             <img src="{{comment.user.user_profile_image.url}}">
+        //             <span class="user_nicknamme">
+        //             {{comment.user.user_nickname}}
+        //             </span>
+        //         </div>
+        //         <div class="comment_content">
+        //             <div class="comment_created">
+        //                 {{comment.created}}
+        //             </div>
+        //             <div class="comment_text">
+        //                 ${text}
+        //             </div>
+        //         </div>
+        //     </div>
+        //     <div class="delete_btn">
+        //         <button onclick="onClickDelete(${id}, ${comment.id})">삭제</button>
+        //     </div>
+        // </div>
+
+
+       
         //-------------------------------------------------------------------------------------------
-       // 질문 코멘트 삭제 부분
+      // 질문 코멘트 삭제 부분
     const requestDelComment = new XMLHttpRequest();
     const onClickDelete = (id, comment_id) => {
         const url = '/comments/delete_question_comment/';
@@ -365,8 +358,8 @@
             commentdelHandleResponse();
         };
     };
-// <!-- 질문 코멘트 끝 -->
-// <!-- 답변 코멘트 시작 -->
+        // <!-- 질문 코멘트 끝 -->
+    // <!-- 답변 코멘트 시작 -->
     //------------------------------------------------------------------------------------------------------
     // 답변 코멘트 추가 부분
     const requestAnswerComment = new XMLHttpRequest();
@@ -469,24 +462,25 @@
         };
     };
 
+        function doDisplay() {
+            var commentBox = document.getElementById("comment_box");
+            if (commentBox.style.display == 'none') {
+                commentBox.style.display = 'block';
+            } else {
+                commentBox.style.display = 'none';
+            }
+        };
 
-    function doDisplay() {
-        var commentBox = document.getElementById("comment_box");
-        if (commentBox.style.display == 'none') {
-            commentBox.style.display = 'block';
-        } else {
-            commentBox.style.display = 'none';
-        }
-    }
-    function doDisplayAnswer(id) {
-        var boxName = "comment_box"+String(id);
-        var commentBox = document.getElementById(boxName);
-        if (commentBox.style.display == 'none') {
-            commentBox.style.display = 'block';
-        } else {
-            commentBox.style.display = 'none';
-        }
-    }
+        function doDisplayAnswer(id) {
+            var boxName = "comment_box" + String(id);
+            var commentBox = document.getElementById(boxName);
+            if (commentBox.style.display == 'none') {
+                commentBox.style.display = 'block';
+            } else {
+                commentBox.style.display = 'none';
+            }
+        };
+
 
         // <!-- 좋아요 , 스크랩 버튼 바뀐것 -->
 
