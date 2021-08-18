@@ -291,77 +291,21 @@
 </script>
 <!-- 팔로우 모달 창 뜨기 -->
 <script>
-    function followModalPopup() {
-        let followModal = document.querySelector('.follow_modal');
-        let followBody = document.querySelector('.follow_body');
-        let closeModal = document.querySelector('.close_btn');
-       
-        let followOpenPopup = document.querySelector('#follow_btn');
-    
-        followOpenPopup.addEventListener('click', () => {
-            followModal.style.display = 'block';
-            body.style.overflow = 'hidden';
-            followBody.style.display = 'block';
-        });
-    
-        closeModal.addEventListener('click', () => {
-            followModal.style.display = 'none';
-            body.style.overflow = 'auto';
-        })
-    }
-</script>
-<!-- 팔로워 모달창 뜨기 -->
-<script>
-    function followerModalPopup() {
-        let followModal = document.querySelector('.follow_modal');
-        let followBody = document.querySelector('.follow_body');
-        let closeModal = document.querySelector('.close_btn');
-       
-        let followOpenPopup = document.querySelector('#follower_btn');
-    
-        followOpenPopup.addEventListener('click', () => {
-            followModal.style.display = 'block';
-            body.style.overflow = 'hidden';
-            followBody.style.display = 'block';
-        });
-    
-        closeModal.addEventListener('click', () => {
-            followModal.style.display = 'none';
-            body.style.overflow = 'auto';
-        })
-    }
-</script>
-</script>
+    const followModal = document.querySelector('.follow_modal');
+    const followBody = document.querySelector('.follow_body');
+    const followOpenPopup = document.querySelector('.follow_btn');
 
-<!-- 최근 (기록/질문) 뜨게하기 -->
-<!-- 구현하려다가 어려워서 넘김.. 기존데이터를 가져와서 출력해주는거 알아보기....ajax어렵당.. -->
-{%comment%}
-<script>
-    const requestLastList = new XMLHttpRequest();
-    
-    const onClickLastList = (type) => { //함수정의 : 어떤 버튼을 눌렀는지 받아온다. (삽질모음이냐 질문모음이냐)
-        const url = '/posts/last_log_questions/'; //어느 url로 요청할 것인지.
-        requestLastList.open('POST', url, true); //post방식으로 이 url에 ajax방식으로 요청을보내는데, 
-        requestLastList.setRequestHeader( // requestheader로 이 요청을 보낸다. 자세한건 나중에
-            'Content-Type',
-            'application/x-www-form-urlencoded'
-        );
-        requestLastList.send(JSON.stringify({type: type})); //요청할 때 필요한 정보들. ajax방식으로 할 땐 무.조.건 JSON방식으로 보내야함.
-    };
-    
-    const lastListHandleResponse = () => {  //응답 처리해주는 함수 (최근 남긴 삽질 기록 / 질문 )보여주는 함수
-        if (requestLastList.status < 400) {
-            const {type} = JSON.parse(requestLastList.response);    // {'type': 'dig'} or {'type': 'question'}
-            const addLastList = document.querySelector(`.post__${type}`);
+    followOpenPopup.addEventListener('click', () => {
+        followModal.style.display = 'block';
+        body.style.overflow = 'hidden';
+        followBody.style.display = 'block';
+    });
 
-            addLastList.innerHTML = `
-            `;
-        }
-    };
+    followBody.addEventListener('click', () => {
+        followModal.style.display = 'none';
+        body.style.overflow = auto
+    })
 </script>
-{%endcomment%}
-
-
 {% endblock script %}
 
 {% block content %}
@@ -384,7 +328,6 @@
     <div class="follow_modal">
         <div class="follow_container follow_body">
             <div class="follower">
-                <button class="close_btn">닫기X</button>
                 <div class="follow_count">
                     <h3>{{request.user.username}}님을 팔로우하는 사람 </h3>
                     <h3>{{ host_follower|length }}명</h3>
@@ -505,37 +448,11 @@
                             <!-- 레벨 기준 모달창 끝 -->
                         </a>
                     </div>
-                    
-                    <div class="proflie_text">    
-                    {% if request.user.user_profile_content %}    
-                        {{request.user.user_profile_content}}
-                    {% else %}
-                        <p>
-                            아직 자기소개가 없습니다.
-                        </p>
-                    {% endif %}
-                    </div>
-                    <div class="follow_area">
-                        <div class="follow_btn_area">
-                            <button id="follow_btn" onclick="followModalPopup()">팔로잉 {{request.user.user_following|length}}</button>
-                            <button id="follower_btn" onclick="followerModalPopup()">팔로워 {{request.user.user_followed|length}}</button>
-                        </div>
-                    </div>
                 </div>
-            {% else %}    
-                <!-- 다른유저 마이페이지 -->
-                <div class="profile_area">
-                    <h1> {{ host.user_nickname}}님의 모래상자 </h1>
-                </div>
-                <a href = '{% url "users:follow" host.id %}'>팔로우하기</a>
-                <div>
-                    <label for="value_low">{{user.user_point}} 모래포인트</label>
-                    <!-- value값이 내 모래포인트에 따라서 반영되어야함. max기준도 레벨에 따라 바뀌어야함.(아직구현X) -->
-                    <meter id="value_low" min="0" max="100" low="30" high="60" optimum="90" value="10"></meter>
-                    {% if host.user_level == 0 %}
-                    <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500" value="{{my_sand_sum.amount__sum}}"></meter>
-                    {% elif host.user_level == 1 %}
-                    <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500" value="{{my_sand_sum.amount__sum}}"></meter>
+
+                <div class="proflie_text">
+                    {% if request.user.user_profile_content %}
+                    {{request.user.user_profile_content}}
                     {% else %}
                     <p>
                         아직 자기소개가 없습니다.
@@ -544,8 +461,8 @@
                 </div>
                 <div class="follow_area">
                     <div class="follow_btn_area">
-                    <button id="follow_btn">팔로잉 {{ host_following|length }}</button>
-                    <button id="follower_btn">팔로워 {{ host_follower|length }}</button>
+                        <button class="follow_btn">팔로잉 {{request.user.user_following|length}}</button>
+                        <button class="follow_btn">팔로워 {{request.user.user_followed|length}}</button>
                     </div>
                 </div>
             </div>

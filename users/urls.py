@@ -56,5 +56,5 @@ urlpatterns = [
     path('<int:host_id>/my_page/my_posts', view=views.my_posts, name="my_posts"),
     path('<int:host_id>/my_page/my_questions', view=views.my_questions, name="my_questions"),
 
-    path('dashboard/', view=views.index, name="dashboard"),
+    # path('dashboard/', view=views.index, name="dashboard"),
 ] 
