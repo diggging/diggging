@@ -334,28 +334,32 @@
 
        
         //-------------------------------------------------------------------------------------------
-        // 질문 코멘트 삭제 부분
-        const requestDelComment = new XMLHttpRequest();
-        const onClickDelete = (id, comment_id) => {
-            const url = '/comments/delete_question_comment/';
-            requestDelComment.open('POST', url, true);
-            requestDelComment.setRequestHeader(
-                'Content-Type',
-                'application/x-www-form-urlencoded'
-            );
-            requestDelComment.send(JSON.stringify({ id: id, comment_id: comment_id }));
+      // 질문 코멘트 삭제 부분
+    const requestDelComment = new XMLHttpRequest();
+    const onClickDelete = (id, comment_id) => {
+        const url = '/comments/delete_question_comment/';
+        requestDelComment.open('POST', url, true);
+        requestDelComment.setRequestHeader(
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
+        requestDelComment.send(JSON.stringify({ id: id, comment_id: comment_id }));
+    };
+    const commentdelHandleResponse = () => {
+        if (requestDelComment.status < 400) {
+            const { id } = JSON.parse(requestDelComment.response);
+            const { comment_id } = JSON.parse(requestDelComment.response);
+            const element = document.querySelector(`.comment_id_${comment_id}`);
+            element.remove();
         };
-        const commentdelHandleResponse = () => {
-            if (requestDelComment.status < 400) {
-                const { id } = JSON.parse(requestDelComment.response);
-                const { comment_id } = JSON.parse(requestDelComment.response);
-                const element = document.querySelector(`.comment_id_${comment_id}`);
-                element.remove();
-            };
+    };
+    requestDelComment.onreadystatechange = () => {
+        if (requestDelComment.readyState === XMLHttpRequest.DONE) {
+            commentdelHandleResponse();
         };
-    
-// <!-- 질문 코멘트 끝 -->
-// <!-- 답변 코멘트 시작 -->
+    };
+        // <!-- 질문 코멘트 끝 -->
+    // <!-- 답변 코멘트 시작 -->
     //------------------------------------------------------------------------------------------------------
     // 답변 코멘트 추가 부분
     const requestAnswerComment = new XMLHttpRequest();
@@ -426,41 +430,40 @@
             cmt_input.value = ''
         }
 
-        };
-        requestAnswerComment.onreadystatechange = () => {
-            if (requestAnswerComment.readyState === XMLHttpRequest.DONE) {
-                AnswercommentHandleResponse();
-            }
-        };
+    };
+    requestAnswerComment.onreadystatechange = () => {
+        if (requestAnswerComment.readyState === XMLHttpRequest.DONE) {
+            AnswercommentHandleResponse();
+        }
+    };
 
-        /*------------------------------------------------------------------------------------------------*/
-        // 답변 코멘트 삭제 부분
-        const requestDelAnswerComment = new XMLHttpRequest();
+    /*------------------------------------------------------------------------------------------------*/
+    // 답변 코멘트 삭제 부분
+    const requestDelAnswerComment = new XMLHttpRequest();
 
-        const onClickAnswerCommentDelete = (id, comment_id) => {
-            const url = '/comments/delete_answer_comment/';
-            requestDelAnswerComment.open('POST', url, true);
-            requestDelAnswerComment.setRequestHeader(
-                'Content-Type',
-                'application/x-www-form-urlencoded'
-            );
-            requestDelAnswerComment.send(JSON.stringify({ id: id, comment_id: comment_id }));
+    const onClickAnswerCommentDelete = (id, comment_id) => {
+        const url = '/comments/delete_answer_comment/';
+        requestDelAnswerComment.open('POST', url, true);
+        requestDelAnswerComment.setRequestHeader(
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
+        requestDelAnswerComment.send(JSON.stringify({ id: id, comment_id: comment_id }));
+    };
+    const AnswerCommentDelHandleResponse = () => {
+        if (requestDelAnswerComment.status < 400) {
+            const { id } = JSON.parse(requestDelAnswerComment.response);
+            const { comment_id } = JSON.parse(requestDelAnswerComment.response);
+            const element = document.querySelector(`.answer_comment_id_${comment_id}`);
+            console.log(element)
+            element.remove();
         };
-        const AnswerCommentDelHandleResponse = () => {
-            if (requestDelAnswerComment.status < 400) {
-                const { id } = JSON.parse(requestDelAnswerComment.response);
-                const { comment_id } = JSON.parse(requestDelAnswerComment.response);
-                const element = document.querySelector(`.answer_comment_id_${comment_id}`);
-                console.log(element)
-                element.remove();
-            };
+    };
+    requestDelAnswerComment.onreadystatechange = () => {
+        if (requestDelAnswerComment.readyState === XMLHttpRequest.DONE) {
+            AnswerCommentDelHandleResponse();
         };
-        requestDelAnswerComment.onreadystatechange = () => {
-            if (requestDelAnswerComment.readyState === XMLHttpRequest.DONE) {
-                AnswerCommentDelHandleResponse();
-            };
-        };
-
+    };
 
         function doDisplay() {
             var commentBox = document.getElementById("comment_box");
@@ -469,7 +472,8 @@
             } else {
                 commentBox.style.display = 'none';
             }
-        }
+        };
+
         function doDisplayAnswer(id) {
             var boxName = "comment_box" + String(id);
             var commentBox = document.getElementById(boxName);
@@ -478,7 +482,7 @@
             } else {
                 commentBox.style.display = 'none';
             }
-        }
+        };
 
 
         // <!-- 좋아요 , 스크랩 버튼 바뀐것 -->
