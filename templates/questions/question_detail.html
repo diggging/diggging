@@ -229,9 +229,9 @@
             newDiv.setAttribute('class', 'comment_alert');
             
             body.appendChild(newDiv);
-            //setTimeout(()=> {
-            //    newDiv.remove()
-            //}, 2000)
+            setTimeout(()=> {
+                newDiv.remove()
+            }, 2000)
         }
 
     //--------------------------------------------------------------------------------------------------------
@@ -363,9 +363,10 @@
     //------------------------------------------------------------------------------------------------------
     // 답변 코멘트 추가 부분
     const requestAnswerComment = new XMLHttpRequest();
-    const cmt_input = document.querySelector('.answer_comment_input');
-
     const onClickAnswerComment = (id) => {
+        const cmt_input = document.querySelector(`.answer-id-${id} .answer_comment_input`);
+        console.log(cmt_input);
+
         if(!cmt_input.value) {
             nullComment(cmt_input);
             return false
@@ -392,13 +393,13 @@
             
             //유저 데이터
             const userData = JSON.parse(user); 
-            console.log(userData)
             const userImg = userData[0].fields.user_profile_image;
             //이거 세개 사용하면 돼!
             const userImgUrl = userImg.slice(2)
             const userName = userData[0].fields.user_nickname;
             const createDate = comment_date;
             
+            const cmt_input = document.querySelector('.answer_comment_input');
             const addAnswerComment = document.querySelector(`.answer-id-${id} .addAnswerComment`);
             const comment_profile = document.querySelector(`.comment_profile`);
             // 코멘트 작성자의 프로필 사진을 받아와야함
@@ -407,10 +408,7 @@
             // comment_profile.innerHTML = `
             // <div>
             //코멘트 작성자의 닉네임이
-            if (cmt_input.value === "") {
-                nullComment(cmt_input)
-                return
-            } else {
+            
                 addAnswerComment.innerHTML += `
             <div class='answer_comment_id_${comment_id}'>
                 <div class="comment_info">
@@ -426,7 +424,6 @@
                 </div>
             </div>
             `
-            }
             cmt_input.value = ''
         }
 
