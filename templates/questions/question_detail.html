@@ -301,11 +301,13 @@
             `
             commentInput.value = null
         };
-        requestComment.onreadystatechange = () => {
-            if (requestComment.readyState === XMLHttpRequest.DONE) {
-                commentHandleResponse();
-            };
+    };
+
+    requestComment.onreadystatechange = () => {
+        if (requestComment.readyState === XMLHttpRequest.DONE) {
+            commentHandleResponse();
         };
+    };
 
         // <div class='comment_id_${comment.id}'>
         //     <div class="comment_info">
@@ -330,40 +332,7 @@
         // </div>
 
 
-        //     <div class='comment_id_${comment_id}'>
-        //         <div class="comment_info">
-        //             <div class="comment_text">
-        //             ${text}
-        //         </div>
-        //         <div class="delete_btn">
-        //             <button onclick="onClickDelete(${id}, ${comment_id})">삭제</button>
-        //         </div>
-        //     </div>
-
-
-
-        // <div class='comment_id_${comment_id}'>
-        //             <div class="comment_info">
-        //                 <div class="comment_profile">
-        //                     <img src="{{comment.user.user_profile_image.url}}">
-        //                     <span class="user_nicknamme">
-        //                     {{comment.user.user_nickname}}
-        //                     </span>
-        //                 </div>
-        //                 <div class="comment_content">
-        //                     <div class="comment_created">
-        //                         {{comment.created}}
-        //                     </div>
-        //                     <div class="comment_text">
-        //                         ${text}
-        //                     </div>
-        //                 </div>
-        //             </div>
-        //             <div class="delete_btn">
-        //                 <button onclick="onClickDelete(${id}, ${comment_id})">삭제</button>
-        //             </div>
-        //         </div>
-
+       
         //-------------------------------------------------------------------------------------------
         // 질문 코멘트 삭제 부분
         const requestDelComment = new XMLHttpRequest();
@@ -384,7 +353,7 @@
                 element.remove();
             };
         };
-    };
+    
 // <!-- 질문 코멘트 끝 -->
 // <!-- 답변 코멘트 시작 -->
     //------------------------------------------------------------------------------------------------------
