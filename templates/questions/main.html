@@ -58,10 +58,14 @@
                         <button type="submit">제출</button>
                         <div class="checkbox">
                             {% for languages in language %}
+                            {% if languages == "==선택==" %}
+                            
+                            {% else %}
                             <div class="input_wrap">
                                 <input type="checkbox" name="answers[]" id="answer1"
                                     value={{languages}}>{{languages}}
                             </div>
+                            {% endif %}
                             {%endfor%}
                         </div>
                     </form>
@@ -69,6 +73,23 @@
                     <!-- 관심사에 따른 질문 목록들 -->
                     <div class="recommend_list_box">
                         {% for post in posts%}
+                        {% if str_search == "전체" %}
+                        <div class="recommend_list">
+                            <a href="{% url 'question:question_post_detail' post.user.id post.id %}">
+                                <div class="post_image_container">
+                                    {% if post.image %}
+                                    <img src="{{post.image.url}}" alt="" class="post_image_container">
+                                    {% endif %}
+                                </div>
+                                <div class="recommend_user_info">
+                                    <img src="{{ post.user.user_profile_image.url }}">
+                                    <span class="post_username">{{post.user.user_nickname}}</span>
+                                </div>
+                                <div class="post_title">{{post.title|truncatechars:20}}</div>
+                                <div class="post_desc">{{post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;"}}</div>
+                            </a>
+                        </div>
+                        {% else %}
                         {%if str_search == post.language %}
                         <div class="recommend_list">
                             <a href="{% url 'question:question_post_detail' post.user.id post.id %}">
@@ -85,6 +106,7 @@
                                 <div class="post_desc">{{post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;"}}</div>
                             </a>
                         </div>
+                        {% endif %}
                         {% endif %}
                         {% endfor %}
                     </div>

@@ -325,6 +325,7 @@ def my_posts(request, host_id):
     # 모래
     my_sand = Sand.objects.filter(user = host)
     my_sand_sum = my_sand.aggregate(Sum('amount'))
+    sands = serializers.serialize('json', my_sand)
     if my_sand_sum['amount__sum'] == None:
         my_sand_sum = 0
     else:
@@ -353,6 +354,7 @@ def my_posts(request, host_id):
         'my_recent_logs' : my_recent_logs,
         'my_all_sands': my_sand,    # sand 모든 object list
         'my_sand_sum' : my_sand_sum,    # 현재까지 sand 총합
+        'sands' : sands,
     }
     return render(request, template_name="users/my_posts.html", context=ctx)
 
@@ -380,6 +382,7 @@ def my_questions(request, host_id):
     # 모래
     my_sand = Sand.objects.filter(user = host)
     my_sand_sum = my_sand.aggregate(Sum('amount'))
+    sands = serializers.serialize('json', my_sand)
     if my_sand_sum['amount__sum'] == None:
         my_sand_sum = 0
     else:
@@ -408,6 +411,7 @@ def my_questions(request, host_id):
         'my_recent_logs' : my_recent_logs,
         'my_all_sands': my_sand,    # sand 모든 object list
         'my_sand_sum' : my_sand_sum,    # 현재까지 sand 총합
+        'sands' : sands,
     }
     return render(request, template_name="users/my_questions.html", context=ctx)
 

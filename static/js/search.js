@@ -69,14 +69,14 @@ select.addEventListener('change', () => {
     .then(res => res.json())
     .then(data => {
         console.log(data)                
-        
         if (data.length === 0){
             searchContainer.innerHTML = "검색어와 맞는 글이 없어요"
         } else {
             const txt = data.map(post => {
+                var str = "/media/" + post.image
                 return  `
-                <img src="${post.image}" alt="">
-                ${post.image}
+                <img src="${str}" alt="">
+                
                 ${post.title}
                 ${post.desc}
                 ${post.created}

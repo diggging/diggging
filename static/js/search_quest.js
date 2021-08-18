@@ -24,8 +24,9 @@ searchField.addEventListener('keyup', (e) => {
                 searchContainer.innerHTML = "검색어와 맞는 글이 없어요"
             } else {
                 const txt = data.map(post => {
+                    var str = "/media/" +post.image
                     return `
-                        <img src='${post.image.url}' alt="">
+                        <img src='${str}' alt="">
                         ${post.title}
                         ${post.desc}
                         ${post.created}
