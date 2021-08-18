@@ -373,32 +373,6 @@
     }
 </script>
 
-<!-- 최근 (기록/질문) 뜨게하기 -->
-<!-- 구현하려다가 어려워서 넘김.. 기존데이터를 가져와서 출력해주는거 알아보기....ajax어렵당.. -->
-{%comment%}
-<script>
-    const requestLastList = new XMLHttpRequest();
-
-    const onClickLastList = (type) => { //함수정의 : 어떤 버튼을 눌렀는지 받아온다. (삽질모음이냐 질문모음이냐)
-        const url = '/posts/last_log_questions/'; //어느 url로 요청할 것인지.
-        requestLastList.open('POST', url, true); //post방식으로 이 url에 ajax방식으로 요청을보내는데, 
-        requestLastList.setRequestHeader( // requestheader로 이 요청을 보낸다. 자세한건 나중에
-            'Content-Type',
-            'application/x-www-form-urlencoded'
-        );
-        requestLastList.send(JSON.stringify({ type: type })); //요청할 때 필요한 정보들. ajax방식으로 할 땐 무.조.건 JSON방식으로 보내야함.
-    };
-
-    const lastListHandleResponse = () => {  //응답 처리해주는 함수 (최근 남긴 삽질 기록 / 질문 )보여주는 함수
-        if (requestLastList.status < 400) {
-            const { type } = JSON.parse(requestLastList.response);    // {'type': 'dig'} or {'type': 'question'}
-            const addLastList = document.querySelector(`.post__${type}`);
-
-    followBody.addEventListener('click', () => {
-        followModal.style.display = 'none';
-        body.style.overflow = auto
-    })
-</script>
 {% endblock script %}
 
 {% block content %}
@@ -657,28 +631,10 @@
                 {%endcomment%}
             </div>
         </div>
-        <!-- 질문버튼 눌렀을 때도 그에 해당하는 디렉토리들이 다르게 떠야함 -->
-        {%comment%}
-        <div class="last_log_box post__dig">
-            {% for log in my_recent_logs %}
-            <div class="last_log_list">
-                {{log.title}}
+        <!-- 폴더 눌렀을 때 글 목록 뜨는 곳 -->
+        <div class="third_container">
+            <div class="my_post_list">
             </div>
-            {% endfor %}
-        </div>
-        <div class="last_question_box post__question">
-            <!-- 질문버튼 누르면 최근 질문 기록도 같이 뜸 -->
-            {% for question in my_recent_questions %}
-            <div class="last_question_list">
-                {{question.title}}
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    {%endcomment%}
-    <!-- 폴더 눌렀을 때 글 목록 뜨는 곳 -->
-    <div class="third_container">
-        <div class="my_post_list">
         </div>
     </div>
 </div>
