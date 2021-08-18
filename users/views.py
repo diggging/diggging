@@ -208,24 +208,24 @@ def github_callback(request):
                         "Accept": "application/json",
                     },
                 )
-                
                 profile_json = profile_request.json()
                 user_name = profile_json.get("login", None)
                 if user_name is not None:
-                    email = profile_json.get("email")
+                    # email = profile_json.get("email")
                     try:
-                        user = User.objects.get(email=email)
+                        user = User.objects.get(username=user_name)
                         if user.login_method != User.LOGIN_GITHUB:
                             raise Exception(f"Please log in with: {user.login_method}")
                     except User.DoesNotExist:
                         user = User.objects.create(
-                            username= user_name, 
-                            email=email, 
+                            username= user_name,  
                             user_nickname= user_name, 
                             login_method=User.LOGIN_GITHUB,   
                         )
                         user.set_unusable_password()
                         user.save()
+                        solved = Folder.objects.create(folder_user=user, folder_name="해결", folder_kind="solved")
+                        not_solved = Folder.objects.create(folder_user=user, folder_name="미해결", folder_kind="solved")
                     login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                     ctx = {
                         'user': user
