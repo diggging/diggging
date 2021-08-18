@@ -29,11 +29,11 @@ searchField.addEventListener('keyup', (e) => {
                 }
             }
 
-            console.log(list)
+            // console.log(list)
             if (data.length === 0){
                 searchContainer.innerHTML = "검색어와 맞는 글이 없어요"
             } else {
-                
+                console.log(list)
                 const txt = data.map(post => {
                     var a = "{% if post.image %}";
                     return `

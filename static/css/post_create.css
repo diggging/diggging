@@ -101,6 +101,10 @@ form {
     display: none;
 }
 
+#text {
+    display: none;
+}
+
 #id_title {
     display: flex;
     height: 60px;

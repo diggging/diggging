@@ -38,7 +38,7 @@ const alarmMessage = () => {
         // 글자수 제한
         for (i=0; i < alarmReason.length; i++) {
             alarmReason[i] = alarmReason[i].substr(0,35);
-            if(alarmReason[i].length > 35) {
+            if(alarmReason[i].length > 34) {
                 alarmReason[i] += '...';
             }
         }
@@ -55,16 +55,16 @@ const alarmMessage = () => {
         } else {
             const txt = alarmReason.map(alarm => {
                 return `
-                ${alarm}
-                `
+                    <div class="alarm_element">${alarm}</div>
+                    `
             }).join('')
             alarmToggle.innerHTML = txt;
         }
     })
-    // 버튼 클릭하고 사라져야 하니까,,,
-    alarmToggle.style.display = "flex";
-    setTimeout(() => {
+    if(alarmToggle.style.display === "none") {
+        alarmToggle.style.display = "flex";
+    } else {
         alarmToggle.style.display = "none";
-    }, 2000)
+    }
 }
 
