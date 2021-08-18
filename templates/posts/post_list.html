@@ -21,8 +21,7 @@
         <a href="{% url 'posts:main' %}"  onclick="a()">스크랩 /</a>
         <a href="{% url 'posts:helped' %}" id="helped" href="#"  onclick="b()">도움 /</a>
     {% endif %}
-
-    {% include 'posts/_posts.html' with posts=posts %}
+        {% include 'posts/_posts.html' with posts=posts %}
 
 </div>
 <div id="bottom-sentinel">
