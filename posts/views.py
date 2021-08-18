@@ -319,9 +319,9 @@ def post_update(request, pk):
     # 원래 있던 폴더에 글이 하나밖에 없었다면 폴더가 삭제 되어야함(하지만 해결 미해결은 아님)
     # 으아ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ
     post = get_object_or_404(Post, pk=pk)
-    origin_lang_fol = post.folder.get(folder_kind="language")
-    origin_frame_fol = post.folder.get(folder_kind="framework")
-    origin_solve_fol = post.folder.get(folder_kind="solved")
+    origin_lang_fol = post.folder.get(folder_user=request.user, folder_kind="language")
+    origin_frame_fol = post.folder.get(folder_user=request.user, folder_kind="framework")
+    origin_solve_fol = post.folder.get(folder_user=request.user, folder_kind="solved")
     if request.method == "POST":
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
