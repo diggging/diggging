@@ -28,7 +28,7 @@ from django.utils.encoding import force_bytes, force_text
 from .tokens import account_activation_token, password_reset_token
 from django.contrib import messages
 # from django.contrib.messages.views import SuccessMessageMixin
-# from django.contrib.sites.models import Site
+from django.contrib.sites.models import Site
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 from django.http.response import JsonResponse
@@ -38,6 +38,11 @@ from django.http.response import JsonResponse
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
 # 회원가입
+my_site = Site.objects.get(pk=1)
+my_site.domain = '13.124.23.247:8000'
+my_site.name ="digging_main"
+my_site.save()
+
 def signup(request):
     if request.method == "POST":
         user_form = UserCustomCreationForm(request.POST)
@@ -83,7 +88,7 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-        return HttpResponse('Thank you for your email confirmation. Now you can login your account')
+        return redirect('users:login')
     else:
         return HttpResponse('Activation link is invalid!')
 
@@ -183,7 +188,7 @@ def password_reset_form(request, pk):
 # github login
 def github_login(request):
     client_id = os.environ.get("GITHUB_ID")
-    redirect_uri = "http://127.0.0.1:8000/users/login/github/callback"
+    redirect_uri = "http://13.124.23.247:8000/users/login/github/callback"
     return redirect(f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope=read:user")
 
 def github_callback(request):
