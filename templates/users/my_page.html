@@ -451,6 +451,7 @@
 
     <!-- 내 마이페이지 -->
     <div class="first_container my_container">
+
         <div class="profile_container">
             {% if request.user.pk == host.pk %}
             <div class="profile_area">
@@ -462,38 +463,47 @@
                     {% else %}
                     <i class="fas fa-user-circle fa-3x"></i>
                     {% endif %}
+
                     <div class="flex_col">
-                        <span class="user_nickname">{{ request.user.username }}님의 모래상자</span>
-                        <div class="point_gage">
-                            <label for="value_low">{{my_sand_sum.amount__sum}} 모래포인트</label>
-                            {% if host.user_level == 0 %}
-                            <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500"
-                                value="{{my_sand_sum.amount__sum}}"></meter>
-                            {% elif host.user_level == 1 %}
-                            <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500"
-                                value="{{my_sand_sum.amount__sum}}"></meter>
-                            {% else%}
-                            <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000"
-                                value="{{my_sand_sum.amount__sum}}"></meter>
+                        <span class="user_nickname">{{ request.user.username }}
+                            <span class="user_nickname_span">님의 모래상자</span>
+                        </span>
+
+                        <div class="proflie_text">
+                            {% if request.user.user_profile_content %}
+                            {{request.user.user_profile_content}}
+                            {% else %}
+                            <p>
+                                아직 자기소개가 없습니다.
+                            </p>
                             {% endif %}
                         </div>
                     </div>
+
                 </div>
                 <div class="sand_level_area">
+
                     <div class="level_badge">
                         <a href="#" class="badge_img">
                             {% if host.user_level == 0 %}
                             <img src="{% static 'image/sandbox.png' %}" style="height: 24px;">
-                            <span>Lv. {{host.user_level}} 맨바닥</span>
+                            <span class="sand_level">Lv. {{host.user_level}} 맨바닥</span>
+                            <span class="sand_point">{{my_sand_sum.amount__sum}}모래</span>
                             {% elif host.user_level == 1 %}
                             <img src="{% static 'image/sand-castle.png' %}" style="height: 24px;">
-                            <span>Lv. {{host.user_level}} 모래성</span>
+                            <span class="sand_level">Lv. {{host.user_level}} 모래성</span>
+                            <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
+
                             {% elif host.user_level == 2 %}
                             <img src="{% static 'image/home.png' %}" style="height: 24px;">
-                            <span>Lv. {{host.user_level}} 벽돌집</span>
+                            <span class="sand_level">Lv. {{host.user_level}} 벽돌집</span>
+                            <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
+
                             {% else %}
                             <img src="{% static 'image/building.png' %}" style="height: 24px;">
-                            <span>Lv. {{host.user_level}} 아파트</span>
+                            <span class="sand_level">Lv. {{host.user_level}} 아파트</span>
+                            <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
+
                             {% endif %}
                             <!-- 레벨 기준 알려주는 모달창 -->
                             <div class="level_modal">
@@ -523,19 +533,24 @@
                             <!-- 레벨 기준 모달창 끝 -->
                         </a>
                     </div>
+
+                    <div class="point_gage">
+                        {% if host.user_level == 0 %}
+                        <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500"
+                            value="{{my_sand_sum.amount__sum}}"></meter>
+                        {% elif host.user_level == 1 %}
+                        <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500"
+                            value="{{my_sand_sum.amount__sum}}"></meter>
+                        {% else%}
+                        <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000"
+                            value="{{my_sand_sum.amount__sum}}"></meter>
+                        {% endif %}
+                    </div>
                 </div>
 
-                <div class="proflie_text">
-                    {% if request.user.user_profile_content %}
-                    {{request.user.user_profile_content}}
-                    {% else %}
-                    <p>
-                        아직 자기소개가 없습니다.
-                    </p>
-                    {% endif %}
-                </div>
                 <div class="follow_area">
                     <div class="follow_btn_area">
+                        <label for="value_low">모래포인트</label>
                         <button class="follow_btn" onclick="followModalPopup()">팔로잉
                             {{request.user.user_following.count}}</button>
                         <button class="follower_btn" onclick="followerModalPopup()">팔로워
@@ -579,8 +594,10 @@
             </div>
             {% endif %}
         </div>
+
+
         <div class="btn_list_area">
-            <a href="{% url 'users:my_posts' host.id %}" class="list_btn" id="log_folder_btn" value="{{host.id}}">삽질 기록
+            <a href="{% url 'users:my_posts' host.id %}" class="list_btn" id="log_folder_btn" value="{{host.id}}">삽질 기록 디렉토리
                 모음</a>
             <a href="{% url 'users:my_questions' host.id %}" class="list_btn" id="question_folder_btn"
                 value="{{host.id}}">질문 모음</a>
@@ -591,7 +608,7 @@
         </div>
         <div class="sand_pour_area">
             <div id="github_chart_1">
-                <svg width="721" height="110" viewBox="0 0 721 110" class="js-calendar-graph-svg">
+                <svg width="" height="" viewBox="0 0 0 0" class="js-calendar-graph-svg">
                     <text x="39" y="-5" class="month">Sep</text><text x="91" y="-5" class="month">Oct</text><text x="143" y="-5"
                         class="month">Nov</text><text x="208" y="-5" class="month">Dec</text><text x="260" y="-5"
                         class="month">Jan</text><text x="325" y="-5" class="month">Feb</text><text x="377" y="-5"
