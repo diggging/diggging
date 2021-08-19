@@ -88,11 +88,7 @@ select.addEventListener('change', () => {
                     } else {
                         
                     }
-                }
-
-            console.log(list)
-        if (list.length === 0){
-        console.log(data)                
+                }          
         if (data.length === 0){
             searchContainer.innerHTML = "검색어와 맞는 글이 없어요"
         } else {
