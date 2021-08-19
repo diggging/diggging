@@ -25,16 +25,22 @@ const alarmMessage = () => {
     })
     .then(res => res.json())
     .then(data => {
+
         const alarmJson = JSON.parse(data.data);
         let alarmReason = [];
+        // for (let i=0; i < key; i++) {
+        //     alarmReason[key] = alarmJson[i]
+        // }
+        // console.log(alarmJson)
         //혹시 몰라서 날짜도 넣어 놨음
-        let alarmDate = [];
+        let alarmDate = {};
         // 알람 목록, date 추출
+
         for (i=0; i < alarmJson.length; i++) {
             alarmReason[i] = alarmJson[i].fields.reason;
+            // alarmReason[i] = alarmJson[i].fields.is_checked;
             alarmDate[i] = alarmJson[i].fields.created; 
         }
-
         // 글자수 제한
         for (i=0; i < alarmReason.length; i++) {
             alarmReason[i] = alarmReason[i].substr(0,35);

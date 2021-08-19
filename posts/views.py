@@ -50,7 +50,7 @@ def scrap_axios(request):
 
     post = Post.objects.filter()
 
-    paginator = Paginator(all_posts_scrap, 8)
+    paginator = Paginator(all_posts_scrap, 10)
     page_num = request.GET.get("page")
     posts_scrap = paginator.page(page_num)
 
@@ -68,7 +68,7 @@ def scrap_axios(request):
 def helped_axios(request):
     me = request.user
     all_posts_helped = Post.objects.all().order_by("-helped_num")
-    paginator = Paginator(all_posts_helped, 8)
+    paginator = Paginator(all_posts_helped, 10)
     page_num = request.GET.get("page")
     posts_helped = paginator.page(page_num)
 
@@ -94,7 +94,7 @@ def follow_axios(request):
     else:
         all_followings_posts = []
 
-    paginator = Paginator(all_followings_posts, 8)
+    paginator = Paginator(all_followings_posts, 10)
     page_num = request.GET.get("page")
     posts_follow = paginator.page(page_num)
 
@@ -108,7 +108,7 @@ def follow_axios(request):
 def my_recent_axios(request):
     me = request.user
     my_recent_post = Post.objects.filter(user=me).order_by("-created")
-    paginator = Paginator(my_recent_post, 8)
+    paginator = Paginator(my_recent_post, 10)
     page_num = request.GET.get("page")
     posts_my = paginator.page(page_num)
 
