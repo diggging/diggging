@@ -43,14 +43,7 @@ const alarmMessage = () => {
             }
         }
 
-        // 알람 9개 삭제
-        if(alarmReason.length > 9) {
-            alarmReason = alarmReason.slice(0, 9);
-        }
-
-        console.log(alarmReason)
-
-        if (data.length === 0) {
+        if (alarmReason.length === 0) {
             alarmToggle.innerHTML = "알람이 없습니다."
         } else {
             const txt = alarmReason.map(alarm => {
