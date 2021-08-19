@@ -28,21 +28,23 @@
         <div class="nav_right">
             {% if user.is_authenticated %}
                 <div class="nav_vertical">
-                    <div class="alarm" onclick="alarmMessage()" value="{{user.id}}">
+                    <div class="alarm vertical_element" onclick="alarmMessage()" value="{{user.id}}">
                         <a ><i class="far fa-comment-alt fa-2x" style="font-size: 1.6rem; margin-top: 3px;"></i></a>
                     </div>
                     <h6>알림</h6>
                     <!-- 알람이 뜨는 공간 -->
-                    <div class="alarm_toggle" style="display: none;"></div>
+                    <div class="alarm_toggle" style="display: none;">
+                        
+                    </div>
                 </div>
                 <div class="nav_vertical">
-                    <div>
+                    <div class="vertical_element">
                         <a href="{% url 'posts:post_create' %}"><img src="{% static 'image/dig_icon.svg' %}" style="height: 1.8rem; margin-left: 2px;"></a>
                     </div>
                     <h6>기록하기</h6>
                 </div>
                 <div class="nav_vertical">
-                    <div>
+                    <div class="vertical_element">
                         <a href="{% url 'question:question_main' %}"><i class="fas fa-question-circle fa-2x"></i></a>
                     </div>
                     <h6>질문광장</h6>
@@ -55,19 +57,19 @@
                 </div>
             {% else %}
                 <div class="nav_vertical">
-                    <div>
+                    <div class="vertical_element">
                         <a href="{% url 'users:login' %}"><i class="fas fa-question-circle fa-2x"></i></a>
                     </div>
                     <h6>질문광장</h6>
                 </div>
                 <div class="nav_vertical">
-                    <div>
+                    <div class="vertical_element">
                         <a href="{% url 'users:login' %}"><i class="fas fa-question-circle"></i></a>
                     </div>
                     <h6>로그인</h6>
                 </div>
                 <div class="nav_vertical">
-                    <div>
+                    <div class="vertical_element">
                         <a href="{% url 'users:signup' %}"><i class="fas fa-question-circle"></i></a>
                     </div>
                     <h6>회원가입</h6>

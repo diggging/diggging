@@ -18,7 +18,7 @@ from questions.models import Question_post
 # main 페이지
 def main(request):
     me = request.user   
-    return render(request, "posts/post_list.html", {"user":me})
+    return render(request, "posts/post_scrap.html", {"user":me})
 
 
 def helped(request):
@@ -58,7 +58,7 @@ def scrap_axios(request):
         return render(request, 'posts/_posts.html', {'posts': posts_scrap, "user":me})
         # return JsonResponse(ctx, safe=False)
 
-    return render(request, 'posts/post_list.html', {'posts': posts_scrap, "user":me})
+    return render(request, 'posts/post_scrap.html', {'posts': posts_scrap, "user":me})
 
 
     return render(request, "posts/test.html")
@@ -101,7 +101,7 @@ def follow_axios(request):
     if is_ajax(request):
         return render(request, "posts/_posts.html", {"posts": posts_follow})
 
-    return render(request, "posts/post_list.html", {"posts": posts_follow})
+    return render(request, "posts/post_scrap.html", {"posts": posts_follow})
 
 
 @require_GET
@@ -115,7 +115,7 @@ def my_recent_axios(request):
     if is_ajax(request):
         return render(request, "posts/_posts.html", {"posts": posts_my})
 
-    return render(request, "posts/post_list.html", {"posts": posts_my})
+    return render(request, "posts/post_scrap.html", {"posts": posts_my})
 
 
 # -----------------------------------------------------------------------

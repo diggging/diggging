@@ -93,10 +93,8 @@ const langPost = () => {
                     const txt = data.map(post => {
                         return `
                         <img src="${post.image}" alt="">
-                        ${post.image}
                         ${post.title}
                         ${post.desc}
-
                         `
                     }).join('')
                     thirdContainer.innerHTML = txt;
@@ -167,8 +165,10 @@ const problemPost = () => {
                 } else {
                     const txt = data.map(post => {
                         return `
-                        ${post.title}    
-                        `
+                        <img src="${post.image}" alt="">
+                        ${post.image}
+                        ${post.title}
+                        ${post.desc}`
                     }).join('')
                     thirdContainer.innerHTML = txt;
                 }
@@ -196,7 +196,6 @@ const frameworkBtn = document.querySelector('.framework_btn');
             if (data.length === 0) {
                 categoryTab.innerHTML = "폴더없음"
             } else {
-                
                 const txt = data.map(folder => {
                     return `
                     <button class="framework_post_btn" id="${folder.id}" value="${folder.id}">
@@ -204,7 +203,7 @@ const frameworkBtn = document.querySelector('.framework_btn');
                         ${folder.folder_name}
                     </button>    
                     `
-                })
+                }).join('')
                 categoryTab.innerHTML = txt;
             }
             framePost()
@@ -236,9 +235,12 @@ const framePost = () => {
                 } else {
                     const txt = data.map(post => {
                         return `
-                        ${post.title}    
+                        <img src="${post.image}" alt="">
+                        ${post.image}
+                        ${post.title}
+                        ${post.desc}
                         `
-                    })
+                    }).join('')
                     thirdContainer.innerHTML = txt;
                 }
             })

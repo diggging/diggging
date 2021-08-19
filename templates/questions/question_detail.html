@@ -391,8 +391,10 @@
             //유저 데이터
             const userData = JSON.parse(user); 
             const userImg = userData[0].fields.user_profile_image;
+            console.log(userImg)
             //이거 세개 사용하면 돼!
             const userImgUrl = userImg.slice(2)
+            console.log(userImgUrl)
             const userName = userData[0].fields.user_nickname;
             const createDate = comment_date;
             

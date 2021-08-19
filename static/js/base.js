@@ -38,33 +38,26 @@ const alarmMessage = () => {
         // 글자수 제한
         for (i=0; i < alarmReason.length; i++) {
             alarmReason[i] = alarmReason[i].substr(0,35);
-            if(alarmReason[i].length > 35) {
+            if(alarmReason[i].length > 34) {
                 alarmReason[i] += '...';
             }
         }
 
-        // 알람 9개 삭제
-        if(alarmReason.length > 9) {
-            alarmReason = alarmReason.slice(0, 9);
-        }
-
-        console.log(alarmReason)
-
-        if (data.length === 0) {
+        if (alarmReason.length === 0) {
             alarmToggle.innerHTML = "알람이 없습니다."
         } else {
             const txt = alarmReason.map(alarm => {
                 return `
-                ${alarm}
-                `
+                    <div class="alarm_element">${alarm}</div>
+                    `
             }).join('')
             alarmToggle.innerHTML = txt;
         }
     })
-    // 버튼 클릭하고 사라져야 하니까,,,
-    alarmToggle.style.display = "flex";
-    setTimeout(() => {
+    if(alarmToggle.style.display === "none") {
+        alarmToggle.style.display = "flex";
+    } else {
         alarmToggle.style.display = "none";
-    }, 2000)
+    }
 }
 
