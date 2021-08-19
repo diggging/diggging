@@ -35,8 +35,9 @@ searchField.addEventListener('keyup', (e) => {
             } else {
                 console.log(list)
                 const txt = data.map(post => {
-                    var a = "{% if post.image %}";
-                    return `
+                    var str = "/media/" + post.image
+                    return  `
+                    <img src="${str}" alt="">
                         <img src="' + ${post.image} + '" />
                         ${post.title}
                         ${post.desc}
@@ -78,7 +79,7 @@ select.addEventListener('change', () => {
     })
     .then(res => res.json())
     .then(data => {
-
+        
                 let list = [];
                 let j = 0;
                 for(i=0; i<data.length; i++){
