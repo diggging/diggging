@@ -58,16 +58,25 @@
     align-items: center;
     padding: 0 1rem;
     height: 64px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
 }
 
+.nav_left {
+    display: flex;
+    justify-content: center;
+    margin-left: 50px;
+
+}
 .nav_search {
     margin-left: 1rem;
 }
 .nav_search > svg{
-    width: 28px;
-    height: 28px;
+    width: 23px;
+    height: 23px;
     text-align: center;
     fill: #9FAEB6;
+    margin-top: 3px;
+    margin-right: 25px;
 }
 
 .nav_search svg:hover {
@@ -76,7 +85,7 @@
 
 .nav_main_title {
     font-family: 'GmarketSansBold';
-    font-size: 22px;
+    font-size: 1.375rem;
     color: #00537A;
 }
 
@@ -84,6 +93,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-right: 50px;
 }
 
 .nav_vertical {
@@ -103,6 +113,7 @@
     fill:#9FAEB6;
     cursor: pointer;
     margin-top: 4px;
+    margin-right: 12px;
 }
 
 .alarm svg:hover {
@@ -113,7 +124,7 @@
     font-family: var(--btn-font);
     font-size: 1rem;
     color: #9FAEB6;
-    line-height: 19px;
+    line-height: 1.188rem;
 }
 
 .nav_vertical h6:hover {
@@ -124,7 +135,7 @@
     font-family: var(--btn-font);
     font-size: 1rem;
     color: #00537A;
-    line-height: 19px;
+    line-height: 1.188rem;
 }
 
 .user_img {
@@ -137,7 +148,7 @@
 
 .user_name {
     font-family: var(--btn-font);
-    font-size: 12px;
+    font-size: 0.75rem;
     color: #FFBA42;
     margin: 0;
 }
@@ -170,7 +181,7 @@
 .toggle {
     position: absolute;
     top: 64px;
-    right: 16px;
+    right: 77px;
     flex-direction: column;
     background: white;
     /* border: solid 1px var(--text-color); */
@@ -187,19 +198,23 @@
 }
 
 .toggle a {
-    color: #00537A;
+    color: #9FAEB6;
     padding-bottom: 5px;
     padding: 0.5rem 1.5rem;
 }
 
+.toggle a:hover {
+    color: #00537A;
+}
+
 .toggle a:not(:nth-child(3)) {
-    border-bottom: solid 1px #00537A;
+    border-bottom: solid 1px #9FAEB6;
 }
 
 .alarm_toggle {
     position: absolute;
     top: 64px;
-    right: 237px;
+    right: 170px;
     background: white;
     line-height: 1.3125rem;
     border-radius: 4px;
