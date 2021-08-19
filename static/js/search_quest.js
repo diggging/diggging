@@ -90,15 +90,14 @@ select.addEventListener('change', () => {
             searchContainer.innerHTML = "검색어와 맞는 글이 없어요"
         } else {
             const txt = data.map(post => {
-                var str = "/media/" + post.image
-                return  `
-                <img src="${str}" alt="">
-                ${post.image}
-                ${post.title}
-                ${post.desc}
-                ${post.created}
-                ${post.helped_num}
-                ${post.scrap_num}
+                var str = "/media/" +post.image
+                return `
+                    <img src='${str}' alt="">
+                    ${post.title}
+                    ${post.desc}
+                    ${post.created}
+                    ${post.helped_num}
+                    ${post.scrap_num}
                 `
             }).join('')
             searchContainer.innerHTML = txt;
