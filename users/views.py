@@ -663,7 +663,11 @@ def alarm(request, pk):
     for alarm in not_check_alarm:
         alarm.is_checked = True
         alarm.save()
-    
+
+    if my_alarm.count() >10:
+        start = my_alarm.count()-10
+        my_alarm = my_alarm[start:]
+
     data = serializers.serialize('json', my_alarm)
 
     return JsonResponse({
