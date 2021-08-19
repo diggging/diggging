@@ -82,6 +82,20 @@ form {
 }
 
 
+.thumbnail_area {
+    flex-direction: column;
+    height: 18em;
+    width: 835px;
+    margin: 10px 0px;
+    font-family: var(--content-font);
+    color: var(--text-color);
+    border: solid 1px var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* z-index: -1; */
+}
+
 .thumbnail_area label {
     width: 100%;
     height: 100%;
@@ -90,11 +104,9 @@ form {
 #image {
     height: 100%;
     width: 100%;
-    /* background-image: url('../image/thumbnail_image.svg'); */
     background-repeat: no-repeat;
     background-position-x: center;
     object-fit: cover;
-    
 }
 
 #id_image {

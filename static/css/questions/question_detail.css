@@ -64,7 +64,7 @@ body {
 }
 
 .post_container {
-    width: 68em;
+    width: 90%;
     padding: 50px;
     display: flex;
     justify-content: center;
@@ -128,8 +128,9 @@ body {
 }
 
 .post_user_info img {
+    height: 36px;
     width: 36px;
-    border-radius: 20px;
+    border-radius: 30px;
     margin: 10px;
 }
 
@@ -207,15 +208,26 @@ body {
     margin-bottom: 30px;
 }
 
+.scrap_box {
+    width: 50%;
+    display: flex;
+}
 
 
 .scrap {
-    color: var(--sand-color);
+    background-color: cornsilk;
+    cursor: pointer;
+    padding: 0.5rem;
+    /* width: 100%; */
+    height: 50%;
+    outline: none;
+    border-radius: 8px;
+    border: none;
+    text-align: left;
+    font-size: 16px;
+    transition: 0.4s;
     font-family: var(--btn-font);
-    background-color: var(--btn-color);
-    border: solid 1px var(--border-color);
-    border-radius: 4px;
-    padding: 10px 4px;
+    color: var(--text-color);
 }
 
 .scrap:visited {
@@ -239,6 +251,110 @@ body {
     line-height: 20px;
     color: var(--text-color);
     font-family: var(--content-font);
+}
+
+/* .share_button {
+    color: var(--sand-color);
+    font-family: var(--btn-font);
+    background-color: var(--btn-color);
+    border: solid 1px var(--border-color);
+    border-radius: 4px;
+    padding: 10px 8px;
+}
+
+.share_popup {
+    position: absolute;
+    top: 50%;
+    right: 30%;
+    border-radius: 16px;
+    border: none;
+    opacity: 0;
+    visibility: hidden;
+    width: 40%;
+    height: 20%;
+    background: white;
+    box-shadow: 0 5px 10px 9px rgb(60 36 35 / 6%);
+    transition-duration: 2s;
+}
+    */
+
+.accordion {
+    background-color: cornsilk;
+    cursor: pointer;
+    padding: 0.5rem;
+    /* width: 100%; */
+    outline: none;
+    border-radius: 8px;
+    border: none;
+    text-align: left;
+    font-size: 16px;
+    transition: 0.4s;
+    font-family: var(--btn-font);
+    color: var(--text-color);
+}
+
+
+.active, .accordion:hover {
+    background-color: var(--hover-color);
+    font-weight: bold;
+}
+
+.accordion:after {
+    content: '\002B';
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+}
+
+.active:after {
+    content: "\2212";
+}
+
+.panel {
+    width: 22rem;
+    padding: 0 16px;
+    background-color: #FFFFFF;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    border-bottom: 1px solid #EEEEEE;
+
+    max-height: 0;
+}
+
+.panel img {
+    vertical-align: middle;
+}
+
+.close_btn {
+    margin: 10px;
+    padding: 4px 8px;
+    background-color: cornsilk;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: var(--btn-font);
+    color: var(--sand-color);
+    display: inline-block;
+}
+
+.share_box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+
+.content-area {
+    border: solid 1px var(--border-color);
+    width: 300px;
+    height: 100px;
+    padding: 5% 8%;
+    margin-left: -14px;
+    text-align: center;
+}
+
+.content-area span {
+    vertical-align: middle;
 }
 
 .comment_box {

@@ -573,8 +573,25 @@ def follow(request, host_pk):
 
 def account_detail(request, pk):
     host = get_object_or_404(User,pk=pk)
+    # 모래
+    my_sand = Sand.objects.filter(user = host)
+    my_sand_sum = my_sand.aggregate(Sum('amount'))
+    sands = serializers.serialize('json', my_sand)
+    if my_sand_sum['amount__sum'] == None:
+        my_sand_sum = 0
+    else:
+        if int(my_sand_sum['amount__sum']) < 2000:
+            host.user_level = 0
+        elif int(my_sand_sum['amount__sum']) <7000:
+            host.user_level=1
+        elif int(my_sand_sum['amount__sum']) <18000:
+            host.user_level=2
+        else:
+            host.user_level=3
     ctx={
         'host':host,
+        'my_all_sands': my_sand,    # sand 모든 object list
+        'my_sand_sum' : my_sand_sum,    # 현재까지 sand 총합
     }
     return render(request, template_name = "users/account_detail.html", context= ctx)
 

@@ -215,3 +215,11 @@ html, body {
     margin-left: 6px;
     text-align: center;
 }
+
+
+.post_container a {
+    padding: 10px 20px;
+    color: var(--text-color);
+    font-family: var(--btn-font);
+    background-color: var(--hover-color);
+}

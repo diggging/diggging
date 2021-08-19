@@ -4,6 +4,12 @@
     <link rel="stylesheet" href="{% static 'css/post_create.css' %}" />
     <link href="ckeditor/plugins/codesnippet/lib/highlight/styles/monokai-sublime.min.css" rel="stylesheet">
     <script src="ckeditor/plugins/codesnippet/lib/highlight/highlight.min.js"></script>
+    <script>
+        document.getElementById('id_image').onchange = function () {
+            var src = URL.createObjectURL(this.files[0])
+            document.getElementById('image').src = src
+        }
+    </script>
 {% endblock script %}
 
 {% block content %}
@@ -14,16 +20,15 @@
 
     <div class="container">
         <div class="form_container">
-            <form action="" method="POST" enctype="multipart/form-data" autocomplete="off">
+            <form  method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.media }}
                 <div class="thumbnail_area">
-                    <div class="image_box">
-                        <label for="id_image">
-                            <img src="{% static 'image/thumbnail_image.svg' %}" />
-                        </label>
-                        {{ form.image }}
-                    </div>
+                    <label for="id_image">
+                        <img id="image" src="" alt=""
+                        onError="this.onerror=null;this.src='../../static/image/thumbnail_image.svg';" />
+                    </label>
+                    {{ form.image }}
                 </div>
 
                 {{ form.title }}
@@ -41,16 +46,9 @@
                 </div>
                 <div class="tag_area">
                     공개설정 | 
-                    <!-- <input type="radio" id="id_is_public" />
-                    <label for="id_is_public">전체공개</label>
-                    <input type="radio" id="id_is_public" />
-                    <label for="id_is_public">비공개</label>
-                    <input type="radio" id="id_is_public" />
-                    <label for="id_is_public">이웃공개</label> -->
                     {{form.is_public}}
                 </div>
-                <div class="btn_area">
-                    <button class="btn_control">임시저장</button>                   
+                <div class="btn_area">                  
                         <input type="submit" value="수정하기" class="btn_control"/>
                     <button  class="btn_control">
                         <a href="{% url 'posts:main' %}">나가기</a>

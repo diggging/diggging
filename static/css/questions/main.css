@@ -110,8 +110,15 @@ p {
 
 .no_user_info img {
     width: 2rem;
+    height: 2rem;
+    object-fit: cover;
+    border-radius: 2rem;
 }
 
+.no_answer_username img{
+    max-width: 30px;
+    max-height: 30px;
+}
 
 .search_input {
     width: 100%;

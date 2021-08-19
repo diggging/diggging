@@ -26,17 +26,37 @@
                 
                 <div class="flex_col profile_name">
                     <p class="name">{{ host.user_nickname }}</p>
-                    <!-- 난리남,,,나중에 지우자 -->
-                    
-                    <!-- {{ host.user_level }}  -->
                 </div>
-
+                <div class="flex_col badge_img">
+                    {% if host.user_level == 0 %}
+                    <img src="{% static 'image/sandbox.png' %}" style="height: 24px;">
+                    <span>Lv. {{host.user_level}} 맨바닥</span>
+                    {% elif host.user_level == 1 %}
+                    <img src="{% static 'image/sand-castle.png' %}" style="height: 24px;">
+                    <span>Lv. {{host.user_level}} 모래성</span>
+                    {% elif host.user_level == 2 %}
+                    <img src="{% static 'image/home.png' %}" style="height: 24px;">
+                    <span>Lv. {{host.user_level}} 벽돌집</span>
+                    {% else %}
+                    <img src="{% static 'image/building.png' %}" style="height: 24px;">
+                    <span>Lv. {{host.user_level}} 아파트</span>
+                    {% endif %}
+                </div>
                 <div class="flex_col profile_level">
-                    <!-- <p>레벨: {{ host.user_level }}</p> -->
-                    <p class="level">Lv.모래성</p>
-                    <div class="point">
-                        10,000
-                    </div>
+                   
+                <div class="point_gage">
+                    <label for="value_low">{{my_sand_sum.amount__sum}} 모래포인트</label>
+                    {% if host.user_level == 0 %}
+                    <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500"
+                        value="{{my_sand_sum.amount__sum}}"></meter>
+                    {% elif host.user_level == 1 %}
+                    <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500"
+                        value="{{my_sand_sum.amount__sum}}"></meter>
+                    {% else%}
+                    <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000"
+                        value="{{my_sand_sum.amount__sum}}"></meter>
+                    {% endif %}
+                </div>
                 </div>
             </div>
 
