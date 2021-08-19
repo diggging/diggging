@@ -73,8 +73,8 @@ html, body {
 
 .desc h1 {
     font-family: 'Pretendard-ExtraBold';
-    font-size: 32px;
-    line-height: 37px;
+    font-size: 2rem;
+    line-height: 2.313rem;
     color: #0B1E33;
     font-weight: bold;
     margin-bottom: 30px;
@@ -83,8 +83,8 @@ html, body {
 .desc h3 {
     font-family: 'Pretendard-Regular';
     font-weight: 500;
-    font-size: 22px;
-    line-height: 32px;
+    font-size: 1.375rem;
+    line-height: 2rem;
     color: #0B1E33;
 }
 
@@ -96,8 +96,8 @@ html, body {
     border-radius: 20px;
     padding: 50px;
     font-family: 'Pretendard-Regular';
-    font-size: 16px;
-    line-height: 32px;
+    font-size: 1rem;
+    line-height: 2rem;
 }
 
 .card_container {
@@ -140,15 +140,6 @@ html, body {
 .follow:hover {
     color: #00537A;
 }
-
-
-/* .main_link {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: auto;
-    margin-right: auto;
-} */
 
 .post_container {
     display: flex;
@@ -229,38 +220,38 @@ html, body {
 .post_title {
     font-family: 'Pretendard-SemiBold';
     color: #585858;
-    font-size: 16px;
+    font-size: 1rem;
     /* text-overflow: ellipsis; */
     height: 30px;
     margin: 20px 0 10px 0;
-    line-height: 28px;
+    line-height: 1.75rem;
 }
 
 .post_desc {
     font-family: 'Pretendard-Regular';
     color: #585858;
-    font-size: 13px;
+    font-size: 0.813rem;
     text-overflow: ellipsis;
-    line-height: 20px;
+    line-height: 1.25rem;
     overflow: hidden;
 }
 
 .post_title_img_none {
     font-family: 'Pretendard-SemiBold';
     color: #585858;
-    font-size: 16px;
+    font-size: 1rem;
     text-overflow: ellipsis;
     height: 30px;
     margin: 10px 0 10px 0;
-    line-height: 28px;
+    line-height: 1.75rem;
 }
 
 .post_desc_img_none {
     font-family: 'Pretendard-Regular';
     color: #585858;
-    font-size: 13px;
+    font-size: 0.813rem;
     text-overflow: ellipsis;
-    line-height: 20px;
+    line-height: 1.25rem;
 }
 .line_flex {
     display: flex;
@@ -275,7 +266,7 @@ html, body {
 
 .post_user {
     display: flex;
-    font-size: 12px;
+    font-size: 0.75rem;
     -webkit-box-pack: justify;
     justify-content: center;
 }
@@ -308,7 +299,7 @@ html, body {
 .comments {
     font-family: 'Pretendard-Regular';
     color: #8C8D8D;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
 .comments:hover {
@@ -317,7 +308,7 @@ html, body {
 
 .username {
     font-family: 'Pretendard-Regular';
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
 .likes {
@@ -332,8 +323,8 @@ html, body {
     display: flex;
     justify-content: space-between;
     font-family: 'Pretendard-Regular';
-    font-size: 12px;
-    line-height: 16px;
+    font-size: 0.75rem;
+    line-height: 1rem;
     color: #00537A;
     text-align: left;
 }
