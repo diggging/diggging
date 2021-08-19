@@ -60,4 +60,3 @@ const alarmMessage = () => {
         alarmToggle.style.display = "none";
     }
 }
-
