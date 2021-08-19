@@ -8,7 +8,7 @@ Django==3.2.5
 django-allauth==0.45.0
 django-ckeditor==6.1.0
 django-dotenv==1.4.2
-django-email-verification==0.1.0
+django-email-verification==0.0.2
 django-filter==2.4.0
 django-js-asset==1.2.2
 django-resized==0.3.11
