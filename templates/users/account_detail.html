@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block script %}
+<link rel="stylesheet" href="{% static 'css/account_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<body>
+    <div class="container">
+        <div class="account_container">
+            <div class="user_profile">
+
+                <div class="flex_col profile_image">
+                    <form method="POST" action="{% url 'users:change_img' host.id %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <label for="new_img">
+                            {% if host.user_profile_image %}
+                                <img class="user_profile_image" src="{{ host.user_profile_image.url }}" width="200">
+                            {% endif %}
+                            <input type="file" id="new_img" name="new_img" accept="image/*"> 
+                        </label>
+                        <button class="img_btn"type="submit"> 이미지 변경하기 </button>
+                    </form>
+                </div>
+                
+                <div class="flex_col profile_name">
+                    <p class="name">{{ host.user_nickname }}</p>
+                </div>
+                <div class="flex_col badge_img">
+                    {% if host.user_level == 0 %}
+                    <img src="{% static 'image/sandbox.png' %}" style="height: 24px;">
+                    <span>Lv. {{host.user_level}} 맨바닥</span>
+                    {% elif host.user_level == 1 %}
+                    <img src="{% static 'image/sand-castle.png' %}" style="height: 24px;">
+                    <span>Lv. {{host.user_level}} 모래성</span>
+                    {% elif host.user_level == 2 %}
+                    <img src="{% static 'image/home.png' %}" style="height: 24px;">
+                    <span>Lv. {{host.user_level}} 벽돌집</span>
+                    {% else %}
+                    <img src="{% static 'image/building.png' %}" style="height: 24px;">
+                    <span>Lv. {{host.user_level}} 아파트</span>
+                    {% endif %}
+                </div>
+                <div class="flex_col profile_level">
+                   
+                <div class="point_gage">
+                    <label for="value_low">{{my_sand_sum.amount__sum}} 모래포인트</label>
+                    {% if host.user_level == 0 %}
+                    <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500"
+                        value="{{my_sand_sum.amount__sum}}"></meter>
+                    {% elif host.user_level == 1 %}
+                    <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500"
+                        value="{{my_sand_sum.amount__sum}}"></meter>
+                    {% else%}
+                    <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000"
+                        value="{{my_sand_sum.amount__sum}}"></meter>
+                    {% endif %}
+                </div>
+                </div>
+            </div>
+
+            <!-- desc 추가 -->
+                <div class="desc">
+                    {{ host.user_profile_content }}
+                </div>
+            
+                <form method="POST" action="{% url 'users:change_desc' host.id %}">
+                    {% csrf_token %}
+                    <div class="flex_col">    
+                        <input class="new_desc" name="new_desc" autocomplete="off" maxlength='150' >
+                        <button class="desc_btn" type="submit"> 설명 변경하기 </button>
+                    </div>
+                </form>
+            
+
+
+            <div class="user_email">
+                <h3>이메일</h3>
+                <p>{{ host.email }}</p>
+            </div>
+
+
+            <div class="user_nickname_change">
+                <h3>닉네임 변경</h3>
+                <form method="POST" action="{% url 'users:change_nickname' host.id %}">
+                    {% csrf_token %}
+                    <input name="new_nickname" autocomplete="off" >
+                    <button type="submit"> 닉네임 변경하기 </button>
+                </form>
+            </div>
+
+            <div class="user_password_change flex_col">
+                <h3>비밀번호 변경</h3>
+                <div class="password_input">
+                    <form method="POST" action="{% url 'users:change_pw' host.id %}">
+                        {% csrf_token %}
+                            <input name="origin_password" type="password" placeholder="Origin Password">
+                
+                            <input class="login_input" name="password1" type="password" placeholder="New Password">
+
+                            <input class="login_input" name="password2" type="password" placeholder="Confirm Password">
+                
+                        <button class="password_submit" type="submit"> 비밀번호 변경하기 </button>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <!-- <div class="a">
+        <p>닉네임: {{ host.user_nickname }}</p>
+        <p>레벨: {{ host.user_level }}</p>
+        <p>sand: {{ host.user_point }} </p>
+        <p>이미지: {{ host.user_profile_image }} </p>
+        <p>{{host.user_profile_content}}</p>
+        {% if host.user_profile_image %}
+        <img src="{{ host.user_profile_image.url }}" width="200">
+        {% endif %}
+    
+        <p>이메일: {{ host.email }}</p>
+        <hr/>
+        <form method="POST" action="{% url 'users:change_img' host.id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="new_img" accept="image/*"> 
+            <button type="submit"> 이미지 변경하기 </button>
+        </form>
+    
+        <h3>닉네임 변경</h3>
+        <form method="POST" action="{% url 'users:change_nickname' host.id %}">
+            {% csrf_token %}
+                Change_nickname
+                <input name="new_nickname" >
+            <button type="submit"> 닉네임 변경하기 </button>
+        </form>
+        <hr/>
+        <h3>비밀번호 변경</h3>
+        <form method="POST" action="{% url 'users:change_pw' host.id %}">
+            {% csrf_token %}
+                Origin Password
+                <input name="origin_password" type="password">
+    
+                New Password
+                <input class="login_input" name="password1" type="password">
+    
+                Confirm Password
+                <input class="login_input" name="password2" type="password">
+    
+            <button type="submit"> 비밀번호 변경하기 </button>
+        </form>
+    </div>
+</body> -->
+{% endblock %}
+
+
+
+
+

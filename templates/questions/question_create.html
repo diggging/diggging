@@ -1,0 +1,63 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/questions/question_create.css' %}" />
+    <!-- code highlights -->
+    <link href="ckeditor/plugins/codesnippet/lib/highlight/styles/monokai-sublime.min.css" rel="stylesheet">
+<script src="ckeditor/plugins/codesnippet/lib/highlight/highlight.min.js"></script>
+</head>
+<body>
+    <div class="create_title">
+        <h1>질문 남기기</h1>
+        <br>
+    </div>
+
+    <div class="container">
+        <div class="form_container">
+            <form method="POST" enctype="multipart/form-data" autocomplete="off">
+                {% csrf_token %}
+                {{ form.media }}
+                <div class="thumbnail_area">
+                    <label for="id_image">
+                        <img id="image" src="" alt=""
+                        onError="this.onerror=null;this.src='../../static/image/thumbnail_image.svg';" />                    </label>
+                    {{ form.image }}
+                </div>
+                {{ form.title }}
+                <div class="choice_area">
+                    {{ form.language }}
+                    {{ form.framework }}
+                    <label for="id_os">운영체제    {{ form.os }}</label>
+                </div>
+                <div class="error_area">
+                    {{ form.error_message }}
+                </div>
+                <div class="desc_area">
+                    {{ form.desc }}
+                </div>
+                <div class="tag_area">
+                </div>
+                <div class="btn_area">
+                    <button class="btn_control">임시저장</button>                   
+                        <input type="submit" value="기록 남기기" class="btn_control"/>
+                    <button  class="btn_control">
+                        <a href="{% url 'question:question_main' %}">나가기</a>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.getElementById('id_image').onchange = function () {
+            var src = URL.createObjectURL(this.files[0])
+            document.getElementById('image').src = src
+        }
+    </script>
+</body>
+</html>
+

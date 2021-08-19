@@ -1,0 +1,597 @@
+:root {
+    --border-color: #CEC4B3;
+    --btn-color: #FFF8CA;
+    --sand-color: #D1AF00;
+    --text-color: #4E4E4E;
+    --logo-color: #CEC4B3;
+    --title-font: 'Pretendard-ExtraBold';
+    --content-font: 'Pretendard-Regular';
+    --btn-font: 'Pretendard-SemiBold';
+    --hover-color: #FFEF9C;
+}
+
+body {
+    padding: 3rem
+}
+
+/* modal창 */
+.hidden {
+    display: hidden;
+}
+
+.point_modal {
+    
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal_body {
+    display: none;
+    position: absolute;
+    bottom: -70%;
+    left: 38%;
+
+    width: 400px;
+    height: 600px;
+
+    padding: 40px;
+
+    overflow: scroll;
+
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+
+    transition-timing-function: ease-in;
+    transition-duration: 1s;
+
+    z-index: 1001;
+    
+}
+
+.follow_modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.follow_body {
+    display: none;
+    position: absolute;
+    bottom: 10%;
+    left: 32%;
+
+    width: 500px;
+    height: 600px;
+
+    padding: 40px;
+
+    overflow: scroll;
+
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+
+    transition-timing-function: ease-in;
+    transition-duration: 1s;
+
+    z-index: 1001;
+}
+
+
+.follow_body h3 {
+    font-family: var(--btn-font);
+    font-size: 1rem;
+    color: var(--text-color);
+    font-family: var(--btn-font);
+}
+
+.follow_desc h4 {
+    font-size: 0.825rem;
+    font-family: var(--content-font);
+    font-weight: 300;
+    color: var(--text-color);
+}
+
+.flex_col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+
+.follow_list {
+    display: flex;
+    margin-top: 5px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.follow_image {
+    object-fit: cover;
+    border-radius: 10px;
+    border-top: 1px solid rgb(248, 249, 250);
+    width: 40px;
+    height: 40px;
+    margin-bottom: 5px;
+    margin-right: 10px;
+}
+
+.follow_desc {
+    margin-left: 10px;
+    padding: 10px;
+}
+
+.container_box {
+    display: flex;
+    flex-direction: row;
+    margin-top: 140px;
+    padding: 0 5rem;
+}
+
+.flex_col {
+    display: flex;
+    flex-direction: column;
+}
+
+.first_container {
+    width: 20rem;
+    height: 120vh;
+    flex-direction: column;
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1rem;
+}
+
+.right_container {
+    display: flex;
+    flex-direction: column;
+    width: 66%;
+    justify-content: space-evenly;
+}
+
+
+.second_container {
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+    display: flex;
+    height: 30vh;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    margin: 1rem;
+}
+
+.third_container {
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+    display: flex;
+    height: 85vh;
+    padding: 1rem;
+    margin: 1rem;
+    align-content: space-around;
+}
+
+/* 모달 창 내부 follow, following list css */
+/*Styling the tab*/
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* tab content 열때 사용되는 button styling*/
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+
+/* button 위로 hover 시 background color change */
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* tablink class로 만들어놓은 것들 중 active/current 로 만들기*/
+.tab button.active {
+    background-color: #ccc;
+}
+
+/* tab content styling */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+/*---------------------- 프로필영역 ----------------------*/
+.profile_username {
+    display: flex;
+    align-items: center;
+}
+
+.profile_username i {
+    margin-right: 8px;
+    vertical-align: middle;
+    color: var(--logo-color);
+}
+
+.user_nickname {
+    margin-left: 10px;
+    font-family: var(--content-font);
+    color: var(--text-color);
+    font-size: 0.75rem;
+}
+
+.profile_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.profile_area {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    font-family: var(--content-font);
+    font-size: 0.825rem;
+}
+
+.profile_image {
+    font-size: 0.825rem;
+    color: var(--text-color);
+    font-family: var(--content-font);
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+}
+
+.profile_image img {
+    width: 2.7rem;
+    border-radius: 20px;
+}
+
+.badge_img img,
+.badge_img span {
+    vertical-align: middle;
+}
+
+.follow_area {
+    border-bottom: solid 1px var(--border-color);
+}
+
+.follow_area button {
+    font-family: var(--btn-font);
+    color: var(--text-color);
+    border: solid 1px var(--border-color);
+    border-radius: 4px;
+    background: white;
+    width: 10em;
+    height: 32px;
+}
+
+.follow_btn_area {
+    display: flex;
+    margin: 20px 0;
+    justify-content: space-evenly;
+}
+
+meter {
+    width: 210px;
+    height: 28px;
+}
+
+.point_gage {
+    margin-top: -10px;
+}
+
+
+.point_gage label {
+    font-size: 0.75rem;
+    font-family: var(--content-font);
+    color: var(--text-color);
+    position: relative;
+    top: 22px;
+    left: 75px;
+}
+
+.profile_text {
+    height: 40px;
+    background-color: floralwhite;
+    border-radius: 4px;
+    padding: 1rem;
+}
+
+.profile_text p {
+    font-family: var(--content-font);
+    font-size: 0.75rem;
+    background: floralwhite;
+    padding: 1rem;
+    border-radius: 8px;
+    color: var(--logo-color);
+}
+
+/* -----------리스트버튼 영역--------------------------- */
+.btn_list_area {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.list_btn {
+    font-size: 1rem;
+    width: 100%;
+    border: solid 1px var(--border-color);
+    background: floralwhite;
+    margin: 10px;
+    display: block;
+    margin: 15px 0;
+    width: 100%;
+    padding: 1rem 5rem;
+    border-radius: 2px;
+    font-family: var(--btn-font);
+    color: var(--text-color);
+}
+
+.list_btn:hover {
+    border: solid 1px var(--border-color);
+    margin: 10px;
+    display: block;
+    margin: 20px 0;
+    padding: 1rem 5rem;
+    border-radius: 2px;
+    font-family: var(--btn-font);
+    color: var(--text-color);
+    background: var(--btn-color);    
+    transition: 0.4s;
+}
+.list_btn:active {
+    border: solid 1px var(--border-color);
+    width: 91%;
+    height: 60px;
+    background: var(--hover-color);
+    margin: 20px auto;
+    transition: 0.2s;
+}
+
+.empty_img {
+    border-radius: 10px;
+    width: 40px;
+    background-color: bisque;
+}
+
+.list_btn a {
+    display: block;
+    
+}
+
+/* 모래쌓기 영역---------------------- */
+#github_chart_1 {
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+    width: 100%;
+    height: 38vh;
+}
+
+#github_chart_1 svg {
+    height: 210px;
+    margin-left: 40px;
+}
+
+#github_chart_1 svg g {
+    font-size: 6px;
+    font-family: var(--content-font);
+    color: var(--hover-color);
+}
+
+
+
+/* --------------------디렉토리 영역 ------------------*/
+.category_tab {
+    display: flex;
+    width: 100%;
+    height: 10rem;
+}
+
+#btn_tap {
+    margin-bottom: -1rem;
+    margin-left: 2rem;
+    width: 20rem;
+}
+
+#btn_tap button {
+    padding: 5px 30px 5px 20px;
+    border-radius: 8px 8px 0px 0px;
+    background: var(--hover-color);
+    font-family: var(--btn-font);
+    color: var(--sand-color);
+    border: none;
+    margin: 0px -4px;
+    border-left: solid 1.5px white;
+}
+
+.directory_box {
+    display: block;
+    height: 30vh;
+    padding: 1rem;
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+    justify-content: flex-start;
+    width: 100%;
+    overflow: scroll;
+
+}
+.lang_post_btn,
+.framework_post_btn,
+.problem_post_btn {
+    padding: 5px;
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: var(--btn-font);
+    color: var(--text-color);
+    margin: 5px;
+}
+
+.lang_post_btn:active,
+.framework_post_btn:active,
+.problem_post_btn:active {
+    padding: 5px;
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: var(--btn-font);
+    color: var(--text-color);
+    margin: 5px;
+}
+
+.folder_area {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
+    font-family: var(--btn-font);
+    justify-content: space-around;
+}
+
+.folder_category {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.folder_icon {
+    color: var(--text-color);
+}
+
+.folder_name {
+    font-family: var(--btn-font);
+    text-align: center;
+    color: var(--text-color);
+    margin-top: 4px;
+}
+
+.folder_space {
+    display: flex;
+    margin: 4px;
+    margin: 0.825rem;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.last_log_box{
+    display: block;
+    padding: 1rem;
+    border-radius: 8px;
+    justify-content: flex-start;
+    margin: 10px;
+    width: 100%;
+    height: 100%;
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+}
+
+.last_question_list {
+    display: none;
+    border-top: solid 1px var(--border-color);
+    padding: 20px;
+    width: 100%;
+    font-size: 0.825rem;
+    border-bottom: solid 1px var(--border-color);
+    font-family: var(--content-font);
+    color: var(--text-color);
+}
+
+.snad_level_area .level_badge img {
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    height: 24px;
+    padding: 2px;
+    height: 28px;
+    margin: 0.875rem 0;
+}
+
+.level_badge {
+    margin: 6px 0;
+}
+
+.level_badge a {
+    color: var(--sand-color);
+    font-family: var(--content-font);
+}
+.level_badge a:hover {
+    text-align: none;
+    color: var(--sand-color);
+    font-family: var(--btn-font);
+}
+
+a.badge_img .level_modal {
+    position: absolute;
+    top: 5rem;
+    left: 5.2rem;
+    width: 20%;
+    background: #F8F8F8;
+    border-radius: 8px;
+    border: solid 1px var(--border-color);
+    padding: 10px;
+    z-index: 1000000;
+    display: inline;
+    opacity: 0;
+    visibility: hidden;
+    transition: 750ms all;
+}
+a.badge_img:hover .level_modal{
+    outline: none;
+    text-decoration: none;
+    font-size: 70%;
+    color: #000;
+
+    visibility: visible;
+    opacity: 1;
+}
+
+.level_modal span {
+    font-size: 12px;
+    color: var(—logo-color);
+    margin-left: 5px;
+    line-height: 2rem;
+}
+.level_modal p {
+    color: var(—text-color);
+    font-family: var(—content-font);
+}
+
+.folder_category{
+    font-size: 0px;
+}

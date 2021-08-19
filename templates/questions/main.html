@@ -1,0 +1,217 @@
+{% extends 'questions/base.html' %}
+{% load static %}
+{% block script %}
+<link rel="stylesheet" href="{% static 'css/questions/main.css' %}">
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/vs2015.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script type="text/javascript">hljs.highlightAll();</script>
+<script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+<script src="{% static 'js/질문광장.js' %}"></script>
+
+{% endblock %}
+{% block content %}
+<!-- 네비바 아래로 가게하는 컨테이너 -->
+<div class="container">
+    <div class="box_container">
+        <!-- 왼쪽 박스들 -->
+        <div class="left_container">
+            <!-- 답변을 기다리는 질문 박스 -->
+            <div class="no_answer_container">
+                <div>
+                    <a href="#"><h3>답변을 기다리는 질문들</h3></a>
+                    {{not_selected_questions.user.id}}
+                    {{not_selected_questions.id}}
+                </div>
+                <div class="no_answer_list_box">
+                    {% if not not_selected_questions|length %}
+                    {% else %}
+                    {% for post in not_selected_questions %}
+                        <div class="no_answer_list" value="{{ i }}">
+                            <a href="{% url 'question:question_post_detail' post.user.id post.id %}">
+                                <div class="no_user_info">
+                                    <img src="{{ post.user.user_profile_image.url }}">
+                                    <span class="no_answer_username">{{post.user.user_nickname}}</span>
+                                </div>
+                                <span class="no_answer_title">{{post.title|truncatechars:20}}</span>
+                                <span class="no_answer_username">{{post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;"}}</span>
+                                <span class="no_answer_username" id="imggg">{{post.desc.img}}</span>
+                            </a>
+                            <!--채택이 false인거만 나오게 한다.-->
+                        </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            <!-- 답변 기다리는 질문박스 끝 -->
+            <!-- 관심사에 따른 추천 박스 -->
+            <div class="recommend_container">
+                <div>
+                    <h3>내가 관심있는 </h3>
+                </div>
+                <div class="recommned_list_box">
+                    <!-- 관심사목록선택 체크박스 -->
+                    <form action="" method="POST">
+                        {%csrf_token%}
+                        <button type="submit">제출</button>
+                        <div class="checkbox">
+                            {% for languages in language %}
+                            {% if languages == "==선택==" %}
+                            
+                            {% else %}
+                            <div class="input_wrap">
+                                <input type="checkbox" name="answers[]" id="answer1"
+                                    value={{languages}}>{{languages}}
+                            </div>
+                            {% endif %}
+                            {%endfor%}
+                        </div>
+                    </form>
+                    <!-- 체크박스끝 -->
+                    <!-- 관심사에 따른 질문 목록들 -->
+                    <div class="recommend_list_box">
+                        {% for post in posts%}
+                        {% if str_search == "전체" %}
+                        <div class="recommend_list">
+                            <a href="{% url 'question:question_post_detail' post.user.id post.id %}">
+                                <div class="post_image_container">
+                                    {% if post.image %}
+                                    <img src="{{post.image.url}}" alt="" class="post_image_container">
+                                    {% endif %}
+                                </div>
+                                <div class="recommend_user_info">
+                                    <img src="{{ post.user.user_profile_image.url }}">
+                                    <span class="post_username">{{post.user.user_nickname}}</span>
+                                </div>
+                                <div class="post_title">{{post.title|truncatechars:20}}</div>
+                                <div class="post_desc">{{post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;"}}</div>
+                            </a>
+                        </div>
+                        {% else %}
+                        {%if str_search == post.language %}
+                        <div class="recommend_list">
+                            <a href="{% url 'question:question_post_detail' post.user.id post.id %}">
+                                <div class="recommend_user_info">
+                                    <img src="{{ post.user.user_profile_image.url }}">
+                                    <span class="post_username">{{post.user.user_nickname}}</span>
+                                </div>
+                                <div class="post_title">{{post.title|truncatechars:20}}</div>
+                                <div class="post_desc">{{post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;"}}</div>
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    <!-- 관심사 질문목록 끝 -->
+                </div>
+            </div>
+        </div>
+        <!-- 왼쪽 영역 끝 -->
+        <div class="right_container">
+            <div class="profile_area">
+                <div class="profile_container">
+                    <!-- 로그인 되었을 때 -->
+                    {% if user.is_authenticated %}
+                    <div>
+                        <div class="profile_username">
+                            <span class="profile_image">
+                                <img src="{{ request.user.user_profile_image.url}}">
+                            </span>
+                            <p class="user_nickname">{{ request.user.user_nickname }}님의 모래상자
+                            <p>
+                        </div>
+                        <p>
+                            레벨 | {{request.user.user_level}} 단계
+                        </p>
+                        <div class="point_gage">
+                            <label for="value_low">{{my_sand_sum.amount__sum}} 모래포인트</label>
+                            <!-- max기준 레벨에 따라 if문으로 바뀌어야함(아직level넘겨주지 않아서 구현 X)  -->
+                            {% if request.user.user_level == 0 %}
+                            <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500"
+                                value="{{my_sand_sum.amount__sum}}"></meter>
+                            {% elif request.user.user_level == 1 %}
+                            <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500"
+                                value="{{my_sand_sum.amount__sum}}"></meter>
+                            {% else %}
+                            <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000"
+                                value="{{my_sand_sum.amount__sum}}"></meter>
+                            {% endif %}
+                        </div>
+                        <div class="proflie_text">
+                            {% if request.user.user_profile_content %}
+                            {{request.user.user_profile_content|truncatechars:40}}
+                            {% else %}
+                            <p>
+                                아직 자기소개가 없습니다.
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <!-- 로그인 안했을 때 -->
+                    <div class="profile">
+                        <div class="profile_username">
+                            <i class="fas fa-user-circle fa-2x" style="color:bisque"></i>
+                            <a href="{% url 'users:login' %}" class="user_nickname">로그인<a>
+                        </div>
+                        <div class="proflie_text">
+                            <p>
+                                로그인 하고 질문을 남겨보세요.
+                            </p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- 디렉토리영역 -->
+            <!-- 탭 버튼 누르면 그에 해당하는 폴더 목록이 뜬다. -->
+            <div class="category_tab">
+                <button class="language_btn" value="{{user.id}}">언어</button>
+                <button class="framework_btn" value="{{user.id}}">프레임워크</button>
+            </div>
+            <div class="folder_area">
+                <!-- {% for folder in question_folder %}
+                    {{folder.folder_name}}
+                {% endfor %} -->
+            </div>
+            <div class="my_answer_container">
+                <button class="accordion">내가 남긴 답변</button>
+                <div class="panel answerabc">
+                    {% for answers in answer %}
+                    {{answers.user}}
+                    {{answers.title}}
+                    {{answers.desc}}
+                    <br />
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+            } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+            }
+        });
+    }
+</script>
+<style>
+    #imggg{
+        display: none;
+        opacity: 100;
+        font-size: 0;
+        display: hidden;
+    }
+</style>
+{% endblock %}

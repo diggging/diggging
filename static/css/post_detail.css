@@ -1,0 +1,344 @@
+
+* {
+    box-sizing: border-box;
+}
+:root {
+    --border-color: #CEC4B3;
+    --btn-color: #FFF8CA;
+    --sand-color: #D1AF00;
+    --text-color: #4E4E4E;
+    --title-font: 'Pretendard-ExtraBold';
+    --content-font: 'Pretendard-Regular';
+    --btn-font: 'Pretendard-SemiBold';
+    --hover-color: #FFEF9C;
+}
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Pretendard-SemiBold';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-SemiBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Pretendard-ExtraBold';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-ExtraBold.woff') format('woff');
+    font-weight: 800;
+    font-style: normal;
+}
+
+h1, h2, h3, h4, h5 {
+    color: var(--text-color);
+    font-family: var(--title-font);
+}
+
+body {
+    color: var(--text-color);
+}
+
+.container_detail {
+    display:flex;
+    justify-content: center;
+    margin-top : 160px;
+    flex-direction: column;
+    align-items: center;
+    padding: 4rem;
+}
+
+.post_container {
+    width: 68em;
+    padding: 50px;
+    display: flex;
+    width: 90%;
+    justify-content: center;
+    border: solid 1px var(--border-color); 
+    border-radius: 8px;
+    flex-direction: column;
+}
+
+.thumbnail_area{
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+    height: 28rem; 
+    width: 68em;
+    display: flex;
+    justify-content: center;
+    object-fit: cover;
+}
+
+.post_area {
+    border: solid 1px var(--border-color);
+    border-radius: 8px;
+    display: flex;
+    padding: 20rem;
+}
+
+.post_top {
+    display: flex;
+    justify-content: space-between;
+}
+
+.post_area h1 {
+    font-size: 2em;
+    color: var(--text-color);
+    font-family: var(--title-font);
+    display: block;
+}
+
+.post_user_info {
+    display: flex;
+    margin: 20px 0;
+}
+
+.post_user_info span {
+    margin-left: 10px;
+    font-size: 0.825rem;
+    color: var(--text-color);
+    font-family: var(--content-font);
+    display: flex;
+    align-items: center;
+}
+
+.profile_username {
+    display: flex;
+    flex-direction: row;
+}
+
+.user_nickname {
+    margin-left: 20px;
+    margin-top: 5px;
+    font-size: 0.875rem;
+    font-family: var(--btn-font);
+    color: var(--text-color);
+}
+
+.post_user_info img {
+    width: 36px;
+    border-radius: 20px;
+    margin: 10px;
+}
+
+.user_nickname {
+    display: flex;
+    align-items: center;
+}
+
+
+.auth_btn_area {
+    display: flex;
+    align-items: center;
+}
+
+.auth_btn_area > div {
+    padding: 20px;
+}
+
+.auth_btn_area a {
+    padding: 10px 14px;
+}
+
+.edit_btn > a {
+    font-family: var(--btn-font);
+    color:var(--sand-color);
+    background-color: var(--btn-color);
+    border-radius: 4px;
+    box-shadow: none;
+    border: solid 2px var(--sand-color);
+    color: var(--sand-color);
+    text-decoration: none;
+    padding: 10px 14px;
+}
+
+.edit_btn > a:visited {
+    color: var(--sand-color);
+    text-decoration: none;
+}
+
+.edit_btn a:hover {
+    background-color: var(--hover-color);
+}
+
+.edit_btn a:active {
+    background-color: floralwhite;
+    color: var(--sand-color)
+}
+
+.delete_btn a:hover {
+    background-color: #fee5ce;
+    color: salmon;
+}
+
+.delete_btn a:active {
+    background-color: lightsalmon;
+    color: whitesmoke;
+}
+
+.category_area {
+    font-family: var(--btn-font);
+    font-size: 0.825rem;
+    color:var(--text-color);
+}
+.desc_area {
+    font-family: var(--content-font);
+    min-height: 8rem;
+    font-size: 1rem;
+    margin-top: 2rem;
+}
+
+.desc_area img {
+    max-width: 90%;
+}
+
+.tag_area {
+    margin-bottom: 30px;
+}
+
+.comment_box {
+    margin-bottom: 30px;
+}
+
+
+.addComment {
+    font-size: 1rem;
+    font-family: var(--content-font); 
+    padding: 10px;
+}
+
+.addComment > * {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.addComment button {
+    padding: 10px 20px;
+}
+
+.addComment > div {
+    padding: 1.2rem;
+    border: solid 1px var(--border-color);
+    border-radius: 14px;
+    margin: 0.5rem;
+}
+
+.comment_area {
+    font-size: 1rem;
+}
+
+.comment_text {
+    font-size: 0.875rem;
+    font-family: var(--content-font);
+    color: var(--text-color);
+    text-align: left;
+}
+
+.comment_info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.comment_created {
+    font-size: 0.625rem;
+    margin-bottom: 1rem;
+    color: var(--border-color);
+}
+
+.comment_profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 2rem;
+}
+
+.delete_btn > * {
+    font-family: var(--btn-font);
+    color:var(--sand-color);
+    background-color: peachpuff;
+    border-radius: 4px;
+    box-shadow: none;
+    border: solid 2px lightsalmon;
+    color: salmon;
+}
+
+.delete_btn button:active {
+    background-color: lightsalmon;
+    color: whitesmoke;
+}
+.delete_btn button:hover {
+    background-color: #fee5ce;
+    color: salmon;
+}
+
+.comment_input_area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.comment_input_area button {
+    padding: 10px 20px;
+    background-color: var(--btn-color);
+    border-color:var(--border-color);
+    color: var(--sand-color);
+    font-family: var(--btn-font);
+    border-radius: 4px;
+    border-style: solid;
+}
+
+.comment_input_area button:hover {
+    background-color: var(--hover-color);
+    border-radius: 4px;
+} 
+
+.comment_input {
+    padding: 10px 15px;
+    font-size: 1rem;
+    font-family: var(--content-font);
+    border: solid 1px var(--border-color);
+    border-radius: 4px;
+    width: 80%;
+}
+
+.post__like, .post__scrap {
+    padding: 10px 20px;
+    border: 1px solid var(--border-color);
+    background: floralwhite;
+    border-radius: 8px;
+}
+
+.scrap {
+    color: var(--sand-color);
+    font-family: var(--btn-font);
+    background-color: var(--btn-color);
+    border: solid 1px var(--border-color);
+    border-radius: 4px;
+    padding: 10px 4px;
+}
+
+.scrap:visited {
+    background-color: var(--hover-color);
+}
+.scrap_popup {
+    position: relative;
+    top: 50%;
+    opacity: 0;
+    /* visibility: hidden; */
+    width: 300px;
+    height: 80px;
+    background: rgb(231, 231, 230);
+    border: solid 1px var(--border-color);
+    transition-duration: 2s;
+}
+
+
+.scrap_popup p {
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--text-color);
+    font-family: var(--content-font);
+}

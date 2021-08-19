@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block script %}
+<script src="{% static 'js/search.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/search.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<body>
+    <div class="main_container">
+        삽질 검색
+        <a href="{% url 'posts:search'%}">삽질 검색</a>
+        <a href="{% url 'posts:search_quest'%}">질문 검색</a>
+        <div class="input_container">
+            <form class="input_form" method="post">
+                {% csrf_token %}
+                <input type="text" class="search" id="search_input" placeholder="뭐라고 할까요?">
+            </form>
+        </div>
+
+        <div>
+            <form id="select" method="post" action="">
+                {% csrf_token %}
+                {{form.field}}
+                {{form.field2}}
+                {{form.field3}}
+                {{form.field4}}
+            </form>
+        </div>
+            
+            <div class="post_container">
+                {{post}}
+            </div>
+</div>
+{% endblock %}

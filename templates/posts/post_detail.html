@@ -1,0 +1,372 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block script %}
+<link rel="stylesheet" href="{% static 'css/post_detail.css' %}">
+<!-- axios cdn -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<!-- highlights.js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/vs2015.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script type="text/javascript">hljs.highlightAll();</script>
+<script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+<script>
+    //빈 코멘트 게시 시 알람창 뜨게할 div
+    const test = document.querySelector('.addComment');
+    const body = document.querySelector('body');
+    const nullComment = (input) => {
+            const newDiv = document.createElement('div');
+            const newText = document.createTextNode('댓글을 입력하세여!!');
+            newDiv.appendChild(newText);
+            //newDiv 커스텀
+            newDiv.style.width = "100px";
+            newDiv.style.height = "30px";
+
+            newDiv.setAttribute('class', 'comment_alert');
+            
+            body.appendChild(newDiv);
+            setTimeout(()=> {
+                newDiv.remove()
+            }, 2000)
+        }
+        //댓글 생성
+        const requestComment = new XMLHttpRequest();
+        const commentInput = document.querySelector(`.comment_input`)
+    
+        const onClickComment = (id) => {
+    
+            if (!commentInput.value) {
+                nullComment(commentInput)
+                return false
+            } else {
+                const url = '/comments/comment/';
+                requestComment.open('POST', url, true);
+                requestComment.setRequestHeader(
+                    'Content-Type',
+                    'application/x-www-form-urlencoded'
+                );
+                const text = document.querySelector(`.comment_input`).value;
+                requestComment.send(JSON.stringify({ id: id, text: text}));
+                console.log(requestComment);
+            }
+        };
+        
+        const commentHandleResponse = () => {
+            if (requestComment.status < 400) {
+                const { id } = JSON.parse(requestComment.response);
+                const { text } = JSON.parse(requestComment.response);
+                const { comment_id } = JSON.parse(requestComment.response);
+                const { comment_date } = JSON.parse(requestComment.response);
+                const {user} = JSON.parse(requestComment.response);
+                
+                //유저 데이터 직렬화
+                const userData = JSON.parse(user); 
+                const userImg = userData[0].fields.user_profile_image;
+                const userImgUrl = userImg.slice(2)
+                const userName = userData[0].fields.user_nickname;
+                const createDate = comment_date;
+    
+                const addComment = document.querySelector(`.addComment`);
+                console.log(commentInput.value)
+                // 아무것도 입력안했을 때, 댓글 안달림
+    
+                    addComment.innerHTML += `
+                    <div class='comment_id_${comment_id}'>
+                        <div class="comment_info">
+                            <div class="comment_profile">
+                                <img src="${userImgUrl}">
+                                <span class="user_nicknamme">
+                                ${userName}
+                                </span>
+                            </div>
+                            <div class="comment_content">
+                                <div class="comment_created">
+                                    ${createDate}
+                                </div>
+                                <div class="comment_text">
+                                    ${text}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="delete_btn">
+                            <button onclick="onClickDelete(${id}, ${comment_id})">삭제</button>
+                        </div>
+                    </div>
+                `
+                commentInput.value = null
+            };
+        };
+    
+        requestComment.onreadystatechange = () => {
+            if (requestComment.readyState === XMLHttpRequest.DONE) {
+                commentHandleResponse();
+            };
+        };
+
+    const requestDelComment = new XMLHttpRequest();
+
+    const onClickDelete = (id, comment_id) => {
+        const url = '/comments/delete_comment/';
+        requestDelComment.open('POST', url, true);
+        requestDelComment.setRequestHeader(
+            'Content-Type',
+            'application/x-www-form-urlencoded'
+        );
+
+        requestDelComment.send(JSON.stringify({ id: id, comment_id: comment_id }));
+    };
+
+    const commentdelHandleResponse = () => {
+        if (requestDelComment.status < 400) {
+            const { id } = JSON.parse(requestDelComment.response);
+            const { comment_id } = JSON.parse(requestDelComment.response);
+            console.log(comment_id)
+            const element = document.querySelector(`.comment_id_${comment_id}`);
+            element.remove();
+        };
+    };
+
+    requestDelComment.onreadystatechange = () => {
+        if (requestDelComment.readyState === XMLHttpRequest.DONE) {
+            commentdelHandleResponse();
+        };
+    };
+    function sendLinkFacebook() {
+        var facebook_share_url = "https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}";
+        window.open(facebook_share_url,
+            'Share on Facebook',
+            'scrollbars=no, width=500, height=500');
+    }
+    function sendLinkTwitter() {
+        var twitter_share_text = "{{ post.title }}";
+        var twitter_share_url = "{{ request.build_absolute_uri }}";
+        window.open("https://twitter.com/share?text=" + twitter_share_text + "&url=" + twitter_share_url,
+            'Share on Twitter',
+            'scrollbars=no, width=500, height=500');
+    }
+    function sendLinkNaver() {
+        var raw_url = "{{ request.build_absolute_uri }}";
+        var raw_title = "{{ post.title }}"
+        var naver_root_url = "http://share.naver.com/web/shareView.nhn?url="
+        var naver_share_url = naver_root_url + encodeURI(raw_url) + "&title=" + encodeURI(raw_title);
+        window.open(naver_share_url,
+            'Share on Naver',
+            'scrollbars=no, width=500, height=500');
+    }
+    $(".like").click(function () { // .like 버튼을 클릭 감지
+        var pk = $(this).attr('name')
+        $.ajax({ // ajax로 서버와 통신 \
+            type: "POST", // 데이터를 전송하는 방법 \
+            url: "{% url 'posts:post_like' %}", // 통신할 url을 지정 
+            data: { 'pk': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}' }, // 서버로 데이터 전송시 옵션, pk를 넘겨야 어떤 post인지 알 수 있음
+            dataType: "json",
+            success: function (response) { // 성공;
+                $(".count-" + pk).html("도움이되었어요" + response.likes_count + "개"); // 좋아요 개수 변경
+            },
+            error: function (request, status, error) { // 실패
+                window.location.replace('/users/login')// 로그인 페이지로 넘어가기
+            },
+        });
+    })
+
+    $(".scrap").click(function () { // .scarp 버튼을 클릭 감지
+        var pk = $(this).attr('name');
+        var user_id = {{user_id}};
+        var post_id = {{post_id}};
+        $.ajax({ // ajax로 서버와 통신 \
+            type: "POST", // 데이터를 전송하는 방법 \
+            url: "{% url 'posts:post_scrap' user_id=user_id post_id=post_id %}", // 통신할 url을 지정 
+            data: { 'pk': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}' }, // 서버로 데이터 전송시 옵션, pk를 넘겨야 어떤 post인지 알 수 있음
+            dataType: "json",
+            success: function (response) { // 성공;
+                $(".scarp-" + pk).html("퍼가기" + response.scarps_count + "개"); // 좋아요 개수 변경
+            },
+            error: function (request, status, error) { // 실패
+                window.location.replace('/users/login')// 로그인 페이지로 넘어가기
+            },
+        });
+    })
+
+
+    // -------------------------------퍼오기 눌렀을 때 알림창------------------     
+const scrapPopup = document.querySelector('.scrap_popup')
+const scrapButton = document.querySelector('.scrap');
+
+scrapButton.addEventListener('click', () => {
+    if (scrapPopup.style.opacity === "0") {
+        scrapPopup.style.opacity = "1";
+        scrapPopup.style.visibility = "visibile";
+    } else {
+        scrapPopup.style.opacity = "0"
+    }
+});
+
+scrapPopup.addEventListener('click', () => {
+    scrapPopup.style.opacity = "0";
+    scrapPopup.style.visibility = "hidden";
+})
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div class="container_detail">
+    {% if post.image %}
+    <img src="{{ post.image.url }}" class="thumbnail_area">
+    {% endif %}
+    <div class="post_container">
+        <div class="post_top">
+            <div class="title_area">
+                <h1>{{post.title}}</h1>
+                <div class="post_user_info">
+                    <img src="{{post.user.user_profile_image.url}}">
+                    <span>{{post.user.user_nickname}}</span>
+                </div>
+            </div>
+            {% if request.user.id == post.user.id %}
+            <div class="auth_btn_area">
+                <div class="edit_btn">
+                    <a href="{% url 'posts:post_update' post.id %}">수정하기</a>
+                </div>
+                <div class="delete_btn">
+                    <a href="{% url 'posts:post_delete' post.id %}">삭제하기</a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <div class="category_area">
+            <span class="post_language">언어|{{post.language}}</span>
+            <span class="folder_name">프레임워크|{{post.framework}}</span>
+            <span class="post_os">운영체제|{{post.os}}</span>
+            <div class="post_os">에러메시지|{{post.error_message}}</div>
+        </div>
+        <div class="desc_area">
+            {{ post.desc|safe|escape }}
+        </div>
+        {% if not request.user.id == post.user.id %}
+        <div class="post_{{post.id}}">
+            <div>
+                <button class="count-{{ post.id }} like" name="{{ post.id }}" value="Like" >
+                    도움이되었어요.{{ post.likes_user.all.count }}개</button>
+            </div>
+        </div>
+        {% endif %}
+        <div class="accordion_area">
+            <button class="btn btn_toggle">공유하기</button>
+            <div class="content_area">
+                <span class="sociallink ml-1">
+                    <a href="javascript:sendLinkFacebook()" title="페이스북으로 공유">
+                        <img src="{% static 'image/facebook.png' %}" width=36 alt="Facebook">
+                    </a>
+                </span>
+                <span class="sociallink ml-1">
+                    <a href="javascript:sendLinkTwitter()" title="트위터로 공유">
+                        <img src="{% static 'image/twitter.png' %}" width=36 alt="Twitter">
+                    </a>
+                </span>
+                <span class="sociallink ml-1">
+                    <a href="javascript:sendLinkNaver()" title="네이버로 공유">
+                        <img src="{% static 'image/naver.png' %}" width=36 alt="Naver">
+                    </a>
+                </span>
+                <span class="sociallink ml-1">
+                    <a href="javascript:sendLinkKakao()" id="kakao-link-btn" title="카카오톡으로 공유">
+                        <img src="{% static 'image/kakaotalk.png' %}" width=36 alt="Kakaotalk">
+                        <!--이거는 도메인이없어서 못하는중임당... 배포하면 수정 할 예정.-->
+                    </a>
+                </span>
+            </div>
+            {% if not request.user.id == post.user.id %}
+            <div>
+                <button  name="{{ post.id }}" value="scrap" class="scarp-{{ post.id }} scrap" >
+                    퍼가기{{ post.scarps_user.all.count }}개</button>
+            </div>
+            <div class="scrap_popup" style="opacity: 0;" >
+                <p>언어📁 {{post.language}} 프레임워크📁 {{post.framework}}으로 퍼왔습니다.
+                마이페이지에서 확인해보세요!</p>
+            </div>
+            {% endif %}
+        </div>
+        <div class="comment_area">
+            <div class='addComment'>
+                {% for comment in comments %}
+                <div class='comment_id_{{comment.id}}'>
+                    <div class="comment_info">
+                        <div class="comment_profile">
+                            <img src="{{comment.user.user_profile_image.url}}">
+                            <span class="user_nicknamme">
+                                {{comment.user.user_nickname}}
+                            </span>
+                        </div>
+                        <div class="comment_content">
+                            <div class="comment_created">
+                                {{comment.created}}
+                            </div>
+                            <div class="comment_text">
+                                {{comment.text}}
+                            </div>
+                        </div>
+                    </div>
+                    {% if request.user == comment.user %}
+                    <div class="delete_btn">
+                        <button onclick="onClickDelete({{post.id}},{{comment.id}})">삭제</button>
+                        <!--comment 별로 id 준당-->
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="comment_input_area">
+                <input class="comment_input" type="text" placeholder="댓글달기" />
+                <button onclick="onClickComment({{ post.id }})">게시</button>
+                <!--comment 별로 id 준당-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+//     // axios try
+// const likeButton = document.querySelector('.like_button')
+// likeButton.forEach(button => {
+//     button.addEventListener('click', function(event){
+//         const articleld = event.target.dataset.id
+//         const likeCount = document.querySelector(`.like_count-${articledId}`)
+
+//         $httpProvider.defaults.xsrfCookieName = 'csrftoken',
+//         $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken'
+
+//         axios.post(`/posts/${articled}/like/`)
+//         .then(response) => {
+//             likeCount.innerText = response.data.likeCount
+//             if(request.data.liked){
+//                 event.target.className = 'like_button'
+//                 event.target.style.color = '#FFEF9C'
+//             } else {
+//                 event.target.className = 'like_button'
+//                 event.target.style.color = '#FFF8CA'
+//             }
+//         }
+//     })
+// })
+
+// 스크랩, 도움버튼 axios 실습따라하기
+// const onClickLikeScrap = async(id, type) => { 
+//         const url = '/posts/count_like_scrap/';
+//         const {data} = await axios.post(url, {   //axios.method(url {JSON안해줘도됨 넘겨줄 인자}) {data}-? : axios다큐먼트 찾아보면 .. 하나의 약속 axios.post는 method=='POST'와 같다.
+//             id, type
+//         }); // {'id': 1, 'type': 'like'}로 처리  data.id로 접근 가능 data.type : 'like'
+//         likeHandleResponse(data.id, data.type)
+//     }
+
+// const likeHandleResponse = (id, type) => {
+//         const element = document.querySelector(`.post-id-${id} .post__${type}`); //id와 버튼type을 받아서
+//         const originHTML = element.innerHTML;
+//         const [buttonType, num] = originHTML.split(', ');  // ['Like', '0'] 쪼개서 변수에 저장
+//         const count = Number(num) + 1;//+1한 값을 count에 저장
+//         element.innerHTML = `${buttonType} ${count}`;
+//     }
+// ajax로 다시시도
+</script>
+{% endblock %}

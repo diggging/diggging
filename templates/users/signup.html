@@ -1,0 +1,71 @@
+{% load static %}
+
+{% block script %}
+<link rel="stylesheet" href="{% static 'css/signup.css' %}">
+<script src="{% static 'js/signup.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<body>
+    <div class="container">
+        <div class="form_container">
+            <div class="signup_top">
+                <a href="" class="signup_logo">
+                    <img class="signup_logo" src="{% static 'image/login_logo.png' %}">
+                </a>
+                <div class="signup_question">
+                    <h4>이미 회원이신가요?</h4>
+                    <a href="{% url 'users:login' %}">로그인 하기</a>
+                </div>
+            </div>
+
+            <div class="signup_middle">
+                <form method="POST" action="{% url 'users:signup' %}">
+                    {% csrf_token %}
+                        <div class="signup_input">
+                            <span class="input_label">아이디</span>
+                            {{ signup_form.username }}
+                        </div>
+                        <div class="signup_input">
+                            <span class="input_label">이메일</span>
+                            {{ signup_form.email }}
+                        </div>
+                        <div class="signup_input">
+                            <span class="input_label">닉네임</span>
+                            {{ signup_form.user_nickname }}
+                        </div>
+                        <div class="signup_input">
+                            <span class="input_label">비밀번호</span>
+                            {{ signup_form.password1 }}
+                        </div>
+                        <div class="password_format">
+                            <span>* 8자 이상 입력해주세요</span>
+                        </div>
+                        <div class="signup_input">
+                            <span class="input_label">비밀번호 확인</span>
+                            {{ signup_form.password2 }}
+                        </div>
+                        <div class="error_message">
+                            {% if signup_form.username.errors %}
+                                <span>{{signup_form.username.errors}}</span>
+                            {% endif %}
+                            {% if signup_form.email.errors %}
+                                <span>{{signup_form.email.errors}}</span>
+                            {% endif %}
+                            {% if signup_form.user_nickname.errors %}
+                                <span>{{signup_form.user_nickname.errors}}</span>
+                            {% endif %}
+                            {% if signup_form.password2.errors %}
+                                <span>{{signup_form.password2.errors}}</span>
+                            {% endif %}
+                        </div>
+                    <button type="submit" class="signup_btn">회원가입하기</button>
+                </form>
+            </div>
+            <div class="signup_bottom">
+                <!-- sns회원가입자리 -->
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}

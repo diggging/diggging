@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <script src="{% static 'js/base.js' %}"></script>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav_left">
+            <a href="{% url 'posts:search' %}" class="nav_search"><img src="{% static 'image/search_icon.svg' %}" alt=""></a>
+        </div>
+        <div class="nav_center">
+            <a class="nav_main_title" href="{% url 'question:question_main' %}">질문광장</a>
+        </div>
+        {% if user.is_authenticated %}
+            <div class="toggle" style="display: none;">
+                <a href="{% url 'users:my_page' user.id %}">내 디렉토리</a>
+                <a href="{% url 'users:account_detail' user.id %}">계정 설정</a>
+                <a href="{% url 'users:logout' %}">로그아웃</a>
+            </div>
+        {% endif %}    
+        <div class="nav_right">
+            {% if user.is_authenticated %}
+                <div class="nav_vertical">
+                    <div class="alarm vertical_element" onclick="alarmMessage()" value="{{user.id}}">
+                        <a ><i class="far fa-comment-alt fa-2x" style="font-size: 1.6rem; margin-top: 3px;"></i></a>
+                    </div>
+                    <h6>알림</h6>
+                    <!-- 알람이 뜨는 공간 -->
+                    <div class="alarm_toggle" style="display: none;"></div>
+                </div>
+                <div class="nav_vertical">
+                    <div class="vertical_element">
+                        <a href="{% url 'question:question_create' %}"><img src="{% static 'image/dig_icon.svg' %}" style="height: 1.8rem; margin-left: 2px;"></a>
+                    </div>
+                    <h6>질문하기</h6>
+                </div>
+                <div class="nav_vertical">
+                    <div class="vertical_element">
+                        <a href="{% url 'posts:main' %}"><img src="{% static 'image/sand-castle.png' %}" style="height: 2.2rem;"></a>
+                    </div>
+                    <h6>삽질모음 홈</h6>
+                </div>
+                <div class="user_btn">
+                    <button class="toggle_btn" onclick="toggleBtn()" href="{% url 'users:my_page' user.id %}">
+                        <img src="{{ user.user_profile_image.url }}">
+                    </button>
+                    <h6>{{user.user_nickname}}</h6>
+                </div>
+            {% else %}
+                <div class="nav_vertical">
+                    <div class="vertical_element">
+                        <a href="{% url 'posts:main' %}"><i class="fas fa-question-circle"></i></a>
+                    </div>
+                    <h6>삽질모음 홈</h6>
+                </div>
+                <div class="nav_vertical">
+                    <div class="vertical_element">
+                        <a href="{% url 'users:login' %}"><i class="fas fa-question-circle"></i></a>
+                    </div>
+                    <h6>로그인</h6>
+                </div>
+                <div class="nav_vertical">
+                    <div class="vertical_element">
+                        <a href="{% url 'users:signup' %}"><i class="fas fa-question-circle"></i></a>
+                    </div>
+                    <h6>회원가입</h6>
+                </div>
+            {% endif %}
+        </div>
+    </nav>
+    {% block content%}
+    {% endblock %}
+    {% block script %}
+    {% endblock %}  
+</body>
+</html>

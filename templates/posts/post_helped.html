@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block script %}
+<link rel="stylesheet" href="{% static 'css/post_list.css' %}">
+<script src="{% static 'js/infinite.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="link_list">
+    {% if user.is_authenticated %}
+        <a class="scrap" href="{% url 'posts:main' %}"  onclick="a()">스크랩</a>
+        <a class="helped" href="{% url 'posts:helped' %}" id="helped" href="#"  onclick="b()">도움</a>
+        <a class="recent" href="{% url 'posts:my_recent' %} "  onclick="c()">내 최신순</a>
+        <a class="follow" href="{% url 'posts:follow' %}"  onclick="d()">이웃</a>
+    {% else %}
+        <a class="scrap" href="{% url 'posts:main' %}"  onclick="a()">스크랩</a>
+        <a class="helped" href="{% url 'posts:helped' %}" id="helped" href="#"  onclick="b()">도움</a>
+    {% endif %}
+</div>
+
+<div class="post_container" id="scroll-element">
+    
+    {% include 'posts/_posts.html' with posts=posts %}
+    
+</div>
+<div id="bottom-sentinel">
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        let bottomSentinal = document.querySelector("#bottom-sentinel");
+        let scrollElement = document.querySelector("#scroll-element");
+        let baseUrl = "{% url 'posts:helped_axios' %}";
+        attachInfiniteScroll(bottomSentinal, scrollElement, baseUrl);
+    })
+</script>
+{% endblock %}
