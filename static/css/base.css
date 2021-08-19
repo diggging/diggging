@@ -52,24 +52,32 @@
     top: 0;
     right: 0;
     left: 0;
+    background-color: #FFFFFF;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
-    background-color: #F1EFEF;
+    padding: 0 1rem;
+    height: 64px;
 }
 
 .nav_search {
     margin-left: 1rem;
 }
-.nav_search img{
-    width: 2rem;
+.nav_search > svg{
+    width: 28px;
+    height: 28px;
+    text-align: center;
+    fill: #9FAEB6;
+}
+
+.nav_search svg:hover {
+    fill: #00537A;
 }
 
 .nav_main_title {
     font-family: 'GmarketSansBold';
-    font-size: 38px;
-    color: #CEC4B3;
+    font-size: 22px;
+    color: #00537A;
 }
 
 .nav_right {
@@ -84,62 +92,84 @@
 }
 
 .nav_vertical .vertical_element {
-    width: 50px;
-    height: 50px;
-    padding: 0.5rem 1rem;
+    /* padding: 0.5rem 1rem; */
     margin: 0.5rem 0.5rem;
-    background-color: #FFFFFF;
     border-radius: 10px;
     text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
-.nav_vertical div>a>i {
+.alarm svg {
     font-size: 2rem;
-    color:#CEC4B3;
+    fill:#9FAEB6;
+    cursor: pointer;
+    margin-top: 4px;
+}
+
+.alarm svg:hover {
+    fill: #00537A;
 }
 
 .nav_vertical h6 {
     font-family: var(--btn-font);
-    font-size: 12px;
-    color: #A9A59F;
+    font-size: 1rem;
+    color: #9FAEB6;
+    line-height: 19px;
 }
 
-.user_btn {
+.nav_vertical h6:hover {
+    color: #00537A;
+}
+
+.vertical_element > .document {
+    font-family: var(--btn-font);
+    font-size: 1rem;
+    color: #00537A;
+    line-height: 19px;
+}
+
+.user_img {
     text-align: center;
-    width: 60px;
+    width: 40px;
+    height: 40px;
+    background-size: contain;
+    border-radius: 100px;
 }
 
-.user_btn h6 {
+.user_name {
     font-family: var(--btn-font);
     font-size: 12px;
-    color: #A9A59F;
+    color: #FFBA42;
+    margin: 0;
+}
+
+.toggle_container {
+    display: flex;
 }
 
 .toggle_btn {
-    width: 50px;
-    height: 50px;
-    padding: 0.5rem 1rem;
-    margin: 0.5rem 0.5rem;
     background-color: #FFFFFF;
     border-radius: 10px;
     text-align: center;
+    padding: 5px;
     border: none;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    color: #9FAEB6;
 }
 
-.toggle_btn img {
-    width: 2.3rem; 
-    height: 2.3rem;
+.toggle_btn:hover {
+    color: #00537A;
+}
+
+.toggle_btn i{
+    padding: 10px;
 }
 
 .toggle {
     position: absolute;
-    top: 104px;
+    top: 64px;
     right: 16px;
     flex-direction: column;
     background: white;
@@ -151,24 +181,24 @@
     font-size: 0.875rem;
     font-family: var(--btn-font);
     text-decoration: none;
-    box-shadow: rgb(0 0 0 / 3%) 0px 4px 16px 0px;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.05);
     transition: box-shadow 0.25s ease-in 0s, transform 0.25s ease-in 0s;
     display: flex;
 }
 
 .toggle a {
-    color: #A9A59F;
+    color: #00537A;
     padding-bottom: 5px;
     padding: 0.5rem 1.5rem;
 }
 
 .toggle a:not(:nth-child(3)) {
-    border-bottom: solid 1px #CEC4B3;
+    border-bottom: solid 1px #00537A;
 }
 
 .alarm_toggle {
     position: absolute;
-    top: 104px;
+    top: 64px;
     right: 237px;
     background: white;
     line-height: 1.3125rem;
@@ -178,7 +208,7 @@
     font-size: 0.875rem;
     font-family: var(--btn-font);
     text-decoration: none;
-    box-shadow: rgb(0 0 0 / 3%) 0px 4px 16px 0px;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.05);
     transition: box-shadow 0.25s ease-in 0s, transform 0.25s ease-in 0s;
     width: 344px;
     height: 232px;
@@ -189,7 +219,7 @@
     width: 10px;
 }
 .alarm_toggle::-webkit-scrollbar-thumb {
-    background-color: var(--border-color);
+    background-color: white;
     border-radius: 10px;
     background-clip: padding-box;
     border: 2px solid transparent;
@@ -202,8 +232,8 @@
 
 .alarm_toggle > .alarm_element {
     width: 100%;
-    border-bottom: solid 1px #CEC4B3;
-    color: #A9A59F;
+    border-bottom: solid 1px #b7c6ce;
+    color: #00537A;
     padding: 15px;
     margin: 0px;
     border-radius: 0px;

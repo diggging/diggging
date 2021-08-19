@@ -42,7 +42,7 @@ const alarmMessage = () => {
                 alarmReason[i] += '...';
             }
         }
-
+        //is_checked 확인
         if (alarmReason.length === 0) {
             alarmToggle.innerHTML = "알람이 없습니다."
         } else {
