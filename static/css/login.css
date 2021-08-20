@@ -141,10 +141,42 @@ html, body {
     outline: none;
 }
 
-::-webkit-input-placeholder,
+/* ::-webkit-input-placeholder,
 :-ms-input-placeholder,
 :-moz-placeholder,
 ::-moz-placeholder {
+    font-family: 'Pretendard-Regular';
+    text-align: center;
+    font-size: 14px;
+    line-height: 20px;
+    color: #C4C4C4;
+} */
+
+::-webkit-input-placeholder {
+    font-family: 'Pretendard-Regular';
+    text-align: start;
+    font-size: 14px;
+    line-height: 20px;
+    color: #C4C4C4;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+    font-family: 'Pretendard-Regular';
+    text-align: start;
+    font-size: 14px;
+    line-height: 20px;
+    color: #C4C4C4;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+    font-family: 'Pretendard-Regular';
+    text-align: start;
+    font-size: 14px;
+    line-height: 20px;
+    color: #C4C4C4; 
+}
+
+:-ms-input-placeholder {  
     font-family: 'Pretendard-Regular';
     text-align: start;
     font-size: 14px;
@@ -192,6 +224,7 @@ html, body {
     color: #585858;
     font-size: 1rem;
     line-height: 1.4375rem;
+    font-family: 'Pretendard-SemiBold';
 }
 
 .github {

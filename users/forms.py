@@ -19,15 +19,15 @@ import re
 class UserCustomCreationForm(UserCreationForm):
     #placeholder
     username= forms.CharField(widget=forms.TextInput
-                        (attrs={'placeholder':'사용할 아이디를 입력해 주세요'}))
+                        (attrs={'placeholder':'사용할 아이디'}))
     email = forms.CharField(widget=forms.TextInput
-                        (attrs={'placeholder': '사용할 이메일을 입력해 주세요'}))
+                        (attrs={'placeholder': '사용할 이메일'}))
     user_nickname = forms.CharField(widget=forms.TextInput
-                        (attrs={'placeholder': '사용할 닉네임을 입력해주세요(최대8자)'}))
+                        (attrs={'placeholder': '사용할 닉네임'}))
     password1 = forms.CharField(widget=forms.PasswordInput
-                        (attrs={'placeholder': '사용할 비밀번호를 입력해주세요'}))
+                        (attrs={'placeholder': '비밀번호'}))
     password2 = forms.CharField(widget=forms.PasswordInput
-                        (attrs={'placeholder': '비밀번호를 재입력해주세요'}))
+                        (attrs={'placeholder': '비밀번호 확인'}))
 
     #eror_messages custom
     error_messages = {
