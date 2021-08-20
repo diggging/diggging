@@ -74,7 +74,7 @@ h1, h2, h3, h4, h5 {
     line-height: 3rem;
     color: #212529;
     margin-bottom: 2.375rem;
-    /* height: 96px; */
+    /* height: 6rem; */
 }
 
 .accordion_area {
@@ -84,7 +84,7 @@ h1, h2, h3, h4, h5 {
 }
 
 .post_area {
-    border: solid 1px var(--border-color);
+    border: solid 0.0625rem var(--border-color);
     border-radius: 0.5rem;
     display: flex;
     padding: 20rem;
@@ -116,8 +116,8 @@ h1, h2, h3, h4, h5 {
     height: 9.0625rem;
     display: flex;
     flex-direction: row;
-    border-bottom: 1px solid #ECECEC;
-    border-top: 1px solid #ECECEC;
+    border-bottom: 0.0625rem solid #ECECEC;
+    border-top: 0.0625rem solid #ECECEC;
     padding: 1.875rem;
 }
 
@@ -145,6 +145,8 @@ h1, h2, h3, h4, h5 {
 .auth_btn_area {
     display: flex;
     align-items: center;
+    justify-content: center;
+    margin-top: 1.875rem;
 }
 
 .auth_btn_area > div {
@@ -152,43 +154,30 @@ h1, h2, h3, h4, h5 {
 }
 
 .auth_btn_area a {
-    padding: 0.625rem 0.875rem;
+    padding: 0.6875rem 1.8125rem
 }
 
 .edit_btn > a {
+    background-color: white;
+    border: 0.0625rem solid #00537A;
+    color: #00537A;
     font-family: var(--btn-font);
-    color:var(--sand-color);
-    background-color: var(--btn-color);
-    border-radius: 0.25rem;
-    box-shadow: none;
-    border: solid 2px var(--sand-color);
-    color: var(--sand-color);
-    text-decoration: none;
-    padding: 0.625rem 0.875rem;
+    border-radius: 1.25rem;
+    width: 4.8125rem;
+    height: 2.5rem;
+    cursor: pointer;
+    margin-left: 1.125rem;
 }
 
-.edit_btn > a:visited {
-    color: var(--sand-color);
-    text-decoration: none;
-}
-
-.edit_btn a:hover {
-    background-color: var(--hover-color);
-}
-
-.edit_btn a:active {
-    background-color: floralwhite;
-    color: var(--sand-color)
-}
-
+.edit_btn a:hover,
 .delete_btn a:hover {
-    background-color: #fee5ce;
-    color: salmon;
+    background-color: #00537A;
+    color: white;
 }
 
+.edit_btn a:active,
 .delete_btn a:active {
-    background-color: lightsalmon;
-    color: whitesmoke;
+    color: #00537A;
 }
 
 .category_area {
@@ -316,7 +305,7 @@ h1, h2, h3, h4, h5 {
 .delete_btn > * {
     padding: 0.625rem 1.25rem;
     background-color: white;
-    border: 1px solid #00537A;
+    border: 0.0625rem solid #00537A;
     color: #00537A;
     font-family: var(--btn-font);
     border-radius: 1.25rem;
@@ -341,13 +330,13 @@ h1, h2, h3, h4, h5 {
 .comment_input_area button {
     padding: 0.625rem 1.25rem;
     background-color: white;
-    border: 1px solid #00537A;
+    border: 0.0625rem solid #00537A;
     color: #00537A;
     font-family: var(--btn-font);
     border-radius: 1.25rem;
     width: 7.875rem;
     height: 2.5rem;
-    border: 1px solid #00537A;
+    border: 0.0625rem solid #00537A;
     cursor: pointer;
     margin: 0.875rem 0 1.875rem 35.8125rem;
 }
@@ -361,7 +350,7 @@ h1, h2, h3, h4, h5 {
     padding: 0.625rem 0.9375rem;
     font-size: 1rem;
     font-family: var(--content-font);
-    border: 1px solid #62A1BF;
+    border: 0.0625rem solid #62A1BF;
     box-sizing: border-box;
     border-radius: 1.25rem;
     width: 44rem;
@@ -385,7 +374,7 @@ h1, h2, h3, h4, h5 {
 
 .post__like, .post__scrap {
     padding: 0.625rem 1.25rem;
-    border: 1px solid var(--border-color);
+    border: 0.0625rem solid var(--border-color);
     background: floralwhite;
     border-radius: 0.5rem;
 }
@@ -395,7 +384,7 @@ h1, h2, h3, h4, h5 {
     color: #FFBA42;
     font-family: var(--btn-font);
     background-color: white;
-    border: solid 1px #FFBA42;
+    border: solid 0.0625rem #FFBA42;
     border-radius: 1.25rem;
     text-align: center;
     width: 7.1875rem;
@@ -421,14 +410,14 @@ h1, h2, h3, h4, h5 {
 .btn_toggle:hover {
     background-color: #FFBA42;
     color: white;
-    border: solid 1px white;
+    border: solid 0.0625rem white;
 }
 
 .like {
     color: #FFBA42;
     font-family: var(--btn-font);
     background-color: white;
-    border: solid 1px #FFBA42;
+    border: solid 0.0625rem #FFBA42;
     border-radius: 1.25rem;
     text-align: center;
     width: 10.5rem;
@@ -447,7 +436,7 @@ h1, h2, h3, h4, h5 {
 .like:hover {
     background-color: #FFBA42;
     color: white;
-    border: solid 1px white;
+    border: solid 0.0625rem white;
 }
 
 .scrap_popup {
@@ -458,7 +447,7 @@ h1, h2, h3, h4, h5 {
     width: 18.75rem;
     height: 5rem;
     background: rgb(231, 231, 230);
-    border: solid 1px var(--border-color);
+    border: solid 0.0625rem var(--border-color);
     transition-duration: 2s;
 }
 
