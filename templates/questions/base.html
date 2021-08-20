@@ -15,18 +15,18 @@
         <div class="nav_left">
             <div class="nav_vertical">
                 <div class="vertical_element">
-                    <a href="{% url 'question:question_create' %}"><h6>질문하기</h6></a>
+                    <a href="{% url 'posts:main' %}"><h6>삽질모음</h6></a>
                 </div>
             </div>
             <div class="nav_vertical">
                 <div class="vertical_element">
-                    <a href="{% url 'posts:main' %}"><h6>삽질모음</h6></a>
+                    <a href="{% url 'question:question_create' %}"><h6>질문하기</h6></a>
                 </div>
             </div>
         </div>
 
         <div class="nav_center">
-            <a class="nav_main_title" href="{% url 'main' %}">질문광장</a>
+            <a class="nav_main_title" href="{% url 'question:question_main' %}">질문광장</a>
         </div>
         {% if user.is_authenticated %}
             <div class="toggle" style="display: none;">

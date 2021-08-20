@@ -7,28 +7,36 @@
 {% endblock script %}
 
 {% block content %}
-    <div class="create_title">
-        <h1>질문 수정하기</h1>
-        <br>
-    </div>
-
+<div class="main_container">
     <div class="container">
+        <div class="create_title">
+            <h1>질문 남기기</h1>
+            <br>
+        </div>
         <div class="form_container">
             <form method="POST" enctype="multipart/form-data" autocomplete="off">
                 {% csrf_token %}
                 {{ form.media }}
                 <div class="thumbnail_area">
                     <label for="id_image">
-                        <img id="image" src="" alt=""
-                            onError="this.onerror=null;this.src='../../static/image/thumbnail_image.svg';" />
+                        <img id="image" src="../../static/image/thumbnail_image.svg" alt="" onerror="this.onerror=null;this.src='../../static/image/thumbnail_image.svg';">
                     </label>
                     {{ form.image }}
                 </div>
                 {{ form.title }}
                 <div class="choice_area">
-                    {{ form.language }}
-                    {{ form.framework }}
-                    <label for="id_os">운영체제    {{ form.os }}</label>
+                    <div class="choice_flex">
+                        <span>언어</span>
+                        {{ form.language }}
+                    </div>
+                    <div class="choice_flex">
+                        <span>프레임워크</span>
+                        {{ form.framework }}
+                    </div>
+                    <div class="choice_flex">
+                        <span>운영체제</span>
+                        {{ form.os }}
+                    </div>
                 </div>
                 <div class="error_area">
                     {{ form.error_message }}
@@ -36,18 +44,20 @@
                 <div class="desc_area">
                     {{ form.desc }}
                 </div>
-                <div class="tag_area">
-                    공개설정 | 
-                    {{form.is_public}}
-                </div>
                 <div class="btn_area">
-                    <button class="btn_control">임시저장</button>                   
-                        <input type="submit" value="기록 수정" class="btn_control"/>
-                    <button  class="btn_control">
-                        <a href="{% url 'question:question_main' %}">나가기</a>
-                    </button>
+                    <input type="submit" value="기록 수정" class="btn_input"/>
+                    <a class="btn_control" href="{% url 'question:question_main' %}">
+                        <span>나가기</span>
+                    </a>
                 </div>
             </form>
         </div>
     </div>
+</div>
+<script>
+    document.getElementById('id_image').onchange = function () {
+        var src = URL.createObjectURL(this.files[0])
+        document.getElementById('image').src = src
+    }
+</script>
 {% endblock content %}

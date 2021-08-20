@@ -58,7 +58,6 @@ form {
     flex-direction: column;
     align-items: center;
     background: #FFFFFF;
-    border: 0.0625rem solid #C4C4C4;
     box-sizing: border-box;
     box-shadow: 0.75rem 0.75rem 3.75rem 0.5rem rgba(0, 0, 0, 0.2);
     border-radius: 1.25rem;
@@ -93,7 +92,7 @@ form {
     margin: 0.625rem 0rem;
     font-family: var(--content-font);
     color: var(--text-color);
-    border: solid 0.0625rem var(--border-color);
+    border: solid 0.0625rem #C4C4C4;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -129,7 +128,7 @@ form {
     padding: 0.3125rem 0.4375rem; 
     font-family: var(--btn-font);
     font-size: 1em;
-    border: solid 0.0625rem var(--border-color);
+    border: solid 0.0625rem #C4C4C4;
     margin-bottom: 0.625rem;
 
 }
@@ -140,7 +139,7 @@ form {
     width: 52.1875rem;
     padding: 0.3125rem 0.4375rem; 
     font-family: var(--btn-font);
-    border: solid 0.0625rem var(--border-color);
+    border: solid 0.0625rem #C4C4C4;
     margin: 0.625rem 0rem;
     font-size : var(--btn-font);
 }
@@ -155,7 +154,7 @@ form {
 .choice_area select {
     width: 12em;
     height: 2.75rem;
-    border: solid 0.0625rem var(--border-color);
+    border: solid 0.0625rem #C4C4C4;
     font-family: var(--content-font);
     font-size: 1em;
     color: var(--text-color);
@@ -212,7 +211,7 @@ form {
 #id_tag {
     width: 30em;
     height: 2.75rem;
-    border: solid 0.0625rem var(--border-color);
+    border: solid 0.0625rem #C4C4C4;
     border-radius: 0.25rem;
 }
 
