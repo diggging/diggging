@@ -10,8 +10,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/vs2015.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-<script type="text/javascript">hljs.highlightAll();</script>
-<script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+<script type="text/javascript">hljs.highlightAll()</script>
+<script type="text/javascript">hljs.initHighlightingOnLoad()</script>
 <script type='text/javascript'>
     function sendLinkKakao(){
       Kakao.Link.sendDefault({
@@ -19,7 +19,7 @@
       content: {
 	title: "{{post.title}}",
 	description: "{{post.desc}}",
-	imageUrl: "http://13.124.23.247:8000/"+"{{post.image.url}}",
+	imageUrl: "http://13.124.23.247:8000/"+"{{post.image.url}}",s
 	link: {
         mobileWebUrl: '{{ request.build_absolute_uri }}',
         webUrl: '{{ request.build_absolute_uri }}'

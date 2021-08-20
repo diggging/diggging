@@ -5,6 +5,7 @@ from django.conf import settings
 from core import models as core_model
 import os
 from django_resized import ResizedImageField
+from posts.models import Folder
 # Create your models here.
 
 class User(AbstractUser):
@@ -45,6 +46,16 @@ class User(AbstractUser):
             os.remove(os.path.join(settings.MEDIA_ROOT, self.upload_files.path))
         super(User, self).delete(*args, **kargs)
 
+    def save(self, *args, **kwargs):
+        #if self.pk is None:  # create
+        super().save(*args, **kwargs)  # Call the "real" save() method.
+        
+        solve = Folder.objects.filter(folder_name="해결", folder_user=self, folder_kind="solved")
+        unsolve = Folder.objects.filter(folder_name="미해결", folder_user=self, folder_kind="solved")
+        if not solve.exists():
+            Folder.objects.create(folder_user=self, folder_name="해결", folder_kind="solved")
+        if not unsolve.exists():
+            Folder.objects.create(folder_user=self, folder_name="미해결", folder_kind="solved")
 
 class Sand(core_model.TimeStampModel):
     user = models.ForeignKey(User, related_name="sand", on_delete=models.CASCADE)

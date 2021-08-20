@@ -1,9 +1,54 @@
 {% extends 'questions/base.html' %}
 {% load static %}
 {% block content %}
+<script type='text/javascript'>
+    var title = document.querySelector('.title_area').textContent;
+    var desc = document.querySelector('.desc_area').textContent;
+    var img = document.getElementById("thumbnail").src
+	
+    //<![CDATA[
+    // // 사용할 앱의 JavaScript 키를 설정해 주세요.
+    Kakao.init(4bc6b6d10ce540d1bd347ad9fb8f61b5);
+    // // 카카오링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
+    Kakao.Link.createDefaultButton({
+      container: '#kakao-link-btn',
+      objectType: 'feed',
+      content: {
+        title: $(title),
+        description: $(desc),
+        imageUrl: $(img),
+        link: {
+          mobileWebUrl: 'https://developers.kakao.com',
+          webUrl: 'https://developers.kakao.com'
+        }
+      },
+      social: {
+        likeCount: 286,
+        commentCount: 45,
+        sharedCount: 845
+      },
+      buttons: [
+        {
+          title: '웹으로 보기',
+          link: {
+            mobileWebUrl: 'https://developers.kakao.com',
+            webUrl: 'https://developers.kakao.com'
+          }
+        },
+        {
+          title: '앱으로 보기',
+          link: {
+            mobileWebUrl:'https://developers.kakao.com',
+            webUrl: 'https://developers.kakao.com'
+          }
+        }
+      ]
+    });
+  //]]>
+</script>
 <div class="question_container">
     {% if post.image %}
-    <img src="{{ post.image.url }}" class="thumbnail_area">
+    <img src="{{ post.image.url }}" class="thumbnail_area" id="thumbnail">
     {% endif %}
     <div class="post_container">
         <!-- 제목영역 -->

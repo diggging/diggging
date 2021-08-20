@@ -32,6 +32,7 @@ from django.contrib.sites.models import Site
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 from django.http.response import JsonResponse
+
 # import json
 
 
@@ -63,9 +64,6 @@ def signup(request):
             email = EmailMessage(mail_subject, message, to=[to_email])
             email.send()
 
-            # user가 생기자마자 바로 해결, 미해결 폴더 만들기
-            solved = Folder.objects.create(folder_user=user, folder_name="해결", folder_kind="solved")
-            not_solved = Folder.objects.create(folder_user=user, folder_name="미해결", folder_kind="solved")
             # return HttpResponse('Please confirm your email address to complete the registration') -> 이메일 인증 성공 확인 가능 메세지
 
             return redirect('users:login')
@@ -229,8 +227,6 @@ def github_callback(request):
                         )
                         user.set_unusable_password()
                         user.save()
-                        solved = Folder.objects.create(folder_user=user, folder_name="해결", folder_kind="solved")
-                        not_solved = Folder.objects.create(folder_user=user, folder_name="미해결", folder_kind="solved")
                     login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                     ctx = {
                         'user': user
@@ -243,7 +239,7 @@ def github_callback(request):
     except Exception as e:
         messages.error(request, e)
         return redirect(reverse("users:login"))
-    
+ 
 
 # ________________________________________________ mypage ________________________________________________
 # my page
