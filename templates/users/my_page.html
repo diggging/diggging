@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block script %}
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <link rel="stylesheet" href="{% static 'css/my_page.css' %}">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
     integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
@@ -12,7 +13,6 @@
 
 <script src="{% static 'js/삽질기록모음.js' %}"></script>
 <script src="{% static 'js/follow_following_list.js' %}"></script>
-<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script>
     if (!String.prototype.formatString) {
         String.prototype.formatString = function () {
@@ -608,7 +608,7 @@
         </div>
         <div class="sand_pour_area">
             <div id="github_chart_1">
-                <svg width="" height="" viewBox="0 0 0 0" class="js-calendar-graph-svg">
+                <svg width="" height="" viewBox="0 0 300 300" class="js-calendar-graph-svg">
                     <text x="39" y="-5" class="month">Sep</text><text x="91" y="-5" class="month">Oct</text><text x="143" y="-5"
                         class="month">Nov</text><text x="208" y="-5" class="month">Dec</text><text x="260" y="-5"
                         class="month">Jan</text><text x="325" y="-5" class="month">Feb</text><text x="377" y="-5"
@@ -626,31 +626,18 @@
     <div class="right_container">
         <div id="btn_tap">
             <button id="btn1" class="language_btn" value="{{host.id}}">언어</button>
-            <button id="btn2" class="problem_btn" value="{{host.id}}">해결/미해결</button>
             <button id="btn3" class="framework_btn" value="{{host.id}}">프레임워크</button>
+            <button id="btn2" class="problem_btn" value="{{host.id}}">해결/미해결</button>
         </div>
         <div class="second_container">
             <div class="category_tab">
                 <div class="folder_category">
-                    </button>
+                    
                 </div>
             </div>
-            <div class="folder_area">
-                {%comment%}
-                {% for folder in framework_folders %}
-                <div class="folder_space">
-                    <button type="button" class="{{folder}}">
-                        <i class="far fa-folder folder_icon fa-2x"></i>
-                        <span class="folder_name">{{folder}}</span>\
-                    </button>
-                </div>
-                {% endfor %}
-                {%endcomment%}
-            </div>
-        </div>
-        <!-- 폴더 눌렀을 때 글 목록 뜨는 곳 -->
-        <div class="third_container">
-            <div class="my_post_list">
+            <!-- 폴더 눌렀을 때 글 목록 뜨는 곳 -->
+            <div class="third_container">
+                <div class="my_post_list"></div>
             </div>
         </div>
     </div>

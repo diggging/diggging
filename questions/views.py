@@ -531,12 +531,14 @@ def questions_lang_folder(request, pk):
 
     return JsonResponse(list(data), safe=False)
 
+@csrf_exempt
 def questions_lang_post(request, pk):
     folder = QuestionFolder.objects.get(pk=pk)
     posts = Question_post.objects.filter(question_folder=folder)
     data = posts.values()
     return JsonResponse(list(data), safe=False)
 
+@csrf_exempt
 def questions_framework_folder(request, pk):
     host = get_object_or_404(User, pk=pk)
     folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
@@ -544,6 +546,7 @@ def questions_framework_folder(request, pk):
     
     return JsonResponse(list(data), safe=False)
 
+@csrf_exempt
 def questions_framework_post(request, pk):
     folder = QuestionFolder.objects.get(pk=pk)
     posts = Question_post.objects.filter(question_folder=folder)
