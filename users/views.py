@@ -503,6 +503,26 @@ def lang_folder_posts(request, pk):
     posts = Post.objects.filter(folder=folder)
     data = posts.values()
 
+    #comment, user정보를 보내줘야 할거 같음
+    # 내정보 받아오기
+    # user = User.objects.filter(pk=folder.folder_user.id)
+    # user_data = serializers.serialize('json', user)
+    
+    # comments = []
+    # for post in posts:
+    #     comments.append(post.comments.all())
+    # comments_data = serializers.serialize('json',comments)
+    
+    # questions user
+    # a = User.objects.get(pk=question_post.user.id)
+    # question_comments 개수
+
+    # ctx = {
+    #     'data': data,
+    #     'user': user_data,
+    #     'comments': comments_data,
+    # }
+
     return JsonResponse(list(data), safe=False)
 
 @csrf_exempt

@@ -21,7 +21,6 @@ langBtn.addEventListener('click', () => {
     })
     .then(res => res.json())
     .then(data => {
-        console.log(data)
 
         if (data.length === 0) {
             categoryTab.innerHTML = "폴더없음"
@@ -61,14 +60,44 @@ const langPost = () => {
             // title, desc, scrap, help // username, userprofile, comments
             .then(res => res.json())
             .then(data => {
-                console.log(data)
+
+
+                let desc = [];
+                for(i=0; i < data.length; i++) {
+                    if(data[i].desc.length > 300) {
+                        desc[i] = data[i].desc.slice(0, 300)
+                    }
+                }
+                const extractTextPattern = /(<([^>]+)>)/gi;
+
+                let replaceDesc = [];
+                for(i=0; i < desc.length; i++) {
+                    replaceDesc[i] = desc[i].replace(extractTextPattern, "")
+                }
+
                 if (data.length === 0) {
                     thirdContainer.innerHTML = "파일없음"
                 } else {
                     const txt = data.map(post => {
                         return `
-                        ${post.title}
-                        ${post.desc}
+                        <div class="my_post_list">
+                            <div class="post_title">
+                                ${post.title}
+                            </div>
+                            <div class="post_desc">
+                                ${replaceDesc}
+                            </div>
+                            <div class="post_user">
+                                <div class="scrap_num">
+                                    <span class="bold">스크랩</span>
+                                    ${post.scrap_num}
+                                </div>
+                                <div class="helped_num">
+                                    <span class="bold">도움</span>
+                                    ${post.helped_num}
+                                </div>
+                            </div>
+                        </div>
                         `
                     }).join('')
                     thirdContainer.innerHTML = txt;
@@ -103,7 +132,7 @@ problemBtn.addEventListener('click', () => {
         } else {
             const txt = data.map(folder => {
                 return `
-                <button class="lang_post_btn" id="${folder.id}" value="${folder.id}">
+                <button class="problem_post_btn" id="${folder.id}" value="${folder.id}">
                     <svg width="60" height="44" viewBox="0 0 60 44" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M54.375 7.33333H31.875L24.375 0H5.625C2.51836 0 0 2.4624 0 5.5V38.5C0 41.5376 2.51836 44 5.625 44H54.375C57.4816 44 60 41.5376 60 38.5V12.8333C60 9.79573 57.4816 7.33333 54.375 7.33333Z" fill="#FFE59C"/>
                     </svg>
@@ -136,15 +165,45 @@ const problemPost = () => {
             })
             .then(res => res.json())
             .then(data => {
+
+                console.log(data);
+                let desc = [];
+                for(i=0; i < data.length; i++) {
+                    if(data[i].desc.length > 300) {
+                        desc[i] = data[i].desc.slice(0, 300)
+                    }
+                }
+                const extractTextPattern = /(<([^>]+)>)/gi;
+
+                let replaceDesc = [];
+                for(i=0; i < desc.length; i++) {
+                    replaceDesc[i] = desc[i].replace(extractTextPattern, "")
+                }
+
                 if (data.length === 0) {
                     thirdContainer.innerHTML = "파일없음";
                 } else {
                     const txt = data.map(post => {
                         return `
-                        <img src="${post.image}" alt="">
-                        ${post.image}
-                        ${post.title}
-                        ${post.desc}`
+                        <div class="my_post_list">
+                            <div class="post_title">
+                                ${post.title}
+                            </div>
+                            <div class="post_desc">
+                                ${replaceDesc}
+                            </div>
+                            <div class="post_user">
+                                <div class="scrap_num">
+                                    <span class="bold">스크랩</span>
+                                    ${post.scrap_num}
+                                </div>
+                                <div class="helped_num">
+                                    <span class="bold">도움</span>
+                                    ${post.helped_num}
+                                </div>
+                            </div>
+                        </div>
+                        `
                     }).join('')
                     thirdContainer.innerHTML = txt;
                 }
@@ -174,7 +233,7 @@ const frameworkBtn = document.querySelector('.framework_btn');
             } else {
                 const txt = data.map(folder => {
                     return `
-                    <button class="lang_post_btn" id="${folder.id}" value="${folder.id}">
+                    <button class="framework_post_btn" id="${folder.id}" value="${folder.id}">
                         <svg width="60" height="44" viewBox="0 0 60 44" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M54.375 7.33333H31.875L24.375 0H5.625C2.51836 0 0 2.4624 0 5.5V38.5C0 41.5376 2.51836 44 5.625 44H54.375C57.4816 44 60 41.5376 60 38.5V12.8333C60 9.79573 57.4816 7.33333 54.375 7.33333Z" fill="#FFE59C"/>
                         </svg>
@@ -208,15 +267,42 @@ const framePost = () => {
             .then(res => res.json())
             .then(data => {
 
+                let desc = [];
+                for(i=0; i < data.length; i++) {
+                    if(data[i].desc.length > 300) {
+                        desc[i] = data[i].desc.slice(0, 300)
+                    }
+                }
+                const extractTextPattern = /(<([^>]+)>)/gi;
+
+                let replaceDesc = [];
+                for(i=0; i < desc.length; i++) {
+                    replaceDesc[i] = desc[i].replace(extractTextPattern, "")
+                }
+
                 if (data.length === 0) {
                     thirdContainer.innerHTML = "파일없음"
                 } else {
                     const txt = data.map(post => {
                         return `
-                        <img src="${post.image}" alt="">
-                        ${post.image}
-                        ${post.title}
-                        ${post.desc}
+                        <div class="my_post_list">
+                            <div class="post_title">
+                                ${post.title}
+                            </div>
+                            <div class="post_desc">
+                                ${replaceDesc}
+                            </div>
+                            <div class="post_user">
+                                <div class="scrap_num">
+                                    <span class="bold">스크랩</span>
+                                    ${post.scrap_num}
+                                </div>
+                                <div class="helped_num">
+                                    <span class="bold">도움</span>
+                                    ${post.helped_num}
+                                </div>
+                            </div>
+                        </div>
                         `
                     }).join('')
                     thirdContainer.innerHTML = txt;
