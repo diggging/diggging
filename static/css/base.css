@@ -120,6 +120,10 @@
     fill: #00537A;
 }
 
+.alarmToggle {
+    font-family: 'Pretendard-SemiBold';
+}
+
 .nav_vertical h6 {
     font-family: var(--btn-font);
     font-size: 1rem;
@@ -221,7 +225,8 @@
     padding: 0.4rem 0.8rem;
     flex-direction: column;
     font-size: 0.875rem;
-    font-family: var(--btn-font);
+    font-family: 'Pretendard-SemiBold';
+    color: #00537A;
     text-decoration: none;
     box-shadow: 0.25rem 0.25rem 0.25rem rgba(0, 0, 0, 0.05);
     transition: box-shadow 0.25s ease-in 0s, transform 0.25s ease-in 0s;
