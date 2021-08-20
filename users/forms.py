@@ -112,9 +112,9 @@ class UserCustomCreationForm(UserCreationForm):
 class AuthenticationCustomForm(AuthenticationForm):
 
     username= forms.CharField(widget=forms.TextInput
-                        (attrs={'placeholder':'아이디를 입력해 주세요'}))
+                        (attrs={'placeholder':'아이디'}))
     password = forms.CharField(widget=forms.PasswordInput
-                        (attrs={'placeholder': '비밀번호를 입력해주세요'}))
+                        (attrs={'placeholder': '비밀번호'}))
 
     error_messages = {
         'invalid_login': "로그인을 다시 확인해주세요",
