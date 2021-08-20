@@ -13,30 +13,41 @@
 {% endblock script %}
 
 {% block content %}
-    <div class="create_title">
-        <h1>삽질기록 수정하기</h1>
-        <br>
-    </div>
-
+<div class="main_container">
     <div class="container">
+        <div class="create_title">
+            <h1>삽질기록 남기기</h1>
+            <br>
+        </div>
         <div class="form_container">
-            <form  method="POST" enctype="multipart/form-data">
+            <form method="POST" enctype="multipart/form-data" autocomplete="off">
                 {% csrf_token %}
                 {{ form.media }}
                 <div class="thumbnail_area">
                     <label for="id_image">
                         <img id="image" src="" alt=""
-                        onError="this.onerror=null;this.src='../../static/image/thumbnail_image.svg';" />
+                            onError="this.onerror=null;this.src='../../static/image/thumbnail_image.svg';" />
                     </label>
                     {{ form.image }}
                 </div>
-
                 {{ form.title }}
                 <div class="choice_area">
-                    {{ form.language }}
-                    {{ form.framework }}
-                    <label for="id_os">운영체제   {{ form.os }}</label>
-                    {{ form.problem_solving }}
+                    <div class="choice_flex">
+                        <span>언어</span>
+                        {{ form.language }}
+                    </div>
+                    <div class="choice_flex">
+                        <span>프레임워크</span>
+                        {{ form.framework }}
+                    </div>
+                    <div class="choice_flex">
+                        <span>운영체제</span>
+                        {{ form.os }}
+                    </div>
+                    <div class="choice_flex">
+                        <span>해결 여부</span>
+                        {{ form.problem_solving }}
+                    </div>
                 </div>
                 <div class="error_area">
                     {{ form.error_message }}
@@ -45,16 +56,17 @@
                     {{ form.desc }}
                 </div>
                 <div class="tag_area">
-                    공개설정 | 
+                    <span>공개설정</span>
                     {{form.is_public}}
                 </div>
                 <div class="btn_area">                  
-                        <input type="submit" value="수정하기" class="btn_control"/>
-                    <button  class="btn_control">
-                        <a href="{% url 'posts:main' %}">나가기</a>
-                    </button>
+                    <input type="submit" value="수정하기" class="btn_control"/>
+                    <a class="btn_control" href="{% url 'posts:main' %}">
+                        <span>나가기</span>
+                    </a>
                 </div>
             </form>
         </div>
     </div>
+</div>
 {% endblock %}
