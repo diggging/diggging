@@ -9,15 +9,83 @@
 <!-- highlights.js -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/vs2015.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script type="text/javascript">hljs.highlightAll();</script>
 <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+<script type='text/javascript'>
+    function sendLinkKakao(){
+      Kakao.Link.sendDefault({
+      objectType: 'feed',
+      content: {
+	title: "{{post.title}}",
+	description: "{{post.desc}}",
+	//imageUrl: "{{post.image.url}}"? "http://13.124.23.247:8000/"+"{{post.image.url}}" : "",
+	imageUrl: "",
+	link: {
+        mobileWebUrl: '{{ request.build_absolute_uri }}',
+        webUrl: '{{ request.build_absolute_uri }}'
+        }
+      },
+      buttons: [
+        {
+          title: '링크 열기',
+          link: {
+            mobileWebUrl: '{{ request.build_absolute_uri }}',
+            webUrl: '{{ request.build_absolute_uri }}'
+          }
+        }
+      ]
+    });
+}
+
+    //<![CDATA[
+    // // 사용할 앱의 JavaScript 키를 설정해 주세요.
+    Kakao.init("4bc6b6d10ce540d1bd347ad9fb8f61b5");
+    // // 카카오링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
+    Kakao.Link.createDefaultButton({
+      container: '#kakao-link-btn',
+      objectType: 'feed',
+      content: {
+	      title: "{{post.title}}",
+	      description: "{{post.desc}}",
+	      imageUrl: "",
+        link: {
+          mobileWebUrl: 'https://developers.kakao.com',
+          webUrl: 'https://developers.kakao.com'
+        }
+      },
+      social: {
+        likeCount: 286,
+        commentCount: 45,
+        sharedCount: 845
+      },
+      buttons: [
+        {
+          title: '웹으로 보기',
+          link: {
+            mobileWebUrl: 'https://developers.kakao.com',
+            webUrl: 'https://developers.kakao.com'
+          }
+        },
+        {
+          title: '앱으로 보기',
+          link: {
+            mobileWebUrl: 'https://developers.kakao.com',
+            webUrl: 'https://developers.kakao.com'
+          }
+        }
+      ]
+    });
+  //]]>
+</script>
+
 <script>
     //빈 코멘트 게시 시 알람창 뜨게할 div
     const test = document.querySelector('.addComment');
     const body = document.querySelector('body');
     const nullComment = (input) => {
             const newDiv = document.createElement('div');
-            const newText = document.createTextNode('댓글을 입력하세여!!');
+            const newText = document.createTextNode('댓글을 입력하세요!');
             newDiv.appendChild(newText);
             //newDiv 커스텀
             newDiv.style.width = "100px";
@@ -26,7 +94,7 @@
             newDiv.setAttribute('class', 'comment_alert');
             
             body.appendChild(newDiv);
-            setTimeout(()=> {
+            setTimeout(()=> {ㅑ
                 newDiv.remove()
             }, 2000)
         }
