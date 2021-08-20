@@ -19,8 +19,7 @@
       content: {
 	title: "{{post.title}}",
 	description: "{{post.desc}}",
-	//imageUrl: "{{post.image.url}}"? "http://13.124.23.247:8000/"+"{{post.image.url}}" : "",
-	imageUrl: "",
+	imageUrl: "http://13.124.23.247:8000/"+"{{post.image.url}}",
 	link: {
         mobileWebUrl: '{{ request.build_absolute_uri }}',
         webUrl: '{{ request.build_absolute_uri }}'
@@ -280,7 +279,7 @@ scrapPopup.addEventListener('click', () => {
 {% block content %}
 
 <div class="container_detail">
-    {% if post.image %}
+    {% if post.image != "../static/image/default_image.PNG" %}
     <img src="{{ post.image.url }}" class="thumbnail_area">
     {% endif %}
     <div class="post_container">

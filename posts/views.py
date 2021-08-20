@@ -130,13 +130,6 @@ def post_detail(request, user_id, post_id):
         folder_name=post_details.language, folder_user=post_details.user
     )
     comments = post_details.comments.all()
-    
-     try:
-        img = post_details.image
-        imgsrc= "http://13.124.23.247:8000/"+ img
-    except:
-        imgsrc = ""
-
     ctx = {
         "post": post_details,
         "host": me,
@@ -144,7 +137,6 @@ def post_detail(request, user_id, post_id):
         "comments": comments,
         "user_id": user_id,
         "post_id": post_id,
-        "post_img": imgsrc,
     }
     # html added by 종권
     return render(request, "posts/post_detail.html", ctx)

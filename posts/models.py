@@ -162,7 +162,7 @@ class Post(core_models.TimeStampModel):
     )
     error_message = models.TextField(verbose_name="에러메세지", blank=True)
     image = models.ImageField(
-        verbose_name="게시물 사진", upload_to="images/posts", blank=True, null=True
+        verbose_name="게시물 사진", upload_to="images/posts", blank=True, null=True, default='../static/image/default_image.PNG'
     )
     # desc = models.TextField(verbose_name="설명", blank=False)
     desc = RichTextUploadingField(verbose_name="설명", blank=False, config_name="default")
