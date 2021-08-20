@@ -61,16 +61,16 @@
     bottom: -70%;
     left: 38%;
 
-    width: 400px;
-    height: 600px;
+    width: 25rem;
+    height: 37.5rem;
 
-    padding: 40px;
+    padding: 2.5rem;
 
     overflow: scroll;
 
     background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.1875rem 0 rgba(34, 36, 38, 0.15);
 
     transition-timing-function: ease-in;
     transition-duration: 1s;
@@ -98,16 +98,16 @@
     bottom: 10%;
     left: 32%;
 
-    width: 500px;
-    height: 600px;
+    width: 31.25rem;
+    height: 37.5rem;
 
-    padding: 40px;
+    padding: 2.5rem;
 
     overflow: scroll;
 
     background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.1875rem 0 rgba(34, 36, 38, 0.15);
 
     transition-timing-function: ease-in;
     transition-duration: 1s;
@@ -134,33 +134,33 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    width: 236px;
-    height: 50px;
+    width: 14.75rem;
+    height: 3.125rem;
 }
 
 
 .follow_list {
     display: flex;
-    margin-top: 5px;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    padding: 15px;
-    margin-bottom: 10px;
+    margin-top: 0.3125rem;
+    border: 0.0625rem solid var(--border-color);
+    border-radius: 0.3125rem;
+    padding: 0.9375rem;
+    margin-bottom: 0.625rem;
 }
 
 .follow_image {
     object-fit: cover;
-    border-radius: 10px;
-    border-top: 1px solid rgb(248, 249, 250);
-    width: 40px;
-    height: 40px;
-    margin-bottom: 5px;
-    margin-right: 10px;
+    border-radius: 0.625rem;
+    border-top: 0.0625rem solid rgb(248, 249, 250);
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: 0.3125rem;
+    margin-right: 0.625rem;
 }
 
 .follow_desc {
-    margin-left: 10px;
-    padding: 10px;
+    margin-left: 0.625rem;
+    padding: 0.625rem;
 }
 
 .container_box {
@@ -182,7 +182,7 @@
     width: 22.125rem;
     height: 100%;
     flex-direction: column;
-    border: solid 1px #E5E5E5;
+    border: solid 0.0625rem #E5E5E5;
     padding: 4rem 1.75rem 1.75rem 1.75rem;
     border-top: none;
     border-bottom: none;
@@ -192,7 +192,7 @@
     display: flex;
     flex-direction: column;
     margin-left: 23rem;
-    padding: 61px 1rem 1rem 1rem;
+    padding: 3.8125rem 1rem 1rem 1rem;
     width: 100%;
     height: 100%;
     justify-content: space-evenly;
@@ -200,10 +200,10 @@
 
 
 .second_container {
-    border: solid 1px #E5E5E5;
+    border: solid 0.0625rem #E5E5E5;
     border-radius: 0.5rem;
     display: flex;
-    height: 700px;
+    height: 43.75rem;
     flex-direction: column;
     align-items: center;
     padding: 2.5rem;
@@ -245,8 +245,8 @@
     justify-content: center;
     align-items: flex-start;
     width: 100%;
-    height: 20px;
-    padding: 47px;
+    height: 1.25rem;
+    padding: 2.9375rem;
 }
 
 .post_title {
@@ -254,7 +254,7 @@
     color: #212529;
     font-size: 1.25rem;
     line-height: 1.4375rem;
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
 }
 
 .post_desc {
@@ -262,13 +262,13 @@
     color: #585858;
     font-size: 0.875rem;
     line-height: 1.5rem;
-    margin-bottom: 15px;
+    margin-bottom: 0.9375rem;
 }
 
 .post_user {
     width: 100%;
-    height: 200px;
-    border-bottom: 1px solid #E5E5E5;
+    height: 12.5rem;
+    border-bottom: 0.0625rem solid #E5E5E5;
     display: flex;
     justify-content: flex-end;
 }
@@ -287,8 +287,8 @@
 
 .helped_num {
     font-family: 'Pretendard-Regular';
-    font-size: 12px;
-    line-height: 16px;
+    font-size: 0.75rem;
+    line-height: 1rem;
     color: #00537A;
 }
 
@@ -300,7 +300,7 @@
 /*Styling the tab*/
 .tab {
     overflow: hidden;
-    border: 1px solid #ccc;
+    border: 0.0625rem solid #ccc;
     background-color: #f1f1f1;
 }
 
@@ -311,7 +311,7 @@
     border: none;
     outline: none;
     cursor: pointer;
-    padding: 14px 16px;
+    padding: 0.875rem 1rem;
     transition: 0.3s;
 }
 
@@ -328,8 +328,8 @@
 /* tab content styling */
 .tabcontent {
     display: none;
-    padding: 6px 12px;
-    border: 1px solid #ccc;
+    padding: 0.375rem 0.75rem;
+    border: 0.0625rem solid #ccc;
     border-top: none;
 }
 
@@ -340,15 +340,15 @@
 }
 
 .profile_username i {
-    margin-right: 8px;
+    margin-right: 0.5rem;
     vertical-align: middle;
     color: var(--logo-color);
 }
 
 .user_nickname {
     font-family: 'Pretendard-SemiBold';
-    margin-left: 10px;
-    margin-bottom: 10px;
+    margin-left: 0.625rem;
+    margin-bottom: 0.625rem;
     color: #00537A;
     font-size: 1rem;
 }
@@ -363,11 +363,11 @@
     font-size: 0.75rem;
     line-height: 1.063rem;
     color: #8C8D8D;
-    margin-left: 10px;
+    margin-left: 0.625rem;
 }
 
 .sand_level_area {
-    margin-top: 50px;
+    margin-top: 3.125rem;
 }
 .profile_container {
     display: flex;
@@ -390,19 +390,19 @@
     display: flex;
     align-items: center;
     margin-right: 1rem;
-    margin-right: 24px;
+    margin-right: 1.5rem;
 }
 
 .profile_image img {
-    width: 50px;
-    height: 50px;
-    border-radius: 100px;
+    width: 3.125rem;
+    height: 3.125rem;
+    border-radius: 6.25rem;
 }
 
 .badge_img img,
 .badge_img span {
     vertical-align: middle;
-    margin-right: 4px;
+    margin-right: 0.25rem;
 }
 
 .badge_img .sand_level {
@@ -420,18 +420,18 @@
 
 
 .follow_area {
-    margin-bottom: 20px;
-    margin-top: 10px;
+    margin-bottom: 1.25rem;
+    margin-top: 0.625rem;
 }
 
 .follow_area button {
     font-family: 'Pretendard-SemiBold';
     color: #00537A;
-    border: 1px solid #00537A;
-    border-radius: 20px;
+    border: 0.0625rem solid #00537A;
+    border-radius: 1.25rem;
     background: white;
     width: 9em;
-    height: 36px;
+    height: 2.25rem;
     cursor: pointer;
     font-size: 0.875rem;
 }
@@ -442,27 +442,27 @@
 }
 
 .follow_btn {
-    margin-right: 10px;
+    margin-right: 0.625rem;
 }
 
 .follow_btn_area {
     display: flex;
-    margin: 20px 0;
+    margin: 1.25rem 0;
     justify-content: space-evenly;
 }
 
 .follow_btn_area label {
     width: 9em;
-    height: 36px;
-    border: 1px solid #00537A;
-    border-radius: 20px;
-    padding: 8px 5px 5px 5px;
+    height: 2.25rem;
+    border: 0.0625rem solid #00537A;
+    border-radius: 1.25rem;
+    padding: 0.5rem 0.3125rem 0.3125rem 0.3125rem;
     text-align: center;
     cursor: pointer;
     color: #00537A;
     font-family: 'Pretendard-SemiBold';
     font-size: 0.875rem;
-    margin-right: 10px;
+    margin-right: 0.625rem;
 }
 
 .follow_btn_area label:hover {
@@ -471,12 +471,12 @@
 }
 
 meter {
-    width: 210px;
-    height: 28px;
+    width: 13.125rem;
+    height: 1.75rem;
 }
 
 .point_gage {
-    margin-top: 10px;
+    margin-top: 0.625rem;
 }
 
 .point_gage label {
@@ -484,25 +484,25 @@ meter {
     font-family: var(--content-font);
     color: var(--text-color);
     position: relative;
-    top: 22px;
-    left: 75px;
+    top: 1.375rem;
+    left: 4.6875rem;
 }
 
 .point_gage meter {
     width: 100%;
-    height: 20px;
+    height: 1.25rem;
     -webkit-appearance: none; /* Reset appearance */
-    border: 1px solid #DBD6C7;
-    border-radius: 20px;
+    border: 0.0625rem solid #DBD6C7;
+    border-radius: 1.25rem;
     box-sizing: border-box;
     background: #FFFFFF;
 }
 
 
 .profile_text {
-    height: 40px;
+    height: 2.5rem;
     background-color: floralwhite;
-    border-radius: 4px;
+    border-radius: 0.25rem;
     padding: 1rem;
 }
 
@@ -511,7 +511,7 @@ meter {
     font-size: 0.75rem;
     background: floralwhite;
     padding: 1rem;
-    border-radius: 8px;
+    border-radius: 0.5rem;
     color: var(--logo-color);
 }
 
@@ -521,7 +521,7 @@ meter {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    border-top: solid 1px #E5E5E5;
+    border-top: solid 0.0625rem #E5E5E5;
 }
 
 .list_btn {
@@ -529,7 +529,7 @@ meter {
     width: 100%;
     padding: 1.625rem;
     display: block;
-    border-bottom: solid 1px #E5E5E5;
+    border-bottom: solid 0.0625rem #E5E5E5;
     font-family: 'Pretendard-SemiBold';
     color: #8C8D8D;
 }
@@ -537,21 +537,21 @@ meter {
 .list_btn:hover {
     display: block;
     color: #00537A;
-    border-bottom: solid 1px #00537A;
+    border-bottom: solid 0.0625rem #00537A;
 }
 
 /* .list_btn:active {
-    border: solid 1px var(--border-color);
+    border: solid 0.0625rem var(--border-color);
     width: 91%;
-    height: 60px;
+    height: 3.75rem;
     background: var(--hover-color);
-    margin: 20px auto;
+    margin: 1.25rem auto;
     transition: 0.2s;
 } */
 
 .empty_img {
-    border-radius: 10px;
-    width: 40px;
+    border-radius: 0.625rem;
+    width: 2.5rem;
     background-color: bisque;
 }
 
@@ -577,7 +577,7 @@ meter {
 }
 
 #github_chart_1 svg g {
-    font-size: 6px;
+    font-size: 0.375rem;
     font-family: var(--content-font);
     color: var(--hover-color);
 }
@@ -588,7 +588,7 @@ meter {
 .category_tab {
     display: flex;
     width: 100%;
-    height: 150px;
+    height: 9.375rem;
 }
 
 #btn_tap {
@@ -615,39 +615,39 @@ meter {
 .language_btn {
     background: #FFBA42;
     color: white;
-    border: 2px solid white;
-    padding: 0.5rem 2.625rem 0.5rem 29px;
+    border: 0.125rem solid white;
+    padding: 0.5rem 2.625rem 0.5rem 1.8125rem;
 }
 
 .framework_btn {
     background-color: #FFD358;
     color: white;
-    border: 2px solid white;
-    padding: 0.5rem 2.625rem 0.5rem 31px;
+    border: 0.125rem solid white;
+    padding: 0.5rem 2.625rem 0.5rem 1.9375rem;
 }
 
 .problem_btn {
     background-color: #FFD358;
     color: white;
-    border: 2px solid white;
-    padding: 0.5rem 2.625rem 0.5rem 31px;
+    border: 0.125rem solid white;
+    padding: 0.5rem 2.625rem 0.5rem 1.9375rem;
 }
 
 .language_btn:hover {
     color: #FFBA42;
-    border: 2px solid #FFBA42;
+    border: 0.125rem solid #FFBA42;
     background: white;
 }
 
 .framework_btn:hover {
     color: #FFBA42;
-    border: 2px solid #FFBA42;
+    border: 0.125rem solid #FFBA42;
     background: white;
 }
 
 .problem_btn:hover {
     color: #FFBA42;
-    border: 2px solid #FFBA42;
+    border: 0.125rem solid #FFBA42;
     background: white;
 }
 
@@ -660,8 +660,8 @@ meter {
     display: block;
     height: 30vh;
     padding: 1rem;
-    border: solid 1px var(--border-color);
-    border-radius: 8px;
+    border: solid 0.0625rem var(--border-color);
+    border-radius: 0.5rem;
     justify-content: flex-start;
     width: 100%;
     overflow: scroll;
@@ -670,7 +670,7 @@ meter {
 .lang_post_btn,
 .framework_post_btn,
 .problem_post_btn {
-    padding: 22px;
+    padding: 1.375rem;
     background: none;
     border: none;
     display: flex;
@@ -678,14 +678,14 @@ meter {
     align-items: center;
     font-family: var(--btn-font);
     color: var(--text-color);
-    margin: 5px;
+    margin: 0.3125rem;
     cursor: pointer;
 }
 
 .lang_post_btn:active,
 .framework_post_btn:active,
 .problem_post_btn:active {
-    padding: 5px;
+    padding: 0.3125rem;
     background: none;
     border: none;
     display: flex;
@@ -693,7 +693,7 @@ meter {
     align-items: center;
     font-family: var(--btn-font);
     color: var(--text-color);
-    margin: 5px;
+    margin: 0.3125rem;
 }
 
 .folder_area {
@@ -712,7 +712,7 @@ meter {
     flex-wrap: wrap;
     margin: 0;
     padding: 0;
-    height: 150px;
+    height: 9.375rem;
     overflow-y: scroll;
 }
 
@@ -741,12 +741,12 @@ meter {
     line-height: 1.4375rem;
     text-align: center;
     color: #8C8D8D;
-    margin-top: 4px;
+    margin-top: 0.25rem;
 }
 
 .folder_space {
     display: flex;
-    margin: 4px;
+    margin: 0.25rem;
     margin: 0.825rem;
     flex-direction: column;
     align-items: center;
@@ -756,37 +756,37 @@ meter {
 .last_log_box{
     display: block;
     padding: 1rem;
-    border-radius: 8px;
+    border-radius: 0.5rem;
     justify-content: flex-start;
-    margin: 10px;
+    margin: 0.625rem;
     width: 100%;
     height: 100%;
-    border: solid 1px var(--border-color);
-    border-radius: 8px;
+    border: solid 0.0625rem var(--border-color);
+    border-radius: 0.5rem;
 }
 
 .last_question_list {
     display: none;
-    border-top: solid 1px var(--border-color);
-    padding: 20px;
+    border-top: solid 0.0625rem var(--border-color);
+    padding: 1.25rem;
     width: 100%;
     font-size: 0.825rem;
-    border-bottom: solid 1px var(--border-color);
+    border-bottom: solid 0.0625rem var(--border-color);
     font-family: var(--content-font);
     color: var(--text-color);
 }
 
 .snad_level_area .level_badge img {
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    height: 24px;
-    padding: 2px;
-    height: 28px;
+    border: 0.0625rem solid var(--border-color);
+    border-radius: 0.25rem;
+    height: 1.5rem;
+    padding: 0.125rem;
+    height: 1.75rem;
     margin: 0.875rem 0;
 }
 
 .level_badge {
-    margin: 6px 0;
+    margin: 0.375rem 0;
 }
 
 .level_badge a {
@@ -805,9 +805,9 @@ a.badge_img .level_modal {
     left: 5.2rem;
     width: 20%;
     background: #F8F8F8;
-    border-radius: 8px;
-    border: solid 1px var(--border-color);
-    padding: 10px;
+    border-radius: 0.5rem;
+    border: solid 0.0625rem var(--border-color);
+    padding: 0.625rem;
     z-index: 1000000;
     display: inline;
     opacity: 0;
@@ -825,9 +825,9 @@ a.badge_img:hover .level_modal{
 }
 
 .level_modal span {
-    font-size: 12px;
+    font-size: 0.75rem;
     color: var(—logo-color);
-    margin-left: 5px;
+    margin-left: 0.3125rem;
     line-height: 2rem;
 }
 .level_modal p {
@@ -836,5 +836,5 @@ a.badge_img:hover .level_modal{
 }
 
 .folder_category{
-    font-size: 0px;
+    font-size: 0rem;
 }
