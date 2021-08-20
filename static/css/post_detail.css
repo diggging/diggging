@@ -36,50 +36,58 @@ h1, h2, h3, h4, h5 {
     font-family: var(--title-font);
 }
 
-body {
-    color: var(--text-color);
-}
-
 .container_detail {
+    width: 48rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5.5rem;
     display:flex;
     justify-content: center;
-    margin-top : 160px;
     flex-direction: column;
     align-items: center;
-    padding: 4rem;
-}
-
-.post_container {
-    width: 68em;
-    padding: 50px;
-    display: flex;
-    width: 90%;
-    justify-content: center;
-    border: solid 1px var(--border-color); 
-    border-radius: 8px;
-    flex-direction: column;
 }
 
 .thumbnail_area{
-    border: solid 1px var(--border-color);
-    border-radius: 8px;
-    height: 28rem; 
-    width: 68em;
+    border-radius: 1.25rem 1.25rem 1rem 1rem;
+    border-bottom: none;
+    height: 25rem; 
+    max-width: 48rem;
     display: flex;
     justify-content: center;
-    object-fit: cover;
+    object-fit: contain;
+    margin-bottom: 1.5rem;
+}
+
+.post_container {
+    max-width: 48rem;
+    padding: 1.875rem;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    border-radius: 1.25rem;
+    box-shadow: 0.75rem 0.75rem 3.75rem 0.5rem rgba(0, 0, 0, 0.2);
+    flex-direction: column;
+}
+
+.title_area h1{
+    font-size: 2.25rem;
+    line-height: 3rem;
+    color: #212529;
+    margin-bottom: 2.375rem;
+    /* height: 96px; */
+}
+
+.accordion_area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .post_area {
     border: solid 1px var(--border-color);
-    border-radius: 8px;
+    border-radius: 0.5rem;
     display: flex;
     padding: 20rem;
-}
-
-.post_top {
-    display: flex;
-    justify-content: space-between;
 }
 
 .post_area h1 {
@@ -91,11 +99,11 @@ body {
 
 .post_user_info {
     display: flex;
-    margin: 20px 0;
+    margin: 1.25rem 0;
 }
 
 .post_user_info span {
-    margin-left: 10px;
+    margin-left: 0.625rem;
     font-size: 0.825rem;
     color: var(--text-color);
     font-family: var(--content-font);
@@ -104,22 +112,28 @@ body {
 }
 
 .profile_username {
+    width: 42.375rem;
+    height: 9.0625rem;
     display: flex;
     flex-direction: row;
+    border-bottom: 1px solid #ECECEC;
+    border-top: 1px solid #ECECEC;
+    padding: 1.875rem;
 }
 
 .user_nickname {
-    margin-left: 20px;
-    margin-top: 5px;
+    width: 100%;
+    margin-left: 1.25rem;
+    margin-top: 0.3125rem;
     font-size: 0.875rem;
     font-family: var(--btn-font);
     color: var(--text-color);
 }
 
 .post_user_info img {
-    width: 36px;
-    border-radius: 20px;
-    margin: 10px;
+    width: 2.25rem;
+    border-radius: 1.25rem;
+    margin: 0.625rem;
 }
 
 .user_nickname {
@@ -134,23 +148,23 @@ body {
 }
 
 .auth_btn_area > div {
-    padding: 20px;
+    padding: 1.25rem;
 }
 
 .auth_btn_area a {
-    padding: 10px 14px;
+    padding: 0.625rem 0.875rem;
 }
 
 .edit_btn > a {
     font-family: var(--btn-font);
     color:var(--sand-color);
     background-color: var(--btn-color);
-    border-radius: 4px;
+    border-radius: 0.25rem;
     box-shadow: none;
     border: solid 2px var(--sand-color);
     color: var(--sand-color);
     text-decoration: none;
-    padding: 10px 14px;
+    padding: 0.625rem 0.875rem;
 }
 
 .edit_btn > a:visited {
@@ -181,12 +195,30 @@ body {
     font-family: var(--btn-font);
     font-size: 0.825rem;
     color:var(--text-color);
+    margin-bottom: 2.375rem;
 }
+
+.category_area span {
+    width: 4.375rem;
+    height: 1.5rem;
+    padding: 0.25rem 1.125rem;
+    background: #FFBA42;
+    border-radius: 1.25rem;
+    color: white;
+    margin-right: 0.625rem;
+    text-align: center;
+}
+
 .desc_area {
     font-family: var(--content-font);
+    color: #585858;
     min-height: 8rem;
     font-size: 1rem;
     margin-top: 2rem;
+    font-size: 1.125rem;
+    line-height: 2.125rem;
+    height: 100%;
+    margin-bottom: 2.375rem;
 }
 
 .desc_area img {
@@ -194,18 +226,18 @@ body {
 }
 
 .tag_area {
-    margin-bottom: 30px;
+    margin-bottom: 1.875rem;
 }
 
 .comment_box {
-    margin-bottom: 30px;
+    margin-bottom: 1.875rem;
 }
 
 
 .addComment {
     font-size: 1rem;
     font-family: var(--content-font); 
-    padding: 10px;
+    padding: 0.3125rem;
 }
 
 .addComment > * {
@@ -215,24 +247,49 @@ body {
 }
 
 .addComment button {
-    padding: 10px 20px;
+    /* padding: 0.625rem 1.25rem; */
 }
 
 .addComment > div {
-    padding: 1.2rem;
-    border: solid 1px var(--border-color);
-    border-radius: 14px;
-    margin: 0.5rem;
+    padding: 1.125rem 1.875rem 1.125rem 1.875rem;
+    background: #FFFFFF;
+    border: 0.0625rem solid #62A1BF;
+    box-sizing: border-box;
+    border-radius: 1.25rem;
+    width: 44rem;
+    margin-bottom: 1.5rem;
+}
+
+.comment_flex {
+    display: flex;
+    align-items: center;
+}
+
+.comment_flex > .user_nicknamme {
+    font-family: 'Pretendard-SemiBold';
+    font-size: 1rem;
+    line-height: 1.4375rem;
+    color: #00537A;
+    margin-bottom: 1rem;
+    margin-right: 0.625rem;
 }
 
 .comment_area {
     font-size: 1rem;
 }
 
+.comment_span {
+    font-family: 'Pretendard-SemiBold';
+    font-size: 1.125rem;
+    line-height: 1.3125rem;
+    color: #00537A;
+    margin: 2rem 0rem 1rem 0rem;
+}
+
 .comment_text {
     font-size: 0.875rem;
-    font-family: var(--content-font);
-    color: var(--text-color);
+    line-height: 1.25rem;
+    color: #8C8D8D;
     text-align: left;
 }
 
@@ -245,7 +302,8 @@ body {
 .comment_created {
     font-size: 0.625rem;
     margin-bottom: 1rem;
-    color: var(--border-color);
+    margin-right: 0.625rem;
+    color: #8C8D8D;
 }
 
 .comment_profile {
@@ -256,89 +314,202 @@ body {
 }
 
 .delete_btn > * {
+    padding: 0.625rem 1.25rem;
+    background-color: white;
+    border: 1px solid #00537A;
+    color: #00537A;
     font-family: var(--btn-font);
-    color:var(--sand-color);
-    background-color: peachpuff;
-    border-radius: 4px;
-    box-shadow: none;
-    border: solid 2px lightsalmon;
-    color: salmon;
+    border-radius: 1.25rem;
+    width: 4.8125rem;
+    height: 2.5rem;
+    cursor: pointer;
+    margin-left: 1.125rem;
 }
 
-.delete_btn button:active {
-    background-color: lightsalmon;
-    color: whitesmoke;
-}
+.delete_btn button:active,
 .delete_btn button:hover {
-    background-color: #fee5ce;
-    color: salmon;
+    background-color: #00537A;
+    color: white;
 }
 
 .comment_input_area {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    flex-direction: column;
 }
 
 .comment_input_area button {
-    padding: 10px 20px;
-    background-color: var(--btn-color);
-    border-color:var(--border-color);
-    color: var(--sand-color);
+    padding: 0.625rem 1.25rem;
+    background-color: white;
+    border: 1px solid #00537A;
+    color: #00537A;
     font-family: var(--btn-font);
-    border-radius: 4px;
-    border-style: solid;
+    border-radius: 1.25rem;
+    width: 7.875rem;
+    height: 2.5rem;
+    border: 1px solid #00537A;
+    cursor: pointer;
+    margin: 0.875rem 0 1.875rem 35.8125rem;
 }
 
 .comment_input_area button:hover {
-    background-color: var(--hover-color);
-    border-radius: 4px;
+    background-color: #00537A;
+    color: white;
 } 
 
 .comment_input {
-    padding: 10px 15px;
+    padding: 0.625rem 0.9375rem;
     font-size: 1rem;
     font-family: var(--content-font);
-    border: solid 1px var(--border-color);
-    border-radius: 4px;
-    width: 80%;
+    border: 1px solid #62A1BF;
+    box-sizing: border-box;
+    border-radius: 1.25rem;
+    width: 44rem;
+    height: 5rem;
+}
+
+.comment_input:focus {
+    outline: none;
+    border: 0.125rem solid #62A1BF;
+}
+
+.comment_input::placeholder {
+    font-size: 1rem;
+    font-family: var(--content-font);
+    color: #00537A;
+}
+
+.btn_right {
+    display: flex;
 }
 
 .post__like, .post__scrap {
-    padding: 10px 20px;
+    padding: 0.625rem 1.25rem;
     border: 1px solid var(--border-color);
     background: floralwhite;
-    border-radius: 8px;
+    border-radius: 0.5rem;
 }
 
-.scrap {
-    color: var(--sand-color);
+.scrap,
+.btn_toggle {
+    color: #FFBA42;
     font-family: var(--btn-font);
-    background-color: var(--btn-color);
-    border: solid 1px var(--border-color);
-    border-radius: 4px;
-    padding: 10px 4px;
+    background-color: white;
+    border: solid 1px #FFBA42;
+    border-radius: 1.25rem;
+    text-align: center;
+    width: 7.1875rem;
+    height: 1.875rem;
+    cursor: pointer;
 }
 
-.scrap:visited {
-    background-color: var(--hover-color);
+.scrap > svg,
+.btn_toggle > svg {
+    margin-right: 0.3125rem;
 }
+
+.scrap span,
+.btn_toggle span {
+    text-align: center;
+}
+
+.scrap_counts {
+    margin-left: 0.3125rem;
+}
+
+.scrap:hover,
+.btn_toggle:hover {
+    background-color: #FFBA42;
+    color: white;
+    border: solid 1px white;
+}
+
+.like {
+    color: #FFBA42;
+    font-family: var(--btn-font);
+    background-color: white;
+    border: solid 1px #FFBA42;
+    border-radius: 1.25rem;
+    text-align: center;
+    width: 10.5rem;
+    height: 1.875rem;
+    cursor: pointer;
+}
+
+.like > svg {
+    margin-right: 0.3125rem;
+}
+
+.like span {
+    text-align: center;
+}
+
+.like:hover {
+    background-color: #FFBA42;
+    color: white;
+    border: solid 1px white;
+}
+
 .scrap_popup {
     position: relative;
     top: 50%;
     opacity: 0;
     /* visibility: hidden; */
-    width: 300px;
-    height: 80px;
+    width: 18.75rem;
+    height: 5rem;
     background: rgb(231, 231, 230);
     border: solid 1px var(--border-color);
     transition-duration: 2s;
 }
 
-
 .scrap_popup p {
-    font-size: 14px;
-    line-height: 20px;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
     color: var(--text-color);
     font-family: var(--content-font);
+}
+
+.comment {
+    font-size: 0.875rem;
+    line-height: 1rem;
+    text-align: right;
+    color: #00537A;
+}
+
+.profile_username {
+    display: flex;
+    align-items: center;
+}
+
+.profile_image {
+    font-size: 0.825rem;
+    color: var(--text-color);
+    font-family: var(--content-font);
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+    margin-right: 1.5rem;
+}
+
+.profile_image img {
+    width: 3.125rem;
+    height: 3.125rem;
+    border-radius: 6.25rem;
+}
+
+.user_nickname {
+    font-family: 'Pretendard-SemiBold';
+    margin-left: 0.625rem;
+    margin-bottom: 0.625rem;
+    color: #00537A;
+    font-size: 1rem;
+}
+
+.proflie_text {
+    width: 31.625rem;
+    height: 2.0625rem;
+    font-size: 0.75rem;
+    line-height: 1.063rem;
+    color: #8C8D8D;
+    margin-left: 0.625rem;
 }
