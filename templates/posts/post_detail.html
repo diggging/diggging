@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block script %}
 <link rel="stylesheet" href="{% static 'css/post_detail.css' %}">
 <!-- axios cdn -->
@@ -18,8 +17,8 @@
       objectType: 'feed',
       content: {
 	title: "{{post.title}}",
-	description: "{{post.desc}}",
-	imageUrl: "http://13.124.23.247:8000/"+"{{post.image.url}}",s
+	description: "{{post.desc|safe|escape }}",
+	imageUrl: "http://13.124.23.247:8000"+"{{post.image.url}}",
 	link: {
         mobileWebUrl: '{{ request.build_absolute_uri }}',
         webUrl: '{{ request.build_absolute_uri }}'
@@ -46,17 +45,16 @@
       objectType: 'feed',
       content: {
 	      title: "{{post.title}}",
-	      description: "{{post.desc}}",
-	      imageUrl: "",
+	      description: "{{post.desc|safe|escape }}",
+	      imageUrl: "http://13.124.23.247:8000/"+"{{post.image.url}}",
         link: {
           mobileWebUrl: 'https://developers.kakao.com',
           webUrl: 'https://developers.kakao.com'
         }
       },
       social: {
-        likeCount: 286,
-        commentCount: 45,
-        sharedCount: 845
+	likeCount: {{post.helped_num}},
+	sharedCount: {{post.scrap_num}}
       },
       buttons: [
         {

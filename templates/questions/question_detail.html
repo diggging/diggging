@@ -1,31 +1,52 @@
 {% extends 'questions/base.html' %}
 {% load static %}
 {% block content %}
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script type='text/javascript'>
-    var title = document.querySelector('.title_area').textContent;
-    var desc = document.querySelector('.desc_area').textContent;
-    var img = document.getElementById("thumbnail").src
-	
+    function sendLinkKakao(){
+      Kakao.Link.sendDefault({
+      objectType: 'feed',
+      content: {
+	title: "{{post.title}}",
+	description: "{{post.desc}}",
+	imageUrl: "http://13.124.23.247:8000"+"{{post.image.url}}",
+	link: {
+        mobileWebUrl: '{{ request.build_absolute_uri }}',
+        webUrl: '{{ request.build_absolute_uri }}'
+        }
+      },
+      buttons: [
+        {
+          title: '링크 열기',
+          link: {
+            mobileWebUrl: '{{ request.build_absolute_uri }}',
+            webUrl: '{{ request.build_absolute_uri }}'
+          }
+        }
+      ]
+    });
+}
+
     //<![CDATA[
     // // 사용할 앱의 JavaScript 키를 설정해 주세요.
-    Kakao.init(4bc6b6d10ce540d1bd347ad9fb8f61b5);
+    Kakao.init("4bc6b6d10ce540d1bd347ad9fb8f61b5");
     // // 카카오링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
     Kakao.Link.createDefaultButton({
       container: '#kakao-link-btn',
       objectType: 'feed',
       content: {
-        title: $(title),
-        description: $(desc),
-        imageUrl: $(img),
+	      title: "{{post.title}}",
+	      description: "{{post.desc}}",
+	      imageUrl: "http://13.124.23.247:8000"+"{{post.image.url}}",
         link: {
           mobileWebUrl: 'https://developers.kakao.com',
           webUrl: 'https://developers.kakao.com'
         }
       },
       social: {
-        likeCount: 286,
-        commentCount: 45,
-        sharedCount: 845
+	      likeCount: {{post.helped_num}},
+	      
+	      sharedCount: {{post.scrap_num}}
       },
       buttons: [
         {
@@ -38,7 +59,7 @@
         {
           title: '앱으로 보기',
           link: {
-            mobileWebUrl:'https://developers.kakao.com',
+            mobileWebUrl: 'https://developers.kakao.com',
             webUrl: 'https://developers.kakao.com'
           }
         }
@@ -46,8 +67,10 @@
     });
   //]]>
 </script>
+
+
 <div class="question_container">
-    {% if post.image %}
+    {% if post.image != "../static/image/default_image.PNG" %}
     <img src="{{ post.image.url }}" class="thumbnail_area" id="thumbnail">
     {% endif %}
     <div class="post_container">
