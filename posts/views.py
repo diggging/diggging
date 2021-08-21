@@ -423,152 +423,152 @@ def post_delete(request, pk):
 
 
 ## search input ajax ------------------------------------------
-@csrf_exempt
-def search_input(request):
-    if request.method == "POST":
-        search_str = json.loads(request.body).get("text")
+# @csrf_exempt
+# def search_input(request):
+#     if request.method == "POST":
+#         search_str = json.loads(request.body).get("text")
 
-        posts = Post.objects.filter(
-            title__icontains=search_str) | Post.objects.filter(
-            desc__icontains=search_str)
+#         posts = Post.objects.filter(
+#             title__icontains=search_str) | Post.objects.filter(
+#             desc__icontains=search_str)
         
-        # paginator = Paginator(posts, 10)
-        # try:
-        #     page_num = request.GET.get("page")
-        #     posts_list = paginator.page(page_num)
-        # except PageNotAnInteger:
-        #     posts_list = paginator.page(1)
+#         # paginator = Paginator(posts, 10)
+#         # try:
+#         #     page_num = request.GET.get("page")
+#         #     posts_list = paginator.page(page_num)
+#         # except PageNotAnInteger:
+#         #     posts_list = paginator.page(1)
 
-        data = posts.values()
+#         data = posts.values()
 
-        return JsonResponse(list(data), safe=False)
+#         return JsonResponse(list(data), safe=False)
 
-@csrf_exempt
-def search_quests_input(request):
-    if request.method == "POST":
-        search_str = json.loads(request.body).get("text")
+# @csrf_exempt
+# def search_quests_input(request):
+#     if request.method == "POST":
+#         search_str = json.loads(request.body).get("text")
 
-        questions = Question_post.objects.filter(
-            title__icontains=search_str).values() | Question_post.objects.filter(
-            desc__icontains=search_str).values()
+#         questions = Question_post.objects.filter(
+#             title__icontains=search_str).values() | Question_post.objects.filter(
+#             desc__icontains=search_str).values()
         
-        #페이지
-        # paginator = Paginator(questions, 10)
-        # try:
-        #     page_num = request.GET.get("page")
-        #     questions_list = paginator.page(page_num)
-        # except PageNotAnInteger:
-        #     questions_list = paginator.page(1)
+#         #페이지
+#         # paginator = Paginator(questions, 10)
+#         # try:
+#         #     page_num = request.GET.get("page")
+#         #     questions_list = paginator.page(page_num)
+#         # except PageNotAnInteger:
+#         #     questions_list = paginator.page(1)
         
-        data = questions.values()
+#         data = questions.values()
 
-        return JsonResponse(list(data), safe=False)
+#         return JsonResponse(list(data), safe=False)
 
 
 ## search select ajax
-@csrf_exempt
-def search_select(request):
-    if request.method == "POST":
+# @csrf_exempt
+# def search_select(request):
+#     if request.method == "POST":
 
-        language = json.loads(request.body).get("language")
-        os = json.loads(request.body).get("os")
-        framework = json.loads(request.body).get("framework")
-        problem_solving = json.loads(request.body).get("problem_solving")
+#         language = json.loads(request.body).get("language")
+#         os = json.loads(request.body).get("os")
+#         framework = json.loads(request.body).get("framework")
+#         problem_solving = json.loads(request.body).get("problem_solving")
 
-        lang_filter = Post.objects.filter(language__exact=language)
-        os_filter = Post.objects.filter(os__exact=os)
-        frame_filter = Post.objects.filter(framework__exact=framework)
-        problem_filter = Post.objects.filter(problem_solving__exact=problem_solving)
+#         lang_filter = Post.objects.filter(language__exact=language)
+#         os_filter = Post.objects.filter(os__exact=os)
+#         frame_filter = Post.objects.filter(framework__exact=framework)
+#         problem_filter = Post.objects.filter(problem_solving__exact=problem_solving)
 
-        result = Post.objects.none()
+#         result = Post.objects.none()
 
-        if language == "전체":
-            lang_filter = Post.objects.all()
+#         if language == "전체":
+#             lang_filter = Post.objects.all()
 
-        if lang_filter.exists():
-            result = lang_filter
+#         if lang_filter.exists():
+#             result = lang_filter
 
-        if os == "전체":
-            os_filter = Post.objects.all()
+#         if os == "전체":
+#             os_filter = Post.objects.all()
 
-        if os_filter.exists() and result.exists():
-            result = result & os_filter
-        elif os_filter.exists():
-            result = os_filter
-        else:
-            result = result
+#         if os_filter.exists() and result.exists():
+#             result = result & os_filter
+#         elif os_filter.exists():
+#             result = os_filter
+#         else:
+#             result = result
 
-        if framework == "전체":
-            frame_filter = Post.objects.all()
+#         if framework == "전체":
+#             frame_filter = Post.objects.all()
 
-        if frame_filter.exists() and result.exists():
-            result = result & frame_filter
-        elif frame_filter.exists():
-            result = frame_filter
-        else:
-            result = result
+#         if frame_filter.exists() and result.exists():
+#             result = result & frame_filter
+#         elif frame_filter.exists():
+#             result = frame_filter
+#         else:
+#             result = result
 
-        if problem_filter.exists() and result.exists():
-            result = result & problem_filter
-        elif problem_filter.exists():
-            result = problem_filter
-        else:
-            result = result
+#         if problem_filter.exists() and result.exists():
+#             result = result & problem_filter
+#         elif problem_filter.exists():
+#             result = problem_filter
+#         else:
+#             result = result
 
-        # posts = result.values()
-        ##페이지네이터
-        # paginator = Paginator(posts, 10)
-        # try:
-        #     page_num = request.GET.get("page")
-        #     posts_list = paginator.page(page_num)
-        # except PageNotAnInteger:
-        #     posts_list = paginator.page(1)
+#         # posts = result.values()
+#         ##페이지네이터
+#         # paginator = Paginator(posts, 10)
+#         # try:
+#         #     page_num = request.GET.get("page")
+#         #     posts_list = paginator.page(page_num)
+#         # except PageNotAnInteger:
+#         #     posts_list = paginator.page(1)
 
-        data = result.values()
+#         data = result.values()
 
-    return JsonResponse(list(data), safe=False)
+#     return JsonResponse(list(data), safe=False)
 
 
-@csrf_exempt
-def search_quests_select(request):
-    if request.method == "POST":
+# @csrf_exempt
+# def search_quests_select(request):
+#     if request.method == "POST":
 
-        language = json.loads(request.body).get("language")
-        framework = json.loads(request.body).get("framework")
+#         language = json.loads(request.body).get("language")
+#         framework = json.loads(request.body).get("framework")
 
-        lang_filter = Question_post.objects.filter(language__exact=language)
-        frame_filter = Question_post.objects.filter(framework__exact=framework)
+#         lang_filter = Question_post.objects.filter(language__exact=language)
+#         frame_filter = Question_post.objects.filter(framework__exact=framework)
 
-        result = Question_post.objects.none()
+#         result = Question_post.objects.none()
 
-        if language == "전체":
-            lang_filter = Question_post.objects.all()
+#         if language == "전체":
+#             lang_filter = Question_post.objects.all()
         
-        if lang_filter.exists():
-            result = lang_filter
+#         if lang_filter.exists():
+#             result = lang_filter
 
-        if framework == "전체":
-            frame_filter = Question_post.objects.all()
+#         if framework == "전체":
+#             frame_filter = Question_post.objects.all()
 
-        if frame_filter.exists() and result.exists():
-            result = result & frame_filter
-        elif frame_filter.exists():
-            result = frame_filter
-        else:
-            result = result
+#         if frame_filter.exists() and result.exists():
+#             result = result & frame_filter
+#         elif frame_filter.exists():
+#             result = frame_filter
+#         else:
+#             result = result
 
-        # questions = result.values()
-        # ##페이지네이터
-        # paginator = Paginator(questions, 10)
-        # try:
-        #     page_num = request.GET.get("page")
-        #     questions_list = paginator.page(page_num)
-        # except PageNotAnInteger:
-        #     questions_list = paginator.page(1)
+#         # questions = result.values()
+#         # ##페이지네이터
+#         # paginator = Paginator(questions, 10)
+#         # try:
+#         #     page_num = request.GET.get("page")
+#         #     questions_list = paginator.page(page_num)
+#         # except PageNotAnInteger:
+#         #     questions_list = paginator.page(1)
 
-        data = result.values()
+#         data = result.values()
 
-    return JsonResponse(list(data), safe=False)
+#     return JsonResponse(list(data), safe=False)
 
 #---------------------------------------------------------
 
@@ -584,16 +584,18 @@ def search(request):
     else:    
         return render(request, "posts/search.html")
 
+
 def search_quest(request):
     questions = Question_post.objects.all() ##질문만 받아오기
-    form = SelectForm()
-    
-    ctx = {
-            'questions': questions,
-            'form': form,
-        }
+    p = request.POST.get('p',"")
 
-    return render(request, "posts/search_quest.html", ctx)
+    if p:
+        questions = questions.filter(title__icontains=p) | questions.filter(desc__icontains=p) | questions.filter(language__icontains=p) | questions.filter(os__icontains=p) | questions.filter(framework__icontains=p) 
+
+        return render(request, 'posts/search_quest.html',{'posts': questions, 'p':p })
+
+    else:
+        return render(request, "posts/search_quest.html")
 
 #---------------------------------------------------------
 

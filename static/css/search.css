@@ -263,6 +263,7 @@ html, body {
     font-size: 0.75rem;
     -webkit-box-pack: justify;
     justify-content: center;
+    margin-bottom: 10px;
 }
 
 .user_info {
