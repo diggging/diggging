@@ -66,6 +66,7 @@ html, body {
 }
 
 .desc {
+    padding-left: 2rem;
     width: 20.8125rem;
     height: 12.625rem;
     margin: 0 12.5rem 0 0;
@@ -74,7 +75,7 @@ html, body {
 .desc h1 {
     font-family: 'Pretendard-ExtraBold';
     font-size: 2rem;
-    line-height: 2.313rem;
+    line-height: 0.7rem;
     color: #0B1E33;
     font-weight: bold;
     margin-bottom: 1.875rem;
@@ -94,10 +95,35 @@ html, body {
     background: #FFFFFF;
     box-shadow: 0.625rem 0.625rem 0.25rem 0.25rem rgba(0, 0, 0, 0.04);
     border-radius: 1.25rem;
-    padding: 3.125rem;
     font-family: 'Pretendard-Regular';
     font-size: 1rem;
-    line-height: 2rem;
+    line-height: 2.25rem;
+    overflow: hidden;
+}
+
+.desc_card h3{
+    font-family: 'Pretendard-SemiBold';
+    color: #0B1E33;
+    padding: 0 2rem;
+}
+
+.desc_card h4{
+    font-family: 'Pretendard-Regular';
+    color: #585858;
+    font-size: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.8rem;
+    font-weight: 500;
+    margin-top: 0.4rem;
+    padding: 0 2rem;
+    margin-bottom: 2rem;
+}
+
+.desc_card img {
+    width: 100%;
+    object-fit: cover;
+    border-top-left-radius: 1.25rem;
+    border-top-right-radius: 1.25rem;
 }
 
 .card_container {
@@ -106,7 +132,7 @@ html, body {
 
 .link_list {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     position: absolute;
     width: 100%;
@@ -122,7 +148,7 @@ html, body {
     font-family: 'Pretendard-SemiBold';
     font-size: 1.5rem;
     text-align: center;
-    margin: 5rem;
+    padding: 1rem;
 }
 
 .helped:hover {
@@ -220,7 +246,7 @@ html, body {
 .post_title {
     font-family: 'Pretendard-SemiBold';
     color: #585858;
-    font-size: 1rem;
+    font-size: 1.25rem;
     /* text-overflow: ellipsis; */
     height: 1.875rem;
     margin: 1.25rem 0 0.625rem 0;
@@ -230,7 +256,7 @@ html, body {
 .post_desc {
     font-family: 'Pretendard-Regular';
     color: #585858;
-    font-size: 0.813rem;
+    font-size: 0.875rem;
     text-overflow: ellipsis;
     line-height: 1.25rem;
     overflow: hidden;
@@ -239,17 +265,17 @@ html, body {
 .post_title_img_none {
     font-family: 'Pretendard-SemiBold';
     color: #585858;
-    font-size: 1rem;
+    font-size: 1.25rem;
     text-overflow: ellipsis;
     height: 1.875rem;
-    margin: 0.625rem 0 0.625rem 0;
+    margin: 0 0 0.625rem 0;
     line-height: 1.75rem;
 }
 
 .post_desc_img_none {
     font-family: 'Pretendard-Regular';
     color: #585858;
-    font-size: 0.813rem;
+    font-size: 0.875rem;
     text-overflow: ellipsis;
     line-height: 1.25rem;
 }
@@ -335,4 +361,9 @@ html, body {
 
 .helped_num {
     margin-left: 0.625rem;
+}
+
+.post_desc img {
+    width: 0px;
+    display: none;
 }
