@@ -232,7 +232,7 @@ form {
     height: 3.5rem;
     border: solid 0.0625rem #00537A;
     background-color: white;
-    border-radius: 1.25rem;
+    border-radius: 2rem;
     color: #00537A;
     font-family: var(--btn-font);
     text-decoration: none;
