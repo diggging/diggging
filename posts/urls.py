@@ -15,8 +15,9 @@ urlpatterns = [
     path("<int:pk>/update", views.post_update, name="post_update"),
     path("<int:pk>/delete", views.post_delete, name="post_delete"),
     path("search/", views.search, name="search"),
-    path("search_post_axios/", views.search_post_axios, name="search_post_axios"),
-    path("search_user_axios/", views.search_user_axios, name="search_user_axios"),
+    # path("search_post_axios/", views.search_post_axios, name="search_post_axios"),
+    # path("search_user_axios/", views.search_user_axios, name="search_user_axios"),
+    
     path("search_input/", views.search_input, name="search_input"),
     path("search_select/", views.search_select, name="search_select"),
     

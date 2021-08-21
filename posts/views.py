@@ -61,9 +61,6 @@ def scrap_axios(request):
     return render(request, 'posts/post_scrap.html', {'posts': posts_scrap, "user":me})
 
 
-    return render(request, "posts/test.html")
-
-
 @require_GET
 def helped_axios(request):
     me = request.user
@@ -425,15 +422,15 @@ def post_delete(request, pk):
     return redirect("posts:main")
 
 
-## search input ajax
+## search input ajax ------------------------------------------
 @csrf_exempt
 def search_input(request):
     if request.method == "POST":
         search_str = json.loads(request.body).get("text")
 
         posts = Post.objects.filter(
-            title__icontains=search_str).values() | Post.objects.filter(
-            desc__icontains=search_str).values()
+            title__icontains=search_str) | Post.objects.filter(
+            desc__icontains=search_str)
         
         # paginator = Paginator(posts, 10)
         # try:
@@ -443,7 +440,7 @@ def search_input(request):
         #     posts_list = paginator.page(1)
 
         data = posts.values()
-        
+
         return JsonResponse(list(data), safe=False)
 
 @csrf_exempt
@@ -573,15 +570,19 @@ def search_quests_select(request):
 
     return JsonResponse(list(data), safe=False)
 
+#---------------------------------------------------------
+
 def search(request):
     posts = Post.objects.all()
+    q = request.POST.get('q',"")
 
-    form = SelectForm()
-    ctx = {
-        "posts": posts,
-        "form": form,
-    }
-    return render(request, "posts/search.html", ctx)
+    if q:
+        posts = posts.filter(title__icontains=q) | posts.filter(desc__icontains=q) | posts.filter(language__icontains=q) | posts.filter(os__icontains=q) | posts.filter(problem_solving__icontains=q) | posts.filter(framework__icontains=q) 
+
+        return render(request, 'posts/search.html',{'posts': posts, 'q':q })
+
+    else:    
+        return render(request, "posts/search.html")
 
 def search_quest(request):
     questions = Question_post.objects.all() ##질문만 받아오기
@@ -594,22 +595,7 @@ def search_quest(request):
 
     return render(request, "posts/search_quest.html", ctx)
 
-#post data 보내주기 -> 지워도 무방
-@csrf_exempt
-def search_post_axios(request):
-    post = Post.objects.all()
-    post_list = serializers.serialize("json", post)
-
-    return HttpResponse(post_list, content_type="text/json-comment-filtered")
-
-
-# user data 보내주기
-@csrf_exempt
-def search_user_axios(request):
-    user = User.objects.all()
-    user_list = serializers.serialize("json", user)
-    return HttpResponse(user_list, content_type="text/json-comment-filtered")
-
+#---------------------------------------------------------
 
 # 삽질 기록 퍼오기
 def get_post(request, user_id, post_id):

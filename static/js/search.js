@@ -2,24 +2,22 @@
 // search input
 const searchField =document.querySelector('#search_input');
 const searchContainer = document.querySelector('.post_container');
-
 searchField.addEventListener('keyup', (e) => {
     const searchValue = e.target.value;
 
     if(searchValue.trim().length > 0) {
-        console.log('searchValue', searchValue);
-
         fetch('/posts/search_input/', {
             body: JSON.stringify({text:searchValue}),
             method: "POST",
-            headers : { 
+            headers : {
+                "X-Requested-With": "XMLHttpRequest", 
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
         })
             .then((res) => res.json())
             .then((data) => {
-
+            
             let list = [];
             for(i=0; i<data.length; i++){
                 if(data[i].is_public) {
@@ -28,17 +26,15 @@ searchField.addEventListener('keyup', (e) => {
                     return
                 }
             }
-
-            // console.log(list)
+            
+            console.log(data)
             if (data.length === 0){
                 searchContainer.innerHTML = "검색어와 맞는 글이 없어요"
             } else {
-                console.log(list)
                 const txt = data.map(post => {
                     var str = "/media/" + post.image
                     return  `
                     <img src="${str}" alt="">
-                        <img src="' + ${post.image} + '" />
                         ${post.title}
                         ${post.desc}
                         ${post.created}
@@ -47,7 +43,6 @@ searchField.addEventListener('keyup', (e) => {
                     `
                 }).join('')
                 searchContainer.innerHTML = txt;
-
             }
         })
     } else {
