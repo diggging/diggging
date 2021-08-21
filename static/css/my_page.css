@@ -46,7 +46,7 @@ meter {
     cursor: pointer;
   }
 
-.point_gage meter::-webkit-meter-bar {
+meter::-webkit-meter-bar {
     width:22rem;
     height: 2.2rem;
     background-color: #fff;
@@ -56,15 +56,15 @@ meter {
     color:#FFBA42;
 }
 
-.point_gage meter::-webkit-meter-optimum-value {
+meter::-webkit-meter-optimum-value {
     border-radius: 1.25rem;
     background: #FFBA42;
 }
-.point_gage meter::-webkit-meter-high-value {
+meter::-webkit-meter-high-value {
     border-radius: 1.25rem;
     background: #FFBA42;
 }
-.point_gage meter::-webkit-meter-low-value {
+meter::-webkit-meter-low-value {
     border-radius: 1.25rem;
     background: #FFBA42;
 }
@@ -310,8 +310,7 @@ meter {
     font-size: 0.875rem;
     font-family: var(--content-font);
     font-weight: 300;
-    color: #FFBA42;
-    
+    color: #FFBA42; 
 }
 
 .flex_col {

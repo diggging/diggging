@@ -16,7 +16,86 @@
 <!-- 네비바 아래로 가게하는 컨테이너 -->
 <div class="container">
     <div class="box_container">
-        <!-- 왼쪽 박스들 -->
+        <!-- 클래스명은 오른쪽이지만 사실 왼쪽에 있는 박스영역임 -->
+        <div class="right_container">
+            <div class="profile_area">
+                <div class="profile_container">
+                    <!-- 로그인 되었을 때 -->
+                    {% if user.is_authenticated %}
+                    <div>
+                        <div class="profile_username">
+                            <span class="profile_image">
+                                <img src="{{ request.user.user_profile_image.url}}" width="50" height="50">
+                            </span>
+                            <a href="{% url 'users:my_page' request.user.id %}" class="user_nickname">{{ request.user.user_nickname }}님의 모래상자</a>
+                            <div class="user_desc">
+                                {% if request.user.user_profile_content %}
+                                {{request.user.user_profile_content|truncatechars:40}}
+                                {% else %}
+                                <p>
+                                    아직 자기소개가 없습니다.
+                                </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <p>
+                            레벨 | {{request.user.user_level}} 단계
+                        </p>
+                        <div class="point_gage">
+                            <label for="value_low">{{my_sand_sum.amount__sum}} 모래포인트</label>
+                            <!-- max기준 레벨에 따라 if문으로 바뀌어야함(아직level넘겨주지 않아서 구현 X)  -->
+                            {% if request.user.user_level == 0 %}
+                            <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500"
+                                value="{{my_sand_sum.amount__sum}}"></meter>
+                            {% elif request.user.user_level == 1 %}
+                            <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500"
+                                value="{{my_sand_sum.amount__sum}}"></meter>
+                            {% else %}
+                            <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000"
+                                value="{{my_sand_sum.amount__sum}}"></meter>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <!-- 로그인 안했을 때 -->
+                    <div class="profile">
+                        <div class="profile_username">
+                            <i class="fas fa-user-circle fa-2x" style="color:bisque"></i>
+                            <a href="{% url 'users:login' %}" class="user_nickname">로그인<a>
+                        </div>
+                        <div class="proflie_text">
+                            <p>
+                                로그인 하고 질문을 남겨보세요.
+                            </p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- 디렉토리영역 -->
+            <!-- 탭 버튼 누르면 그에 해당하는 폴더 목록이 뜬다. -->
+            <div class="category_tab">
+                <button class="language_btn" value="{{user.id}}">언어</button>
+                <button class="framework_btn" value="{{user.id}}">프레임워크</button>
+            </div>
+            <div class="folder_area">
+                <!-- {% for folder in question_folder %}
+                    {{folder.folder_name}}
+                {% endfor %} -->
+            </div>
+            <div class="my_answer_container">
+                <button class="accordion">내가 남긴 답변</button>
+                <div class="panel answerabc">
+                    {% for answers in answer %}
+                    {{answers.user}}
+                    {{answers.title}}
+                    {{answers.desc}}
+                    <br />
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!-- 클래스명은 왼쪽이지만 사실오른쪽에있는 박스영역임 -->
         <div class="left_container">
             <!-- 답변을 기다리는 질문 박스 -->
             <div class="no_answer_container">
@@ -112,85 +191,6 @@
             </div>
         </div>
         <!-- 왼쪽 영역 끝 -->
-        <div class="right_container">
-            <div class="profile_area">
-                <div class="profile_container">
-                    <!-- 로그인 되었을 때 -->
-                    {% if user.is_authenticated %}
-                    <div>
-                        <div class="profile_username">
-                            <span class="profile_image">
-                                <img src="{{ request.user.user_profile_image.url}}">
-                            </span>
-                            <p class="user_nickname">{{ request.user.user_nickname }}님의 모래상자
-                            <p>
-                        </div>
-                        <p>
-                            레벨 | {{request.user.user_level}} 단계
-                        </p>
-                        <div class="point_gage">
-                            <label for="value_low">{{my_sand_sum.amount__sum}} 모래포인트</label>
-                            <!-- max기준 레벨에 따라 if문으로 바뀌어야함(아직level넘겨주지 않아서 구현 X)  -->
-                            {% if request.user.user_level == 0 %}
-                            <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500"
-                                value="{{my_sand_sum.amount__sum}}"></meter>
-                            {% elif request.user.user_level == 1 %}
-                            <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500"
-                                value="{{my_sand_sum.amount__sum}}"></meter>
-                            {% else %}
-                            <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000"
-                                value="{{my_sand_sum.amount__sum}}"></meter>
-                            {% endif %}
-                        </div>
-                        <div class="proflie_text">
-                            {% if request.user.user_profile_content %}
-                            {{request.user.user_profile_content|truncatechars:40}}
-                            {% else %}
-                            <p>
-                                아직 자기소개가 없습니다.
-                            </p>
-                            {% endif %}
-                        </div>
-                    </div>
-                    {% else %}
-                    <!-- 로그인 안했을 때 -->
-                    <div class="profile">
-                        <div class="profile_username">
-                            <i class="fas fa-user-circle fa-2x" style="color:bisque"></i>
-                            <a href="{% url 'users:login' %}" class="user_nickname">로그인<a>
-                        </div>
-                        <div class="proflie_text">
-                            <p>
-                                로그인 하고 질문을 남겨보세요.
-                            </p>
-                        </div>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-            <!-- 디렉토리영역 -->
-            <!-- 탭 버튼 누르면 그에 해당하는 폴더 목록이 뜬다. -->
-            <div class="category_tab">
-                <button class="language_btn" value="{{user.id}}">언어</button>
-                <button class="framework_btn" value="{{user.id}}">프레임워크</button>
-            </div>
-            <div class="folder_area">
-                <!-- {% for folder in question_folder %}
-                    {{folder.folder_name}}
-                {% endfor %} -->
-            </div>
-            <div class="my_answer_container">
-                <button class="accordion">내가 남긴 답변</button>
-                <div class="panel answerabc">
-                    {% for answers in answer %}
-                    {{answers.user}}
-                    {{answers.title}}
-                    {{answers.desc}}
-                    <br />
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 <script>
