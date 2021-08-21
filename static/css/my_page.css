@@ -36,6 +36,39 @@
     font-style: normal;
 }
 
+
+meter {
+    /* Reset the default appearance */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    height: 2.2rem;
+    width: 22rem;
+    cursor: pointer;
+  }
+
+.point_gage meter::-webkit-meter-bar {
+    width:22rem;
+    height: 2.2rem;
+    background-color: #fff;
+    border: solid 1px #DBD6C7;
+    border-radius: 1.25rem;
+    padding: 6px 8px;
+    color:#FFBA42;
+}
+
+.point_gage meter::-webkit-meter-optimum-value {
+    border-radius: 1.25rem;
+    background: #FFBA42;
+}
+.point_gage meter::-webkit-meter-high-value {
+    border-radius: 1.25rem;
+    background: #FFBA42;
+}
+.point_gage meter::-webkit-meter-low-value {
+    border-radius: 1.25rem;
+    background: #FFBA42;
+}
+
 /* modal창 */
 .hidden {
     display: hidden;
@@ -347,6 +380,8 @@
     width: 100%;
     height: 100%;
     justify-content: space-evenly;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 
@@ -357,7 +392,6 @@
     height: 43.75rem;
     flex-direction: column;
     align-items: center;
-    padding: 2.5rem;
     margin: 1rem;
     background-color: #F8F8F8;
     box-shadow: 0.375rem 0.375rem 0.25rem rgba(0, 0, 0, 0.04);
@@ -375,19 +409,18 @@
     /* align-content: space-around; */
 }
 
+
+
 .third_container::-webkit-scrollbar {
-    width: 0.625rem;
+    width: 14px;
 }
 .third_container::-webkit-scrollbar-thumb {
-    background-color: #F8F8F8;
-    border-radius: 0.625rem;
-    background-clip: padding-box;
-    border: 0.125rem solid transparent;
+    height: 17%;
+    background-color: #FFE59C; 
+    border-radius: 20px; 
 }
 .third_container::-webkit-scrollbar-track {
-    background-color: #F8F8F8;
-    border-radius: 0.625rem;
-    box-shadow: inset 0rem 0rem 0.3125rem #F8F8F8;
+    background-color: none;
 }
 
 .my_post_list {
@@ -396,8 +429,9 @@
     justify-content: center;
     align-items: flex-start;
     width: 100%;
-    height: 1.25rem;
-    padding: 2.9375rem;
+    height: 13.75rem;
+    border-bottom: 0.0625rem solid #E5E5E5;
+    padding: 50px 24px 14px 24px;
 }
 
 .post_title {
@@ -419,8 +453,8 @@
 .post_user {
     width: 100%;
     height: 12.5rem;
-    border-bottom: 0.0625rem solid #E5E5E5;
     display: flex;
+    justify-content: flex-end;
     justify-content: flex-end;
 }
 
@@ -584,11 +618,6 @@
     background: #00537A;
 }
 
-meter {
-    width: 13.125rem;
-    height: 1.75rem;
-}
-
 .point_gage {
     margin-top: 0.625rem;
 }
@@ -705,6 +734,9 @@ meter {
     display: flex;
     width: 100%;
     height: 9.375rem;
+    overflow-y: scroll;
+    padding: 0 0.875rem;
+    margin-top: 1rem;
 }
 
 #btn_tap {
@@ -751,19 +783,23 @@ meter {
 
 .language_btn:hover {
     color: white;
-    border: 0.125rem solid #FFBA42;
     background: #FFBA42;
 }
 
 .framework_btn:hover {
     color: white;
-    border: 0.125rem solid #FFBA42;
     background: #FFBA42;
 }
 
 .problem_btn:hover {
     color: white;
-    border: 0.125rem solid #FFBA42;
+    background: #FFBA42;
+}
+
+.framework_btn:active 
+.language_btn:active  
+.problem_btn:active {
+    color: white;
     background: #FFBA42;
 }
 
@@ -793,18 +829,13 @@ meter {
     cursor: pointer;
 }
 
-.lang_post_btn:active,
-.framework_post_btn:active,
-.problem_post_btn:active {
-    padding: 0.3125rem;
+
+.lang_post_btn:hover,
+.framework_post_btn:hover,
+.problem_post_btn:hover {
     background: none;
-    border: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: var(--btn-font);
-    color: var(--text-color);
-    margin: 0.3125rem;
+    border-radius: 1.25rem;
+    border: solid 1px rgba(98, 161, 191, 30%);
 }
 
 .folder_area {
@@ -824,22 +855,26 @@ meter {
     margin: 0;
     padding: 0;
     height: 9.375rem;
-    overflow-y: scroll;
+    align-content: flex-start;
 }
 
-.folder_category::-webkit-scrollbar {
-    width: 0.625rem;
+
+.folder_category button:active {
+    background-color: rgba(98, 161, 191, 30%);
+    border-radius: 1.25rem;
+
 }
-.folder_category::-webkit-scrollbar-thumb {
-    background-color: #F8F8F8;
-    border-radius: 0.625rem;
-    background-clip: padding-box;
-    border: 0.125rem solid transparent;
+
+.category_tab::-webkit-scrollbar {
+    width: 14px;
 }
-.folder_category::-webkit-scrollbar-track {
-    background-color: #F8F8F8;
-    border-radius: 0.625rem;
-    box-shadow: inset 0rem 0rem 0.3125rem #F8F8F8;
+.category_tab::-webkit-scrollbar-thumb {
+    height: 17%;
+    background-color: #FFE59C; 
+    border-radius: 20px; 
+}
+.category_tab::-webkit-scrollbar-track {
+    background-color: none;
 }
 
 .folder_icon {

@@ -477,9 +477,7 @@
                         </div>
                     </div>
                 </div>
-                
                 <div class="sand_level_area">
-
                     <div class="level_badge">
                         <a href="#" class="badge_img">
                             {% if host.user_level == 0 %}
@@ -530,8 +528,8 @@
                             <!-- 레벨 기준 모달창 끝 -->
                         </a>
                     </div>
-
                     <div class="point_gage">
+                        <label for="value_low">{{my_sand_sum.amount__sum}} 모래</label>
                         {% if host.user_level == 0 %}
                         <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500"
                             value="{{my_sand_sum.amount__sum}}"></meter>
@@ -544,7 +542,7 @@
                         {% endif %}
                     </div>
                 </div>
-
+                <!-- 모래포인트, 레벨 영역 끝 -->
                 <div class="follow_area">
                     <div class="follow_btn_area">
                         <label for="value_low">모래포인트</label>

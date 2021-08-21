@@ -75,7 +75,7 @@ textarea:focus {
     padding: .875rem 1.625rem;
     font-family: 'Pretendard-Regular';
     color: #8C8D8D;
-    margin-right: 3rem;
+    margin-right: 1rem;
     vertical-align: middle;
 }
 
@@ -93,7 +93,7 @@ textarea:focus {
 }
 
 .top_box {
-    height: 11.5rem;
+    height: 9.5rem;
     width:100%;
 }
 
@@ -104,13 +104,14 @@ textarea:focus {
     color: #FFBA42;
     text-decoration-line: underline;
     text-underline-offset: 12px;
-    margin-left: 13.5rem;
+    margin-left: 10%;
+    padding:0 10%;
 }
 
 .container {
     margin: 0 auto;
     max-width: 1000px;
-    padding: 80px 100px;
+    padding: 0px 10%;
     width: 100%;
 }
 
@@ -137,8 +138,11 @@ textarea:focus {
     height: 2.625rem;
 }
 
-.setting:hover {
+.setting_btn:hover {
     background-color: #FFD358;
+}
+.setting_btn:active {
+    background-color: #FFBA42;
 }
 
 .profile_image label {
@@ -185,7 +189,7 @@ textarea:focus {
 .setting_list h3 {
     font-family: 'Pretendard-Bold';
     color: #FFBA42;
-    font-size: 1.375rem;
+    font-size: 1.125rem;
     margin-right: 2.2rem;
     align-items: center;
     vertical-align: middle;
@@ -207,16 +211,20 @@ meter::-webkit-meter-bar {
     background-color: #fff;
     border: solid 1px #DBD6C7;
     border-radius: 1.25rem;
+    padding: 6px 8px;
     color:#FFBA42;
 }
 
 meter::-webkit-meter-optimum-value {
+    border-radius: 1.25rem;
     background: #FFBA42;
 }
 meter::-webkit-meter-high-value {
+    border-radius: 1.25rem;
     background: #FFBA42;
 }
 meter::-webkit-meter-low-value {
+    border-radius: 1.25rem;
     background: #FFBA42;
 }
 
