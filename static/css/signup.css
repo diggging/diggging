@@ -13,12 +13,12 @@
     --title-font: 'Pretendard-ExtraBold';
     --content-font: 'Pretendard-Regular';
     --btn-font: 'Pretendard-SemiBold';
-    --border-radius: 8px;
+    --border-radius: 0.5rem;
 }
 
 /* 반응형 웹 구분할 거 있으면 여기에 넣기 */
 
-/* @media only screen and (max-width: 767px) {
+/* @media only screen and (max-width: 47.9375rem) {
     .container > .form_container {
         padding: 1.5rem;
         display: flex;
@@ -30,14 +30,14 @@
     }
 }
 
-@media only screen and (min-width:768px) {
+@media only screen and (min-width:48rem) {
     .container > .form_container {
         padding: 1.5rem;
         display: flex;
-        width: 600px;
-        height: 480px;
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
+        width: 37.5rem;
+        height: 30rem;
+        border: 0.0625rem solid var(--border-color);
+        border-radius: 0.5rem;
         flex-direction: column;
         justify-content: space-around;
         align-items: center;
@@ -96,9 +96,9 @@ html, body {
     text-align: center;
     color: #00537A;
     width: 100%;
-    padding-top: 18px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid #E5E5E5;
+    padding-top: 1.125rem;
+    padding-bottom: 1.125rem;
+    border-bottom: 0.0625rem solid #E5E5E5;
 }
 
 .signup_logo {
@@ -139,12 +139,12 @@ html, body {
 #id_user_nickname, #id_password1,
 #id_password2 {
     width: 100%;
-    height: 50px;
-    padding: 16px;
+    height: 3.125rem;
+    padding: 1rem;
     background: rgba(241, 241, 241, 0.6);
     border: none;
-    margin-bottom: 24px;
-    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    border-radius: 0.625rem;
 }
 
 #id_username:focus, #id_email:focus,
@@ -156,41 +156,41 @@ html, body {
 ::-webkit-input-placeholder {
     font-family: 'Pretendard-Regular';
     text-align: start;
-    font-size: 14px;
-    line-height: 20px;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
     color: #C4C4C4;
 }
 
 :-moz-placeholder { /* Firefox 18- */
     font-family: 'Pretendard-Regular';
     text-align: start;
-    font-size: 14px;
-    line-height: 20px;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
     color: #C4C4C4;
 }
 
 ::-moz-placeholder {  /* Firefox 19+ */
     font-family: 'Pretendard-Regular';
     text-align: start;
-    font-size: 14px;
-    line-height: 20px;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
     color: #C4C4C4; 
 }
 
 :-ms-input-placeholder {  
     font-family: 'Pretendard-Regular';
     text-align: start;
-    font-size: 14px;
-    line-height: 20px;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
     color: #C4C4C4;
 }
 
 .error_message {
     font-family: 'Pretendard-SemiBold';
-    font-size: 14px;
+    font-size: 0.875rem;
     text-align: center;
     color: #62A1BF;
-    margin-bottom: 18px;
+    margin-bottom: 1.125rem;
 }
 
 .login_btn {
@@ -199,19 +199,19 @@ html, body {
     background: #FFE59C;
     border-radius: 1.25rem;
     border: none;
-    font-size: 20px;
-    line-height: 29px;
+    font-size: 1.25rem;
+    line-height: 1.8125rem;
     text-align: center;
     color: #FFBA42;
     font-family: 'Pretendard-SemiBold';
     cursor: pointer;
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
 }
 
 .login_btn:hover {
     background: white;
     color: #FFBA42;
-    border: 2px solid #FFBA42;
+    border: 0.125rem solid #FFBA42;
 }
 
 .social_login {
@@ -219,8 +219,8 @@ html, body {
     justify-content: space-between;
     align-items: center;
     text-decoration: none;
-    width: 379px;
-    height: 50px;
+    width: 23.6875rem;
+    height: 3.125rem;
     margin: auto;
     font-family: 'Pretendard-SemiBold';
     color: #585858;
@@ -233,8 +233,8 @@ html, body {
 }
 
 .naver {
-    margin-left: 29px;
-    margin-right: 5px;
+    margin-left: 1.8125rem;
+    margin-right: 0.3125rem;
     text-decoration: none;
 }
 
@@ -244,17 +244,17 @@ html, body {
     justify-content: space-between;
     align-items: center;
     text-decoration: none;
-    width: 379px;
+    width: 23.6875rem;
     margin: auto;
-    margin-top: 10px;
-    margin-bottom: 16px;
+    margin-top: 0.625rem;
+    margin-bottom: 1rem;
     color: #585858;
     font-size: 1rem;
     line-height: 1.4375rem;
 }
 
 .signup_margin {
-    margin-bottom: 10px;
+    margin-bottom: 0.625rem;
 }
 
 .signup_question > a,
