@@ -336,3 +336,7 @@ html, body {
 .helped_num {
     margin-left: 0.625rem;
 }
+
+desc_image {
+    width: 0px;
+}

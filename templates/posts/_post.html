@@ -18,6 +18,7 @@
                     </div>
                     <p class="post_desc">
                         {{ post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;"}}
+                        <span class="desc_image">{{post.desc.image}}</span>
                     </p>
                 {% else %}
                     <div class="post_title_img_none">
@@ -25,6 +26,7 @@
                     </div>
                     <p class="post_desc_img_none">
                         {{ post.desc|safe|escape|truncatechars:300|striptags|cut:"&nbsp;"}}
+                        <span class="desc_image">{{post.desc.image}}</span>
                     </p>
                 {% endif %}
             </a>
