@@ -42,12 +42,18 @@
                     </div>
 
                     <div class="error_message">
-                        {% if form.non_field_errors %}
-                            <span>{{form.non_field_errors}}</span>
+                        {% if signup_form.username.errors %}
+                            <span>{{signup_form.username.errors}}</span>
                         {% endif %}
-                        <!-- {% if form.password.errors %}
-                            <span>{{form.password.errors}}</span>
-                        {% endif %} -->
+                        {% if signup_form.email.errors %}
+                            <span>{{signup_form.email.errors}}</span>
+                        {% endif %}
+                        {% if signup_form.user_nickname.errors %}
+                            <span>{{signup_form.user_nickname.errors}}</span>
+                        {% endif %}
+                        {% if signup_form.password2.errors %}
+                            <span>{{signup_form.password2.errors}}</span>
+                        {% endif %}
                     </div>
 
                 </form>
