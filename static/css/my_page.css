@@ -114,7 +114,7 @@
     overflow-y: scroll;
 
     background-color: white;
-    border-radius: 0.5rem;
+    border-radius: 1.25rem;
     box-shadow: 0 0.125rem 0.1875rem 0 rgba(34, 36, 38, 0.15);
 
     transition-timing-function: ease-in;
@@ -139,15 +139,23 @@
 .log_box {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 24px 40px;
     color: #585858;
     font-family: 'Pretendard-SemiBold';
     border-bottom: 0.0625rem solid #E5E5E5;
-    
-
 }
 
+.point_close_btn {
+    margin-left: 100px;
+}
 
+.title_text {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+   
 
 .follow_modal {
     z-index: 1000;
@@ -182,7 +190,7 @@
     overflow-y: scroll;
 
     background-color: white;
-    border-radius: 0.5rem;
+    border-radius: 1.25rem;
     box-shadow: 0 0.125rem 0.1875rem 0 rgba(34, 36, 38, 0.15);
 
     transition-timing-function: ease-in;

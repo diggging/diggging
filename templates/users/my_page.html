@@ -276,6 +276,7 @@
     const modal = document.querySelector('.point_modal');
     const modalBody = document.querySelector('.modal_body');
     const pointOpenPopup = document.querySelector('.point_gage');
+    const pointCloseModal = document.querySelector('.point_close_btn');
     const body = document.querySelector('body');
 
     pointOpenPopup.addEventListener('click', () => {
@@ -285,6 +286,9 @@
     document.querySelectorAll
     modalBody.addEventListener('click', () => {
         modal.style.display = 'none';
+    });
+    pointCloseModal.addEventListener('click', () => {
+            followModal.style.display = 'none';
     })
 </script> 
 <!-- 팔로우 모달 창 뜨기 -->
@@ -377,7 +381,8 @@
         <div class="point_modal">
             <div class="modal_body">
                 <div class="title_text">
-                    <h2>내 포인트 기록</h2>
+                    <h2>쌓인 모래 히스토리</h2>
+                    <div class="point_close_btn"><img src="{% static 'image/close_icon.svg' %}" /></div>
                 </div>
                 {% for sand in my_all_sands %}
                 <div class="log_box">
