@@ -1,6 +1,6 @@
 {%if post.is_public %}
     <div class="post_card">
-        {% if post.image %}
+        {% if post.image != "../static/image/default_image.PNG" %}
         <a class="post_image" href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}">
             <div class="post_image_container">
                     <img src="{{post.image.url}}" alt="" class="post_image_container">
@@ -12,7 +12,7 @@
         {% endif %}
         <div class="post_element">
             <a class="post_link" href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}">
-                {%if post.image %}
+                {% if post.image != "../static/image/default_image.PNG" %}
                     <div class="post_title">
                         {{ post.title|truncatechars:24 }}
                     </div>
