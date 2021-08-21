@@ -296,7 +296,7 @@
     function followModalPopup() {
         let followModal = document.querySelector('.follow_modal');
         let followBody = document.querySelector('.follow_body');
-        let closeModal = document.querySelector('.close_btn');
+        let closeModal = document.querySelector('.follow_close');
 
         let followOpenPopup = document.querySelector('.follow_btn');
 
@@ -315,12 +315,12 @@
     function followerModalPopup() {
         let followModal = document.querySelector('.follow_modal');
         let followBody = document.querySelector('.follow_body');
-        let closeModal = document.querySelector('.close_btn');
+        let closeModal = document.querySelector('.follow_close');
 
         let FollowerOpenPopup = document.querySelector('.follower_btn');
 
         FollowerOpenPopup.addEventListener('click', () => {
-            followModal.style.display = 'block';
+            followModal.style.display = 'flex';
             body.style.overflow = 'hidden';
             followBody.style.display = 'block';
         });
@@ -335,12 +335,12 @@
     function otherFollowModalPopup() {
         let followModal = document.querySelector('.follow_modal');
         let followBody = document.querySelector('.follow_body');
-        let closeModal = document.querySelector('.close_btn');
+        let closeModal = document.querySelector('.follow_close');
 
         let otherFollowOpenPopup = document.querySelector('.other_follow_btn');
 
         otherFollowOpenPopup.addEventListener('click', () => {
-            followModal.style.display = 'block';
+            followModal.style.display = 'flex';
             body.style.overflow = 'hidden';
             followBody.style.display = 'block';
         });
@@ -355,12 +355,12 @@
     function otherFollowerModalPopup() {
         let followModal = document.querySelector('.follow_modal');
         let followBody = document.querySelector('.follow_body');
-        let closeModal = document.querySelector('.close_btn');
+        let closeModal = document.querySelector('.follow_close');
 
         let otherFollowerOpenPopup = document.querySelector('.other_follower_btn');
 
         otherFollowerOpenPopup.addEventListener('click', () => {
-            followModal.style.display = 'block';
+            followModal.style.display = 'flex';
             body.style.overflow = 'hidden';
             followBody.style.display = 'block';
         });
@@ -382,23 +382,25 @@
             <div class="modal_body">
                 <div class="title_text">
                     <h2>쌓인 모래 히스토리</h2>
-                    <div class="point_close_btn"><img src="{% static 'image/close_icon.svg' %}" /></div>
+                    <img class="point_close_btn" src="{% static 'image/close_icon.svg' %}" />
                 </div>
+                <div class="modal_content_box">
                 {% for sand in my_all_sands %}
-                <div class="log_box">
-                    {% if sand.reason|slice:"-3:" == "퍼가기" %}
+                    <div class="log_box">
+                        {% if sand.reason|slice:"-3:" == "퍼가기" %}
                         <img src="{% static 'image/scrap_icon.svg' %}" width: 50px;>
-                    {% elif sand.reason|slice:"-2:" == "작성" %}
+                        {% elif sand.reason|slice:"-2:" == "작성" %}
                         <img src="{% static 'image/post_icon.svg' %}" width: 50px;>
-                    {% elif sand.reason|slice:"-2:" == "채택" %}
+                        {% elif sand.reason|slice:"-2:" == "채택" %}
                         <img src="{% static 'image/selection_icon.svg' %}" width: 50px;>
-                    {% elif sand.reason|slice:":2" == "도움" %}
+                        {% elif sand.reason|slice:":2" == "도움" %}
                         <img src="{% static 'image/help_icon.svg' %}" width: 50px;>
-                    {% endif %}
-                    <p>{{sand.reason}}</p>
-                    <p>+ {{sand.amount}}</p>
-                </div>
+                        {% endif %}
+                        <p>{{sand.reason}}</p>
+                        <p>+ {{sand.amount}}</p>
+                    </div>
                 {% endfor%}
+                </div>
             </div>
         </div>
     </div>
@@ -407,12 +409,12 @@
     <div class="modal_container">
         <div class="follow_modal">
             <div class="follow_container follow_body">
-                <div class="tab title_text">
-                    <button class="tablinks" onclick="openList(event, 'follow')">팔로워</button>
-                    <button class="tablinks" onclick="openList(event, 'following')">팔로잉</button>
+                <div class="tab">
+                    <button class="tablinks follower_btn" onclick="openList(event, 'following')">팔로잉</button>
+                    <button class="tablinks following_btn" onclick="openList(event, 'follow')">팔로워</button>
+                    <img class="follow_close" src="{% static 'image/close_icon.svg' %}" />
                 </div>
-                <button class="close_btn">X</button>
-                <div id="follow" class="tabcontent">
+                <div id="follow" class="tabcontent modal_content_box">
                     <div class="follow_count">
                         <h3>{{host.username}}님을 팔로우하는 사람 </h3>
                         <h3>{{ host_follower.count }}명</h3>
