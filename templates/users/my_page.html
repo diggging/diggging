@@ -279,15 +279,12 @@
     const body = document.querySelector('body');
 
     pointOpenPopup.addEventListener('click', () => {
-        modal.style.display = 'block';
-        body.style.overflow = 'hidden';
+        modal.style.display = 'flex';
         modalBody.style.display = 'block';
-        modalBody.style.transform = 'translateY(-110%)'
     });
     document.querySelectorAll
     modalBody.addEventListener('click', () => {
         modal.style.display = 'none';
-        body.style.overflow = 'auto';
     })
 </script> 
 <!-- 팔로우 모달 창 뜨기 -->
@@ -300,14 +297,12 @@
         let followOpenPopup = document.querySelector('.follow_btn');
 
         followOpenPopup.addEventListener('click', () => {
-            followModal.style.display = 'block';
-            body.style.overflow = 'hidden';
+            followModal.style.display = 'flex';
             followBody.style.display = 'block';
         });
 
         closeModal.addEventListener('click', () => {
             followModal.style.display = 'none';
-            body.style.overflow = 'auto';
         })
     }
 </script>
@@ -378,77 +373,88 @@
 {% block content %}
 <div class="container_box">
     <!-- 포인트 기록 모달창 -->
-    <div class="point_modal">
-        <div class="modal_body">
-            <h2>내 포인트 기록</h2>
-            {% for sand in my_all_sands %}
-            <div class="log_box">
-                <p>{{sand.user}}</p>
-                <p>{{sand.amout}}</p>
-                <p>{{sand.reason}}</p>
+    <div class="modal_container">
+        <div class="point_modal">
+            <div class="modal_body">
+                <div class="title_text">
+                    <h2>내 포인트 기록</h2>
+                </div>
+                {% for sand in my_all_sands %}
+                <div class="log_box">
+                    {% if sand.reason|slice:"-3:" == "퍼가기" %}
+                        <img src="{% static 'image/scrap_icon.svg' %}" width: 50px;>
+                    {% elif sand.reason|slice:"-2:" == "작성" %}
+                        <img src="{% static 'image/post_icon.svg' %}" width: 50px;>
+                    {% elif sand.reason|slice:"-2:" == "채택" %}
+                        <img src="{% static 'image/selection_icon.svg' %}" width: 50px;>
+                    {% elif sand.reason|slice:":2" == "도움" %}
+                        <img src="{% static 'image/help_icon.svg' %}" width: 50px;>
+                    {% endif %}
+                    <p>{{sand.reason}}</p>
+                    <p>+ {{sand.amount}}</p>
+                </div>
+                {% endfor%}
             </div>
-            {% endfor%}
         </div>
     </div>
     <!-- 포인트 모달창 끝 -->
     <!-- 팔로우모달창 -->
-    <div class="follow_modal">
-        <div class="follow_container follow_body">
-            <button class="close_btn">닫기X</button>
-            <!--Tab links-->
-            <div class="tab">
-                <button class="tablinks" onclick="openList(event, 'follow')">팔로워</button>
-                <button class="tablinks" onclick="openList(event, 'following')">팔로잉</button>
-            </div>
-            <!--Tab Content follow-->
-            <div id="follow" class="tabcontent">
-                <div class="follow_count">
-                    <h3>{{host.username}}님을 팔로우하는 사람 </h3>
-                    <h3>{{ host_follower.count }}명</h3>
+    <div class="modal_container">
+        <div class="follow_modal">
+            <div class="follow_container follow_body">
+                <div class="tab title_text">
+                    <button class="tablinks" onclick="openList(event, 'follow')">팔로워</button>
+                    <button class="tablinks" onclick="openList(event, 'following')">팔로잉</button>
                 </div>
-                {% for follower in host_follower %}
-                <div class="follow_list">
-                    {% if follower.user_profile_image %}
-                    <img class="follow_image" src="{{ follower.user_profile_image.url }}" width="200">
-                    {% else %}
-                    <div class="follow_image"></div>
-                    {% endif %}
-                    <div class="flex_col">
-                        <h3>{{follower.user_level}}</h3>
-                        <h3>{{ follower.username }}</h3>
+                <button class="close_btn">X</button>
+                <div id="follow" class="tabcontent">
+                    <div class="follow_count">
+                        <h3>{{host.username}}님을 팔로우하는 사람 </h3>
+                        <h3>{{ host_follower.count }}명</h3>
                     </div>
-                    <div class="follow_desc">
-                        <h3>{{ follower.email }}</h3>
+                    {% for follower in host_follower %}
+                    <div class="follow_list">
+                        {% if follower.user_profile_image %}
+                        <img class="follow_image" src="{{ follower.user_profile_image.url }}" width="200">
+                        {% else %}
+                        <div class="follow_image"></div>
+                        {% endif %}
+                        <div class="flex_col">
+                            <h3>{{follower.user_level}}</h3>
+                            <h3>{{ follower.username }}</h3>
+                        </div>
+                        <div class="follow_desc">
+                            <h3>{{ follower.email }}</h3>
+                        </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-            </div>
-            <!--Tab content follow-->
-            <div id="following" class="tabcontent">
-                <div class="following_count">
-                    <h3>{{host.username}}님이 팔로우하는 사람</h3>
-                    <h3>{{host_following.count}}명</h3>
-                </div>
-                {% for following in host_following %}
-                <div class="following_list">
-                    {% if following.user_profile_image %}
-                    <img class="following_image" src="{{following.user_profile_image.url}}" width="200">
-                    {% else %}
-                    <div class="following-image"></div>
-                    {% endif %}
-                    <div class="flex_col">
-                        <h3>{{following.user_level}}</h3>
-                        <h3>{{following.username}}</h3>
+                <!--Tab content follow-->
+                <div id="following" class="tabcontent">
+                    <div class="following_count">
+                        <h3>{{host.username}}님이 팔로우하는 사람</h3>
+                        <h3>{{host_following.count}}명</h3>
                     </div>
-                    <div class="following_desc">
-                        <h3>{{following.email}}</h3>
+                    {% for following in host_following %}
+                    <div class="following_list">
+                        {% if following.user_profile_image %}
+                        <img class="following_image" src="{{following.user_profile_image.url}}" width="200">
+                        {% else %}
+                        <div class="following-image"></div>
+                        {% endif %}
+                        <div class="flex_col">
+                            <h3>{{following.user_level}}</h3>
+                            <h3>{{following.username}}</h3>
+                        </div>
+                        <div class="following_desc">
+                            <h3>{{following.email}}</h3>
+                        </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
         </div>
     </div>
-
     <!-- 내 마이페이지 -->
     <div class="first_container my_container">
 

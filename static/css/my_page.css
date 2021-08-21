@@ -41,14 +41,62 @@
     display: hidden;
 }
 
+.modal_container {
+    display: flex;
+    align-items: center;
+    justify-items: center;
+}
+
+/* 포인트 modal scroll 커스텀 */
+.modal_body::-webkit-scrollbar{ 
+    width: 14px; }
+
+
+/* 스크롤바 막대 설정*/ 
+.modal_body::-webkit-scrollbar-thumb{ 
+    height: 17%;
+    background-color: #FFE59C; 
+    border-radius: 20px; 
+} 
+
+/* 스크롤바 뒷 배경 설정*/ 
+.modal_body::-webkit-scrollbar-track{ 
+    background-color: none;
+}
+
+/*-------- 팔로우 modal scroll 커스텀 ------*/
+.follow_body::-webkit-scrollbar{ 
+    width: 14px; }
+
+
+/* 스크롤바 막대 설정*/ 
+.follow_body::-webkit-scrollbar-thumb{ 
+    height: 17%;
+    background-color: #FFE59C; 
+    border-radius: 20px; 
+} 
+
+/* 스크롤바 뒷 배경 설정*/ 
+.follow_body::-webkit-scrollbar-track{ 
+    background-color: none;
+}
+
+/* ------------------- 포인트 모달 --------------- */
 .point_modal {
-    
-    position: absolute;
+    z-index: 1000;
+    position: fixed;
+
+    align-items: center;
+    display: flex;
+    /* display: block; */
+
+    justify-content: center;
+    height: 100vh;
+
     top: 0;
     left: 0;
 
     width: 100%;
-    height: 100%;
 
     display: none;
 
@@ -57,16 +105,13 @@
 
 .modal_body {
     display: none;
-    position: absolute;
-    bottom: -70%;
-    left: 38%;
+    /* bottom: 10%;
+    left: 32%; */
 
-    width: 25rem;
+    width: 31.25rem;
     height: 37.5rem;
 
-    padding: 2.5rem;
-
-    overflow: scroll;
+    overflow-y: scroll;
 
     background-color: white;
     border-radius: 0.5rem;
@@ -76,16 +121,49 @@
     transition-duration: 1s;
 
     z-index: 1001;
+}
     
+.title_text {
+    font-family: 'Pretendard-SemiBold';
+    font-size: 1.25rem;
+    line-height: 1.8125rem;
+    text-align: center;
+    color: #00537A;
+    width: 100%;
+    padding-top: 1.125rem;
+    padding-bottom: 1.125rem;
+    border-bottom: 0.0625rem solid #E5E5E5;
 }
 
+
+.log_box {
+    display: flex;
+    justify-content: space-between;
+    padding: 24px 40px;
+    color: #585858;
+    font-family: 'Pretendard-SemiBold';
+    border-bottom: 0.0625rem solid #E5E5E5;
+    
+
+}
+
+
+
 .follow_modal {
-    position: absolute;
+    z-index: 1000;
+    position: fixed;
+
+    align-items: center;
+    display: flex;
+    /* display: block; */
+    justify-content: center;
+
+    height: 100vh;
+
     top: 0;
     left: 0;
 
     width: 100%;
-    height: 100%;
 
     display: none;
 
@@ -94,16 +172,14 @@
 
 .follow_body {
     display: none;
-    position: absolute;
+    /* position: absolute;
     bottom: 10%;
-    left: 32%;
+    left: 32%; */
 
     width: 31.25rem;
     height: 37.5rem;
 
-    padding: 2.5rem;
-
-    overflow: scroll;
+    overflow-y: scroll;
 
     background-color: white;
     border-radius: 0.5rem;
