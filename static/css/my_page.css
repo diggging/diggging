@@ -561,9 +561,11 @@ meter {
 }
 
 .sand_point {
-    font-size: 0.625rem;
+    font-size: .6875rem;
     line-height: 0.875rem;
     color: #9FAEB6;
+    top: 1px;
+    position: relative;
 }
 
 
@@ -620,15 +622,6 @@ meter {
 
 .point_gage {
     margin-top: 0.625rem;
-}
-
-.point_gage label {
-    font-size: 0.75rem;
-    font-family: var(--content-font);
-    color: var(--text-color);
-    position: relative;
-    top: 1.375rem;
-    left: 4.6875rem;
 }
 
 .point_gage meter {
