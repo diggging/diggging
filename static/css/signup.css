@@ -209,8 +209,8 @@ html, body {
 }
 
 .login_btn:hover {
-    background: white;
-    color: #FFBA42;
+    background: #FFBA42;
+    color: white;
     border: 0.125rem solid #FFBA42;
 }
 
