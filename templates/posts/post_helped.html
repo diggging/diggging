@@ -7,24 +7,43 @@
 {% endblock %}
 
 {% block content %}
-<div class="link_list">
-    {% if user.is_authenticated %}
-        <a class="scrap" href="{% url 'posts:main' %}"  onclick="a()">스크랩</a>
-        <a class="helped" href="{% url 'posts:helped' %}" id="helped" href="#"  onclick="b()">도움</a>
-        <a class="recent" href="{% url 'posts:my_recent' %} "  onclick="c()">내 최신순</a>
-        <a class="follow" href="{% url 'posts:follow' %}"  onclick="d()">이웃</a>
-    {% else %}
-        <a class="scrap" href="{% url 'posts:main' %}"  onclick="a()">스크랩</a>
-        <a class="helped" href="{% url 'posts:helped' %}" id="helped" href="#"  onclick="b()">도움</a>
-    {% endif %}
-</div>
-
-<div class="post_container" id="scroll-element">
-    
-    {% include 'posts/_posts.html' with posts=posts %}
-    
-</div>
-<div id="bottom-sentinel">
+<div class="main_container">
+    <div class="service_desc">
+        <div class="desc">
+            <h1>개발자들을 위한</h1>
+            <h1>삽질 기록 질문 커뮤니티</h1>
+            <h3>
+                삽질을 안해본 개발자는 없고 기록을 안하는 개발자는 많다! 
+                이젠 삽질모음에 체계적으로 개발에서 겪은 어려움을 정리하고 공유하며 함께 성장해보세요.
+            </h3>
+        </div>
+        <div class="desc_card">
+            <img src="{% static 'image/javascript.png' %}">
+            <h3>자바스크립트 잡히지 않는 비동기</h3>
+            <h4>Uncaught TypeError: Cannot read property 'addEventListener' of null at anonymous 
+                addEventListener는 HTML DOM의 method 중 하나이기 때문에 객체 요소가 반드시 필요하다.
+            </h4>
+        </div>
+    </div>
+    <div class="card_container">
+        <div class="link_flex">
+            <div class="link_list">
+                {% if user.is_authenticated %}
+                    <a class="scrap" href="{% url 'posts:main' %}"  onclick="a()">스크랩</a>
+                    <a class="helped" href="{% url 'posts:helped' %}" id="helped" href="#"  onclick="b()" style="color: #00537A;">도움</a>
+                    <a class="recent" href="{% url 'posts:my_recent' %} "  onclick="c()">내 최신순</a>
+                    <a class="follow" href="{% url 'posts:follow' %}"  onclick="d()">이웃</a>
+                {% else %}
+                    <a class="scrap" href="{% url 'posts:main' %}"  onclick="a()">스크랩</a>
+                    <a class="helped" href="{% url 'posts:helped' %}" id="helped" href="#"  onclick="b()" style="color: #00537A;">도움</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="post_container" id="scroll-element">
+                {% include 'posts/_posts.html' with posts=posts %}
+        </div>
+        <div id="bottom-sentinel"></div>
+    </div>
 </div>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
