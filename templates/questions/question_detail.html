@@ -2,41 +2,33 @@
 {% load static %}
 {% block content %}
 <div class="question_container">
-    {% if post.image %}
-    <img src="{{ post.image.url }}" class="thumbnail_area">
-    {% endif %}
     <div class="post_container">
-        <!-- 제목영역 -->
+        {% if post.image %}
+            <img src="{{ post.image.url }}" class="thumbnail_area">
+        {% endif %}
         <div class="post_top">
             <div class="title_area">
                 <h1>{{post.title}}</h1>
-                <div class="post_user_info">
-                    <img src="{{post.user.user_profile_image.url}}">
-                    <h3>{{ post.user.user_nickname }}님의 질문</h3>
+                <span class="created_date">
+                    {{post.created}}
+                </span>
+                <div class="category_area">
+                    <span class="post_language">{{post.language}}</span>
+                    <span class="post_framework">{{post.framework}}</span>
+                    <span class="post_os">{{post.os}}</span>
+                </div>
+                <div class="desc_area">
+                    {{ post.desc|safe|escape }}
                 </div>
             </div>
-            {% if request.user.id == post.user.id %}
-            <div class="auth_btn_area">
-                <div class="edit_btn">
-                    <a href="{% url 'question:question_update' post.id %}">수정하기</a>
-                </div>
-                <div class="delete_btn">
-                    <a href="{% url 'question:question_delete' post.id %}">삭제하기</a>
-                </div>
-            </div>
-            {% endif %}
         </div>
         <!-- 제목영역 끝 -->
-        <div class="category_area">
-            <span class="post_language">언어|{{post.language}}</span>
-            <span class="post_framework">프레임워크|{{post.framework}}</span>
-            <span class="post_os">운영체제|{{post.os}}</span>
-            <div class="post_os">에러메시지|{{post.error_message}}</div>
-        </div>
-        <div class="desc_area">
-            {{ post.desc|safe|escape }}
-        </div>
+        
         <div class="post_{{post.id}}">
+            <div class="scrap_box">
+                <button name="{{ post.id }}" class="scarp-{{ post.id }} scrap" id="scrap_btn"value="scrap">
+                    퍼가기{{ post.scarps_user.all.count }}개</button>
+            </div>
             <div>
                 <button name="{{ post.id }}" value="Like" class="count-{{ post.id }} like" style="font:bold 1em; margin-top: 3px">
                     도움이되었어요.{{ post.likes_user.all.count }}개</button>
@@ -72,12 +64,12 @@
                 </div>
             </div>
             <!-- 공유하기버튼 영역 끝 -->
-            <div class="scrap_box">
-                <button name="{{ post.id }}" class="scarp-{{ post.id }} scrap" id="scrap_btn"value="scrap">
-                    퍼가기{{ post.scarps_user.all.count }}개</button>
-            </div>
+            <a href="javascript:doDisplay();" class="comment_btn">댓글 {{comments.count}}</a>
         </div>
-        <a href="javascript:doDisplay();" class="comment_btn">댓글 {{comments.count}}</a>
+
+
+
+
         <!-- 질문-댓글창 영역 -->
         <div id="comment_box">
             <div class='addComment'>
@@ -114,10 +106,28 @@
             </div>
         </div>
     </div>
+    {% if request.user.id == post.user.id %}
+            <div class="auth_btn_area">
+                <div class="edit_btn">
+                    <a href="{% url 'question:question_update' post.id %}">수정하기</a>
+                </div>
+                <div class="delete_btn">
+                    <a href="{% url 'question:question_delete' post.id %}">삭제하기</a>
+                </div>
+            </div>
+            {% endif %}
     {% if not request.user.id == post.user.id %}
     <a href="{% url 'question:answer_create' post.id %}" class="btn_control">답변 남기기</a>
     {% endif %}
 </div>
+
+
+
+
+
+
+
+
 <!-- 질문-댓글창영역 끝 -->
 <!-- 질문에 대한 답변 영역 답변답변답변 -->
 <div class="answer_area">

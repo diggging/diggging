@@ -8,25 +8,27 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="form_container">
+<div class="main_container">
+    <div class="container">
         <div class="create_title">
             <h1>답변 남기기</h1>
         </div>
-        <form method="POST" enctype="multipart/form-data" autocomplete="off">
-            {% csrf_token %}
-            {{ form.media }}
-            {{ form.title }}
-            <div class="desc_area">
-                {{ form.desc }}
-            </div>
-            <div class="btn_area">
-                <input type="submit" value="답변 남기기" class="btn_control" />
-                <button class="btn_control">
-                    <a href="{% url 'question:question_main' %}">나가기</a>
-                </button>
-            </div>
-        </form>
+        <div class="form_container">
+            <form method="POST" enctype="multipart/form-data" autocomplete="off">
+                {% csrf_token %}
+                {{ form.media }}
+                {{ form.title }}
+                <div class="desc_area">
+                    {{ form.desc }}
+                </div>
+                <div class="btn_area">
+                    <input type="submit" value="답변 수정하기" class="btn_input" />
+                    <a class="btn_control" href="{% url 'question:question_main' %}">
+                        <span>나가기</span>
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

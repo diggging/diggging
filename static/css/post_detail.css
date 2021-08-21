@@ -48,14 +48,19 @@ h1, h2, h3, h4, h5 {
 }
 
 .thumbnail_area{
-    border-radius: 1.25rem 1.25rem 1rem 1rem;
+    border-radius: 20px 20px 0px 0px;
     border-bottom: none;
-    height: 25rem; 
+    height: 25rem;
     max-width: 48rem;
     display: flex;
     justify-content: center;
     object-fit: contain;
-    margin-bottom: 1.5rem;
+    margin-bottom: 24px;
+    
+    /* 패딩값 상쇄해주는 부분 */
+    margin-left: -1.875rem;
+    margin-right: -1.875rem;
+    margin-top: -1.875rem;
 }
 
 .post_container {

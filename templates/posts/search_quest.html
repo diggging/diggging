@@ -44,7 +44,7 @@
                     </div>
                     {% endif %}
                     <div class="post_element">
-                        <a class="post_link" href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}">
+                        <a class="post_link" href="{% url 'question:question_post_detail' user_id=post.user.id post_id=post.id %}">
                             {%if post.image %}
                                 <div class="post_title">
                                     {{ post.title|truncatechars:24 }}
