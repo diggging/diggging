@@ -152,8 +152,8 @@ def get_answer_comments(request, answer_id):
 
 def question_update(request, pk):
     question_post = get_object_or_404(Question_post, pk=pk)
-    origin_lang_fol = question_post.question_folder.get(folder_kind="language")
-    origin_frame_fol = question_post.question_folder.get(folder_kind="framework")
+    origin_lang_fol = question_post.question_folder.get(folder_user=question_post.user, folder_kind="language")
+    origin_frame_fol = question_post.question_folder.get(folder_user=question_post.user, folder_kind="framework")
     if request.method == "POST":
         form = QuestionPostForm(request.POST, request.FILES, instance=question_post)
         if form.is_valid():
