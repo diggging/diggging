@@ -39,32 +39,32 @@
 
 meter {
     /* Reset the default appearance */
-    -webkit-appearance: none;
+    /* -webkit-appearance: none; */
     -moz-appearance: none;
     height: 2.2rem;
     width: 22rem;
     cursor: pointer;
-  }
+}
 
-.point_gage meter::-webkit-meter-bar {
-    width:22rem;
-    height: 2.2rem;
+.point_gage > meter::-webkit-meter-bar {
+    width: 100%;
+    height: 1.2rem;
     background-color: #fff;
     border: solid 1px #DBD6C7;
     border-radius: 1.25rem;
-    padding: 6px 8px;
+    padding: 4px 6px;
     color:#FFBA42;
 }
 
-.point_gage meter::-webkit-meter-optimum-value {
+.point_gage > meter::-webkit-meter-optimum-value {
     border-radius: 1.25rem;
     background: #FFBA42;
 }
-.point_gage meter::-webkit-meter-high-value {
+.point_gage > meter::-webkit-meter-high-value {
     border-radius: 1.25rem;
     background: #FFBA42;
 }
-.point_gage meter::-webkit-meter-low-value {
+.point_gage > meter::-webkit-meter-low-value {
     border-radius: 1.25rem;
     background: #FFBA42;
 }
@@ -87,8 +87,8 @@ meter {
 
 /* 포인트 modal scroll 커스텀 */
 .modal_content_box::-webkit-scrollbar{ 
-    width: 14px; }
-
+    width: 14px; 
+}
 
 /* 스크롤바 막대 설정*/ 
 .modal_content_box::-webkit-scrollbar-thumb{ 
@@ -287,7 +287,9 @@ meter {
     cursor: pointer;
     font-size: 0.875rem;
     margin-left: 20px;
-    padding: 6px;
+    width: 122px;
+    height: 33px;
+    padding: 6px 6px 6px 10px;
 }
 
 .follow:hover {
@@ -301,7 +303,6 @@ meter {
 }
 
 .margin_bottom {
-    /* margin-bottom: 1.875rem; */
     display: flex;
 }
 
@@ -396,6 +397,7 @@ meter {
     padding: 4rem 1.75rem 1.75rem 1.75rem;
     border-top: none;
     border-bottom: none;
+    height: 100%;
 }
 
 .right_container {
@@ -673,7 +675,7 @@ meter {
 .point_gage meter {
     width: 100%;
     height: 1.25rem;
-    -webkit-appearance: none; /* Reset appearance */
+    /* -webkit-appearance: none; */
     border: 0.0625rem solid #DBD6C7;
     border-radius: 1.25rem;
     box-sizing: border-box;
@@ -775,6 +777,8 @@ meter {
     overflow-y: scroll;
     padding: 0 0.875rem;
     margin-top: 1rem;
+    border-bottom: solid 1px #ececec;
+    padding-bottom: 0.4rem;
 }
 
 #question_btn_tap {
@@ -993,6 +997,7 @@ meter {
 }
 
 .level_badge {
+    width: 100%;
     margin: 0.375rem 0;
 }
 

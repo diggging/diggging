@@ -187,7 +187,7 @@ const framePost = () => {
                 }
                 console.log(data)
                 if (data.length === 0) {
-                    thirdContainer.innerHTML = "파일없음"
+                    thirdContainer.innerHTML = ""
                 } else {
                     const txt = data.map(post => {
                         return `

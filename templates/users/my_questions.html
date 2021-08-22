@@ -402,7 +402,7 @@
             <!--Tab Content follow-->
             <div id="follow" class="tabcontent">
                 <div class="follow_count">
-                    <h3>{{host.username}}님을 팔로우하는 사람 </h3>
+                    <h3>{{host.user_nickname}}님을 팔로우하는 사람 </h3>
                     <h3>{{ host_follower.count }}명</h3>
                 </div>
                 {% for follower in host_follower %}
@@ -414,7 +414,7 @@
                     {% endif %}
                     <div class="flex_col">
                         <h3>{{follower.user_level}}</h3>
-                        <h3>{{ follower.username }}</h3>
+                        <h3>{{ follower.user_nickname }}</h3>
                     </div>
                     <div class="follow_desc">
                         <h3>{{ follower.email }}</h3>
@@ -425,7 +425,7 @@
             <!--Tab content follow-->
             <div id="following" class="tabcontent">
                 <div class="following_count">
-                    <h3>{{host.username}}님이 팔로우하는 사람</h3>
+                    <h3>{{host.user_nickname}}님이 팔로우하는 사람</h3>
                     <h3>{{host_following.count}}명</h3>
                 </div>
                 {% for following in host_following %}
@@ -437,7 +437,7 @@
                     {% endif %}
                     <div class="flex_col">
                         <h3>{{following.user_level}}</h3>
-                        <h3>{{following.username}}</h3>
+                        <h3>{{following.user_nickname}}</h3>
                     </div>
                     <div class="following_desc">
                         <h3>{{following.email}}</h3>
@@ -464,7 +464,7 @@
                     {% endif %}
 
                     <div class="flex_col">
-                        <span class="user_nickname">{{ request.user.username }}
+                        <span class="user_nickname">{{ request.user.user_nickname }}
                             <span class="user_nickname_span">님의 모래상자</span>
                         </span>
 
@@ -507,21 +507,19 @@
                             
                         </a>
                     </div>
-
-                    <div class="point_gage">
-                        {% if host.user_level == 0 %}
-                        <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500"
-                            value="{{my_sand_sum.amount__sum}}"></meter>
-                        {% elif host.user_level == 1 %}
-                        <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500"
-                            value="{{my_sand_sum.amount__sum}}"></meter>
-                        {% else%}
-                        <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000"
-                            value="{{my_sand_sum.amount__sum}}"></meter>
-                        {% endif %}
-                    </div>
                 </div>
-
+                <div class="point_gage">
+                    {% if host.user_level == 0 %}
+                    <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500"
+                        value="{{my_sand_sum.amount__sum}}"></meter>
+                    {% elif host.user_level == 1 %}
+                    <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500"
+                        value="{{my_sand_sum.amount__sum}}"></meter>
+                    {% else%}
+                    <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000"
+                        value="{{my_sand_sum.amount__sum}}"></meter>
+                    {% endif %}
+                </div>
                 <div class="follow_area">
                     <div class="follow_btn_area">
                         <label for="value_low">모래포인트</label>
@@ -544,7 +542,7 @@
                 {% endif %}
 
                 <div class="flex_col">
-                    <span class="user_nickname">{{ host.username }}
+                    <span class="user_nickname">{{ host.user_nickname }}
                         <span class="user_nickname_span">님의 모래상자</span>
                     </span>
 

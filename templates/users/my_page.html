@@ -461,7 +461,7 @@
                     {% endif %}
 
                     <div class="flex_col">
-                        <span class="user_nickname">{{ request.user.username }}
+                        <span class="user_nickname">{{ request.user.user_nickname }}
                             <span class="user_nickname_span">님의 모래상자</span>
                         </span>
 
@@ -502,18 +502,18 @@
                             
                         </a>
                     </div>
-                    <div class="point_gage">
-                        {% if host.user_level == 0 %}
-                        <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500"
-                            value="{{my_sand_sum.amount__sum}}"></meter>
-                        {% elif host.user_level == 1 %}
-                        <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500"
-                            value="{{my_sand_sum.amount__sum}}"></meter>
-                        {% else%}
-                        <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000"
-                            value="{{my_sand_sum.amount__sum}}"></meter>
-                        {% endif %}
-                    </div>
+                </div>
+                <div class="point_gage">
+                    {% if host.user_level == 0 %}
+                    <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500"
+                        value="{{my_sand_sum.amount__sum}}"></meter>
+                    {% elif host.user_level == 1 %}
+                    <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500"
+                        value="{{my_sand_sum.amount__sum}}"></meter>
+                    {% else%}
+                    <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000"
+                        value="{{my_sand_sum.amount__sum}}"></meter>
+                    {% endif %}
                 </div>
                 <!-- 모래포인트, 레벨 영역 끝 -->
                 <div class="follow_area">
@@ -538,7 +538,7 @@
                 {% endif %}
 
                 <div class="flex_col">
-                    <span class="user_nickname">{{ host.username }}
+                    <span class="user_nickname">{{ host.user_nickname }}
                         <span class="user_nickname_span">님의 모래상자</span>
                     </span>
 
