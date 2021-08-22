@@ -65,6 +65,7 @@
                                 </div>
                                 <p class="post_desc">
                                     {{ post.desc|safe|escape|truncatechars:150|striptags|cut:"&nbsp;"}}
+                                    <span id="desc_img">{{post.desc.img}}</span>
                                 </p>
                             {% else %}
                                 <div class="post_title_img_none">

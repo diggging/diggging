@@ -73,6 +73,10 @@ code {
 }
 
 
+#desc_img {
+    display: none;
+}
+
 .btn {
     opacity: 0;
 }
