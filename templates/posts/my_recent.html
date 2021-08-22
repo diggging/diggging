@@ -18,8 +18,8 @@
                 이젠 삽질모음에 체계적으로 개발에서 겪은 어려움을 정리하고 공유하며 함께 성장해보세요.
             </h3>
         </div>
-        <div class="desc_card">
-            <img src="{% static 'image/roll_1.jpg' %}">
+        <div class="desc_card" id="changeText">
+            <img src="{% static 'image/roll_1.jpg' %}" id="roll">
             <h3>자바스크립트 잡히지 않는 비동기</h3>
             <h4>Uncaught TypeError: Cannot read property 'addEventListener' of null at anonymous 
                 addEventListener는 HTML DOM의 method 중 하나이기 때문에 객체 요소가 반드시 필요하다. ...
@@ -64,7 +64,7 @@
     var inst = setInterval(change, 2000);
 
     function change() {
-    document.getElementsByClassName("desc_card").innerHTML = 
+    document.getElementById("changeText").innerHTML = 
     `<h3>text[counter]</h3>
     <h4>desc[counter]</h4>`;
     counter++;
