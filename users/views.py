@@ -511,8 +511,9 @@ def lang_folder_posts(request, pk):
     # comments = []
     # for post in posts:
     #     comments.append(post.comments.all())
+
     # comments_data = serializers.serialize('json',comments)
-    
+    # print(comments_data)
     # questions user
     # a = User.objects.get(pk=question_post.user.id)
     # question_comments 개수

@@ -54,7 +54,7 @@ const langPost = () => {
             })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
+                console.log(id)
                 if (data.length === 0) {
                     noAnswerListBox.innerHTML = "파일없음"
                 } else {

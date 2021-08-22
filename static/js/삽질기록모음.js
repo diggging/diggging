@@ -6,10 +6,16 @@ const btnTap = document.getElementById('btn_tap');
 console.log(btnTap.childElementCount)
 
 const langBtn = document.querySelector('.language_btn');
+const frameworkBtn = document.querySelector('.framework_btn');
+const problemBtn = document.querySelector('.problem_btn');
 
 langBtn.addEventListener('click', () => {
+    langBtn.style.background = "#FFBA42";
+    frameworkBtn.style.background = "#FFD358";
+    problemBtn.style.background = "#FFD358";
+
     id =langBtn.value;
-    var a = "http://127.0.0.1:8000/users/" + id
+    var a = "http://13.124.23.247:8000/users/" + id
     var url = a + "/lang_folder/"
     
     fetch(url, {
@@ -23,7 +29,8 @@ langBtn.addEventListener('click', () => {
     .then(data => {
 
         if (data.length === 0) {
-            categoryTab.innerHTML = "폴더없음"
+            categoryTab.innerHTML = ""
+
         } else {
             const txt = data.map(folder => {
                 return `
@@ -48,7 +55,8 @@ const langPost = () => {
         langPostBtn[i].addEventListener('click', () => {
 
             id =langPostBtn[i].value;
-            var a = "http://127.0.0.1:8000/users/" + id
+            console.log(id)
+            var a = "http://13.124.23.247:8000/users/" + id
             var url = a + "/lang_folder_posts/"
             fetch(url, {
                 method: "GET",
@@ -61,33 +69,37 @@ const langPost = () => {
             .then(res => res.json())
             .then(data => {
 
-
                 let desc = [];
-                for(i=0; i < data.length; i++) {
-                    if(data[i].desc.length > 300) {
-                        desc[i] = data[i].desc.slice(0, 300)
+                for(j=0; j < data.length; j++) {
+                    if(data[j].desc.length > 300) {
+                        desc[j] = data[j].desc.slice(0, 200)
+                        data[j].desc = desc[j]
                     }
                 }
                 const extractTextPattern = /(<([^>]+)>)/gi;
 
                 let replaceDesc = [];
-                for(i=0; i < desc.length; i++) {
-                    replaceDesc[i] = desc[i].replace(extractTextPattern, "")
+                for(k=0; k < desc.length; k++) {
+                    replaceDesc[k] = desc[k].replace(extractTextPattern, "")
                 }
-
+            
                 if (data.length === 0) {
-                    thirdContainer.innerHTML = "파일없음"
+                    thirdContainer.innerHTML = ""
                 } else {
                     const txt = data.map(post => {
                         return `
+                    <a class="post_link" href="http://13.124.23.247:8000/posts/${post.user_id}/${post.id}/detail">
                         <div class="my_post_list">
                             <div class="post_title">
                                 ${post.title}
                             </div>
                             <div class="post_desc">
-                                ${replaceDesc}
+                                ${post.desc}
                             </div>
                             <div class="post_user">
+                                <div class="post_created">
+                                    ${post.created}
+                                </div>
                                 <div class="scrap_num">
                                     <span class="bold">스크랩</span>
                                     ${post.scrap_num}
@@ -98,6 +110,7 @@ const langPost = () => {
                                 </div>
                             </div>
                         </div>
+                    </a>
                         `
                     }).join('')
                     thirdContainer.innerHTML = txt;
@@ -109,12 +122,14 @@ const langPost = () => {
 
 //해결 미해결
 
-const problemBtn = document.querySelector('.problem_btn');
 
 problemBtn.addEventListener('click', () => {
-    id =problemBtn.value;
+    langBtn.style.background = "#FFD358";
+    frameworkBtn.style.background = "#FFD358";
+    problemBtn.style.background = "#FFBA42";
 
-    var a = "http://127.0.0.1:8000/users/" + id
+    id =problemBtn.value;
+    var a = "http://13.124.23.247:8000/users/" + id
     var url = a + "/solved_folder/"
     
     fetch(url, {
@@ -128,7 +143,7 @@ problemBtn.addEventListener('click', () => {
     .then(data => {
         
         if (data.length === 0) {
-            categoryTab.innerHTML = "폴더없음"
+            categoryTab.innerHTML = ""
         } else {
             const txt = data.map(folder => {
                 return `
@@ -153,7 +168,7 @@ const problemPost = () => {
         problemBtn[i].addEventListener('click', () => {
 
             id =problemBtn[i].value;
-            var a = "http://127.0.0.1:8000/users/" + id
+            var a = "http://13.124.23.247:8000/users/" + id
             var url = a + "/solved_folder_posts/"
             
             fetch(url, {
@@ -166,43 +181,48 @@ const problemPost = () => {
             .then(res => res.json())
             .then(data => {
 
-                console.log(data);
                 let desc = [];
-                for(i=0; i < data.length; i++) {
-                    if(data[i].desc.length > 300) {
-                        desc[i] = data[i].desc.slice(0, 300)
+                for(j=0; j < data.length; j++) {
+                    if(data[j].desc.length > 300) {
+                        desc[j] = data[j].desc.slice(0, 200)
+                        data[j].desc = desc[j]
                     }
                 }
                 const extractTextPattern = /(<([^>]+)>)/gi;
 
                 let replaceDesc = [];
-                for(i=0; i < desc.length; i++) {
-                    replaceDesc[i] = desc[i].replace(extractTextPattern, "")
+                for(k=0; k < desc.length; k++) {
+                    replaceDesc[k] = desc[k].replace(extractTextPattern, "")
                 }
 
                 if (data.length === 0) {
-                    thirdContainer.innerHTML = "파일없음";
+                    thirdContainer.innerHTML = "";
                 } else {
                     const txt = data.map(post => {
                         return `
-                        <div class="my_post_list">
-                            <div class="post_title">
-                                ${post.title}
-                            </div>
-                            <div class="post_desc">
-                                ${replaceDesc}
-                            </div>
-                            <div class="post_user">
-                                <div class="scrap_num">
-                                    <span class="bold">스크랩</span>
-                                    ${post.scrap_num}
+                        <a class="post_link" href="http://13.124.23.247:8000/posts/${post.user_id}/${post.id}/detail">
+                            <div class="my_post_list">
+                                <div class="post_title">
+                                    ${post.title}
                                 </div>
-                                <div class="helped_num">
-                                    <span class="bold">도움</span>
-                                    ${post.helped_num}
+                                <div class="post_desc">
+                                    ${post.desc}
+                                </div>
+                                <div class="post_user">
+                                    <div class="post_created">
+                                        ${post.created}
+                                    </div>
+                                    <div class="scrap_num">
+                                        <span class="bold">스크랩</span>
+                                        ${post.scrap_num}
+                                    </div>
+                                    <div class="helped_num">
+                                        <span class="bold">도움</span>
+                                        ${post.helped_num}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                         `
                     }).join('')
                     thirdContainer.innerHTML = txt;
@@ -213,10 +233,13 @@ const problemPost = () => {
 }
 
 //프레임 워크
-const frameworkBtn = document.querySelector('.framework_btn');
     frameworkBtn.addEventListener('click', () => {
+        langBtn.style.background = "#FFD358";
+        frameworkBtn.style.background = "#FFBA42";
+        problemBtn.style.background = "#FFD358";
+
         id =frameworkBtn.value;
-        var a = "http://127.0.0.1:8000/users/" + id
+        var a = "http://13.124.23.247:8000/users/" + id
         var url = a + "/framework_folder/"
         
         fetch(url, {
@@ -229,7 +252,7 @@ const frameworkBtn = document.querySelector('.framework_btn');
         .then(res => res.json())
         .then(data => {
             if (data.length === 0) {
-                categoryTab.innerHTML = "폴더없음"
+                categoryTab.innerHTML = ""
             } else {
                 const txt = data.map(folder => {
                     return `
@@ -254,7 +277,7 @@ const framePost = () => {
         framePostBtn[i].addEventListener('click', () => {
 
             id =framePostBtn[i].value;
-            var a = "http://127.0.0.1:8000/users/" + id
+            var a = "http://13.124.23.247:8000/users/" + id
             var url = a + "/framework_folder_posts/"
             
             fetch(url, {
@@ -268,31 +291,36 @@ const framePost = () => {
             .then(data => {
 
                 let desc = [];
-                for(i=0; i < data.length; i++) {
-                    if(data[i].desc.length > 300) {
-                        desc[i] = data[i].desc.slice(0, 300)
+                for(j=0; j < data.length; j++) {
+                    if(data[j].desc.length > 300) {
+                        desc[j] = data[j].desc.slice(0, 200)
+                        data[j].desc = desc[j]
                     }
                 }
                 const extractTextPattern = /(<([^>]+)>)/gi;
 
                 let replaceDesc = [];
-                for(i=0; i < desc.length; i++) {
-                    replaceDesc[i] = desc[i].replace(extractTextPattern, "")
+                for(k=0; k < desc.length; k++) {
+                    replaceDesc[k] = desc[k].replace(extractTextPattern, "")
                 }
 
                 if (data.length === 0) {
-                    thirdContainer.innerHTML = "파일없음"
+                    thirdContainer.innerHTML = ""
                 } else {
                     const txt = data.map(post => {
                         return `
+                    <a class="post_link" href="http://13.124.23.247:8000/posts/${post.user_id}/${post.id}/detail">
                         <div class="my_post_list">
                             <div class="post_title">
                                 ${post.title}
                             </div>
                             <div class="post_desc">
-                                ${replaceDesc}
+                                ${post.desc}
                             </div>
                             <div class="post_user">
+                                <div class="post_created">
+                                    ${post.created}
+                                </div>
                                 <div class="scrap_num">
                                     <span class="bold">스크랩</span>
                                     ${post.scrap_num}
@@ -303,6 +331,7 @@ const framePost = () => {
                                 </div>
                             </div>
                         </div>
+                    </a>
                         `
                     }).join('')
                     thirdContainer.innerHTML = txt;
