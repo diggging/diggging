@@ -109,6 +109,11 @@ form {
     width: 0.0625rem;
 }
 
+.thumbnail_area label::after{
+    display:none;
+
+}
+
 #image {
     height: 100%;
     width: 100%;

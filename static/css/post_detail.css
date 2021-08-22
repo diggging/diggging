@@ -88,6 +88,8 @@ h1, h2, h3, h4, h5 {
     align-items: center;
 }
 
+
+
 .post_area {
     border: solid 0.0625rem var(--border-color);
     border-radius: 0.5rem;
@@ -223,6 +225,27 @@ h1, h2, h3, h4, h5 {
     margin-bottom: 1.875rem;
 }
 
+
+.sociallink:not(#naver_icon) > a > svg:hover {
+    fill: #FFBA42;
+}
+.sociallink:not(#naver_icon) > a > svg:active{
+    fill: #FFBA42;
+}
+
+#naver_icon > rect:hover {
+    fill: #FFBA42;
+}
+#naver_icon > path:hover {
+    fill: white;
+}
+#naver_icon > rect:active {
+    fill: #FFBA42;
+}
+#naver_icon > path:active {
+    fill: white;
+}
+
 .comment_box {
     margin-bottom: 1.875rem;
 }
@@ -240,9 +263,6 @@ h1, h2, h3, h4, h5 {
     justify-content: space-between;
 }
 
-.addComment button {
-    /* padding: 0.625rem 1.25rem; */
-}
 
 .addComment > div {
     padding: 1.125rem 1.875rem 1.125rem 1.875rem;
@@ -378,10 +398,6 @@ h1, h2, h3, h4, h5 {
 }
 
 .post__like, .post__scrap {
-    padding: 0.625rem 1.25rem;
-    border: 0.0625rem solid var(--border-color);
-    background: floralwhite;
-    border-radius: 0.5rem;
 }
 
 .scrap,
@@ -473,6 +489,9 @@ h1, h2, h3, h4, h5 {
 .profile_username {
     display: flex;
     align-items: center;
+    border-top: solid 1px #ececec;
+    border-bottom: solid 1px #ececec;
+    
 }
 
 .profile_image {
@@ -499,11 +518,9 @@ h1, h2, h3, h4, h5 {
     font-size: 1rem;
 }
 
-.proflie_text {
-    width: 31.625rem;
-    height: 2.0625rem;
+.user_level {
     font-size: 0.75rem;
-    line-height: 1.063rem;
     color: #8C8D8D;
     margin-left: 0.625rem;
+    font-family: var(--content-font);
 }

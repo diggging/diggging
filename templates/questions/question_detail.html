@@ -1,216 +1,244 @@
 {% extends 'questions/base.html' %}
 {% load static %}
 {% block content %}
-<div class="question_container">
-    <div class="post_container">
-        {% if post.image %}
-            <img src="{{ post.image.url }}" class="thumbnail_area">
-        {% endif %}
-        <div class="post_top">
-            <div class="title_area">
-                <h1>{{post.title}}</h1>
-                <span class="created_date">
-                    {{post.created}}
-                </span>
-                <div class="category_area">
-                    <span class="post_language">{{post.language}}</span>
-                    <span class="post_framework">{{post.framework}}</span>
-                    <span class="post_os">{{post.os}}</span>
-                </div>
-                <div class="desc_area">
-                    {{ post.desc|safe|escape }}
-                </div>
-            </div>
-        </div>
-        <!-- 제목영역 끝 -->
-        
-        <div class="post_{{post.id}}">
-            <div class="scrap_box">
-                <button name="{{ post.id }}" class="scarp-{{ post.id }} scrap" id="scrap_btn"value="scrap">
-                    퍼가기{{ post.scarps_user.all.count }}개</button>
-            </div>
-            <div>
-                <button name="{{ post.id }}" value="Like" class="count-{{ post.id }} like" style="font:bold 1em; margin-top: 3px">
-                    도움이되었어요.{{ post.likes_user.all.count }}개</button>
-            </div>
-            <!-- 공유하기 버튼영역 -->
-            <div class="share_box">
-                <button class="accordion">공유하기</button>
-                <div class="panel">
-                    <div class="content_area">
-                        <span class="sociallink ml-1">
-                            <a href="javascript:sendLinkFacebook()" title="페이스북으로 공유">
-                                <img src="{% static 'image/facebook.png' %}" width=31 alt="Facebook">
-                            </a>
-                        </span>
-                        <span class="sociallink ml-1">
-                            <a href="javascript:sendLinkTwitter()" title="트위터로 공유">
-                                <img src="{% static 'image/twitter.png' %}" width=34 alt="Twitter">
-                            </a>
-                        </span>
-                        <span class="sociallink ml-1">
-                            <a href="javascript:sendLinkNaver()" title="네이버로 공유">
-                                <img src="{% static 'image/naver.png' %}" width=42 alt="Naver">
-                            </a>
-                        </span>
-                        <span class="sociallink ml-1">
-                            <a href="javascript:sendLinkKakao()" id="kakao-link-btn" title="카카오톡으로 공유">
-                                <img src="{% static 'image/kakaotalk.png' %}" width=34 alt="Kakaotalk">
-                                <!--이거는 도메인이없어서 못하는중임당... 배포하면 수정 할 예정.-->
-                            </a>
-                        </span>
-                        <button class="close_btn"> 닫기 X </button>
+<div class="container">
+
+    <div class="question_container">
+        <div class="post_container">
+            {% if post.image %}
+                <img src="{{ post.image.url }}" class="thumbnail_area">
+            {% endif %}
+            <div class="post_top">
+                <div class="title_area">
+                    <h1>{{post.title}}</h1>
+                    <span class="created_date">
+                        {{post.created}}
+                    </span>
+                    <div class="category_area">
+                        <span class="post_language">{{post.language}}</span>
+                        <span class="post_framework">{{post.framework}}</span>
+                        <span class="post_os">{{post.os}}</span>
+                    </div>
+                    <div class="desc_area">
+                        {{ post.desc|safe|escape }}
                     </div>
                 </div>
             </div>
-            <!-- 공유하기버튼 영역 끝 -->
-            <a href="javascript:doDisplay();" class="comment_btn">댓글 {{comments.count}}</a>
-        </div>
-
-
-
-
-        <!-- 질문-댓글창 영역 -->
-        <div id="comment_box">
-            <div class='addComment'>
-                {% for comment in comments %}
-                <div class='comment_id_{{comment.id}}'>
-                    <div class="comment_info">
-                        <div class="comment_profile">
-                            <img src="{{comment.user.user_profile_image.url}}">
-                            <span class="user_nicknamme">
-                                {{comment.user.user_nickname}}
+            <!-- 제목영역 끝 -->
+            <div class="accordion_area">
+                {% if not request.user.id == post.user.id %}
+                <div class="post_{{post.id}}">
+                    <div class="scrap_box">
+                        <button name="{{ post.id }}" class="scarp-{{ post.id }} scrap" id="scrap_btn"value="scrap">
+                            <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13.369 2H7.83703L5.99302 0H1.38301C0.619183 0 0 0.671562 0 1.5V10.5C0 11.3284 0.619183 12 1.38301 12H13.369C14.1329 12 14.7521 11.3284 14.7521 10.5V3.5C14.7521 2.67156 14.1329 2 13.369 2ZM10.603 7.25C10.603 7.52625 10.3967 7.75 10.142 7.75H8.06753V10C8.06753 10.2763 7.86123 10.5 7.60653 10.5H7.14553C6.89082 10.5 6.68452 10.2763 6.68452 10V7.75H4.61002C4.35531 7.75 4.14902 7.52625 4.14902 7.25V6.75C4.14902 6.47375 4.35531 6.25 4.61002 6.25H6.68452V4C6.68452 3.72375 6.89082 3.5 7.14553 3.5H7.60653C7.86123 3.5 8.06753 3.72375 8.06753 4V6.25H10.142C10.3967 6.25 10.603 6.47375 10.603 6.75V7.25Z" fill="#FFBA42"/>
+                            </svg>                                
+                            <span>
+                                퍼가기&nbsp&nbsp{{ post.scarps_user.all.count }}
                             </span>
-                        </div>
-                        <div class="comment_content">
-                            <div class="comment_created">
-                                {{comment.created}}
-                            </div>
-                            <div class="comment_text">
-                                {{comment.text}}
-                            </div>
-                        </div>
+                        </button>
                     </div>
-                    {% if request.user == comment.user %}
-                    <div class="delete_btn">
-                        <button onclick="onClickDelete({{post.id}},{{comment.id}})">삭제</button>
-                        <!--comment 별로 id 준당-->
+                    <div class="scrap_popup" style="opacity: 0;" >
+                        <p>언어📁 {{post.language}} 프레임워크📁 {{post.framework}}으로 퍼왔습니다.
+                        마이페이지에서 확인해보세요!</p>
                     </div>
-                    {% endif %}
                 </div>
-                {% endfor %}
-            </div>
-            <div class="comment_input_area">
-                <input class="comment_input" type="text" placeholder="댓글달기" />
-                <button class="comment_input_btn" onclick="onClickComment({{ post.id }})">게시</button>
-            </div>
-        </div>
-    </div>
-    {% if request.user.id == post.user.id %}
-            <div class="auth_btn_area">
-                <div class="edit_btn">
-                    <a href="{% url 'question:question_update' post.id %}">수정하기</a>
+                <div class="post_{{post.id}}">
+                    <div>
+                        <button class="count-{{ post.id }} like" name="{{ post.id }}" value="Like" >
+                            <svg width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12.3831 0.820517C10.9153 -0.430353 8.73231 -0.205357 7.38502 1.1848L6.85735 1.72854L6.32968 1.1848C4.98506 -0.205357 2.79938 -0.430353 1.33155 0.820517C-0.350558 2.25621 -0.438949 4.83294 1.06638 6.38917L6.24932 11.7409C6.58414 12.0864 7.12788 12.0864 7.46269 11.7409L12.6456 6.38917C14.1536 4.83294 14.0653 2.25621 12.3831 0.820517Z" fill="#FFBA42"/>
+                            </svg>    
+                            <span>
+                                도움이되었어요&nbsp&nbsp{{ post.likes_user.all.count }}
+                            </span>
+                        </button>
+                    </div>
                 </div>
-                <div class="delete_btn">
-                    <a href="{% url 'question:question_delete' post.id %}">삭제하기</a>
+                {% endif %}
+                <!-- 공유하기 버튼영역 -->
+                <a href="javascript:doDisplay();" class="comment_btn">댓글 {{comments.count}}</a>
+                <div class="share_box">
+                    <span class="sociallink ml-1" id="facebook_icon">
+                        <a href="javascript:sendLinkFacebook()" title="페이스북으로 공유">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="#FFD358" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M21.4286 0H2.57143C1.88944 0 1.23539 0.270918 0.753154 0.753154C0.270918 1.23539 0 1.88944 0 2.57143L0 21.4286C0 22.1106 0.270918 22.7646 0.753154 23.2468C1.23539 23.7291 1.88944 24 2.57143 24H9.92411V15.8405H6.54911V12H9.92411V9.07286C9.92411 5.74339 11.9063 3.90429 14.9421 3.90429C16.3961 3.90429 17.9164 4.16357 17.9164 4.16357V7.43143H16.2413C14.5907 7.43143 14.0759 8.45571 14.0759 9.50625V12H17.7605L17.1712 15.8405H14.0759V24H21.4286C22.1106 24 22.7646 23.7291 23.2468 23.2468C23.7291 22.7646 24 22.1106 24 21.4286V2.57143C24 1.88944 23.7291 1.23539 23.2468 0.753154C22.7646 0.270918 22.1106 0 21.4286 0Z" fill="#FFBA42"/>
+                            </svg>
+                        </a>
+                    </span>
+                    <span class="sociallink ml-1">
+                        <a href="javascript:sendLinkTwitter()" title="트위터로 공유">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M21.4286 0H2.57143C1.15179 0 0 1.15179 0 2.57143V21.4286C0 22.8482 1.15179 24 2.57143 24H21.4286C22.8482 24 24 22.8482 24 21.4286V2.57143C24 1.15179 22.8482 0 21.4286 0ZM18.8089 8.50714C18.8196 8.65714 18.8196 8.8125 18.8196 8.9625C18.8196 13.6071 15.2839 18.9589 8.82321 18.9589C6.83036 18.9589 4.98214 18.3804 3.42857 17.3839C3.7125 17.4161 3.98571 17.4268 4.275 17.4268C5.91964 17.4268 7.43036 16.8696 8.63571 15.9268C7.09286 15.8946 5.79643 14.8821 5.35179 13.4893C5.89286 13.5696 6.38036 13.5696 6.9375 13.425C5.33036 13.0982 4.125 11.6839 4.125 9.975V9.93214C4.59107 10.1946 5.1375 10.3554 5.71071 10.3768C5.2288 10.0562 4.83374 9.62136 4.56079 9.11098C4.28784 8.60059 4.14548 8.03057 4.14643 7.45179C4.14643 6.79821 4.31786 6.19821 4.62321 5.67857C6.35357 7.81071 8.95179 9.20357 11.8661 9.35357C11.3679 6.96964 13.1518 5.03571 15.2946 5.03571C16.3071 5.03571 17.2179 5.45893 17.8607 6.14464C18.6536 5.99464 19.4143 5.7 20.0893 5.29821C19.8268 6.1125 19.275 6.79821 18.5464 7.23214C19.2536 7.15714 19.9393 6.95893 20.5714 6.68571C20.0946 7.3875 19.4946 8.00893 18.8089 8.50714Z" fill="#FFD358"/>
+                            </svg>    
+                        </a>
+                    </span>
+                    <span class="sociallink ml-1">
+                        <a href="javascript:sendLinkKakao()" id="kakao-link-btn" title="카카오톡으로 공유">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15.2808 13.1484C15.2777 13.2882 15.2191 13.4211 15.1181 13.5178C15.0171 13.6146 14.8818 13.6673 14.742 13.6644H12.942C12.8023 13.667 12.6672 13.6142 12.5662 13.5175C12.4653 13.4208 12.4067 13.2881 12.4032 13.1484V9.3276C12.41 9.17985 12.4734 9.0404 12.5803 8.93823C12.6873 8.83607 12.8295 8.77906 12.9774 8.77906C13.1253 8.77906 13.2675 8.83607 13.3745 8.93823C13.4814 9.0404 13.5448 9.17985 13.5516 9.3276V12.6324H14.7516C14.8898 12.6321 15.0226 12.6859 15.1215 12.7824C15.2205 12.8788 15.2777 13.0102 15.2808 13.1484ZM12.0324 12.8616C12.204 13.3932 12.054 13.59 11.8992 13.6608C11.7863 13.7127 11.6634 13.7393 11.5392 13.7388C11.4451 13.7506 11.3497 13.733 11.2659 13.6886C11.1822 13.6441 11.1142 13.5749 11.0712 13.4904L10.8 12.7608H9.0804L8.8008 13.4904C8.75796 13.575 8.68999 13.6444 8.6062 13.6888C8.52241 13.7333 8.42691 13.7508 8.3328 13.7388C8.20858 13.7391 8.08577 13.7124 7.9728 13.6608C7.818 13.59 7.6692 13.3932 7.8396 12.8628L9.1884 9.3204C9.23744 9.15989 9.33673 9.01936 9.47164 8.91951C9.60655 8.81966 9.76996 8.76577 9.9378 8.76577C10.1056 8.76577 10.269 8.81966 10.404 8.91951C10.5389 9.01936 10.6382 9.15989 10.6872 9.3204L12.0324 12.8616ZM10.4988 11.76L9.9372 10.164L9.3756 11.76H10.4988ZM8.6016 9.3168C8.60128 9.17061 8.54299 9.03051 8.4395 8.92725C8.33601 8.82399 8.19579 8.766 8.0496 8.766H5.1696C5.09727 8.766 5.02564 8.78025 4.95882 8.80793C4.89199 8.83561 4.83127 8.87618 4.78013 8.92733C4.72898 8.97847 4.68841 9.03919 4.66073 9.10602C4.63305 9.17284 4.6188 9.24447 4.6188 9.3168C4.6188 9.38913 4.63305 9.46076 4.66073 9.52758C4.68841 9.59441 4.72898 9.65513 4.78013 9.70627C4.83127 9.75742 4.89199 9.79799 4.95882 9.82567C5.02564 9.85335 5.09727 9.8676 5.1696 9.8676H6.0468V13.2084C6.0468 13.3577 6.10609 13.5008 6.21164 13.6064C6.31719 13.7119 6.46034 13.7712 6.6096 13.7712C6.75886 13.7712 6.90201 13.7119 7.00756 13.6064C7.11311 13.5008 7.1724 13.3577 7.1724 13.2084V9.8676H8.0496C8.19579 9.8676 8.33601 9.80961 8.4395 9.70635C8.54299 9.60309 8.60128 9.46299 8.6016 9.3168ZM17.6532 10.9896L18.9348 9.708C18.9781 9.66263 19.0112 9.60855 19.0319 9.54936C19.0526 9.49017 19.0604 9.42725 19.0548 9.3648C19.0438 9.22486 18.9813 9.09397 18.8793 8.99753C18.7773 8.90108 18.6431 8.84594 18.5028 8.8428C18.387 8.83998 18.2748 8.88313 18.1908 8.9628L16.6212 10.5324V9.3276C16.6145 9.18299 16.5524 9.04651 16.4477 8.94654C16.343 8.84656 16.2038 8.79078 16.059 8.79078C15.9142 8.79078 15.775 8.84656 15.6703 8.94654C15.5656 9.04651 15.5035 9.18299 15.4968 9.3276V13.176C15.4933 13.252 15.5052 13.328 15.5319 13.3992C15.5586 13.4705 15.5994 13.5356 15.652 13.5906C15.7045 13.6457 15.7677 13.6895 15.8376 13.7194C15.9076 13.7493 15.9829 13.7648 16.059 13.7648C16.1351 13.7648 16.2104 13.7493 16.2804 13.7194C16.3503 13.6895 16.4135 13.6457 16.466 13.5906C16.5186 13.5356 16.5594 13.4705 16.5861 13.3992C16.6128 13.328 16.6247 13.252 16.6212 13.176V11.9484L16.8168 11.754L18.1368 13.5012C18.2267 13.6204 18.3603 13.699 18.5081 13.7197C18.656 13.7404 18.806 13.7015 18.9252 13.6116C19.0444 13.5217 19.123 13.3881 19.1437 13.2403C19.1644 13.0924 19.1255 12.9424 19.0356 12.8232L17.6532 10.9896ZM24 1.2V22.8C24 23.1183 23.8736 23.4235 23.6485 23.6485C23.4235 23.8736 23.1183 24 22.8 24H1.2C0.88174 24 0.576515 23.8736 0.351472 23.6485C0.126428 23.4235 0 23.1183 0 22.8V1.2C0 0.88174 0.126428 0.576515 0.351472 0.351472C0.576515 0.126428 0.88174 0 1.2 0H22.8C23.1183 0 23.4235 0.126428 23.6485 0.351472C23.8736 0.576515 24 0.88174 24 1.2ZM21.75 11.0628C21.75 6.8172 17.3844 3.3756 12 3.3756C6.6156 3.3756 2.25 6.8172 2.25 11.0628C2.32389 12.4679 2.7916 13.8238 3.59966 14.9756C4.40773 16.1275 5.52355 17.0287 6.8196 17.5764C6.6708 18.0912 5.8596 20.8896 5.8284 21.1092C5.8284 21.1092 5.8092 21.2748 5.916 21.3372C5.95172 21.3555 5.99084 21.3662 6.0309 21.3687C6.07096 21.3712 6.11109 21.3653 6.1488 21.3516C6.4548 21.3084 9.7056 19.026 10.2684 18.6288C10.842 18.7098 11.4207 18.7499 12 18.7488C17.3844 18.75 21.75 15.3084 21.75 11.0628Z" fill="#FFD358"/>
+                            </svg>
+                            <!--이거는 도메인이없어서 못하는중임당... 배포하면 수정 할 예정.-->
+                        </a>
+                    </span>
+                    <span class="sociallink ml-1" id="naver_icon">
+                        <a href="javascript:sendLinkNaver()" title="네이버로 공유">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="24" height="24" rx="2" fill="#FFD358"/>
+                                <path d="M9.62054 6H5V17.8696H9.62054V11.9348L13.6384 17.8696H18.2589V6H13.6384V11.9348L9.62054 6Z" fill="white"/>
+                            </svg>
+                        </a>
+                    </span>
                 </div>
+                <!-- 공유하기버튼 영역 끝 -->
+               
             </div>
-            {% endif %}
-    {% if not request.user.id == post.user.id %}
-    <a href="{% url 'question:answer_create' post.id %}" class="btn_control">답변 남기기</a>
-    {% endif %}
-</div>
-
-
-
-
-
-
-
-
-<!-- 질문-댓글창영역 끝 -->
-<!-- 질문에 대한 답변 영역 답변답변답변 -->
-<div class="answer_area">
-    {% if post_answers %}
-    {% for answer in post_answers %}
-    <div class="answer_container answer-id-{{answer.id}}">
-        <div class="post_top">
-            <div class="answer_info_box">
-                <h3>{{ answer.user.user_nickname }}님의 답변</h3>
-                <h3>채택여부 : {{answer.selection}}</h3>
-                {{answer.title}}
-            </div>
-            {% if request.user.id == answer.user.id %}
-            <div class="auth_btn_area">
-                <div class="edit_btn">
-                    <a href="{% url 'question:answer_update' post.id answer.id %}">수정하기</a>
-                </div>
-                <div class="delete_btn">
-                    <a href="{% url 'question:answer_delete' post.id answer.id %}">삭제하기</a>
-                </div>
-            </div>
-            {% endif %}
-            <!--하나라도 채택되면 채택 버튼 삭제 기능-->
-            {% if not answer.question.is_selected %}
+            <!-- 수정, 삭제하기 버튼 : 작성자에게만 뜬다 -->
             {% if request.user.id == post.user.id %}
-            {% if answer.selection == False %}
-            <div class="choice_btn">
-                <button onclick="answerChoicePopup({{answer.id}})" value="{{answer.id}}">채택하기</button>
-            </div>
-            채택안된 답변
-            {% else %}
-            {% if answer.selection == True %}
-            채택되었어요
-            {% endif %}
-            {% endif %}
-            {% endif %}
-            <div class="choice_modal_body_{{answer.id}} choice_popup" style="visibility: hidden;">
-                <button class="modal_delete_{{answer.id}}">x</button>
-                <h3>해당 답변을 채택하시겠습니까?</h3>
-                <a href="{% url 'question:chosen_answer' answer.id %}" class="yes_choice">예</a>
-                <button class="no_select_{{answer.id}}">아니오</button>
-            </div>
-            {% else %}
-            {% if answer.selection == True %}
-            채택되었어요
-            {% endif %}
-            {% endif %}
-        </div>
-        <div class="answer_desc_box">
-            {{ answer.desc|safe|escape|linebreaks}}
-        </div>
-        <a href="javascript:doDisplayAnswer({{answer.id}})">댓글 {{answer.comments|length}}</a>
-        <!-- 답변의 댓글창영역 -->
-        <div id="comment_box{{answer.id}}">
-            <div id="answer_comment_box">
-                <div class='addAnswerComment'>
-                    <div>
-                        <input class="answer_comment_input" type="text" placeholder="댓글달기" />
-                        <button onclick="onClickAnswerComment({{ answer.id }})">게시</button>
-                        <!--comment 별로 id 준당-->
+                <div class="auth_btn_area">
+                    <div class="edit_btn">
+                        <a href="{% url 'question:question_update' post.id %}">수정하기</a>
                     </div>
-                    <div>
-                        {% for comment in answer.answer_comments.all.reverse %}
-                        <img src="{{answer.user.user_profile_image.url}}" alt="" style="width:50px; height:50px;">
-                        <div class='answer_comment_id_{{comment.id}}'>
-                            <div class="answer_comment_text">
-                                {{comment.text}}
-                                {{answer.user}}
+                    <div class="delete_btn">
+                        <a href="{% url 'question:question_delete' post.id %}">삭제하기</a>
+                    </div>
+                </div>
+            {% endif %}
+            <!-- 질문 하단 질문자 정보 -->
+            <div class="profile_username">
+                <span class="profile_image">
+                    <img src="{{ post.user.user_profile_image.url}}">
+                </span>
+                <div class="flex_col">
+                    <h4 class="user_nickname">{{ post.user.user_nickname }}</h4>
+                    <span class="user_level">Lv. {{post.user.user_level}}</span>
+                </div>
+            </div>
+            <!-- 질문-댓글창 영역 -->
+            <div id="comment_box">
+                <div class='addComment'>
+                    {% for comment in comments %}
+                    <div class='comment_id_{{comment.id}}'>
+                        <div class="comment_info">
+                            <div class="comment_profile">
+                                <img src="{{comment.user.user_profile_image.url}}" width="50" height="50">
+                                <span class="user_nicknamme">
+                                    {{comment.user.user_nickname}}
+                                </span>
                             </div>
-                            {% if request.user == comment.user %}
-                            <div class="add_comment_delete_btn">
-                                <button onclick="onClickAnswerCommentDelete({{answer.id}}, {{comment.id}})">삭제</button>
+                            <div class="comment_content">
+                                <div class="comment_created">
+                                    {{comment.created}}
+                                </div>
+                                <div class="comment_text">
+                                    {{comment.text}}
+                                </div>
                             </div>
-                            {%endif%}
                         </div>
-                        {% endfor %}
+                        {% if request.user == comment.user %}
+                        <div class="delete_btn">
+                            <button onclick="onClickDelete({{post.id}},{{comment.id}})">삭제</button>
+                            <!--comment 별로 id 준당-->
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="comment_input_area">
+                    <input class="comment_input" type="text" placeholder="댓글달기" />
+                    <button class="comment_input_btn" onclick="onClickComment({{ post.id }})">댓글 남기기</button>
+                </div>
+            </div>
+        </div>
+        {% if not request.user.id == post.user.id %}
+        <a href="{% url 'question:answer_create' post.id %}" class="btn_control">답변 남기기</a>
+        {% endif %}
+    </div>
+    
+    <!-- 질문-댓글창영역 끝 -->
+    <!-- 질문에 대한 답변 영역 답변답변답변 -->
+    <div class="answer_area">
+        {% if post_answers %}
+        {% for answer in post_answers %}
+        <div class="answer_container answer-id-{{answer.id}}">
+            <div class="post_top">
+                <div class="answer_info_box">
+                    <h3>{{ answer.user.user_nickname }}님의 답변</h3>
+                    <h3>채택여부 : {{answer.selection}}</h3>
+                    {{answer.title}}
+                </div>
+                {% if request.user.id == answer.user.id %}
+                <div class="auth_btn_area">
+                    <div class="edit_btn">
+                        <a href="{% url 'question:answer_update' post.id answer.id %}">수정하기</a>
+                    </div>
+                    <div class="delete_btn">
+                        <a href="{% url 'question:answer_delete' post.id answer.id %}">삭제하기</a>
+                    </div>
+                </div>
+                {% endif %}
+                <!--하나라도 채택되면 채택 버튼 삭제 기능-->
+                {% if not answer.question.is_selected %}
+                {% if request.user.id == post.user.id %}
+                {% if answer.selection == False %}
+                <div class="choice_btn">
+                    <button onclick="answerChoicePopup({{answer.id}})" value="{{answer.id}}">채택하기</button>
+                </div>
+                채택안된 답변
+                {% else %}
+                {% if answer.selection == True %}
+                채택되었어요
+                {% endif %}
+                {% endif %}
+                {% endif %}
+                <div class="choice_modal_body_{{answer.id}} choice_popup" style="visibility: hidden;">
+                    <button class="modal_delete_{{answer.id}}">x</button>
+                    <h3>해당 답변을 채택하시겠습니까?</h3>
+                    <a href="{% url 'question:chosen_answer' answer.id %}" class="yes_choice">예</a>
+                    <button class="no_select_{{answer.id}}">아니오</button>
+                </div>
+                {% else %}
+                {% if answer.selection == True %}
+                채택되었어요
+                {% endif %}
+                {% endif %}
+            </div>
+            <div class="answer_desc_box">
+                {{ answer.desc|safe|escape|linebreaks}}
+            </div>
+            <a href="javascript:doDisplayAnswer({{answer.id}})">댓글 {{answer.comments|length}}</a>
+            <!-- 답변의 댓글창영역 -->
+            <div id="comment_box{{answer.id}}">
+                <div id="answer_comment_box">
+                    <div class='addAnswerComment'>
+                        <div>
+                            <input class="answer_comment_input" type="text" placeholder="댓글달기" />
+                            <button onclick="onClickAnswerComment({{ answer.id }})">게시</button>
+                            <!--comment 별로 id 준당-->
+                        </div>
+                        <div>
+                            {% for comment in answer.answer_comments.all.reverse %}
+                            <img src="{{answer.user.user_profile_image.url}}" alt="" style="width:50px; height:50px;">
+                            <div class='answer_comment_id_{{comment.id}}'>
+                                <div class="answer_comment_text">
+                                    {{comment.text}}
+                                    {{answer.user}}
+                                </div>
+                                {% if request.user == comment.user %}
+                                <div class="add_comment_delete_btn">
+                                    <button onclick="onClickAnswerCommentDelete({{answer.id}}, {{comment.id}})">삭제</button>
+                                </div>
+                                {%endif%}
+                            </div>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        {% endfor %}
+        {% endif %}
     </div>
-    {% endfor %}
-    {% endif %}
 </div>
 {% endblock %}
 
@@ -626,19 +654,19 @@ function scrapPopup() {
 //         sharePopup.style.visibility = "hidden"
 //     });
 // }
-var acc = document.getElementsByClassName("accordion");
-var i;
-for (i = 0; i < acc.length; i++) {
-    acc[i].addEventListener("click", function () {
-        this.classList.toggle("active");
-        var panel = this.nextElementSibling;
-        if (panel.style.maxHeight) {
-            panel.style.maxHeight = null;
-        } else {
-            panel.style.maxHeight = panel.scrollHeight + "px";
-        }
-    });
-}
+// var acc = document.getElementsByClassName("accordion");
+// var i;
+// for (i = 0; i < acc.length; i++) {
+//     acc[i].addEventListener("click", function () {
+//         this.classList.toggle("active");
+//         var panel = this.nextElementSibling;
+//         if (panel.style.maxHeight) {
+//             panel.style.maxHeight = null;
+//         } else {
+//             panel.style.maxHeight = panel.scrollHeight + "px";
+//         }
+//     });
+// }
 // -------------------------------
 
 function sendLinkFacebook() {

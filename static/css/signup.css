@@ -15,35 +15,6 @@
     --btn-font: 'Pretendard-SemiBold';
     --border-radius: 0.5rem;
 }
-
-/* 반응형 웹 구분할 거 있으면 여기에 넣기 */
-
-/* @media only screen and (max-width: 47.9375rem) {
-    .container > .form_container {
-        padding: 1.5rem;
-        display: flex;
-        width: 100%;
-        height: 100vh;
-        flex-direction: column;
-        justify-content: space-around;
-        align-items: center;
-    }
-}
-
-@media only screen and (min-width:48rem) {
-    .container > .form_container {
-        padding: 1.5rem;
-        display: flex;
-        width: 37.5rem;
-        height: 30rem;
-        border: 0.0625rem solid var(--border-color);
-        border-radius: 0.5rem;
-        flex-direction: column;
-        justify-content: space-around;
-        align-items: center;
-    }
-} */
-
 @font-face {
     font-family: 'Pretendard-Regular';
     src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');

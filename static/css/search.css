@@ -9,8 +9,14 @@
     --title-font: 'Pretendard-ExtraBold';
     --content-font: 'Pretendard-Regular';
     --btn-font: 'Pretendard-SemiBold';
+    --coding-font: 'Nanum Gothic Coding', monospace;
 }
 
+@import url(//fonts.googleapis.com/earlyaccess/nanumgothiccoding.css);
+
+.nanumgothiccoding * {
+ font-family: 'Nanum Gothic Coding', monospace;
+}
 @font-face {
     font-family: 'Pretendard-Regular';
     src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
@@ -44,6 +50,28 @@
 html, body {
     background-color: rgb(248, 249, 250);
 }
+
+code {
+    font-family: var(--coding-font);
+    background-color: #fee5ce;
+    border-radius: .625rem;
+    font-weight:500;
+}
+
+::-webkit-scrollbar {
+    height: 10px;
+    width: 8px;
+}
+::-webkit-scrollbar-thumb {
+    height: 4px;
+    background-color: rgba(98, 161, 191, 60%);
+    border-color:  rgba(98, 161, 191, 70%);
+    border-radius: 20px; 
+}
+::-webkit-scrollbar-track {
+    background-color: none;
+}
+
 
 .input_container {
     width: 100%;

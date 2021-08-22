@@ -39,20 +39,20 @@
 
 meter {
     /* Reset the default appearance */
-    -webkit-appearance: none;
-    -moz-appearance: none;
+    /* -webkit-appearance: none;
+    -moz-appearance: none; */
     height: 2.2rem;
     width: 22rem;
     cursor: pointer;
   }
 
 meter::-webkit-meter-bar {
-    width:22rem;
-    height: 2.2rem;
+    width: 100%;
+    height: 1.2rem;
     background-color: #fff;
     border: solid 1px #DBD6C7;
     border-radius: 1.25rem;
-    padding: 6px 8px;
+    padding: 4px 6px;
     color:#FFBA42;
 }
 
@@ -449,6 +449,11 @@ meter::-webkit-meter-low-value {
     margin-bottom: 0.9375rem;
 }
 
+.post desc img {
+    width: 0px;
+    display: none;
+}
+
 .post_user {
     width: 100%;
     height: 12.5rem;
@@ -479,6 +484,7 @@ meter::-webkit-meter-low-value {
 .helped_num > span {
     font-family: 'Pretendard-SemiBold';
 }
+
 
 /*---------------------- 프로필영역 ----------------------*/
 .profile_username {
@@ -626,7 +632,7 @@ meter::-webkit-meter-low-value {
 .point_gage meter {
     width: 100%;
     height: 1.25rem;
-    -webkit-appearance: none; /* Reset appearance */
+    /* -webkit-appearance: none;  */
     border: 0.0625rem solid #DBD6C7;
     border-radius: 1.25rem;
     box-sizing: border-box;
@@ -722,7 +728,10 @@ meter::-webkit-meter-low-value {
 
 
 /* --------------------디렉토리 영역 ------------------*/
-
+#desc_img {
+    display: none;
+    width: 0px;
+}
 
 #btn_tap {
     margin-bottom: -1rem;

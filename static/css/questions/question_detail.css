@@ -11,7 +11,22 @@
     --content-font: 'Pretendard-Regular';
     --btn-font: 'Pretendard-SemiBold';
     --hover-color: #FFEF9C;
+    --second-font: 'SpoqaHanSansNeo-Regular';
+    --coding-font: 'Nanum Gothic Coding', monospace;
 }
+@import url(//fonts.googleapis.com/earlyaccess/nanumgothiccoding.css);
+
+.nanumgothiccoding * {
+ font-family: 'Nanum Gothic Coding', monospace;
+}
+
+@font-face {
+    font-family: 'SpoqaHanSansNeo-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SpoqaHanSansNeo-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 @font-face {
     font-family: 'Pretendard-Regular';
     src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
@@ -41,6 +56,26 @@
     to {opacity:1 ;}
 }
 
+code {
+    font-family: var(--coding-font);
+    background-color: #fee5ce;
+    border-radius: .625rem;
+    font-weight:500;
+}
+
+
+::-webkit-scrollbar {
+    height: 10px;
+}
+::-webkit-scrollbar-thumb {
+    height: 4px;
+    background-color: rgba(98, 161, 191, 60%);
+    border-color:  rgba(98, 161, 191, 70%);
+    border-radius: 20px; 
+}
+::-webkit-scrollbar-track {
+    background-color: none;
+}
 
 .question_container {
     width: 48rem;
@@ -53,7 +88,8 @@
     align-items: center;
 }
 
-.thumbnail_area{
+
+.thumbnail_area {
     border-radius: 1.25rem 1.25rem 1rem 1rem;
     border-bottom: none;
     height: 25rem; 
@@ -71,7 +107,7 @@
     justify-content: center;
     box-sizing: border-box;
     border-radius: 1.25rem;
-    box-shadow: 0.75rem 0.75rem 3.75rem 0.5rem rgba(0, 0, 0, 0.2);
+    box-shadow: .75rem 0.75rem 2.5rem 0rem rgb(0 0 0 / 8%);
     flex-direction: column;
 }
 
@@ -127,6 +163,8 @@
 .profile_username {
     display: flex;
     flex-direction: row;
+    border-bottom: solid 1px #ececec;
+    border-top: solid 1px #ececec;
 }
 
 .user_nickname {
@@ -146,8 +184,9 @@
 }
 
 .auth_btn_area {
-    display:flex;
+    display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .auth_btn_area > div {
@@ -158,49 +197,57 @@
     padding: 10px 14px;
 }
 
-.edit_btn > a{
+.edit_btn > a {
+    padding: 0.625rem 1.25rem;
+    background-color: white;
+    border: 0.0625rem solid #00537A;
+    color: #00537A;
     font-family: var(--btn-font);
-    color:var(--sand-color);
-    background-color: var(--btn-color);
-    border-radius: 4px;
-    box-shadow: none;
-    border: solid 2px var(--sand-color);
-    color: var(--sand-color);
-    text-decoration: none;
-    padding: 10px 14px;
+    border-radius: 1.25rem;
+    width: 4.8125rem;
+    height: 2.5rem;
+    cursor: pointer;
+    margin-left: 1.125rem;
 }
 
 .edit_btn > a:visited {
-    color: var(--sand-color);
+    color: #00537A;
     text-decoration: none;
 }
 
-.edit_btn a:hover {
-    background-color: var(--hover-color);
-}
-
+.edit_btn a:hover,
 .edit_btn a:active {
-    background-color: floralwhite;
-    color: var(--sand-color)
+    background-color: #00537A;
+    color: white;
 }
 
+.delete_btn > a {
+    padding: 0.625rem 1.25rem;
+    background-color: white;
+    border: 0.0625rem solid #00537A;
+    color: #00537A;
+    font-family: var(--btn-font);
+    border-radius: 1.25rem;
+    width: 4.8125rem;
+    height: 2.5rem;
+    cursor: pointer;
+    margin-left: 1.125rem;
+}
 
+.delete_btn a:active,
 .delete_btn a:hover {
-    background-color: #fee5ce;
-    color: salmon;
-}
-
-.delete_btn a:active {
-    background-color: lightsalmon;
-    color: whitesmoke;
+    background-color: #00537A;
+    color: white;
 }
 
 .category_area {
     font-family: var(--btn-font);
     font-size: 0.825rem;
-    color:var(--text-color);
+    color: var(--text-color);
     margin-bottom: 2.375rem;
     margin-top: 14px;
+    border-top: solid 1px #ECECEC;
+    padding-top: 14px;
 }
 
 .category_area span {
@@ -216,38 +263,55 @@
 
 .desc_area {
     font-family: var(--content-font);
+    font-size: 1.125rem;
     color: #585858;
     min-height: 8rem;
-    font-size: 1rem;
     margin-top: 2rem;
-    font-size: 1.125rem;
     line-height: 2.125rem;
     height: 100%;
     margin-bottom: 2.375rem;
+    width: 44.25rem;
 }
 
 .desc_area img {
     max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
 }
 
 .accordion_area {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    padding-bottom: 1rem;
 }
 
-.tag_area {
-    margin-bottom: 30px;
+#facebook_icon > a > svg > path {
+    fill: #FFD358;
 }
 
-.scrap_box {
-    width: 50%;
-    display: flex;
+.sociallink:not(#naver_icon) > a > svg>path:hover {
+    fill: #FFBA42;
+}
+.sociallink:not(#naver_icon) > a > svg>path:active{
+    fill: #FFBA42;
 }
 
+#naver_icon rect:hover {
+    fill: #FFBA42;
+}
+#naver_icon path:hover {
+    fill: white;
+}
+#naver_icon rect:active {
+    fill: #FFBA42;
+}
+#naver_icon path:active {
+    fill: white;
+}
 
 .scrap {
-    background-color: cornsilk;
+    background-color: white;
     cursor: pointer;
     padding: 0.5rem;
     /* width: 100%; */
@@ -308,8 +372,9 @@
     box-shadow: 0 5px 10px 9px rgb(60 36 35 / 6%);
     transition-duration: 2s;
 }
-    */
+*/
 
+/* 공유하기 아코디언 */
 .accordion {
     background-color: cornsilk;
     cursor: pointer;
@@ -331,6 +396,7 @@
     font-weight: bold;
 }
 
+
 .accordion:after {
     content: '\002B';
     font-weight: bold;
@@ -343,12 +409,10 @@
 }
 
 .panel {
-    width: 22rem;
     padding: 0 16px;
     background-color: #FFFFFF;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
-    border-bottom: 1px solid #EEEEEE;
 
     max-height: 0;
 }
@@ -357,10 +421,10 @@
     vertical-align: middle;
 }
 
+
 .close_btn {
     margin: 10px;
     padding: 4px 8px;
-    background-color: cornsilk;
     border: none;
     border-radius: 4px;
     font-size: 12px;
@@ -371,24 +435,72 @@
 
 .share_box {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    width: 12rem;
+    border: none;
+    justify-content: space-between;
+    align-items: center;
 }
 
 
-.content-area {
-    border: solid 1px var(--border-color);
+.panel_down {
+    border: solid 1px #ffd358;
     width: 300px;
-    height: 100px;
-    padding: 5% 8%;
+    padding: 6px 8px;
     margin-left: -14px;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 200px;
 }
 
-.content-area span {
+
+.panel_down span {
     vertical-align: middle;
 }
 
+
+
+
+.profile_username {
+    display: flex;
+    align-items: center;
+    padding: 1.75rem 1.5rem 1.5rem 1.5rem;
+}
+
+.profile_image {
+    font-size: 0.825rem;
+    color: var(--text-color);
+    font-family: var(--content-font);
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+    margin-right: 1.5rem;
+}
+
+.profile_image img {
+    width: 3.125rem;
+    height: 3.125rem;
+    border-radius: 6.25rem;
+}
+
+.user_nickname {
+    font-family: 'Pretendard-SemiBold';
+    margin-left: 0.625rem;
+    margin-bottom: 0.625rem;
+    color: #00537A;
+    font-size: 1rem;
+}
+
+
+.user_level {
+    font-size: 0.75rem;
+    color: #8C8D8D;
+    margin-left: 0.625rem;
+}
+
+/* ----------------------------------댓글영역 -------------------------------- */
 .comment_box {
     margin-top: 30px;
 }
@@ -444,96 +556,58 @@
 }
 
 
-.addComment button {
-    padding: 10px 20px;
-}
-
-
-.delete_btn > * {
-    font-family: var(--btn-font);
-    color:var(--sand-color);
-    background-color: peachpuff;
-    border-radius: 4px;
-    box-shadow: none;
-    border: solid 2px lightsalmon;
-    color: salmon;
-}
-
-.delete_btn button:active {
-    background-color: lightsalmon;
-    color: whitesmoke;
-}
-.delete_btn button:hover {
-    background-color: #fee5ce;
-    color: salmon;
-}
-
-.comment_input_area {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 .comment_input_area button {
-    padding: 10px 20px;
-    background-color: var(--btn-color);
-    border-color:var(--border-color);
-    color: var(--sand-color);
+    padding: 0.625rem 1.25rem;
+    background-color: white;
+    border: 0.0625rem solid #00537A;
+    color: #00537A;
     font-family: var(--btn-font);
-    border-radius: 4px;
-    border-style: solid;
+    border-radius: 1.25rem;
+    width: 7.875rem;
+    height: 2.5rem;
+    border: 0.0625rem solid #00537A;
+    cursor: pointer;
+    margin: 0.875rem 0 1.875rem 35.8125rem;
 }
 
 .comment_input_area button:hover {
-    background-color: var(--hover-color);
-    border-radius: 4px;
+    background-color: #00537A;
+    color: white;
 } 
 
 .comment_input {
-    padding: 10px 15px;
+    padding: 0.625rem 0.9375rem;
     font-size: 1rem;
     font-family: var(--content-font);
-    border: solid 1px var(--border-color);
-    border-radius: 4px;
-    width: 50em;
+    border: 0.0625rem solid #62A1BF;
+    box-sizing: border-box;
+    border-radius: 1.25rem;
+    width: 44rem;
+    height: 5rem;
 }
 
 .comment_id_ {
     margin: 30px 0;
 }
 
-.like_button, .post__scrap, .comment_btn {
-    padding: 10px 20px;
-    border: 1px solid var(--border-color);
-    background: floralwhite;
-    border-radius: 8px;
-}
-
-
-.btn_control {
-    border: solid 1px var(--sand-color);
-    background-color: var(--btn-color);
-    font-size: 1.25em;
-    border-radius: 8px;
-    padding: 15px 40px;
-    color: var(--sand-color);
+.like,
+.scrap,
+.comment_btn {
+    font-size: .875rem;
     font-family: var(--btn-font);
-    text-decoration: none;
-    margin-bottom: 4rem;
+    color: #FFBA42;
+    padding: .375rem .25rem;
+    border: solid 1px #FFBA42;
+}
+.like,
+.scrap,
+.comment_btn:hover {
+    color: white;
+    background-color: ##FFBA42;
 }
 
 .btn_control a {
     text-decoration: none;
-    
-}
-
-.btn_control a:active {
-    color:whitesmoke;
-    background-color: var(--hover-color);
-}
-
-.btn_control a:visited {
-    color: var(--sand-color);
 }
 
 .answer_area {
@@ -544,14 +618,14 @@
 }
 
 .answer_container {
-    width: 68em;
-    padding: 50px;
+    max-width: 48rem;
+    padding: 1.875rem;
     display: flex;
     justify-content: center;
-    border: solid 1px var(--border-color);
-    border-radius: 8px;
+    box-sizing: border-box;
+    border-radius: 1.25rem;
+    box-shadow: .75rem 0.75rem 2.5rem 0rem rgb(0 0 0 / 8%);
     flex-direction: column;
-    margin: 8rem 0;
 }
 
 

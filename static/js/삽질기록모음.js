@@ -86,6 +86,7 @@ const langPost = () => {
                             </div>
                             <div class="post_desc">
                                 ${replaceDesc}
+                                <span id="desc_img">${replaceDesc.img}</span>
                             </div>
                             <div class="post_user">
                                 <div class="scrap_num">
