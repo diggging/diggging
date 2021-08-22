@@ -275,18 +275,19 @@
     const modal = document.querySelector('.point_modal');
     const modalBody = document.querySelector('.modal_body');
     const pointOpenPopup = document.querySelector('.point_gage');
+    const pointCloseModal = document.querySelector('.point_close_btn');
     const body = document.querySelector('body');
 
     pointOpenPopup.addEventListener('click', () => {
-        modal.style.display = 'block';
-        body.style.overflow = 'hidden';
+        modal.style.display = 'flex';
         modalBody.style.display = 'block';
-        modalBody.style.transform = 'translateY(-110%)'
     });
     document.querySelectorAll
     modalBody.addEventListener('click', () => {
         modal.style.display = 'none';
-        body.style.overflow = 'auto';
+    });
+    pointCloseModal.addEventListener('click', () => {
+            followModal.style.display = 'none';
     })
 </script> 
 <!-- 팔로우 모달 창 뜨기 -->
@@ -294,39 +295,37 @@
     function followModalPopup() {
         let followModal = document.querySelector('.follow_modal');
         let followBody = document.querySelector('.follow_body');
-        let closeModal = document.querySelector('.close_btn');
+        let closeModal = document.querySelector('.follow_close');
 
         let followOpenPopup = document.querySelector('.follow_btn');
 
         followOpenPopup.addEventListener('click', () => {
-            followModal.style.display = 'block';
-            body.style.overflow = 'hidden';
+            followModal.style.display = 'flex';
             followBody.style.display = 'block';
         });
 
         closeModal.addEventListener('click', () => {
             followModal.style.display = 'none';
-            body.style.overflow = 'auto';
         })
     }
 </script>
 <!-- 팔로워 모달창 뜨기 -->
 <script>
     function followerModalPopup() {
-        let followModal = document.querySelector('.follow_modal');
-        let followBody = document.querySelector('.follow_body');
-        let closeModal = document.querySelector('.close_btn');
+        let followerModal = document.querySelector('.follow_modal');
+        let followerBody = document.querySelector('.follow_body');
+        let closeModal = document.querySelector('.follow_close');
 
-        let FollowerOpenPopup = document.querySelector('.follower_btn');
+        let FollowerOpenPopup = document.querySelector('.my_follower_btn');
 
         FollowerOpenPopup.addEventListener('click', () => {
-            followModal.style.display = 'block';
+            followerModal.style.display = 'flex';
             body.style.overflow = 'hidden';
-            followBody.style.display = 'block';
+            followerBody.style.display = 'block';
         });
 
         closeModal.addEventListener('click', () => {
-            followModal.style.display = 'none';
+            followerModal.style.display = 'none';
             body.style.overflow = 'auto';
         })
     }
@@ -335,12 +334,12 @@
     function otherFollowModalPopup() {
         let followModal = document.querySelector('.follow_modal');
         let followBody = document.querySelector('.follow_body');
-        let closeModal = document.querySelector('.close_btn');
+        let closeModal = document.querySelector('.follow_close');
 
         let otherFollowOpenPopup = document.querySelector('.other_follow_btn');
 
         otherFollowOpenPopup.addEventListener('click', () => {
-            followModal.style.display = 'block';
+            followModal.style.display = 'flex';
             body.style.overflow = 'hidden';
             followBody.style.display = 'block';
         });
@@ -355,12 +354,12 @@
     function otherFollowerModalPopup() {
         let followModal = document.querySelector('.follow_modal');
         let followBody = document.querySelector('.follow_body');
-        let closeModal = document.querySelector('.close_btn');
+        let closeModal = document.querySelector('.follow_close');
 
         let otherFollowerOpenPopup = document.querySelector('.other_follower_btn');
 
         otherFollowerOpenPopup.addEventListener('click', () => {
-            followModal.style.display = 'block';
+            followModal.style.display = 'flex';
             body.style.overflow = 'hidden';
             followBody.style.display = 'block';
         });
@@ -371,83 +370,80 @@
         })
     }
 </script>
-
 {% endblock script %}
 
 {% block content %}
 <div class="container_box">
     <!-- 포인트 기록 모달창 -->
-    <div class="point_modal">
-        <div class="modal_body">
-            <h2>내 포인트 기록</h2>
-            {% for sand in my_all_sands %}
-            <div class="log_box">
-                <p>{{sand.user}}</p>
-                <p>{{sand.amout}}</p>
-                <p>{{sand.reason}}</p>
+    <div class="modal_container">
+        <div class="point_modal">
+            <div class="modal_body">
+                <div class="title_text">
+                    <h2>쌓인 모래 히스토리</h2>
+                    <img class="point_close_btn" src="{% static 'image/close_icon.svg' %}" />
+                </div>
+                <div class="modal_content_box">
+                {% for sand in my_all_sands %}
+                    <div class="log_box">
+                        {% if sand.reason|slice:"-3:" == "퍼가기" %}
+                        <img src="{% static 'image/scrap_icon.svg' %}" width: 50px;>
+                        {% elif sand.reason|slice:"-2:" == "작성" %}
+                        <img src="{% static 'image/post_icon.svg' %}" width: 50px;>
+                        {% elif sand.reason|slice:"-2:" == "채택" %}
+                        <img src="{% static 'image/selection_icon.svg' %}" width: 50px;>
+                        {% elif sand.reason|slice:":2" == "도움" %}
+                        <img src="{% static 'image/help_icon.svg' %}" width: 50px;>
+                        {% endif %}
+                        <p>{{sand.reason}}</p>
+                        <p>+ {{sand.amount}}</p>
+                    </div>
+                {% endfor%}
+                </div>
             </div>
-            {% endfor%}
         </div>
     </div>
     <!-- 포인트 모달창 끝 -->
     <!-- 팔로우모달창 -->
-    <div class="follow_modal">
-        <div class="follow_container follow_body">
-            <button class="close_btn">닫기X</button>
-            <!--Tab links-->
-            <div class="tab">
-                <button class="tablinks" onclick="openList(event, 'follow')">팔로워</button>
-                <button class="tablinks" onclick="openList(event, 'following')">팔로잉</button>
-            </div>
-            <!--Tab Content follow-->
-            <div id="follow" class="tabcontent">
-                <div class="follow_count">
-                    <h3>{{host.user_nickname}}님을 팔로우하는 사람 </h3>
-                    <h3>{{ host_follower.count }}명</h3>
+    <div class="modal_container">
+        <div class="follow_modal">
+            <div class="follow_container follow_body">
+                <div class="tab">
+                    <button class="tablinks follower_btn" onclick="openList(event, 'following')">팔로잉</button>
+                    <button class="tablinks following_btn" onclick="openList(event, 'follow')">팔로워</button>
+                    <img class="follow_close" src="{% static 'image/close_icon.svg' %}" />
                 </div>
-                {% for follower in host_follower %}
-                <div class="follow_list">
-                    {% if follower.user_profile_image %}
-                    <img class="follow_image" src="{{ follower.user_profile_image.url }}" width="200">
-                    {% else %}
-                    <div class="follow_image"></div>
-                    {% endif %}
-                    <div class="flex_col">
-                        <h3>{{follower.user_level}}</h3>
-                        <h3>{{ follower.user_nickname }}</h3>
-                    </div>
-                    <div class="follow_desc">
-                        <h3>{{ follower.email }}</h3>
-                    </div>
+                <div id="follow" class="tabcontent modal_content_box">
+                    {% for follower in host_follower %}
+                    <a href="{% url 'users:my_posts' follower.id %}" class="follow_list">
+                        <img class="follow_image" src="{{ follower.user_profile_image.url }}" style="width: 50px; height: 50px;">
+                        <div class="user_info">
+                            <span class="user_info_name">
+                                <h3>{{ follower.user_nickname }}</h3> 
+                                <span class="user_level">Lv.{{follower.user_level}}</span>
+                            </span>
+                            <p class="follow_desc">{{ follower.user_profile_content }}</p>
+                        </div>
+                    </a>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-            </div>
-            <!--Tab content follow-->
-            <div id="following" class="tabcontent">
-                <div class="following_count">
-                    <h3>{{host.user_nickname}}님이 팔로우하는 사람</h3>
-                    <h3>{{host_following.count}}명</h3>
+                <!--Tab content follow-->
+                <div id="following" class="tabcontent">
+                    {% for following in host_following %}
+                    <a href="{% url 'users:my_posts' following.id %}" class="follow_list">
+                        <img class="follow_image" src="{{following.user_profile_image.url}}" style="width: 50px; height: 50px;" />
+                        <div class="user_info">
+                            <span class="user_info_name">
+                                <h3>{{ following.user_nickname }}</h3> 
+                                <span class="user_level">Lv.{{following.user_level}}</span>
+                            </span>
+                            <p class="follow_desc">{{ following.user_profile_content }}</p>
+                        </div>
+                    </a>
+                    {% endfor %}
                 </div>
-                {% for following in host_following %}
-                <div class="following_list">
-                    {% if following.user_profile_image %}
-                    <img class="following_image" src="{{following.user_profile_image.url}}" width="200">
-                    {% else %}
-                    <div class="following-image"></div>
-                    {% endif %}
-                    <div class="flex_col">
-                        <h3>{{following.user_level}}</h3>
-                        <h3>{{following.user_nickname}}</h3>
-                    </div>
-                    <div class="following_desc">
-                        <h3>{{following.email}}</h3>
-                    </div>
-                </div>
-                {% endfor %}
             </div>
         </div>
     </div>
-
     <!-- 내 마이페이지 -->
     <div class="first_container my_container">
 
@@ -522,10 +518,9 @@
                 </div>
                 <div class="follow_area">
                     <div class="follow_btn_area">
-                        <label for="value_low">모래포인트</label>
                         <button class="follow_btn" onclick="followModalPopup()">팔로잉
                             {{request.user.user_following.count}}</button>
-                        <button class="follower_btn" onclick="followerModalPopup()">팔로워
+                        <button class="my_follower_btn" onclick="followerModalPopup()">팔로워
                             {{request.user.user_followed.count}}</button>
                     </div>
                 </div>
@@ -600,26 +595,19 @@
                     <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500"
                         value="{{my_sand_sum.amount__sum}}"></meter>
                     {% elif host.user_level == 1 %}
-                    <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500"
+                    <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500"er id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000"
+                        value="{{my_sand_sum.amount__su
                         value="{{my_sand_sum.amount__sum}}"></meter>
                     {% else%}
-                    <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000"
-                        value="{{my_sand_sum.amount__sum}}"></meter>
+                    <metm}}"></meter>
                     {% endif %}
                 </div>
             </div>
-            <div class="proflie_text">
-                {% if request.user.user_profile_content %}
-                {{request.user.user_profile_content}}
-                {% else %}
-                <p>
-                    아직 자기소개가 없습니다.
-                </p>
-                {% endif %}
-            </div>
             <div class="follow_area">
-                <button onclick="otherFollowModalPopup()" class="other_follow_btn">팔로잉 {{ host_following|length }}</button>
-                <button onclick="otherFollowerModalPopup()" class="other_follower_btn">팔로워 {{ host_follower|length }}</button>
+                <div class="follow_btn_area">
+                    <button onclick="otherFollowModalPopup()" class="other_follow_btn">팔로잉 {{ host_following|length }}</button>
+                    <button onclick="otherFollowerModalPopup()" class="other_follower_btn">팔로워 {{ host_follower|length }}</button>
+                </div>
             </div>
             {% endif %}
         </div>
@@ -637,7 +625,7 @@
         </div>
         <div class="sand_pour_area">
             <div id="github_chart_1">
-                <svg width="" height="" viewBox="0 0 300 300" class="js-calendar-graph-svg">
+                <svg width="1468" height="224" viewBox="0 0 300 300" class="js-calendar-graph-svg">
                     <text x="39" y="-5" class="month">Sep</text><text x="91" y="-5" class="month">Oct</text><text x="143" y="-5"
                         class="month">Nov</text><text x="208" y="-5" class="month">Dec</text><text x="260" y="-5"
                         class="month">Jan</text><text x="325" y="-5" class="month">Feb</text><text x="377" y="-5"

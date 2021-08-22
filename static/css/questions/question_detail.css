@@ -197,6 +197,10 @@ code {
     padding: 10px 14px;
 }
 
+
+
+
+
 .edit_btn > a {
     padding: 0.625rem 1.25rem;
     background-color: white;
@@ -501,6 +505,71 @@ code {
 }
 
 /* ----------------------------------댓글영역 -------------------------------- */
+
+.addComment > div {
+    padding: 1.125rem 1.875rem 1.125rem 1.875rem;
+    background: #FFFFFF;
+    border: 0.0625rem solid #62A1BF;
+    box-sizing: border-box;
+    border-radius: 1.25rem;
+    width: 44rem;
+    margin-bottom: 1.5rem;
+}
+
+.comment_flex {
+    display: flex;
+    align-items: center;
+}
+
+.comment_flex > .user_nicknamme {
+    font-family: 'Pretendard-SemiBold';
+    font-size: 1rem;
+    line-height: 1.4375rem;
+    color: #00537A;
+    margin-bottom: 1rem;
+    margin-right: 0.625rem;
+}
+
+.comment_area {
+    font-size: 1rem;
+}
+
+.comment_span {
+    font-family: 'Pretendard-SemiBold';
+    font-size: 1.125rem;
+    line-height: 1.3125rem;
+    color: #00537A;
+    margin: 2rem 0rem 1rem 0rem;
+}
+
+.comment_text {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #8C8D8D;
+    text-align: left;
+}
+
+.comment_info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.comment_created {
+    font-size: 0.625rem;
+    margin-bottom: 1rem;
+    margin-right: 0.625rem;
+    color: #8C8D8D;
+}
+
+.comment_profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 2rem;
+}
+
+
 .comment_box {
     margin-top: 30px;
 }
