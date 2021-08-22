@@ -722,14 +722,7 @@ meter::-webkit-meter-low-value {
 
 
 /* --------------------디렉토리 영역 ------------------*/
-.category_tab {
-    display: flex;
-    width: 100%;
-    height: 9.375rem;
-    overflow-y: scroll;
-    padding: 0 0.875rem;
-    margin-top: 1rem;
-}
+
 
 #btn_tap {
     margin-bottom: -1rem;
@@ -795,16 +788,6 @@ meter::-webkit-meter-low-value {
     background: #FFBA42;
 }
 
-.directory_box {
-    display: block;
-    height: 30vh;
-    padding: 1rem;
-    border: solid 0.0625rem var(--border-color);
-    border-radius: 0.5rem;
-    justify-content: flex-start;
-    width: 100%;
-    overflow: scroll;
-}
 
 .lang_post_btn,
 .framework_post_btn,
@@ -830,6 +813,28 @@ meter::-webkit-meter-low-value {
     border: solid 1px rgba(98, 161, 191, 30%);
 }
 
+
+/* .directory_box {
+    display: block;
+    height: 30vh;
+    padding: 1rem;
+    border: solid 0.0625rem var(--border-color);
+    border-radius: 0.5rem;
+    justify-content: flex-start;
+    width: 100%;
+    overflow: scroll;
+} */
+
+.category_tab {
+    display: flex;
+    width: 100%;
+    height: 9.375rem;
+    overflow-y: scroll;
+    padding: 0 0.875rem;
+    margin-top: 1rem;
+}
+
+/* 
 .folder_area {
     display: flex;
     flex-direction: row;
@@ -838,7 +843,7 @@ meter::-webkit-meter-low-value {
     height: 100%;
     font-family: var(--btn-font);
     justify-content: space-around;
-}
+} */
 
 .folder_category {
     background-color: #F8F8F8;
@@ -848,6 +853,7 @@ meter::-webkit-meter-low-value {
     padding: 0;
     height: 9.375rem;
     align-content: flex-start;
+    font-size: 0px;
 }
 
 
@@ -890,7 +896,7 @@ meter::-webkit-meter-low-value {
     align-items: center;
 }
 
-
+/* ---------------------글 목록 뜨는 곳 --------------- */
 .last_log_box{
     display: block;
     padding: 1rem;
@@ -952,7 +958,8 @@ a.badge_img .level_modal {
     visibility: hidden;
     transition: 750ms all;
 }
-a.badge_img:hover .level_modal{
+
+/* a.badge_img:hover .level_modal{
     outline: none;
     text-decoration: none;
     font-size: 70%;
@@ -971,8 +978,4 @@ a.badge_img:hover .level_modal{
 .level_modal p {
     color: var(—text-color);
     font-family: var(—content-font);
-}
-
-.folder_category{
-    font-size: 0rem;
-}
+} */

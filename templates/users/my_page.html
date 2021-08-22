@@ -470,54 +470,26 @@
                 </div>
                 <div class="sand_level_area">
                     <div class="level_badge">
-                        <a href="#" class="badge_img">
-                            {% if host.user_level == 0 %}
-                            <img src="{% static 'image/sandbox.png' %}" style="height: 24px;">
-                            <span class="sand_level">Lv. {{host.user_level}} 맨바닥</span>
-                            <span class="sand_point">{{my_sand_sum.amount__sum}}모래</span>
-                            {% elif host.user_level == 1 %}
-                            <img src="{% static 'image/sand-castle.png' %}" style="height: 24px;">
-                            <span class="sand_level">Lv. {{host.user_level}} 모래성</span>
-                            <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
+                        {% if host.user_level == 0 %}
+                        <img src="{% static 'image/sandbox.png' %}" style="height: 24px;">
+                        <span class="sand_level">Lv. {{host.user_level}} 맨바닥</span>
+                        <span class="sand_point">{{my_sand_sum.amount__sum}}모래</span>
+                        {% elif host.user_level == 1 %}
+                        <img src="{% static 'image/sand-castle.png' %}" style="height: 24px;">
+                        <span class="sand_level">Lv. {{host.user_level}} 모래성</span>
+                        <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
 
-                            {% elif host.user_level == 2 %}
-                            <img src="{% static 'image/home.png' %}" style="height: 24px;">
-                            <span class="sand_level">Lv. {{host.user_level}} 벽돌집</span>
-                            <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
+                        {% elif host.user_level == 2 %}
+                        <img src="{% static 'image/home.png' %}" style="height: 24px;">
+                        <span class="sand_level">Lv. {{host.user_level}} 벽돌집</span>
+                        <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
 
-                            {% else %}
-                            <img src="{% static 'image/building.png' %}" style="height: 24px;">
-                            <span class="sand_level">Lv. {{host.user_level}} 아파트</span>
-                            <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
+                        {% else %}
+                        <img src="{% static 'image/building.png' %}" style="height: 24px;">
+                        <span class="sand_level">Lv. {{host.user_level}} 아파트</span>
+                        <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
 
-                            {% endif %}
-                            <!-- 레벨 기준 알려주는 모달창 -->
-                            <div class="level_modal">
-                                <div class="desc_box">
-                                    <div class="level_list">
-                                        <img src="{% static 'image/sandbox.png' %}" style="height: 16px;">
-                                        <span>Lv.맨바닥</span>
-                                        <p>모래 포인트 2000미만</p>
-                                    </div>
-                                    <div class="level_list">
-                                        <img src="{% static 'image/sand-castle.png' %}" style="height: 16px;">
-                                        <span>Lv.모래성</span>
-                                        <p>모래 포인트 2000이상 7000미만</p>
-                                    </div>
-                                    <div class="level_list">
-                                        <img src="{% static 'image/home.png' %}" style="height: 16px;">
-                                        <span>Lv.벽돌집</span>
-                                        <p>모래 포인트 7000이상 18000미만</p>
-                                    </div>
-                                    <div class="level_list">
-                                        <img src="{% static 'image/building.png' %}" style="height: 16px;">
-                                        <span>Lv.아파트</span>
-                                        <p>모래 포인트 18000이상</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- 레벨 기준 모달창 끝 -->
-                        </a>
+                        {% endif %}
                     </div>
                     <div class="point_gage">
                         {% if host.user_level == 0 %}
