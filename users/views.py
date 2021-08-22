@@ -32,7 +32,6 @@ from django.contrib.sites.models import Site
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 from django.http.response import JsonResponse
-
 # import json
 
 
@@ -43,7 +42,6 @@ my_site = Site.objects.get(pk=1)
 my_site.domain = '13.124.23.247:8000'
 my_site.name ="digging_main"
 my_site.save()
-
 def signup(request):
     if request.method == "POST":
         user_form = UserCustomCreationForm(request.POST)
@@ -64,6 +62,9 @@ def signup(request):
             email = EmailMessage(mail_subject, message, to=[to_email])
             email.send()
 
+            # user가 생기자마자 바로 해결, 미해결 폴더 만들기
+            solved = Folder.objects.create(folder_user=user, folder_name="해결", folder_kind="solved")
+            not_solved = Folder.objects.create(folder_user=user, folder_name="미해결", folder_kind="solved")
             # return HttpResponse('Please confirm your email address to complete the registration') -> 이메일 인증 성공 확인 가능 메세지
 
             return redirect('users:login')
@@ -86,7 +87,7 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-        return redirect('users:login')
+        return HttpResponse('Thank you for your email confirmation. Now you can login your account')
     else:
         return HttpResponse('Activation link is invalid!')
 
@@ -227,6 +228,8 @@ def github_callback(request):
                         )
                         user.set_unusable_password()
                         user.save()
+                        solved = Folder.objects.create(folder_user=user, folder_name="해결", folder_kind="solved")
+                        not_solved = Folder.objects.create(folder_user=user, folder_name="미해결", folder_kind="solved")
                     login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                     ctx = {
                         'user': user
@@ -239,7 +242,7 @@ def github_callback(request):
     except Exception as e:
         messages.error(request, e)
         return redirect(reverse("users:login"))
- 
+    
 
 # ________________________________________________ mypage ________________________________________________
 # my page
@@ -503,6 +506,26 @@ def lang_folder_posts(request, pk):
     folder = Folder.objects.get(pk=pk)
     posts = Post.objects.filter(folder=folder)
     data = posts.values()
+
+    #comment, user정보를 보내줘야 할거 같음
+    # 내정보 받아오기
+    # user = User.objects.filter(pk=folder.folder_user.id)
+    # user_data = serializers.serialize('json', user)
+    
+    # comments = []
+    # for post in posts:
+    #     comments.append(post.comments.all())
+    # comments_data = serializers.serialize('json',comments)
+    
+    # questions user
+    # a = User.objects.get(pk=question_post.user.id)
+    # question_comments 개수
+
+    # ctx = {
+    #     'data': data,
+    #     'user': user_data,
+    #     'comments': comments_data,
+    # }
 
     return JsonResponse(list(data), safe=False)
 

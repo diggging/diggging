@@ -61,11 +61,11 @@
 <script>
     var title = ["파이썬 범위 에러", "자바 직렬화 에러","자바스크립트 잡히지 않는 비동기"];
     var desc = [`IndexError: list index out of range 
-    범위를 벗어난 index에 접근하려하는 경우 발생하는 오류`,`nvalidClassException
+    범위를 벗어난 index에 접근하려하는 경우 발생하는 오류`,`InvalidClassException
     직렬화 런타임이, 클래스에 도착해 다음의 문제의 어떤 것인지를 검출했을 때에 슬로우 됩니다`, `Uncaught TypeError: Cannot read property 'addEventListener' of null at anonymous
 addEventListener는 HTML DOM의 method 중 하나이기 때문에 객체 요소가 반드시 필요하다. ...`];
     var counter = 0;
-    var inst = setInterval(change, 2000);
+    var inst = setInterval(change, 2500);
 
     function change() {
     document.getElementById("changeText").innerHTML = 
@@ -82,10 +82,11 @@ addEventListener는 HTML DOM의 method 중 하나이기 때문에 객체 요소�
             setInterval(function(){
                 roll++;
                 if(roll>3){roll=1;}
-		    var str = "/static/image/roll_" +roll+ ".jpg";
-		    document.getElementById("roll").src = str;
+            var str = "/static/image/roll_" +roll+ ".jpg";
+            document.getElementById("roll").src = str;
 		    //$('#roll').attr("src","/static/image/roll_"+roll+".jpg");
-            },2000);
+            },2500);
         });
     </script>
 {% endblock %}
+

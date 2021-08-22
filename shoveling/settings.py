@@ -35,7 +35,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['13.124.23.247', 'diggging.com']
+ALLOWED_HOSTS = ['13.124.23.247', 'diggging.com', 'hyunjupiro.ga']
 
 # Application definition
 
@@ -64,7 +64,10 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.naver",
     #select search
+    "sass_processor",
 ]
+
+SASS_PROCESSOR_ENABLED = True
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 

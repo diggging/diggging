@@ -1,3 +1,8 @@
+* {
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
 :root {
     --border-color: #CEC4B3;
     --btn-color: #FFF8CA;
@@ -10,8 +15,58 @@
     --hover-color: #FFEF9C;
 }
 
-body {
-    padding: 3rem
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard-SemiBold';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-SemiBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard-ExtraBold';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-ExtraBold.woff') format('woff');
+    font-weight: 800;
+    font-style: normal;
+}
+
+
+meter {
+    /* Reset the default appearance */
+    /* -webkit-appearance: none; */
+    -moz-appearance: none;
+    height: 2.2rem;
+    width: 22rem;
+    cursor: pointer;
+}
+
+.point_gage > meter::-webkit-meter-bar {
+    width: 100%;
+    height: 1.2rem;
+    background-color: #fff;
+    border: solid 1px #DBD6C7;
+    border-radius: 1.25rem;
+    padding: 4px 6px;
+    color:#FFBA42;
+}
+
+.point_gage > meter::-webkit-meter-optimum-value {
+    border-radius: 1.25rem;
+    background: #FFBA42;
+}
+.point_gage > meter::-webkit-meter-high-value {
+    border-radius: 1.25rem;
+    background: #FFBA42;
+}
+.point_gage > meter::-webkit-meter-low-value {
+    border-radius: 1.25rem;
+    background: #FFBA42;
 }
 
 /* modal창 */
@@ -19,51 +74,140 @@ body {
     display: hidden;
 }
 
+.modal_container {
+    display: flex;
+    align-items: center;
+    justify-items: center;
+}
+
+.modal_content_box {
+    overflow-y: scroll;
+    height: 520px;
+}
+
+/* 포인트 modal scroll 커스텀 */
+.modal_content_box::-webkit-scrollbar{ 
+    width: 14px; 
+}
+
+/* 스크롤바 막대 설정*/ 
+.modal_content_box::-webkit-scrollbar-thumb{ 
+    height: 17%;
+    background-color: #FFE59C; 
+    border-radius: 20px; 
+} 
+
+/* 스크롤바 뒷 배경 설정*/ 
+.modal_content_box::-webkit-scrollbar-track{ 
+    background-color: none;
+}
+
+/* ------------------- 포인트 모달 --------------- */
 .point_modal {
-    
-    position: absolute;
+    z-index: 1000;
+    position: fixed;
+
+    align-items: center;
+    display: flex;
+    /* display: block; */
+
+    justify-content: center;
+    height: 100vh;
+
     top: 0;
     left: 0;
 
     width: 100%;
-    height: 100%;
 
     display: none;
 
     background-color: rgba(0, 0, 0, 0.4);
 }
 
+.close_btn {
+    position: relative;
+    top: 0;
+    left: 110px;
+    cursor: pointer;
+}
+
+
 .modal_body {
     display: none;
-    position: absolute;
-    bottom: -70%;
-    left: 38%;
 
-    width: 400px;
-    height: 600px;
-
-    padding: 40px;
-
-    overflow: scroll;
+    width: 31.25rem;
+    height: 37.5rem;
 
     background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+    border-radius: 1.25rem;
+    box-shadow: 0 0.125rem 0.1875rem 0 rgba(34, 36, 38, 0.15);
 
     transition-timing-function: ease-in;
     transition-duration: 1s;
 
     z-index: 1001;
+}
     
+.title_text {
+    font-family: 'Pretendard-SemiBold';
+    font-size: 1.25rem;
+    line-height: 1.8125rem;
+    text-align: center;
+    color: #00537A;
+    width: 100%;
+    padding-top: 1.125rem;
+    padding-bottom: 1.125rem;
+    border-bottom: 0.0625rem solid #E5E5E5;
+}
+
+
+.log_box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 40px;
+    color: #585858;
+    font-family: 'Pretendard-SemiBold';
+    border-bottom: 0.0625rem solid #E5E5E5;
+}
+
+.point_close_btn {
+    position: relative;
+    top: 0;
+    left: 110px;
+    cursor: pointer;
+}
+
+.title_text {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+/* ----------------팔로우모달 */
+.follow_close {
+    margin-bottom: -26px;
+    float: right;
+    top: -43px;
+    cursor: pointer;
+    position: relative;
+    right: 16px;
 }
 
 .follow_modal {
-    position: absolute;
+    z-index: 1000;
+    position: fixed;
+
+    align-items: center;
+    display: flex;
+    /* display: block; */
+    justify-content: center;
+
+    height: 100vh;
+
     top: 0;
     left: 0;
 
     width: 100%;
-    height: 100%;
 
     display: none;
 
@@ -72,20 +216,13 @@ body {
 
 .follow_body {
     display: none;
-    position: absolute;
-    bottom: 10%;
-    left: 32%;
 
-    width: 500px;
-    height: 600px;
-
-    padding: 40px;
-
-    overflow: scroll;
+    width: 31.25rem;
+    height: 37.5rem;
 
     background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+    border-radius: 1.25rem;
+    box-shadow: 0 0.125rem 0.1875rem 0 rgba(34, 36, 38, 0.15);
 
     transition-timing-function: ease-in;
     transition-duration: 1s;
@@ -94,56 +231,158 @@ body {
 }
 
 
+.tabcontent::-webkit-scrollbar{ 
+    width: 14px; }
+
+
+/* 스크롤바 막대 설정*/ 
+.tabcontent::-webkit-scrollbar-thumb{ 
+    height: 17%;
+    background-color: #FFE59C; 
+    border-radius: 20px; 
+} 
+
+/* 스크롤바 뒷 배경 설정*/ 
+.tabcontent::-webkit-scrollbar-track{ 
+    background-color: none;
+}
+
+
+/* 모달 창 내부 follow, following list css */
+/*Styling the tab*/
+.tab {
+    font-family: 'Pretendard-SemiBold';
+    color: #00537A;
+    width: 100%;
+}
+
+/* tab content 열때 사용되는 button styling*/
+.tab button {
+    font-family: 'Pretendard-SemiBold';
+    font-size: 1.25rem;
+    color: #00537A;
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: 0.3s;
+    padding: 1.125rem;
+    width: 250px;
+}
+
+
+/* tab content styling */
+.tabcontent {
+    display: none;
+    overflow-y: scroll;
+}
+
+.follow {
+    font-family: 'Pretendard-SemiBold';
+    color: #00537A;
+    border: 0.0625rem solid #00537A;
+    border-radius: 1.25rem;
+    background: white;
+    cursor: pointer;
+    font-size: 0.875rem;
+    margin-left: 20px;
+    width: 122px;
+    height: 33px;
+    padding: 6px 6px 6px 10px;
+}
+
+.follow:hover {
+    color: white;
+    background: #00537A;
+}
+
+.margin_top {
+    margin-top: 1.6875rem;
+    margin-bottom: 0.625rem;
+}
+
+.margin_bottom {
+    display: flex;
+}
+
+.following_btn {
+    border-top-right-radius:20px;
+}
+
+.follower_btn {
+    border-top-left-radius: 20px;
+}
+/* button 위로 hover 시 background color change */
+.tab button:hover {
+    background-color: #FFE59C;
+}
+
+/* tablink class로 만들어놓은 것들 중 active/current 로 만들기*/
+.tab button.active {
+    background-color: #FFD358;
+
+}
 .follow_body h3 {
     font-family: var(--btn-font);
     font-size: 1rem;
+    margin-right:1rem;
     color: var(--text-color);
     font-family: var(--btn-font);
+    display: inline-block;
 }
 
-.follow_desc h4 {
-    font-size: 0.825rem;
+.user_level {
+    font-size: 0.875rem;
     font-family: var(--content-font);
     font-weight: 300;
-    color: var(--text-color);
+    color: #FFBA42;
+    
 }
 
 .flex_col {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    width: 14.75rem;
+    height: 3.125rem;
 }
 
 
 .follow_list {
     display: flex;
-    margin-top: 5px;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    padding: 15px;
-    margin-bottom: 10px;
+    border-bottom: solid 1px #E5E5E5;
+    padding: 24px 40px;
 }
 
-.follow_image {
+.follow_image {    
     object-fit: cover;
-    border-radius: 10px;
-    border-top: 1px solid rgb(248, 249, 250);
-    width: 40px;
-    height: 40px;
-    margin-bottom: 5px;
-    margin-right: 10px;
+    object-fit: cover;
+    border-radius: 2rem;
+    width: 50px;
+    height: 50px;
+}
+
+.user_info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 24px;
 }
 
 .follow_desc {
-    margin-left: 10px;
-    padding: 10px;
+    font-family:var(--content-font);
+    line-height: 1.25rem;
+    margin-top: 8px;
+    color: #8C8D8D;
 }
 
 .container_box {
     display: flex;
     flex-direction: row;
-    margin-top: 140px;
-    padding: 0 5rem;
+    margin-top: 4rem;
+    width: 100%;
+    height: 100%;
+    /* padding: 0 5rem; */
 }
 
 .flex_col {
@@ -152,79 +391,140 @@ body {
 }
 
 .first_container {
-    width: 20rem;
-    height: 120vh;
+    width: 22.125rem;
     flex-direction: column;
-    border: solid 1px var(--border-color);
-    border-radius: 8px;
-    padding: 1.5rem;
-    margin: 1rem;
+    border: solid 0.0625rem #E5E5E5;
+    padding: 4rem 1.75rem 1.75rem 1.75rem;
+    border-top: none;
+    border-bottom: none;
+    height: 100%;
 }
 
 .right_container {
     display: flex;
     flex-direction: column;
-    width: 66%;
+    padding: 3.8125rem 1rem 1rem 1rem;
+    width: 100%;
+    height: 100%;
     justify-content: space-evenly;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 
 .second_container {
-    border: solid 1px var(--border-color);
-    border-radius: 8px;
+    border: solid 0.0625rem #E5E5E5;
+    border-radius: 0.5rem;
     display: flex;
-    height: 30vh;
+    height: 43.75rem;
     flex-direction: column;
     align-items: center;
-    padding: 1rem;
     margin: 1rem;
+    background-color: #F8F8F8;
+    box-shadow: 0.375rem 0.375rem 0.25rem rgba(0, 0, 0, 0.04);
+    box-sizing: border-box;
+    border-radius: 0rem 1.25rem 1.25rem 1.25rem;
 }
 
 .third_container {
-    border: solid 1px var(--border-color);
-    border-radius: 8px;
     display: flex;
-    height: 85vh;
-    padding: 1rem;
-    margin: 1rem;
-    align-content: space-around;
+    flex-direction: column;
+    width: 100%;
+    overflow-y: scroll;
+    /* padding: 1rem; */
+    /* margin: 1rem; */
+    /* align-content: space-around; */
 }
 
-/* 모달 창 내부 follow, following list css */
-/*Styling the tab*/
-.tab {
-    overflow: hidden;
-    border: 1px solid #ccc;
-    background-color: #f1f1f1;
+
+
+.third_container::-webkit-scrollbar {
+    width: 14px;
+}
+.third_container::-webkit-scrollbar-thumb {
+    height: 17%;
+    background-color: #FFE59C; 
+    border-radius: 20px; 
+}
+.third_container::-webkit-scrollbar-track {
+    background-color: none;
 }
 
-/* tab content 열때 사용되는 button styling*/
-.tab button {
-    background-color: inherit;
-    float: left;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.3s;
+.my_post_list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    height: 13.75rem;
+    border-bottom: 0.0625rem solid #E5E5E5;
+    padding: 3.125rem 1.5rem 0.875rem 1.5rem;
 }
 
-/* button 위로 hover 시 background color change */
-.tab button:hover {
-    background-color: #ddd;
+.post_title {
+    font-family: 'Pretendard-SemiBold';
+    color: #212529;
+    font-size: 1.25rem;
+    line-height: 1.4375rem;
+    margin-bottom: 1.25rem;
 }
 
-/* tablink class로 만들어놓은 것들 중 active/current 로 만들기*/
-.tab button.active {
-    background-color: #ccc;
+.post_desc {
+    font-family: 'Pretendard-Regular';
+    color: #585858;
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+    margin-bottom: 0.9375rem;
+    width: 100%;
 }
 
-/* tab content styling */
-.tabcontent {
-    display: none;
-    padding: 6px 12px;
-    border: 1px solid #ccc;
-    border-top: none;
+.post_user {
+    width: 100%;
+    height: 0.5rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.post_created {
+    margin-right: auto;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: #00537A;
+}
+
+.post_created:visited {
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: #00537A;
+}
+
+.data_none {
+    font-size: 1.125rem;
+    line-height: 1rem;
+    color: #00537A;
+}
+
+.scrap_num {
+    font-family: 'Pretendard-Regular';
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: #00537A;
+    margin-right: 1.25rem;
+}
+
+.scrap_num > .bold {
+    font-family: 'Pretendard-SemiBold';
+}
+
+.helped_num {
+    font-family: 'Pretendard-Regular';
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: #00537A;
+}
+
+.helped_num > span {
+    font-family: 'Pretendard-SemiBold';
 }
 
 /*---------------------- 프로필영역 ----------------------*/
@@ -234,18 +534,37 @@ body {
 }
 
 .profile_username i {
-    margin-right: 8px;
+    margin-right: 0.5rem;
     vertical-align: middle;
     color: var(--logo-color);
 }
 
 .user_nickname {
-    margin-left: 10px;
-    font-family: var(--content-font);
-    color: var(--text-color);
-    font-size: 0.75rem;
+    font-family: 'Pretendard-SemiBold';
+    margin-left: 0.625rem;
+    margin-bottom: 0.625rem;
+    color: #00537A;
+    font-size: 1rem;
 }
 
+.user_nickname_span {
+    font-family: 'Pretendard-SemiBold';
+    color: #00537A;
+    font-size: 0.875rem;
+}
+
+.proflie_text {
+    font-size: 0.75rem;
+    line-height: 1.063rem;
+    color: #8C8D8D;
+    margin-left: 0.625rem;
+}
+
+.sand_level_area {
+    margin-top: 3.125rem;
+    display: flex;
+    align-items: center;
+}
 .profile_container {
     display: flex;
     flex-direction: column;
@@ -267,61 +586,107 @@ body {
     display: flex;
     align-items: center;
     margin-right: 1rem;
+    margin-right: 1.5rem;
 }
 
 .profile_image img {
-    width: 2.7rem;
-    border-radius: 20px;
+    width: 3.125rem;
+    height: 3.125rem;
+    border-radius: 6.25rem;
 }
 
 .badge_img img,
 .badge_img span {
     vertical-align: middle;
+    margin-right: 0.25rem;
 }
 
+.badge_img .sand_level {
+    font-family: 'Pretendard-Regular';
+    font-size: 0.75rem;
+    line-height: 1.063rem;
+    color: #FFBA42;
+}
+
+.sand_point {
+    font-size: .6875rem;
+    line-height: 0.875rem;
+    color: #9FAEB6;
+    top: 1px;
+    position: relative;
+}
+
+
 .follow_area {
-    border-bottom: solid 1px var(--border-color);
+    margin-bottom: 1.25rem;
+    margin-top: 0.625rem;
 }
 
 .follow_area button {
-    font-family: var(--btn-font);
-    color: var(--text-color);
-    border: solid 1px var(--border-color);
-    border-radius: 4px;
+    font-family: 'Pretendard-SemiBold';
+    color: #00537A;
+    border: 0.0625rem solid #00537A;
+    border-radius: 1.25rem;
     background: white;
-    width: 10em;
-    height: 32px;
+    width: 9em;
+    height: 2.25rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.follow_area button:hover {
+    color: white;
+    background: #00537A;
+}
+
+.follow_btn {
+    margin-right: 0.625rem;
 }
 
 .follow_btn_area {
     display: flex;
-    margin: 20px 0;
+    margin: 1.25rem 0;
     justify-content: space-evenly;
 }
 
-meter {
-    width: 210px;
-    height: 28px;
+.follow_btn_area label {
+    width: 9em;
+    height: 2.25rem;
+    border: 0.0625rem solid #00537A;
+    border-radius: 1.25rem;
+    padding: 0.5rem 0.3125rem 0.3125rem 0.3125rem;
+    text-align: center;
+    cursor: pointer;
+    color: #00537A;
+    font-family: 'Pretendard-SemiBold';
+    font-size: 0.875rem;
+    margin-right: 0.625rem;
+}
+
+.follow_btn_area label:hover {
+    color: white;
+    background: #00537A;
 }
 
 .point_gage {
-    margin-top: -10px;
+    margin-top: 0.625rem;
 }
 
-
-.point_gage label {
-    font-size: 0.75rem;
-    font-family: var(--content-font);
-    color: var(--text-color);
-    position: relative;
-    top: 22px;
-    left: 75px;
+.point_gage meter {
+    width: 100%;
+    height: 1.25rem;
+    /* -webkit-appearance: none; */
+    border: 0.0625rem solid #DBD6C7;
+    border-radius: 1.25rem;
+    box-sizing: border-box;
+    background: #FFFFFF;
 }
+
 
 .profile_text {
-    height: 40px;
+    height: 2.5rem;
     background-color: floralwhite;
-    border-radius: 4px;
+    border-radius: 0.25rem;
     padding: 1rem;
 }
 
@@ -330,59 +695,47 @@ meter {
     font-size: 0.75rem;
     background: floralwhite;
     padding: 1rem;
-    border-radius: 8px;
+    border-radius: 0.5rem;
     color: var(--logo-color);
 }
 
 /* -----------리스트버튼 영역--------------------------- */
 .btn_list_area {
-    margin-top: 2rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    margin-bottom: 8px;
+    border-top: solid 0.0625rem #E5E5E5;
 }
 
 .list_btn {
-    font-size: 1rem;
+    font-size: 1.125rem;
     width: 100%;
-    border: solid 1px var(--border-color);
-    background: floralwhite;
-    margin: 10px;
+    padding: 1.625rem;
     display: block;
-    margin: 15px 0;
-    width: 100%;
-    padding: 1rem 5rem;
-    border-radius: 2px;
-    font-family: var(--btn-font);
-    color: var(--text-color);
+    border-bottom: solid 0.0625rem #E5E5E5;
+    font-family: 'Pretendard-SemiBold';
+    color: #8C8D8D;
 }
 
 .list_btn:hover {
-    border: solid 1px var(--border-color);
-    margin: 10px;
     display: block;
-    margin: 20px 0;
-    padding: 1rem 5rem;
-    border-radius: 2px;
-    font-family: var(--btn-font);
-    color: var(--text-color);
-    background: var(--btn-color);    
-    transition: 0.4s;
-}
-.list_btn:active {
-    border: solid 1px var(--border-color);
-    width: 91%;
-    height: 60px;
-    background: var(--hover-color);
-    margin: 20px auto;
-    transition: 0.2s;
+    color: #00537A;
+    border-bottom: solid 0.0625rem #00537A;
 }
 
+/* .list_btn:active {
+    border: solid 0.0625rem var(--border-color);
+    width: 91%;
+    height: 3.75rem;
+    background: var(--hover-color);
+    margin: 1.25rem auto;
+    transition: 0.2s;
+} */
+
 .empty_img {
-    border-radius: 10px;
-    width: 40px;
+    border-radius: 0.625rem;
+    width: 2.5rem;
     background-color: bisque;
 }
 
@@ -392,65 +745,144 @@ meter {
 }
 
 /* 모래쌓기 영역---------------------- */
+
+.sand_pour_area {
+    margin: auto;
+}
 #github_chart_1 {
-    border: solid 1px var(--border-color);
-    border-radius: 8px;
-    width: 100%;
-    height: 38vh;
+    padding-left: 3rem;
+    padding-top: 1rem;
+    width: 10%;
 }
 
 #github_chart_1 svg {
-    height: 210px;
-    margin-left: 40px;
+    height: 16rem;
+    margin: auto;
+    /* width: 16.375rem; */
+    padding: auto;
 }
 
 #github_chart_1 svg g {
-    font-size: 6px;
+    font-size: 0.375rem;
     font-family: var(--content-font);
     color: var(--hover-color);
 }
-
 
 
 /* --------------------디렉토리 영역 ------------------*/
 .category_tab {
     display: flex;
     width: 100%;
-    height: 10rem;
+    height: 9.375rem;
+    overflow-y: scroll;
+    padding: 0 0.875rem;
+    margin-top: 1rem;
+    border-bottom: solid 1px #ececec;
+    padding-bottom: 0.4rem;
+}
+
+#question_btn_tap {
+    margin-bottom: -1rem;
+    margin-left: -4.5rem;
+    width: 25rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#question_btn_tap button {
+    font-family: var(--btn-font);
+    font-size: 1rem;
+    line-height: 1.4375rem;
+    margin: -0.0625rem -0.625rem;
+    border-bottom: none;
+    border-radius: 1.25rem 1.25rem 0rem 0rem;
+    height: 2.3125rem;
+    text-align: center;
+    cursor: pointer;
 }
 
 #btn_tap {
     margin-bottom: -1rem;
-    margin-left: 2rem;
-    width: 20rem;
+    margin-left: -0.375rem;
+    width: 25rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #btn_tap button {
-    padding: 5px 30px 5px 20px;
-    border-radius: 8px 8px 0px 0px;
-    background: var(--hover-color);
     font-family: var(--btn-font);
-    color: var(--sand-color);
-    border: none;
-    margin: 0px -4px;
-    border-left: solid 1.5px white;
+    font-size: 1rem;
+    line-height: 1.4375rem;
+    margin: -0.0625rem -0.625rem;
+    border-bottom: none;
+    border-radius: 1.25rem 1.25rem 0rem 0rem;
+    height: 2.3125rem;
+    text-align: center;
+    cursor: pointer;
+}
+
+.language_btn, .question_language_btn {
+    background: #FFD358;
+    color: white;
+    border: 0.125rem solid white;
+    padding: 0.5rem 2.625rem 0.5rem 1.8125rem;
+}
+
+.framework_btn, .question_framework_btn {
+    background-color: #FFD358;
+    color: white;
+    border: 0.125rem solid white;
+    padding: 0.5rem 2.625rem 0.5rem 1.9375rem;
+}
+
+.problem_btn {
+    background-color: #FFD358;
+    color: white;
+    border: 0.125rem solid white;
+    padding: 0.5rem 2.625rem 0.5rem 1.9375rem;
+}
+
+.language_btn:hover,
+.question_language_btn:hover {
+    color: white;
+    background: #FFBA42;
+}
+
+.framework_btn:hover,
+.question_framework_btn:hover {
+    color: white;
+    background: #FFBA42;
+}
+
+.problem_btn:hover {
+    color: white;
+    background: #FFBA42;
+}
+
+.framework_btn:active 
+.language_btn:active  
+.problem_btn:active {
+    color: white;
+    background: #FFBA42;
 }
 
 .directory_box {
     display: block;
     height: 30vh;
     padding: 1rem;
-    border: solid 1px var(--border-color);
-    border-radius: 8px;
+    border: solid 0.0625rem var(--border-color);
+    border-radius: 0.5rem;
     justify-content: flex-start;
     width: 100%;
     overflow: scroll;
-
 }
+
 .lang_post_btn,
 .framework_post_btn,
 .problem_post_btn {
-    padding: 5px;
+    padding: 1.375rem;
     background: none;
     border: none;
     display: flex;
@@ -458,21 +890,17 @@ meter {
     align-items: center;
     font-family: var(--btn-font);
     color: var(--text-color);
-    margin: 5px;
+    margin: 0.3125rem;
+    cursor: pointer;
 }
 
-.lang_post_btn:active,
-.framework_post_btn:active,
-.problem_post_btn:active {
-    padding: 5px;
+
+.lang_post_btn:hover,
+.framework_post_btn:hover,
+.problem_post_btn:hover {
     background: none;
-    border: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: var(--btn-font);
-    color: var(--text-color);
-    margin: 5px;
+    border-radius: 1.25rem;
+    border: solid 1px rgba(98, 161, 191, 30%);
 }
 
 .folder_area {
@@ -486,8 +914,32 @@ meter {
 }
 
 .folder_category {
+    background-color: #F8F8F8;
     display: flex;
     flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    height: 9.375rem;
+    align-content: flex-start;
+}
+
+
+.folder_category button:active {
+    background-color: rgba(98, 161, 191, 30%);
+    border-radius: 1.25rem;
+
+}
+
+.category_tab::-webkit-scrollbar {
+    width: 14px;
+}
+.category_tab::-webkit-scrollbar-thumb {
+    height: 17%;
+    background-color: #FFE59C; 
+    border-radius: 20px; 
+}
+.category_tab::-webkit-scrollbar-track {
+    background-color: none;
 }
 
 .folder_icon {
@@ -496,14 +948,16 @@ meter {
 
 .folder_name {
     font-family: var(--btn-font);
+    font-size: 1rem;
+    line-height: 1.4375rem;
     text-align: center;
-    color: var(--text-color);
-    margin-top: 4px;
+    color: #8C8D8D;
+    margin-top: 0.25rem;
 }
 
 .folder_space {
     display: flex;
-    margin: 4px;
+    margin: 0.25rem;
     margin: 0.825rem;
     flex-direction: column;
     align-items: center;
@@ -513,37 +967,38 @@ meter {
 .last_log_box{
     display: block;
     padding: 1rem;
-    border-radius: 8px;
+    border-radius: 0.5rem;
     justify-content: flex-start;
-    margin: 10px;
+    margin: 0.625rem;
     width: 100%;
     height: 100%;
-    border: solid 1px var(--border-color);
-    border-radius: 8px;
+    border: solid 0.0625rem var(--border-color);
+    border-radius: 0.5rem;
 }
 
 .last_question_list {
     display: none;
-    border-top: solid 1px var(--border-color);
-    padding: 20px;
+    border-top: solid 0.0625rem var(--border-color);
+    padding: 1.25rem;
     width: 100%;
     font-size: 0.825rem;
-    border-bottom: solid 1px var(--border-color);
+    border-bottom: solid 0.0625rem var(--border-color);
     font-family: var(--content-font);
     color: var(--text-color);
 }
 
 .snad_level_area .level_badge img {
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    height: 24px;
-    padding: 2px;
-    height: 28px;
+    border: 0.0625rem solid var(--border-color);
+    border-radius: 0.25rem;
+    height: 1.5rem;
+    padding: 0.125rem;
+    height: 1.75rem;
     margin: 0.875rem 0;
 }
 
 .level_badge {
-    margin: 6px 0;
+    width: 100%;
+    margin: 0.375rem 0;
 }
 
 .level_badge a {
@@ -562,9 +1017,9 @@ a.badge_img .level_modal {
     left: 5.2rem;
     width: 20%;
     background: #F8F8F8;
-    border-radius: 8px;
-    border: solid 1px var(--border-color);
-    padding: 10px;
+    border-radius: 0.5rem;
+    border: solid 0.0625rem var(--border-color);
+    padding: 0.625rem;
     z-index: 1000000;
     display: inline;
     opacity: 0;
@@ -582,9 +1037,9 @@ a.badge_img:hover .level_modal{
 }
 
 .level_modal span {
-    font-size: 12px;
+    font-size: 0.75rem;
     color: var(—logo-color);
-    margin-left: 5px;
+    margin-left: 0.3125rem;
     line-height: 2rem;
 }
 .level_modal p {
@@ -593,5 +1048,5 @@ a.badge_img:hover .level_modal{
 }
 
 .folder_category{
-    font-size: 0px;
+    font-size: 0rem;
 }

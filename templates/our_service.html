@@ -1,0 +1,64 @@
+{% load static %}
+{% load sass_tags %}
+{% extends 'base.html' %}
+{% block script %}
+<link rel="stylesheet" href="{% static 'css/our_service.scss' %}">
+<script src="{% static 'js/our_service.js' %}"></script>
+{% endblock %}
+{% block content %}
+<section class="intro-section">
+    <h1 class="intro-heading">Team Diggging</h1>
+    <p>Developer community for everyone</p>
+</section>
+<section class="content-section" data-scroll>
+    <figure class="figure">
+        <img src="{% static 'image/error.jpg' %}" />
+    </figure>
+    <div class="content">
+        <header class="header">
+            <div class="subheading">Our Vision</div>
+            <h2 class="heading">Endless Errors</h2>
+        </header>
+        <p class="paragraph">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis tempora quam voluptates amet. Quod
+            pariatur
+            non incidunt! Explicabo cum repellendus amet quas accusantium, aut fugit rerum doloribus velit.
+            Possimus,
+            harum.
+        </p>
+    </div>
+</section>
+<section class="content-section" data-scroll>
+    <figure class="figure">
+        <img src="{% static 'image/collaboration.jpg' %}" />
+    </figure>
+    <div class="content">
+        <header class="header">
+            <div class="subheading">Our Vision</div>
+            <h2 class="heading">We believe in the power of community</h2>
+        </header>
+        <p class="paragraph">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum dolorum sunt ducimus, obcaecati porro at
+            amet debitis possimus error maxime iste accusamus doloremque eos provident, deserunt, itaque
+            consequuntur recusandae? Odit!
+        </p>
+    </div>
+</section>
+<section class="content-section" data-scroll>
+    <figure class="figure">
+        <img src="{% static 'image/collaboration.jpg' %}" />
+    </figure>
+    <div class="content">
+        <header class="header">
+            <div class="subheading">Join the team</div>
+            <h2 class="heading">Signup today to take part in our community</h2>
+        </header>
+        <p class="paragraph">
+            Join our commnunity to share, ask questions and solve member's errors together!
+        </p>
+        <a href="{% url 'users:signup' %}">
+            <h6>회원가입</h6>
+        </a>
+    </div>
+</section>
+{% endblock %}
