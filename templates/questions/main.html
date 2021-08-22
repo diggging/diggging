@@ -35,14 +35,25 @@
                         </div>
                     </div>
                     <div class="user_level">
-                        {% if request.user.user_level == 0 %}
-                        <span class="sand_level">Lv. {{request.user.user_level}} 맨바닥</span>
-                        {% elif request.user.user_level == 1 %}
-                        <span class="sand_level">Lv. {{request.user.user_level}} 모래성</span>
-                        {% elif request.user.user_level == 2 %}
-                        <span class="sand_level">Lv. {{request.user.user_level}} 벽돌집</span>
+                        {% if host.user_level == 0 %}
+                        <img src="{% static 'image/sandbox.png' %}" style="height: 24px;">
+                        <span class="sand_level">Lv. {{host.user_level}} 맨바닥</span>
+                        <span class="sand_point">{{my_sand_sum.amount__sum}}모래</span>
+                        {% elif host.user_level == 1 %}
+                        <img src="{% static 'image/sand-castle.png' %}" style="height: 24px;">
+                        <span class="sand_level">Lv. {{host.user_level}} 모래성</span>
+                        <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
+
+                        {% elif host.user_level == 2 %}
+                        <img src="{% static 'image/home.png' %}" style="height: 24px;">
+                        <span class="sand_level">Lv. {{host.user_level}} 벽돌집</span>
+                        <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
+
                         {% else %}
-                        <span class="sand_level">Lv. {{request.user.user_level}} 아파트</span>
+                        <img src="{% static 'image/building.png' %}" style="height: 24px;">
+                        <span class="sand_level">Lv. {{host.user_level}} 아파트</span>
+                        <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
+
                         {% endif %}
                     </div>
                     <div class="point_gage">
@@ -85,19 +96,22 @@
             </div>
             <div class="my_answer_container">
                 <button class="accordion">내가 남긴 답변</button>
-                <div class="panel answerabc">
-                    {% for answers in answer %}
-                    <a href="{% url 'question:question_post_detail' answers.question.user.id answers.question.id %}">
-                        <div class="my_answer_list">
-                            <div class="my_answer_title_box">
-                                <span class="my_answer_title">{{answers.title}}</span>
-                                <span class="my_answer_questioner">{{answers.user}}님의 질문</span>
+                {% if request.user == answer.answer_user %}
+                    <div class="panel answerabc">
+                        {% for answers in answer %}
+                        <a href="{% url 'question:question_post_detail' answers.question.user.id answers.question.id %}">
+                            <div class="my_answer_list">
+                                <div class="my_answer_title_box">
+                                    <span class="my_answer_title">{{answers.title}}</span>
+                                    <span class="my_answer_questioner">{{answers.user}}님의 질문</span>
+                                </div>
+                                <div class="my_answer_desc">{{answers.desc}}</div>
                             </div>
-                            <div class="my_answer_desc">{{answers.desc}}</div>
-                        </div>
-                    </a>
-                    {% endfor %}
-                </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                {%else%}
+                {%endif%}
             </div>
         </div>
         <!-- 클래스명은 왼쪽이지만 사실오른쪽에있는 박스영역임 -->
@@ -105,7 +119,9 @@
             <!-- 답변을 기다리는 질문 박스 -->
             <div class="no_answer_container">
                 <div>
-                    <h3 class="no_answer_titlebox">답변을 기다리는 질문들</h3>
+                    <a href="{% url 'question:question_main'%}">
+                        <h3 class="no_answer_titlebox">답변을 기다리는 질문들</h3>
+                    </a>
                 </div>
                 <div class="scroll_box">
                     <div class="no_answer_list_box">
@@ -113,16 +129,26 @@
     
                         {% else %}
                         {% for post in not_selected_questions %}
-                        <a href="{% url 'question:question_post_detail' post.user.id post.id %}">
+                        <a href="{% url 'question:question_post_detail' post.user.id post.id %}" class="no_answer_link">
                             <div class="no_answer_list" value="{{ i }}">
                                 <div class="no_answer_titlebox">
                                     <div class="no_answer_title">{{post.title|truncatechars:20}}</div>
-                                    <div class="no_user_info">
-                                        <img src="{{ post.user.user_profile_image.url }}" width="28" height="28">
-                                        <span class="no_answer_username">{{post.user.user_nickname}}</span>
-                                    </div>
+                                    <a href="{% url 'users:my_page' post.user.id %}" class="">
+                                        <div class="no_user_info">
+                                            <img src="{{ post.user.user_profile_image.url }}" width="28" height="28">
+                                            <span class="no_answer_username">{{post.user.user_nickname}}</span>
+                                        </div>
+                                    </a>
                                 </div>
                                 <span class="no_answer_desc">{{post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;"}}</span>
+                                <span class="no_answer_category">
+                                    <span>{{post.language}}</span>
+                                    <span>{{post.framework}}</span>
+                                    <span>{{post.os}}</span>
+                                    <div class="no_answer_created">
+                                        <h5>{{post.created}}</h5>
+                                    </div>
+                                </span>
                                 <span class="no_answer_username" id="imggg">{{post.desc.img}}</span>
                                 <!--채택이 false인거만 나오게 한다.-->
                             </div>
@@ -136,7 +162,7 @@
             <!-- 관심사에 따른 추천 박스 -->
             <div class="recommend_container">
                 <div>
-                    <h3>내가 관심있는 </h3>
+                    <h3>내가 관심있는 언어</h3>
                 </div>
                 <!-- 관심사목록선택 체크박스 -->
                 <form action="" method="POST">
@@ -160,17 +186,28 @@
                 <div class="recommend_list_box">
                     {% for post in posts%}
                     {% if str_search == "전체" %}
-                    <a href="{% url 'question:question_post_detail' post.user.id post.id %}">
-                        <div class="no_answer_list">
+                    <a href="{% url 'question:question_post_detail' post.user.id post.id %}" class="no_answer_link">
+                        <div class="no_answer_list" value="{{ i }}">
                             <div class="no_answer_titlebox">
                                 <div class="no_answer_title">{{post.title|truncatechars:20}}</div>
-                                <div class="no_user_info">
-                                    <img src="{{ post.user.user_profile_image.url }}">
-                                    <span class="no_answer_username">{{post.user.user_nickname}}</span>
-                                </div>
+                                <a href="{% url 'users:my_page' post.user.id %}" class="">
+                                    <div class="no_user_info">
+                                        <img src="{{ post.user.user_profile_image.url }}" width="28" height="28">
+                                        <span class="no_answer_username">{{post.user.user_nickname}}</span>
+                                    </div>
+                                </a>
                             </div>
                             <span class="no_answer_desc">{{post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;"}}</span>
+                            <span class="no_answer_category">
+                                <span>{{post.language}}</span>
+                                <span>{{post.framework}}</span>
+                                <span>{{post.os}}</span>
+                                <div class="no_answer_created">
+                                    <h5>{{post.created}}</h5>
+                                </div>
+                            </span>
                             <span class="no_answer_username" id="imggg">{{post.desc.img}}</span>
+                            <!--채택이 false인거만 나오게 한다.-->
                         </div>
                     </a>
                     {% else %}

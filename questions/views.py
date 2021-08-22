@@ -535,8 +535,19 @@ def questions_lang_folder(request, pk):
 def questions_lang_post(request, pk):
     folder = QuestionFolder.objects.get(pk=pk)
     posts = Question_post.objects.filter(question_folder=folder)
+
+    user_list = [] 
+    for post in posts: 
+        user_list.append(post.user.user_nickname)
+    
     data = posts.values()
-    return JsonResponse(list(data), safe=False)
+
+    ctx = {
+        'user': user_list,
+        'data': list(data)
+    }
+
+    return JsonResponse(ctx, safe=False)
 
 @csrf_exempt
 def questions_framework_folder(request, pk):
@@ -550,6 +561,15 @@ def questions_framework_folder(request, pk):
 def questions_framework_post(request, pk):
     folder = QuestionFolder.objects.get(pk=pk)
     posts = Question_post.objects.filter(question_folder=folder)
+    user_list = [] 
+    for post in posts: 
+        user_list.append(post.user.user_nickname)
+    
     data = posts.values()
 
-    return JsonResponse(list(data), safe=False)
+    ctx = {
+        'user': user_list,
+        'data': list(data)
+    }
+
+    return JsonResponse(ctx, safe=False)
