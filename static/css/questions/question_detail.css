@@ -286,7 +286,7 @@ code {
 .accordion_area {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
     padding-bottom: 1rem;
 }
 
@@ -335,15 +335,18 @@ code {
 }
 
 .scrap_popup {
+    vertical-align: middle;
+    float: left;
     position: relative;
-    top: 50%;
-    opacity: 0;
+    top: -10px;
+    border: solid 1.5px #FFD358;
+    /* opacity: 0; */
     /* visibility: hidden; */
     width: 300px;
     height: 80px;
-    background: rgb(231, 231, 230);
-    border: solid 1px var(--border-color);
     transition-duration: 2s;
+    padding: 1.1rem;
+}
 }
 
 .scrap_popup p {
@@ -442,8 +445,15 @@ code {
     flex-direction: row;
     width: 12rem;
     border: none;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
+}
+
+.accordion_area:first-child {
+    width: 15%;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
 }
 
 
@@ -662,23 +672,47 @@ code {
 .like,
 .scrap,
 .comment_btn {
-    font-size: .875rem;
+    min-width: 80px;
+    color: #212529;
     font-family: var(--btn-font);
-    color: #FFBA42;
-    padding: .375rem .25rem;
+    background-color: white;
     border: solid 1px #FFBA42;
+    border-radius: 1.25rem;
+    text-align: center;
+    /* width: 10.5rem; */
+    height: 1.875rem;
+    cursor: pointer;
+    padding: 4px 14px;
+    font-size: .75rem;
+    vertical-align: middle;
 }
-.like,
-.scrap,
+
+.like:hover path,
+.scrap:hover path,
+.comment_btn:hover path {
+    fill: white;
+}
+
+.like:hover,
+.scrap:hover,
 .comment_btn:hover {
     color: white;
-    background-color: ##FFBA42;
+    background-color: #FFBA42;
+}
+.like:hover,
+.scrap:hover,
+.comment_btn:hover {
+    color: white;
+    background-color: #FFBA42;
 }
 
 .btn_control a {
     text-decoration: none;
 }
 
+
+
+/* 답변 영역 */
 .answer_area {
     display: flex;
     align-items: center;

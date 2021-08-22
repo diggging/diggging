@@ -28,6 +28,10 @@
             <div class="accordion_area">
                 {% if not request.user.id == post.user.id %}
                 <div class="post_{{post.id}}">
+                    <div class="scrap_popup" style="opacity: 0;" >
+                        <p>언어📁 {{post.language}} 프레임워크📁 {{post.framework}}으로 퍼왔습니다.
+                        마이페이지에서 확인해보세요!</p>
+                    </div>
                     <div class="scrap_box">
                         <button name="{{ post.id }}" class="scarp-{{ post.id }} scrap" id="scrap_btn"value="scrap">
                             <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -37,10 +41,6 @@
                                 퍼가기&nbsp&nbsp{{ post.scarps_user.all.count }}
                             </span>
                         </button>
-                    </div>
-                    <div class="scrap_popup" style="opacity: 0;" >
-                        <p>언어📁 {{post.language}} 프레임워크📁 {{post.framework}}으로 퍼왔습니다.
-                        마이페이지에서 확인해보세요!</p>
                     </div>
                 </div>
                 <div class="post_{{post.id}}">

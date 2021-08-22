@@ -435,15 +435,16 @@ h1, h2, h3, h4, h5 {
 }
 
 .like {
-    color: #FFBA42;
+    color: #212529;
     font-family: var(--btn-font);
     background-color: white;
-    border: solid 0.0625rem #FFBA42;
+    border: solid 1px #FFBA42;
     border-radius: 1.25rem;
     text-align: center;
     width: 10.5rem;
     height: 1.875rem;
     cursor: pointer;
+    padding: 4px 8px;
 }
 
 .like > svg {
