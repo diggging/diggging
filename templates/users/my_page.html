@@ -290,84 +290,46 @@
             followModal.style.display = 'none';
     })
 </script> 
+
 <!-- 팔로우 모달 창 뜨기 -->
 <script>
+    // 팔로잉 버튼 눌렀을 때 모달창 뜨기
+    // follow와 follower뜨는 모달창 (공통) : 전역변수로.
+    const followModal = document.querySelector('.follow_modal');
+    const followBody = document.querySelector('.follow_body');
+    const closeModal = document.querySelector('.follow_close');
+
+
     function followModalPopup() {
-        let followModal = document.querySelector('.follow_modal');
-        let followBody = document.querySelector('.follow_body');
-        let closeModal = document.querySelector('.follow_close');
+        followModal.style.display = 'flex';
+        body.style.overflow = 'hidden';
+        followBody.style.display = 'block';
+        }
 
-        let followOpenPopup = document.querySelector('.follow_btn');
-
-        followOpenPopup.addEventListener('click', () => {
-            followModal.style.display = 'flex';
-            followBody.style.display = 'block';
-        });
-
-        closeModal.addEventListener('click', () => {
-            followModal.style.display = 'none';
-        })
-    }
-</script>
-<!-- 팔로워 모달창 뜨기 -->
-<script>
+// 팔로워 버튼 눌렀을 때 모달창 뜨기
     function followerModalPopup() {
-        let followModal = document.querySelector('.follow_modal');
-        let followBody = document.querySelector('.follow_body');
-        let closeModal = document.querySelector('.follow_close');
-
-        let FollowerOpenPopup = document.querySelector('.follower_button');
-
-        FollowerOpenPopup.addEventListener('click', () => {
-            followModal.style.display = 'flex';
-            body.style.overflow = 'hidden';
-            followBody.style.display = 'block';
-        });
-
-        closeModal.addEventListener('click', () => {
-            followModal.style.display = 'none';
-            body.style.overflow = 'auto';
-        })
+        followModal.style.display = 'flex';
+        body.style.overflow = 'hidden';
+        followBody.style.display = 'block';
     }
-</script>
-<script>
+// 팔로우 모달창 닫기 - 이거는 하나면 끝! 모달창이 공통이기 때문
+    function closeModalPopup() {
+        followModal.style.display = 'none';
+        body.style.overflow = 'auto';
+    }
+
+// 다른유저 프로필에서 팔로잉 버튼 눌렀을 때
     function otherFollowModalPopup() {
-        let followModal = document.querySelector('.follow_modal');
-        let followBody = document.querySelector('.follow_body');
-        let closeModal = document.querySelector('.follow_close');
-
-        let otherFollowOpenPopup = document.querySelector('.other_follow_btn');
-
-        otherFollowOpenPopup.addEventListener('click', () => {
-            followModal.style.display = 'flex';
-            body.style.overflow = 'hidden';
-            followBody.style.display = 'block';
-        });
-
-        closeModal.addEventListener('click', () => {
-            followModal.style.display = 'none';
-            body.style.overflow = 'auto';
-        })
+        followModal.style.display = 'flex';
+        body.style.overflow = 'hidden';
+        followBody.style.display = 'block';
     }
-</script>
-<script>
+
     function otherFollowerModalPopup() {
-        let followModal = document.querySelector('.follow_modal');
-        let followBody = document.querySelector('.follow_body');
-        let closeModal = document.querySelector('.follow_close');
 
-        let otherFollowerOpenPopup = document.querySelector('.other_follower_btn');
-
-        otherFollowerOpenPopup.addEventListener('click', () => {
-            followModal.style.display = 'flex';
-            body.style.overflow = 'hidden';
-            followBody.style.display = 'block';
-        });
-
-        closeModal.addEventListener('click', () => {
-            followModal.style.display = 'none';
-            body.style.overflow = 'auto';
-        })
+        followModal.style.display = 'flex';
+        body.style.overflow = 'hidden';
+        followBody.style.display = 'block';
     }
 </script>
 
@@ -411,7 +373,7 @@
                 <div class="tab">
                     <button class="tablinks follower_btn" onclick="openList(event, 'following')">팔로잉</button>
                     <button class="tablinks following_btn" onclick="openList(event, 'follow')">팔로워</button>
-                    <img class="follow_close" src="{% static 'image/close_icon.svg' %}" />
+                    <img class="follow_close" onclick="closeModalPopup()" src="{% static 'image/close_icon.svg' %}" />
                 </div>
                 <div id="follow" class="tabcontent modal_content_box">
                     {% for follower in host_follower %}
@@ -496,7 +458,6 @@
                         value="{{my_sand_sum.amount__sum}}"></meter>
                     {% endif %}
                 </div>
-                <label for="value_low">모래포인트</label>
                 <!-- 모래포인트, 레벨 영역 끝 -->
                 <div class="follow_area">
                     <div class="follow_btn_area">

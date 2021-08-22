@@ -290,84 +290,45 @@
             followModal.style.display = 'none';
     })
 </script> 
-<!-- 팔로우 모달 창 뜨기 -->
+
 <script>
+    // 팔로잉 버튼 눌렀을 때 모달창 뜨기
+    // follow와 follower뜨는 모달창 (공통) : 전역변수로.
+    const followModal = document.querySelector('.follow_modal');
+    const followBody = document.querySelector('.follow_body');
+    const closeModal = document.querySelector('.follow_close');
+
+
     function followModalPopup() {
-        let followModal = document.querySelector('.follow_modal');
-        let followBody = document.querySelector('.follow_body');
-        let closeModal = document.querySelector('.follow_close');
+        followModal.style.display = 'flex';
+        body.style.overflow = 'hidden';
+        followBody.style.display = 'block';
+        }
 
-        let followOpenPopup = document.querySelector('.follow_btn');
-
-        followOpenPopup.addEventListener('click', () => {
-            followModal.style.display = 'flex';
-            followBody.style.display = 'block';
-        });
-
-        closeModal.addEventListener('click', () => {
-            followModal.style.display = 'none';
-        })
-    }
-</script>
-<!-- 팔로워 모달창 뜨기 -->
-<script>
+// 팔로워 버튼 눌렀을 때 모달창 뜨기
     function followerModalPopup() {
-        let followerModal = document.querySelector('.follow_modal');
-        let followerBody = document.querySelector('.follow_body');
-        let closeModal = document.querySelector('.follow_close');
-
-        let FollowerOpenPopup = document.querySelector('.my_follower_btn');
-
-        FollowerOpenPopup.addEventListener('click', () => {
-            followerModal.style.display = 'flex';
-            body.style.overflow = 'hidden';
-            followerBody.style.display = 'block';
-        });
-
-        closeModal.addEventListener('click', () => {
-            followerModal.style.display = 'none';
-            body.style.overflow = 'auto';
-        })
+        followModal.style.display = 'flex';
+        body.style.overflow = 'hidden';
+        followBody.style.display = 'block';
     }
-</script>
-<script>
+// 팔로우 모달창 닫기 - 이거는 하나면 끝! 모달창이 공통이기 때문
+    function closeModalPopup() {
+        followModal.style.display = 'none';
+        body.style.overflow = 'auto';
+    }
+
+// 다른유저 프로필에서 팔로잉 버튼 눌렀을 때
     function otherFollowModalPopup() {
-        let followModal = document.querySelector('.follow_modal');
-        let followBody = document.querySelector('.follow_body');
-        let closeModal = document.querySelector('.follow_close');
-
-        let otherFollowOpenPopup = document.querySelector('.other_follow_btn');
-
-        otherFollowOpenPopup.addEventListener('click', () => {
-            followModal.style.display = 'flex';
-            body.style.overflow = 'hidden';
-            followBody.style.display = 'block';
-        });
-
-        closeModal.addEventListener('click', () => {
-            followModal.style.display = 'none';
-            body.style.overflow = 'auto';
-        })
+        followModal.style.display = 'flex';
+        body.style.overflow = 'hidden';
+        followBody.style.display = 'block';
     }
-</script>
-<script>
+
     function otherFollowerModalPopup() {
-        let followModal = document.querySelector('.follow_modal');
-        let followBody = document.querySelector('.follow_body');
-        let closeModal = document.querySelector('.follow_close');
 
-        let otherFollowerOpenPopup = document.querySelector('.other_follower_btn');
-
-        otherFollowerOpenPopup.addEventListener('click', () => {
-            followModal.style.display = 'flex';
-            body.style.overflow = 'hidden';
-            followBody.style.display = 'block';
-        });
-
-        closeModal.addEventListener('click', () => {
-            followModal.style.display = 'none';
-            body.style.overflow = 'auto';
-        })
+        followModal.style.display = 'flex';
+        body.style.overflow = 'hidden';
+        followBody.style.display = 'block';
     }
 </script>
 {% endblock script %}
@@ -410,7 +371,7 @@
                 <div class="tab">
                     <button class="tablinks follower_btn" onclick="openList(event, 'following')">팔로잉</button>
                     <button class="tablinks following_btn" onclick="openList(event, 'follow')">팔로워</button>
-                    <img class="follow_close" src="{% static 'image/close_icon.svg' %}" />
+                    <img onclick="closeModalPopup()" class="follow_close" src="{% static 'image/close_icon.svg' %}" />
                 </div>
                 <div id="follow" class="tabcontent modal_content_box">
                     {% for follower in host_follower %}
@@ -446,7 +407,6 @@
     </div>
     <!-- 내 마이페이지 -->
     <div class="first_container my_container">
-
         <div class="profile_container">
             {% if request.user.pk == host.pk %}
             <div class="profile_area">
@@ -474,10 +434,8 @@
                             {% endif %}
                         </div>
                     </div>
-
                 </div>
                 <div class="sand_level_area">
-
                     <div class="level_badge">
                         <a href="#" class="badge_img">
                             {% if host.user_level == 0 %}
@@ -498,9 +456,7 @@
                             <img src="{% static 'image/building.png' %}" style="height: 24px;">
                             <span class="sand_level">Lv. {{host.user_level}} 아파트</span>
                             <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
-
                             {% endif %}
-                            
                         </a>
                     </div>
                 </div>
@@ -595,24 +551,22 @@
                     <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500"
                         value="{{my_sand_sum.amount__sum}}"></meter>
                     {% elif host.user_level == 1 %}
-                    <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500"er id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000"
-                        value="{{my_sand_sum.amount__su
+                    <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500"
                         value="{{my_sand_sum.amount__sum}}"></meter>
                     {% else%}
-                    <metm}}"></meter>
+                    <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000"
+                        value="{{my_sand_sum.amount__sum}}"></meter>
                     {% endif %}
                 </div>
             </div>
             <div class="follow_area">
                 <div class="follow_btn_area">
-                    <button onclick="otherFollowModalPopup()" class="other_follow_btn">팔로잉 {{ host_following|length }}</button>
-                    <button onclick="otherFollowerModalPopup()" class="other_follower_btn">팔로워 {{ host_follower|length }}</button>
+                    <button class="other_follow_btn" onclick="otherFollowModalPopup()" >팔로잉 {{ host_following|length }}</button>
+                    <button class="other_follower_btn" onclick="otherFollowerModalPopup()">팔로워 {{ host_follower|length }}</button>
                 </div>
             </div>
             {% endif %}
         </div>
-
-
         <div class="btn_list_area">
             <a href="{% url 'users:my_posts' host.id %}" class="list_btn" id="log_folder_btn" value="{{host.id}}">삽질 기록 디렉토리
                 모음</a>
