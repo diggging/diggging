@@ -19,7 +19,7 @@
             </h3>
         </div>
         <div class="desc_card">
-            <img src="{% static 'image/Javascript.png' %}">
+            <img src="{% static 'image/roll_1.jpg' %}">
             <h3>자바스크립트 잡히지 않는 비동기</h3>
             <h4>Uncaught TypeError: Cannot read property 'addEventListener' of null at anonymous 
                 addEventListener는 HTML DOM의 method 중 하나이기 때문에 객체 요소가 반드시 필요하다. ...
@@ -55,4 +55,32 @@
         attachInfiniteScroll(bottomSentinal, scrollElement, baseUrl);
     })
 </script>
+<script>
+    var title = ["파이썬 범위 에러", "자바 직렬화 에러","자바스크립트 잡히지 않는 비동기"];
+    var desc = [`IndexError: list index out of range 
+    범위를 벗어난 index에 접근하려하는 경우 발생하는 오류`,`nvalidClassException
+    직렬화 런타임이, 클래스에 도착해 다음의 문제의 어떤 것인지를 검출했을 때에 슬로우 됩니다`];
+    var counter = 0;
+    var inst = setInterval(change, 2000);
+
+    function change() {
+    document.getElementById("changeText").innerHTML = 
+    `<h3>text[counter]</h3>
+    <h4>desc[counter]</h4>`;
+    counter++;
+    if (counter >= text.length) {
+        counter = 0;
+        };
+    };
+    </script>
+    <script>
+        $(document).ready(function(){
+            var roll =1;
+            setInterval(function(){
+                roll++;
+                if(roll>4){roll=1;}
+                $("#roll").attr("src","image/roll_"+roll+".jpg");
+            },2000);
+        });
+    </script>
 {% endblock %}
