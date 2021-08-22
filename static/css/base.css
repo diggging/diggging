@@ -146,8 +146,8 @@
     text-align: center;
     width: 2.5rem;
     height: 2.5rem;
-    background-size: contain;
     border-radius: 6.25rem;
+    object-fit: cover;
 }
 
 .user_name {
