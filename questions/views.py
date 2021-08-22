@@ -8,10 +8,6 @@ from django.shortcuts import get_object_or_404, render, redirect
 from .models import Question_post, Answer, QuestionFolder
 from users.models import Sand, Alarm
 from django.views.decorators.csrf import csrf_exempt
-
-
-# from django.core import serializers
-# from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse  # , JsonResponse
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
@@ -37,7 +33,7 @@ def question_main(request):
     languages = [langs[0] for langs in Question_post.language_choices]
     search = request.POST.getlist("answers[]")
     str_search = "".join(search)
-    answer = Answer.objects.all()
+    answer = Answer.objects.filter(user=request.user).values()
 
     # 지수가 필요해서 넣은 것 : 질문 관련 폴더
     # 질문 모음

@@ -14,7 +14,7 @@
         const elements = document.getElementsByTagName("INPUT");
         for (var i = 0; i < elements.length; i++) {
             elements[i].oninvalid = function(e) {
-                e.target.setCustomValidity("빈칸 없이 모두 입력해주세욧!");
+                e.target.setCustomValidity("이곳을 입력해주세요!");
                 if (!e.target.validity.valid) {
                     e.target.
                     e.target.setCustomValidity("");
@@ -29,37 +29,26 @@
 <body>
     <div class="container">
         <div class="form_container">
-            <div class="login_top">
-                <a href="{% url 'main' %}" class="login_logo">
-                    <img class="login_logo" src="{% static 'image/login_logo.png' %}">
-                </a>
-                <div class="question_box">
-                    <span class="login_question">
-                        <h4>회원이 아닌가요?</h4>
-                        <a href="{% url 'users:signup' %}">회원가입하기</a>
-                    </span>
-                    <span class="login_question">
-                        <h4>비밀번호를 잊었나요?</h4>
-                        <a href="{% url 'users:password_reset' %}">비밀번호 찾기</a>
-                    </span>
-                </div>
+            <div class="login_text">
+                로그인
             </div>
+
+            <a href="{% url 'main' %}" class="login_logo">삽질모음.TXT</a>
 
             <div class="login_middle">
                 <form action="" method="post" autocomplete="off" required>
                     {% csrf_token %}
-                    <div class="login_input">
+                    
+                    <div class="login_container">
                         <div class="input_id">
-                            <span class="input_label">아이디</span>
                             {{ form.username }}
                         </div>
-                    </div>
-                    <div class="login_input">
                         <div class="input_password">
-                            <span class="input_label">비밀번호</span>
                             {{ form.password }}
                         </div>
+                        <button class="login_btn" type="submit">로그인하기</button>
                     </div>
+
                     <div class="error_message">
                         {% if form.non_field_errors %}
                             <span>{{form.non_field_errors}}</span>
@@ -68,15 +57,41 @@
                             <span>{{form.password.errors}}</span>
                         {% endif %} -->
                     </div>
-                    <button class="login_btn" type="submit">로그인하기</button>
+
                 </form>
             </div>
-            <div class="login_bottom">
-                <a href=" {% provider_login_url 'naver' %}">네이버 로그인</a>
-                {% include 'users/github_login.html' %}              
+
+            <div class="social_login">
+                <span>SNS 로그인</span>
+                <div class="social_login_container">
+                    <a class="github" href="{% url 'users:github_login' %}">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M28.5714 0H3.42857C1.53571 0 0 1.53571 0 3.42857V28.5714C0 30.4643 1.53571 32 3.42857 32H28.5714C30.4643 32 32 30.4643 32 28.5714V3.42857C32 1.53571 30.4643 0 28.5714 0ZM19.8071 27.4071C19.2071 27.5143 18.9857 27.1429 18.9857 26.8357C18.9857 26.45 19 24.4786 19 22.8857C19 21.7714 18.6286 21.0643 18.1929 20.6929C20.8357 20.4 23.6214 20.0357 23.6214 15.4714C23.6214 14.1714 23.1571 13.5214 22.4 12.6857C22.5214 12.3786 22.9286 11.1143 22.2786 9.47143C21.2857 9.16429 19.0143 10.75 19.0143 10.75C18.0714 10.4857 17.05 10.35 16.0429 10.35C15.0357 10.35 14.0143 10.4857 13.0714 10.75C13.0714 10.75 10.8 9.16429 9.80714 9.47143C9.15714 11.1071 9.55714 12.3714 9.68572 12.6857C8.92857 13.5214 8.57143 14.1714 8.57143 15.4714C8.57143 20.0143 11.2357 20.4 13.8786 20.6929C13.5357 21 13.2286 21.5286 13.1214 22.2857C12.4429 22.5929 10.7071 23.1214 9.67143 21.2929C9.02143 20.1643 7.85 20.0714 7.85 20.0714C6.69286 20.0571 7.77143 20.8 7.77143 20.8C8.54286 21.1571 9.08571 22.5286 9.08571 22.5286C9.77857 24.65 13.0929 23.9357 13.0929 23.9357C13.0929 24.9286 13.1071 26.5429 13.1071 26.8357C13.1071 27.1429 12.8929 27.5143 12.2857 27.4071C7.57143 25.8286 4.27143 21.3429 4.27143 16.1C4.27143 9.54286 9.28571 4.56429 15.8429 4.56429C22.4 4.56429 27.7143 9.54286 27.7143 16.1C27.7214 21.3429 24.5214 25.8357 19.8071 27.4071ZM12.8 23.0429C12.6643 23.0714 12.5357 23.0143 12.5214 22.9214C12.5071 22.8143 12.6 22.7214 12.7357 22.6929C12.8714 22.6786 13 22.7357 13.0143 22.8286C13.0357 22.9214 12.9429 23.0143 12.8 23.0429ZM12.1214 22.9786C12.1214 23.0714 12.0143 23.15 11.8714 23.15C11.7143 23.1643 11.6071 23.0857 11.6071 22.9786C11.6071 22.8857 11.7143 22.8071 11.8571 22.8071C11.9929 22.7929 12.1214 22.8714 12.1214 22.9786ZM11.1429 22.9C11.1143 22.9929 10.9714 23.0357 10.85 22.9929C10.7143 22.9643 10.6214 22.8571 10.65 22.7643C10.6786 22.6714 10.8214 22.6286 10.9429 22.6571C11.0857 22.7 11.1786 22.8071 11.1429 22.9ZM10.2643 22.5143C10.2 22.5929 10.0643 22.5786 9.95714 22.4714C9.85 22.3786 9.82143 22.2429 9.89286 22.1786C9.95714 22.1 10.0929 22.1143 10.2 22.2214C10.2929 22.3143 10.3286 22.4571 10.2643 22.5143ZM9.61429 21.8643C9.55 21.9071 9.42857 21.8643 9.35 21.7571C9.27143 21.65 9.27143 21.5286 9.35 21.4786C9.42857 21.4143 9.55 21.4643 9.61429 21.5714C9.69286 21.6786 9.69286 21.8071 9.61429 21.8643V21.8643ZM9.15 21.1714C9.08572 21.2357 8.97857 21.2 8.9 21.1286C8.82143 21.0357 8.80714 20.9286 8.87143 20.8786C8.93571 20.8143 9.04286 20.85 9.12143 20.9214C9.2 21.0143 9.21429 21.1214 9.15 21.1714ZM8.67143 20.6429C8.64286 20.7071 8.55 20.7214 8.47143 20.6714C8.37857 20.6286 8.33571 20.55 8.36429 20.4857C8.39286 20.4429 8.47143 20.4214 8.56429 20.4571C8.65714 20.5071 8.7 20.5857 8.67143 20.6429Z" fill="#FFD358"/>
+                        </svg>                        
+                    </a>
+                    <a class="naver" href=" {% provider_login_url 'naver' %}">
+                        <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="33" height="32" rx="2" fill="#FFD358"/>
+                            <path d="M13.2282 8H6.875V23.8261H13.2282V15.913L18.7528 23.8261H25.106V8H18.7528V15.913L13.2282 8Z" fill="white"/>
+                        </svg>    
+                    </a>
+                </div>
             </div>
+
+            <div class="login_question_none">
+                <h4>회원이 아닌가요?</h4>
+                <a href="{% url 'users:signup' %}">
+                    회원가입하기
+                </a>
+            </div>
+            <div class="login_question_forget">
+                <h4>비밀번호를 잊었나요?</h4>
+                <a href="{% url 'users:password_reset' %}">비밀번호 찾기</a>
+            </div>
+
         </div>
     </div>
 </body>
 </html>
+
 

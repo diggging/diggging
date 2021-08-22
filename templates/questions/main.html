@@ -181,9 +181,9 @@
                 <button class="accordion">내가 남긴 답변</button>
                 <div class="panel answerabc">
                     {% for answers in answer %}
-                    {{answers.user}}
-                    {{answers.title}}
-                    {{answers.desc}}
+		    user : {{request.user}} |
+                    제목 : {{answers.title}} |
+                    내용 : {{answers.desc}}
                     <br />
                     {% endfor %}
                 </div>

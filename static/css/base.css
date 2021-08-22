@@ -52,30 +52,61 @@
     top: 0;
     right: 0;
     left: 0;
+    background-color: #FFFFFF;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
-    background-color: #F1EFEF;
+    padding: 0 1rem;
+    height: 4rem;
+    box-shadow: 0rem 0.25rem 0.625rem rgba(0, 0, 0, 0.05);
 }
 
+.nav_left {
+    display: flex;
+    justify-content: center;
+    margin-left: 3.125rem;
+
+}
 .nav_search {
     margin-left: 1rem;
 }
-.nav_search img{
-    width: 2rem;
+.nav_search > svg{
+    width: 1.4375rem;
+    height: 1.4375rem;
+    text-align: center;
+    fill: #9FAEB6;
+    margin-top: 0.1875rem;
+    margin-right: 1.5625rem;
+}
+
+.nav_search svg:hover {
+    fill: #00537A;
 }
 
 .nav_main_title {
     font-family: 'GmarketSansBold';
-    font-size: 38px;
-    color: #CEC4B3;
+    font-size: 1.375rem;
+    color: $c4c4c4;
+    text-transform: capitalize;
+    white-space: nowrap;
+    color: transparent;
+    position: absolute;
 }
+
+.nav_main_title::before{
+    content: "삽질모음.TXT";
+    position: absolute;
+    overflow: hidden;
+    color: #c4c4c4;
+    border-right: 3px solid #000000;
+    animation: typing 6s steps(8) infinite;    
+} 
 
 .nav_right {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-right: 3.125rem;
 }
 
 .nav_vertical {
@@ -84,129 +115,172 @@
 }
 
 .nav_vertical .vertical_element {
-    width: 50px;
-    height: 50px;
-    padding: 0.5rem 1rem;
+    /* padding: 0.5rem 1rem; */
     margin: 0.5rem 0.5rem;
-    background-color: #FFFFFF;
-    border-radius: 10px;
+    border-radius: 0.625rem;
     text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
-.nav_vertical div>a>i {
+.alarm svg {
     font-size: 2rem;
-    color:#CEC4B3;
+    fill:#9FAEB6;
+    cursor: pointer;
+    margin-top: 0.25rem;
+    margin-right: 0.75rem;
+}
+
+.alarm svg:hover {
+    fill: #00537A;
+}
+
+.alarmToggle {
+    font-family: 'Pretendard-SemiBold';
 }
 
 .nav_vertical h6 {
     font-family: var(--btn-font);
-    font-size: 12px;
-    color: #A9A59F;
+    font-size: 1rem;
+    color: #9FAEB6;
+    line-height: 1.188rem;
 }
 
-.user_btn {
-    text-align: center;
-    width: 60px;
+.nav_vertical h6:hover {
+    color: #00537A;
 }
 
-.user_btn h6 {
+.vertical_element > .document {
     font-family: var(--btn-font);
-    font-size: 12px;
-    color: #A9A59F;
+    font-size: 1rem;
+    color: #00537A;
+    line-height: 1.188rem;
+}
+
+.user_img {
+    text-align: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-size: contain;
+    border-radius: 6.25rem;
+}
+
+.user_name {
+    font-family: var(--btn-font);
+    font-size: 0.75rem;
+    color: #FFBA42;
+    margin: 0;
+}
+
+.toggle_container {
+    display: flex;
 }
 
 .toggle_btn {
-    width: 50px;
-    height: 50px;
-    padding: 0.5rem 1rem;
-    margin: 0.5rem 0.5rem;
     background-color: #FFFFFF;
-    border-radius: 10px;
+    border-radius: 0.625rem;
     text-align: center;
+    padding: 0.3125rem;
     border: none;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    color: #9FAEB6;
 }
 
-.toggle_btn img {
-    width: 2.3rem; 
-    height: 2.3rem;
+.toggle_btn:hover {
+    color: #00537A;
+}
+
+.toggle_btn i{
+    padding: 0.625rem;
 }
 
 .toggle {
     position: absolute;
-    top: 104px;
-    right: 16px;
+    top: 4rem;
+    right: 4.8125rem;
     flex-direction: column;
     background: white;
-    /* border: solid 1px var(--text-color); */
+    /* border: solid 0.0625rem var(--text-color); */
     line-height: 1.3125rem;
-    border-radius: 4px;
+    border-radius: 0.25rem;
     padding: 0.4rem 0.8rem;
     flex-direction: column;
     font-size: 0.875rem;
     font-family: var(--btn-font);
     text-decoration: none;
-    box-shadow: rgb(0 0 0 / 3%) 0px 4px 16px 0px;
+    box-shadow: 0.25rem 0.25rem 0.25rem rgba(0, 0, 0, 0.05);
     transition: box-shadow 0.25s ease-in 0s, transform 0.25s ease-in 0s;
     display: flex;
 }
 
 .toggle a {
-    color: #A9A59F;
-    padding-bottom: 5px;
+    color: #9FAEB6;
+    padding-bottom: 0.3125rem;
     padding: 0.5rem 1.5rem;
 }
 
+.toggle a:hover {
+    color: #00537A;
+}
+
 .toggle a:not(:nth-child(3)) {
-    border-bottom: solid 1px #CEC4B3;
+    border-bottom: solid 0.0625rem #9FAEB6;
 }
 
 .alarm_toggle {
     position: absolute;
-    top: 104px;
-    right: 237px;
+    top: 4rem;
+    right: 10.625rem;
     background: white;
     line-height: 1.3125rem;
-    border-radius: 4px;
-    padding: 0.4rem 0.8rem;
+    border-radius: 0.5rem;
+    padding: 0.4rem 1rem;
     flex-direction: column;
     font-size: 0.875rem;
-    font-family: var(--btn-font);
+    font-family: 'Pretendard-SemiBold';
+    color: #00537A;
     text-decoration: none;
-    box-shadow: rgb(0 0 0 / 3%) 0px 4px 16px 0px;
+    box-shadow: 0.25rem 0.25rem 0.25rem rgba(0, 0, 0, 0.05);
     transition: box-shadow 0.25s ease-in 0s, transform 0.25s ease-in 0s;
-    width: 344px;
-    height: 232px;
+    width: 21.5rem;
+    height: 14.5rem;
     overflow-y: scroll;
 }
 
 .alarm_toggle::-webkit-scrollbar {
-    width: 10px;
+    width: 0.625rem;
 }
 .alarm_toggle::-webkit-scrollbar-thumb {
-    background-color: var(--border-color);
-    border-radius: 10px;
+    background-color: white;
+    border-radius: 0.625rem;
     background-clip: padding-box;
-    border: 2px solid transparent;
+    border: 0.125rem solid transparent;
 }
 .alarm_toggle::-webkit-scrollbar-track {
     background-color: white;
-    border-radius: 10px;
-    box-shadow: inset 0px 0px 5px white;
+    border-radius: 0.625rem;
+    box-shadow: inset 0rem 0rem 0.3125rem white;
 }
 
 .alarm_toggle > .alarm_element {
     width: 100%;
-    border-bottom: solid 1px #CEC4B3;
-    color: #A9A59F;
-    padding: 15px;
-    margin: 0px;
-    border-radius: 0px;
+    border-bottom: solid 0.0625rem #b7c6ce;
+    color: #00537A;
+    padding: 0.9375rem;
+    margin: 0rem;
+    border-radius: 0rem;
     text-align: left;
 }
 
+@keyframes typing{
+    0%{
+        width: 0%;
+    }
+    50%{
+        width: 100%;
+    }
+    100%{
+        width: 0%;
+    }
+}
