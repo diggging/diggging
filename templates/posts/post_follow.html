@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% block content %}
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <div class="main_container">
     <div class="service_desc">
         <div class="desc">
@@ -79,10 +80,10 @@ addEventListener는 HTML DOM의 method 중 하나이기 때문에 객체 요소�
             setInterval(function(){
                 roll++;
                 if(roll>3){roll=1;}
-		    var str = "/static/image/roll_" +roll+ ".jpg";
-		    document.getElementById("roll").src = str;
+            var str = "/static/image/roll_" +roll+ ".jpg";
+            document.getElementById("roll").src = str;
 		    //$('#roll').attr("src","/static/image/roll_"+roll+".jpg");
-            },2000);
+            },2500);
         });
     </script>
 {% endblock %}
