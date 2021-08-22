@@ -67,6 +67,7 @@
 
 html, body {
     background: #FFD358;
+    font-family: 'Pretendard-Regular';
 }
 
 .flex_row {
@@ -208,8 +209,8 @@ html, body {
 }
 
 .login_btn:hover {
-    background: white;
-    color: #FFBA42;
+    background: #FFBA42;
+    color: white;
     border: 0.125rem solid #FFBA42;
 }
 
@@ -227,14 +228,27 @@ html, body {
     font-family: 'Pretendard-SemiBold';
 }
 
+.social_login svg rect:hover {
+    fill:#FFBA42;
+}
+
 .github {
     text-decoration: none;
+}
+
+.github svg:hover {
+    fill:#FFBA42;
 }
 
 .naver {
     margin-left: 1.8125rem;
     margin-right: 0.3125rem;
     text-decoration: none;
+}
+
+.login_question_none h4,
+.login_question_forget h4 {
+    line-height: 2rem;
 }
 
 .login_question_none,
@@ -250,6 +264,7 @@ html, body {
     color: #585858;
     font-size: 1rem;
     line-height: 1.4375rem;
+    font-family: "Pretendard-SemiBold";
 }
 
 .login_question_none > a,
@@ -265,6 +280,5 @@ html, body {
     text-decoration: underline;
     text-underline-position: under;
 }
-
 
 

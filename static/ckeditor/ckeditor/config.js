@@ -11,3 +11,4 @@ CKEDITOR.editorConfig = function( config ) {
 };
 
 CKEDITOR.config.autoParagraph = false;
+

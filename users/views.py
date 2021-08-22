@@ -42,6 +42,8 @@ my_site = Site.objects.get(pk=1)
 my_site.domain = '13.124.23.247:8000'
 my_site.name ="digging_main"
 my_site.save()
+
+@csrf_exempt
 def signup(request):
     if request.method == "POST":
         user_form = UserCustomCreationForm(request.POST)
@@ -63,8 +65,6 @@ def signup(request):
             email.send()
 
             # user가 생기자마자 바로 해결, 미해결 폴더 만들기
-            solved = Folder.objects.create(folder_user=user, folder_name="해결", folder_kind="solved")
-            not_solved = Folder.objects.create(folder_user=user, folder_name="미해결", folder_kind="solved")
             # return HttpResponse('Please confirm your email address to complete the registration') -> 이메일 인증 성공 확인 가능 메세지
 
             return redirect('users:login')
@@ -87,11 +87,12 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-        return HttpResponse('Thank you for your email confirmation. Now you can login your account')
+        return redirect("users:my_page", user.id)
     else:
         return HttpResponse('Activation link is invalid!')
 
 # 로그인
+@csrf_exempt
 def log_in(request):
     context = {}
     if request.method == "POST":
@@ -228,8 +229,6 @@ def github_callback(request):
                         )
                         user.set_unusable_password()
                         user.save()
-                        solved = Folder.objects.create(folder_user=user, folder_name="해결", folder_kind="solved")
-                        not_solved = Folder.objects.create(folder_user=user, folder_name="미해결", folder_kind="solved")
                     login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                     ctx = {
                         'user': user
