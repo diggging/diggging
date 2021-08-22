@@ -90,10 +90,11 @@
                     <a href="{% url 'question:question_post_detail' answers.question.user.id answers.question.id %}">
                         <div class="my_answer_list">
                             <div class="my_answer_title_box">
-                                <span class="my_answer_title">{{answers.title}}</span>
+                                <span class="my_answer_title">{{answers.title|truncatechars:20}}</span>
                                 <span class="my_answer_questioner">{{answers.user}}님의 질문</span>
                             </div>
-                            <div class="my_answer_desc">{{answers.desc}}</div>
+                            <div class="my_answer_desc">{{answers.desc|safe}}</div>
+                            <span>{{answers.desc.image}}</span>
                         </div>
                     </a>
                     {% endfor %}
