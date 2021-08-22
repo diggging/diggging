@@ -73,6 +73,10 @@ code {
 }
 
 
+.btn {
+    opacity: 0;
+}
+
 .input_container {
     width: 100%;
     height: 350px;

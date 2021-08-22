@@ -44,7 +44,7 @@ meter {
     height: 2.2rem;
     width: 22rem;
     cursor: pointer;
-  }
+}
 
 meter::-webkit-meter-bar {
     width: 100%;
@@ -87,8 +87,8 @@ meter::-webkit-meter-low-value {
 
 /* 포인트 modal scroll 커스텀 */
 .modal_content_box::-webkit-scrollbar{ 
-    width: 14px; }
-
+    width: 14px; 
+}
 
 /* 스크롤바 막대 설정*/ 
 .modal_content_box::-webkit-scrollbar-thumb{ 
@@ -192,7 +192,7 @@ meter::-webkit-meter-low-value {
     position: relative;
     right: 16px;
 }
-   
+
 .follow_modal {
     z-index: 1000;
     position: fixed;
@@ -278,7 +278,33 @@ meter::-webkit-meter-low-value {
     overflow-y: scroll;
 }
 
+.follow {
+    font-family: 'Pretendard-SemiBold';
+    color: #00537A;
+    border: 0.0625rem solid #00537A;
+    border-radius: 1.25rem;
+    background: white;
+    cursor: pointer;
+    font-size: 0.875rem;
+    margin-left: 20px;
+    width: 122px;
+    height: 33px;
+    padding: 6px 6px 6px 10px;
+}
 
+.follow:hover {
+    color: white;
+    background: #00537A;
+}
+
+.margin_top {
+    margin-top: 1.6875rem;
+    margin-bottom: 0.625rem;
+}
+
+.margin_bottom {
+    display: flex;
+}
 
 .following_btn {
     border-top-right-radius:20px;
@@ -370,6 +396,7 @@ meter::-webkit-meter-low-value {
     padding: 4rem 1.75rem 1.75rem 1.75rem;
     border-top: none;
     border-bottom: none;
+    height: 100%;
 }
 
 .right_container {
@@ -430,7 +457,7 @@ meter::-webkit-meter-low-value {
     width: 100%;
     height: 13.75rem;
     border-bottom: 0.0625rem solid #E5E5E5;
-    padding: 50px 24px 14px 24px;
+    padding: 3.125rem 1.5rem 0.875rem 1.5rem;
 }
 
 .post_title {
@@ -447,6 +474,7 @@ meter::-webkit-meter-low-value {
     font-size: 0.875rem;
     line-height: 1.5rem;
     margin-bottom: 0.9375rem;
+    width: 100%;
 }
 
 .post desc img {
@@ -456,10 +484,28 @@ meter::-webkit-meter-low-value {
 
 .post_user {
     width: 100%;
-    height: 12.5rem;
+    height: 0.5rem;
     display: flex;
     justify-content: flex-end;
-    justify-content: flex-end;
+}
+
+.post_created {
+    margin-right: auto;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: #00537A;
+}
+
+.post_created:visited {
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: #00537A;
+}
+
+.data_none {
+    font-size: 1.125rem;
+    line-height: 1rem;
+    color: #00537A;
 }
 
 .scrap_num {
@@ -521,6 +567,8 @@ meter::-webkit-meter-low-value {
 
 .sand_level_area {
     margin-top: 3.125rem;
+    display: flex;
+    align-items: center;
 }
 .profile_container {
     display: flex;
@@ -713,7 +761,7 @@ meter::-webkit-meter-low-value {
 }
 
 #github_chart_1 svg {
-    height: 14rem;
+    height: 16rem;
     margin: auto;
     /* width: 16.375rem; */
     padding: auto;
@@ -726,11 +774,37 @@ meter::-webkit-meter-low-value {
 }
 
 
-
 /* --------------------디렉토리 영역 ------------------*/
-#desc_img {
-    display: none;
-    width: 0px;
+.category_tab {
+    display: flex;
+    width: 100%;
+    height: 9.375rem;
+    overflow-y: scroll;
+    padding: 0 0.875rem;
+    margin-top: 1rem;
+    border-bottom: solid 1px #ececec;
+    padding-bottom: 0.4rem;
+}
+
+#question_btn_tap {
+    margin-bottom: -1rem;
+    margin-left: -4.5rem;
+    width: 25rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#question_btn_tap button {
+    font-family: var(--btn-font);
+    font-size: 1rem;
+    line-height: 1.4375rem;
+    margin: -0.0625rem -0.625rem;
+    border-bottom: none;
+    border-radius: 1.25rem 1.25rem 0rem 0rem;
+    height: 2.3125rem;
+    text-align: center;
+    cursor: pointer;
 }
 
 #btn_tap {
@@ -754,14 +828,14 @@ meter::-webkit-meter-low-value {
     cursor: pointer;
 }
 
-.language_btn {
+.language_btn, .question_language_btn {
     background: #FFD358;
     color: white;
     border: 0.125rem solid white;
     padding: 0.5rem 2.625rem 0.5rem 1.8125rem;
 }
 
-.framework_btn {
+.framework_btn, .question_framework_btn {
     background-color: #FFD358;
     color: white;
     border: 0.125rem solid white;
@@ -775,12 +849,14 @@ meter::-webkit-meter-low-value {
     padding: 0.5rem 2.625rem 0.5rem 1.9375rem;
 }
 
-.language_btn:hover {
+.language_btn:hover,
+.question_language_btn:hover {
     color: white;
     background: #FFBA42;
 }
 
-.framework_btn:hover {
+.framework_btn:hover,
+.question_framework_btn:hover {
     color: white;
     background: #FFBA42;
 }
@@ -939,6 +1015,7 @@ meter::-webkit-meter-low-value {
 }
 
 .level_badge {
+    width: 100%;
     margin: 0.375rem 0;
 }
 

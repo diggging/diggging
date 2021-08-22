@@ -79,7 +79,7 @@
                 var wrap_chart = _this;
 
                 settings.colors_length = settings.colors.length;
-                var radius = settings.border.radius;
+                var radius = 5;
                 var hoverColor = settings.border.hover_color;
                 var clickCallback = settings.click;
 
@@ -124,10 +124,10 @@
                     var color = getColor(count);
 
                     var y = start_date.getDay() * step;
-                    item_html += '<rect class="day" width="11" height="11" y="' + y + '" fill="' + color + '" data-count="' + count + '" data-date="' + data_date + '" rx="' + radius + '" ry="' + radius + '"/>';
-
+                    item_html += '<circle class="day" width="11" height="11" cy="' + y + '" fill="' + color + '" data-count="' + count + '" data-date="' + data_date + '" r="' + radius + '"/>';
+                                
                     if (start_date.getDay() == 6) {
-                        item_html += "</g>";
+                        item_html += "</g>";    
                         loop_html += item_html;
 
                         item_html = null;
@@ -146,17 +146,15 @@
                 for (var i = 0; i < month_position.length; i++) {
                     var item = month_position[i];
                     var month_name = settings.month_names[item.month_index];
-                    loop_html += '<text x="' + item.x + '" y="-5" class="month">' + month_name + '</text>';
+                    loop_html += '<text x="' + item.x + '" y="-10" class="month">' + month_name + '</text>';
                 }
 
                 //Add Monday, Wenesday, Friday label
-                loop_html += '<text text-anchor="middle" class="wday" dx="-10" dy="22">{0}</text>'.formatString(settings.h_days[0]) +
-                    '<text text-anchor="middle" class="wday" dx="-10" dy="48">{0}</text>'.formatString(settings.h_days[1]) +
-                    '<text text-anchor="middle" class="wday" dx="-10" dy="74">{0}</text>'.formatString(settings.h_days[2]);
+                
 
                 //Fixed size for now with width= 721 and height = 110
                 var wire_html =
-                    '<svg viewBox="0 0 721 110"  class="js-calendar-graph-svg">' +
+                    '<svg viewBox="0 0 500 110"  class="js-calendar-graph-svg">' +
                     '<g transform="translate(20, 20)">' +
                     loop_html +
                     '</g>' +
@@ -178,8 +176,8 @@
                     $(this).attr("style", "stroke-width:0");
                 });
 
-                _this.find('rect').on("mouseenter", mouseEnter);
-                _this.find('rect').on("mouseleave", mouseLeave);
+                _this.find('circle').on("mouseenter", mouseEnter);
+                _this.find('circle').on("mouseleave", mouseLeave);
                 appendTooltip();
 
             }
@@ -196,14 +194,14 @@
                 var date = $(evt.target).attr('data-date');
 
                 var count_text = (count > 1) ? settings.texts[1] : settings.texts[0];
-                var text = "{0} {1} on {2}".formatString(count, count_text, date);
+                var text = "{2} {1} {0}알".formatString(count, count_text, date);
 
                 var svg_tip = $('.svg-tip').show();
                 svg_tip.html(text);
                 var svg_width = Math.round(svg_tip.width() / 2 + 5);
                 var svg_height = svg_tip.height() * 2 + 10;
 
-                svg_tip.css({ top: target_offset.top - svg_height - 5 });
+                svg_tip.css({ top: target_offset.top - svg_height });
                 svg_tip.css({ left: target_offset.left - svg_width });
             }
             //Append tooltip to display when mouse enter the rect element
@@ -215,16 +213,16 @@
             }
 
             var settings = $.extend({
-                colors: ['#eeeeee', '#d6e685', '#8cc665', '#44a340', '#44a340'],
+                colors: ['#eeeeee', '#ffd358', '#ffc74d', '#ffc048', '#ffba42'],
                 border: {
                     radius: 2,
-                    hover_color: "#999"
+                    hover_color: "#eeeeee"
                 },
                 click: null,
                 start_date: null,
                 //List of name months
-                month_names: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                h_days: ['M', 'W', 'F'],
+                month_names: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+                h_days: ['월', '일', 'F'],
                 //Default is empty, it can be overrided
                 data: [],
             }, options);
@@ -268,9 +266,10 @@
         $('#github_chart_1').github_graph({
             //Generate random entries from 50-> 200 entries
             data: getRandomTimeStamps(50, 500, start_date, false),
-            texts: ['completed task', 'completed tasks']
+            texts: ['모래', '모래']
         });
     });
+
 </script>
 <script>
     const modal = document.querySelector('.point_modal');
@@ -403,7 +402,7 @@
             <!--Tab Content follow-->
             <div id="follow" class="tabcontent">
                 <div class="follow_count">
-                    <h3>{{host.username}}님을 팔로우하는 사람 </h3>
+                    <h3>{{host.user_nickname}}님을 팔로우하는 사람 </h3>
                     <h3>{{ host_follower.count }}명</h3>
                 </div>
                 {% for follower in host_follower %}
@@ -415,7 +414,7 @@
                     {% endif %}
                     <div class="flex_col">
                         <h3>{{follower.user_level}}</h3>
-                        <h3>{{ follower.username }}</h3>
+                        <h3>{{ follower.user_nickname }}</h3>
                     </div>
                     <div class="follow_desc">
                         <h3>{{ follower.email }}</h3>
@@ -426,7 +425,7 @@
             <!--Tab content follow-->
             <div id="following" class="tabcontent">
                 <div class="following_count">
-                    <h3>{{host.username}}님이 팔로우하는 사람</h3>
+                    <h3>{{host.user_nickname}}님이 팔로우하는 사람</h3>
                     <h3>{{host_following.count}}명</h3>
                 </div>
                 {% for following in host_following %}
@@ -438,7 +437,7 @@
                     {% endif %}
                     <div class="flex_col">
                         <h3>{{following.user_level}}</h3>
-                        <h3>{{following.username}}</h3>
+                        <h3>{{following.user_nickname}}</h3>
                     </div>
                     <div class="following_desc">
                         <h3>{{following.email}}</h3>
@@ -465,7 +464,7 @@
                     {% endif %}
 
                     <div class="flex_col">
-                        <span class="user_nickname">{{ request.user.username }}
+                        <span class="user_nickname">{{ request.user.user_nickname }}
                             <span class="user_nickname_span">님의 모래상자</span>
                         </span>
 
@@ -505,49 +504,22 @@
                             <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
 
                             {% endif %}
-                            <!-- 레벨 기준 알려주는 모달창 -->
-                            <div class="level_modal">
-                                <div class="desc_box">
-                                    <div class="level_list">
-                                        <img src="{% static 'image/sandbox.png' %}" style="height: 16px;">
-                                        <span>Lv.맨바닥</span>
-                                        <p>모래 포인트 2000미만</p>
-                                    </div>
-                                    <div class="level_list">
-                                        <img src="{% static 'image/sand-castle.png' %}" style="height: 16px;">
-                                        <span>Lv.모래성</span>
-                                        <p>모래 포인트 2000이상 7000미만</p>
-                                    </div>
-                                    <div class="level_list">
-                                        <img src="{% static 'image/home.png' %}" style="height: 16px;">
-                                        <span>Lv.벽돌집</span>
-                                        <p>모래 포인트 7000이상 18000미만</p>
-                                    </div>
-                                    <div class="level_list">
-                                        <img src="{% static 'image/building.png' %}" style="height: 16px;">
-                                        <span>Lv.아파트</span>
-                                        <p>모래 포인트 18000이상</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- 레벨 기준 모달창 끝 -->
+                            
                         </a>
                     </div>
-
-                    <div class="point_gage">
-                        {% if host.user_level == 0 %}
-                        <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500"
-                            value="{{my_sand_sum.amount__sum}}"></meter>
-                        {% elif host.user_level == 1 %}
-                        <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500"
-                            value="{{my_sand_sum.amount__sum}}"></meter>
-                        {% else%}
-                        <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000"
-                            value="{{my_sand_sum.amount__sum}}"></meter>
-                        {% endif %}
-                    </div>
                 </div>
-
+                <div class="point_gage">
+                    {% if host.user_level == 0 %}
+                    <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500"
+                        value="{{my_sand_sum.amount__sum}}"></meter>
+                    {% elif host.user_level == 1 %}
+                    <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500"
+                        value="{{my_sand_sum.amount__sum}}"></meter>
+                    {% else%}
+                    <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000"
+                        value="{{my_sand_sum.amount__sum}}"></meter>
+                    {% endif %}
+                </div>
                 <div class="follow_area">
                     <div class="follow_btn_area">
                         <label for="value_low">모래포인트</label>
@@ -560,24 +532,81 @@
             </div>
             {% else %}
             <!-- 다른유저 마이페이지 -->
-            <div class="profile_area">
-                <h1> {{ host.user_nickname}}님의 모래상자 </h1>
-            </div>
-            <a href='{% url "users:follow" host.id %}'>팔로우하기</a>
-            <div>
-                <label for="value_low">{{user.user_point}} 모래포인트</label>
-                <!-- value값이 내 모래포인트에 따라서 반영되어야함. max기준도 레벨에 따라 바뀌어야함.(아직구현X) -->
-                {% if host.user_level == 0 %}
-                    <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500"
-                    value="{{my_sand_sum.amount__sum}}"></meter>
-                {% elif host.user_level == 1 %}
-                    <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500"
-                    value="{{my_sand_sum.amount__sum}}"></meter>
+            <div class="profile_username">
+                {% if host.user_profile_image %}
+                <span class="profile_image">
+                    <img src="{{ host.user_profile_image.url}}">
+                </span>
                 {% else %}
-                <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000"
-                    value="{{my_sand_sum.amount__sum}}"></meter>
+                <i class="fas fa-user-circle fa-3x"></i>
                 {% endif %}
-                
+
+                <div class="flex_col">
+                    <span class="user_nickname">{{ host.user_nickname }}
+                        <span class="user_nickname_span">님의 모래상자</span>
+                    </span>
+
+                    <div class="proflie_text">
+                        {% if request.user.user_profile_content %}
+                        {{request.user.user_profile_content}}
+                        {% else %}
+                        <p>
+                            아직 자기소개가 없습니다.
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+            <div class="margin_top">
+                <div class="margin_bottom">
+                    <div class="sand_level_area">
+
+                        <div class="level_badge">
+                            <a href="#" class="badge_img">
+                                {% if host.user_level == 0 %}
+                                <img src="{% static 'image/sandbox.png' %}" style="height: 24px;">
+                                <span class="sand_level">Lv. {{host.user_level}} 맨바닥</span>
+                                <span class="sand_point">{{my_sand_sum.amount__sum}}모래</span>
+                                {% elif host.user_level == 1 %}
+                                <img src="{% static 'image/sand-castle.png' %}" style="height: 24px;">
+                                <span class="sand_level">Lv. {{host.user_level}} 모래성</span>
+                                <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
+    
+                                {% elif host.user_level == 2 %}
+                                <img src="{% static 'image/home.png' %}" style="height: 24px;">
+                                <span class="sand_level">Lv. {{host.user_level}} 벽돌집</span>
+                                <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
+    
+                                {% else %}
+                                <img src="{% static 'image/building.png' %}" style="height: 24px;">
+                                <span class="sand_level">Lv. {{host.user_level}} 아파트</span>
+                                <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
+    
+                                {% endif %}
+                                
+                            </a>
+                        </div>
+                        {% if user.is_authenticated %}
+                        <a class="follow" href='{% url "users:follow" host.id %}'>팔로우하기</a>
+                    {% else%}
+                        <a class="follow" href='{% url "users:login" %}'>팔로우하기</a>
+                    {% endif %}
+                    </div>
+                </div>
+                <!-- value값이 내 모래포인트에 따라서 반영되어야함. max기준도 레벨에 따라 바뀌어야함.(아직구현X) -->
+                <div class="point_gage">
+                    {% if host.user_level == 0 %}
+                    <meter id="value_low" min="0" max="2000" low="500" high="1000" optimum="1500"
+                        value="{{my_sand_sum.amount__sum}}"></meter>
+                    {% elif host.user_level == 1 %}
+                    <meter id="value_low" min="2000" max="7000" low="4000" high="4000" optimum="5500"
+                        value="{{my_sand_sum.amount__sum}}"></meter>
+                    {% else%}
+                    <meter id="value_low" min="7000" max="18000" low="10000" high="13000" optimum="16000"
+                        value="{{my_sand_sum.amount__sum}}"></meter>
+                    {% endif %}
+                </div>
             </div>
             <div class="proflie_text">
                 {% if request.user.user_profile_content %}
@@ -600,7 +629,7 @@
             <a href="{% url 'users:my_posts' host.id %}" class="list_btn" id="log_folder_btn" value="{{host.id}}">삽질 기록 디렉토리
                 모음</a>
             <a href="{% url 'users:my_questions' host.id %}" class="list_btn" id="question_folder_btn"
-                value="{{host.id}}">질문 모음</a>
+                value="{{host.id}}" style="color: #00537A;">질문 모음</a>
             {% if request.user.pk == host.pk %}
             <a href='{% url "users:account_detail" host.id %}' class="list_btn">계정 관리</a>
             {% else %}
@@ -624,9 +653,9 @@
         </div>
     </div>
     <div class="right_container">
-        <div id="btn_tap">
-            <button id="btn1" class="language_btn" value="{{host.id}}">언어</button>
-            <button id="btn3" class="framework_btn" value="{{host.id}}">프레임워크</button>
+        <div id="question_btn_tap">
+            <button id="btn1" class="question_language_btn" value="{{host.id}}">언어</button>
+            <button id="btn3" class="question_framework_btn" value="{{host.id}}">프레임워크</button>
         </div>
         <div class="second_container">
             <div class="category_tab">
