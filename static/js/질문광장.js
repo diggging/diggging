@@ -1,11 +1,15 @@
 // 언어별 폴더
 const categoryTab = document.querySelector('.folder_area');
 const langBtn = document.querySelector('.language_btn');
+const frameworkBtn = document.querySelector('.framework_btn');
 
 //폴더 뜨는 버튼
 langBtn.addEventListener('click', () => {
+    langBtn.style.background = "#FFBA42";
+    frameworkBtn.style.background = "#FFD358";
+
     id =langBtn.value;
-    var a = "http://127.0.0.1:8000/questions/" + id
+    var a = "http://13.124.23.247:8000/questions/" + id
     var url = a + "/questions_lang_folder/"
     
     fetch(url, {
@@ -19,14 +23,16 @@ langBtn.addEventListener('click', () => {
     .then(data => {
 
         if (data.length === 0) {
-            categoryTab.innerHTML = "폴더없음"
+            categoryTab.innerHTML = ""
         } else {
             const txt = data.map(folder => {
                 return `
                 <button class="lang_post_btn" id="${folder.id}" value="${folder.id}">
-                    <i class="far fa-folder folder_icon fa-3x"></i>
-                    ${folder.folder_name}
-                </button>    
+                    <svg width="60" height="44" viewBox="0 0 60 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M54.375 7.33333H31.875L24.375 0H5.625C2.51836 0 0 2.4624 0 5.5V38.5C0 41.5376 2.51836 44 5.625 44H54.375C57.4816 44 60 41.5376 60 38.5V12.8333C60 9.79573 57.4816 7.33333 54.375 7.33333Z" fill="#FFE59C"/>
+                    </svg>
+                    <div class="folder_name">${folder.folder_name}</div>
+                </button>     
                 `
             }).join('')
             categoryTab.innerHTML = txt;
@@ -43,7 +49,7 @@ const langPost = () => {
         langPostBtn[i].addEventListener('click', () => {
 
             id =langPostBtn[i].value;
-            var a = "http://127.0.0.1:8000/questions/" + id
+            var a = "http://13.124.23.247:8000/questions/" + id
             var url = a + "/questions_lang_post/"
             fetch(url, {
                 method: "GET",
@@ -54,15 +60,48 @@ const langPost = () => {
             })
             .then(res => res.json())
             .then(data => {
-                console.log(id)
+                
+                let desc = [];
+                for(j=0; j < data.data.length; j++) {
+                    if(data.data[j].desc.length > 150) {
+                        desc[j] = data.data[j].desc.slice(0, 40)
+                        data.data[j].desc = desc[j]
+                    }
+                }
+                const extractTextPattern = /(<([^>]+)>)/gi;
+
+                let replaceDesc = [];
+                for(k=0; k < desc.length; k++) {
+                    replaceDesc[k] = desc[k].replace(extractTextPattern, "")
+                }
+
                 if (data.length === 0) {
-                    noAnswerListBox.innerHTML = "파일없음"
+                    noAnswerListBox.innerHTML = ""
                 } else {
-                    const txt = data.map(post => {
+                    const txt = data.data.map(post => {
+                        let img = "/media/" + post.image
                         return `
-                        ${post.image}
-                        ${post.title}
-                        ${post.desc}
+                        <a href="http://13.124.23.247:8000/questions/${post.user_id}/${post.id}/detail">
+                            <div class="no_answer_list_json" value="">
+                                <div class="no_answer_titlebox">
+                                    <div class="no_answer_title">${post.title}</div>
+                                    <a href="http://13.124.23.247:8000/users/${post.user_id}/my_page/" class="">
+                                        <div class="no_user_info">
+                                            <span class="no_answer_username_json">${data.user[0]}</span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <span class="no_answer_desc">${post.desc}</span>
+                                <span class="no_answer_category">
+                                    <span>${post.language}</span>
+                                    <span>${post.framework}</span>
+                                    <span>${post.os}</span>
+                                    <div class="no_answer_created">
+                                        <h5>${post.created}</h5>
+                                    </div>
+                                </span>
+                            </div>
+                        </a>
                         `
                     }).join('')
                     noAnswerListBox.innerHTML = txt;
@@ -75,10 +114,11 @@ const langPost = () => {
 
 //프레임 워크
 //폴더 뜨는 버튼
-const frameworkBtn = document.querySelector('.framework_btn');
     frameworkBtn.addEventListener('click', () => {
+        langBtn.style.background = "#FFD358";
+        frameworkBtn.style.background = "#FFBA42";
         id =frameworkBtn.value;
-        var a = "http://127.0.0.1:8000/questions/" + id
+        var a = "http://13.124.23.247:8000/questions/" + id
         var url = a + "/questions_framework_folder/"
         
         fetch(url, {
@@ -91,13 +131,15 @@ const frameworkBtn = document.querySelector('.framework_btn');
         .then(res => res.json())
         .then(data => {
             if (data.length === 0) {
-                categoryTab.innerHTML = "폴더없음"
+                categoryTab.innerHTML = ""
             } else {
                 
                 const txt = data.map(folder => {
                     return `
                     <button class="framework_post_btn" id="${folder.id}" value="${folder.id}">
-                        <i class="far fa-folder folder_icon fa-3x"></i>
+                    <svg width="60" height="44" viewBox="0 0 60 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M54.375 7.33333H31.875L24.375 0H5.625C2.51836 0 0 2.4624 0 5.5V38.5C0 41.5376 2.51836 44 5.625 44H54.375C57.4816 44 60 41.5376 60 38.5V12.8333C60 9.79573 57.4816 7.33333 54.375 7.33333Z" fill="#FFE59C"/>
+                    </svg>
                         ${folder.folder_name}
                     </button>    
                     `
@@ -115,7 +157,7 @@ const framePost = () => {
         framePostBtn[i].addEventListener('click', () => {
 
             id =framePostBtn[i].value;
-            var a = "http://127.0.0.1:8000/questions/" + id
+            var a = "http://13.124.23.247:8000/questions/" + id
             var url = a + "/questions_framework_post/"
             
             fetch(url, {
@@ -128,14 +170,47 @@ const framePost = () => {
             .then(res => res.json())
             .then(data => {
 
+                let desc = [];
+                for(j=0; j < data.data.length; j++) {
+                    if(data.data[j].desc.length > 150) {
+                        desc[j] = data.data[j].desc.slice(0, 40)
+                        data.data[j].desc = desc[j]
+                    }
+                }
+                const extractTextPattern = /(<([^>]+)>)/gi;
+
+                let replaceDesc = [];
+                for(k=0; k < desc.length; k++) {
+                    replaceDesc[k] = desc[k].replace(extractTextPattern, "")
+                }
+
                 if (data.length === 0) {
-                    noAnswerListBox.innerHTML = "파일없음"
+                    noAnswerListBox.innerHTML = ""
                 } else {
-                    const txt = data.map(post => {
+                    const txt = data.data.map(post => {
+                        let img = "/media/" + post.image
                         return `
-                        ${post.image}
-                        ${post.title}
-                        ${post.desc}
+                        <a href="http://13.124.23.247:8000/questions/${post.user_id}/${post.id}/detail">
+                            <div class="no_answer_list_json" value="">
+                                <div class="no_answer_titlebox">
+                                    <div class="no_answer_title">${post.title}</div>
+                                    <a href="http://13.124.23.247:8000/users/${post.user_id}/my_page/" class="">
+                                        <div class="no_user_info">
+                                            <span class="no_answer_username_json">${data.user[0]}</span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <span class="no_answer_desc">${post.desc}</span>
+                                <span class="no_answer_category">
+                                    <span>${post.language}</span>
+                                    <span>${post.framework}</span>
+                                    <span>${post.os}</span>
+                                    <div class="no_answer_created">
+                                        <h5>${post.created}</h5>
+                                    </div>
+                                </span>
+                            </div>
+                        </a>
                         `
                     }).join('')
                     noAnswerListBox.innerHTML = txt;

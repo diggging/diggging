@@ -409,37 +409,56 @@
     </div>
     <!-- 내 마이페이지 -->
     <div class="first_container my_container">
+
         <div class="profile_container">
             {% if request.user.pk == host.pk %}
             <div class="profile_area">
                 <div class="profile_username">
-                    <img  class="profile_image"src="{{ host.user_profile_image.url}}">
+                    {% if host.user_profile_image %}
+                    <span class="profile_image">
+                        <img src="{{ host.user_profile_image.url}}">
+                    </span>
+                    {% else %}
+                    <i class="fas fa-user-circle fa-3x"></i>
+                    {% endif %}
+
                     <div class="flex_col">
                         <span class="user_nickname">{{ request.user.user_nickname }}
                             <span class="user_nickname_span">님의 모래상자</span>
                         </span>
+
+                        <div class="proflie_text">
+                            {% if request.user.user_profile_content %}
+                            {{request.user.user_profile_content}}
+                            {% else %}
+                            <p>
+                                아직 자기소개가 없습니다.
+                            </p>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
                 <div class="sand_level_area">
                     <div class="level_badge">
-                        {% if host.user_level == 0 %}
-                        <img src="{% static 'image/sandbox.png' %}" style="height: 24px;">
-                        <span class="sand_level">Lv. {{host.user_level}} 맨바닥</span>
-                        <span class="sand_point">{{my_sand_sum.amount__sum}}모래</span>
-                        {% elif host.user_level == 1 %}
-                        <img src="{% static 'image/sand-castle.png' %}" style="height: 24px;">
-                        <span class="sand_level">Lv. {{host.user_level}} 모래성</span>
-                        <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
+                        <a href="#" class="badge_img">
+                            {% if host.user_level == 0 %}
+                            <img src="{% static 'image/sandbox.png' %}" style="height: 24px;">
+                            <span class="sand_level">Lv. {{host.user_level}} 맨바닥</span>
+                            <span class="sand_point">{{my_sand_sum.amount__sum}}모래</span>
+                            {% elif host.user_level == 1 %}
+                            <img src="{% static 'image/sand-castle.png' %}" style="height: 24px;">
+                            <span class="sand_level">Lv. {{host.user_level}} 모래성</span>
+                            <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
 
-                        {% elif host.user_level == 2 %}
-                        <img src="{% static 'image/home.png' %}" style="height: 24px;">
-                        <span class="sand_level">Lv. {{host.user_level}} 벽돌집</span>
-                        <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
+                            {% elif host.user_level == 2 %}
+                            <img src="{% static 'image/home.png' %}" style="height: 24px;">
+                            <span class="sand_level">Lv. {{host.user_level}} 벽돌집</span>
+                            <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
 
-                        {% else %}
-                        <img src="{% static 'image/building.png' %}" style="height: 24px;">
-                        <span class="sand_level">Lv. {{host.user_level}} 아파트</span>
-                        <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
+                            {% else %}
+                            <img src="{% static 'image/building.png' %}" style="height: 24px;">
+                            <span class="sand_level">Lv. {{host.user_level}} 아파트</span>
+                            <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
 
                             {% endif %}
                             

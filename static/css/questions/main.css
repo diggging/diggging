@@ -86,12 +86,12 @@ h1, h2, h3, h4, h5 {
 
 meter {
     /* Reset the default appearance */
-    -webkit-appearance: none;
-    /* -moz-appearance: none; */
+    /* -webkit-appearance: none;
+    -moz-appearance: none; */
     height: 2.2rem;
     width: 22rem;
     cursor: pointer;
-  }
+}
 
 meter::-webkit-meter-bar {
     width: 100%;
@@ -135,10 +135,10 @@ meter::-webkit-meter-low-value {
 
 .right_container {
     display: flex;
-    margin-left: 20px;
+    margin-left: 1.25rem;
     flex-direction: column;
     width: 23rem;
-    margin-right: 3rem;
+    margin-right: 5rem;
     height: 11.25rem;
 }
 
@@ -172,10 +172,11 @@ meter::-webkit-meter-low-value {
 
 .no_answer_container {
     border: solid 1px #ECECEC;
-    background-color: white;
-    height: 72vh;
+    background-color: #F8F8F8;
+    height: 100%;
     max-height: 680px;
-    max-width: 840px;
+    max-width: 100%;
+    border-radius: 1.25rem 1.25rem 1.25rem 1.25rem;
 }
 
 .no_answer_list_box::-webkit-scrollbar {
@@ -190,6 +191,10 @@ meter::-webkit-meter-low-value {
     background-color: none;
 }
 
+/* .no_answer_link {
+    width: 500px;
+    height: 300px;
+} */
 
 .no_answer_titlebox {
     display: flex;
@@ -215,24 +220,52 @@ meter::-webkit-meter-low-value {
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
+    padding: 28px;
 }
 
 .no_answer_list {
     background-color: white;
     display: flex;
-    margin: 5px 0;
-    padding: 1rem 2rem;
-    height: 7.5rem;
+    margin: 10px 0;
+    padding: 36px;
+    height: 170px;
+    width: 100%;
     flex-direction: column;
     border-bottom: solid 1px #e5e5e5;
-
+    border-radius: 10px;
+    box-shadow: rgb(0 0 0 / 5%) 0px 4px 16px 0px;
+    transition: box-shadow 0.25s ease-in 0s, transform 0.25s ease-in 0s;
 }
 
-.no_answer_list:active {
+.no_answer_list_json {
+    background-color: white;
+    display: flex;
+    margin: 10px 0;
+    padding: 36px;
+    height: 180px;
+    width: 100%;
+    flex-direction: column;
+    border-bottom: solid 1px #e5e5e5;
+    border-radius: 10px;
+    box-shadow: rgb(0 0 0 / 5%) 0px 4px 16px 0px;
+    transition: box-shadow 0.25s ease-in 0s, transform 0.25s ease-in 0s;
+}
+
+
+.no_answer_list:active,
+.no_answer_list_json:active {
     background-color: rgba(98, 161, 191, 30%);
 }
 
-.no_answer_list a {
+.no_answer_list:hover,
+.no_answer_list_json:hover {
+    transform: translateY(-4px);
+    box-shadow: rgb(0 0 0 / 8%) 0px 12px 20px 0px;
+}
+
+
+.no_answer_list a,
+.no_answer_list_json a {
     text-decoration: none;
     font-size: 0.875rem;
     font-family: "Pretendard-Regular";
@@ -244,19 +277,47 @@ meter::-webkit-meter-low-value {
     flex-direction: column;
 }
 
-.no_answer_list .no_answer_desc {
+.no_answer_list .no_answer_desc,
+.no_answer_list_json .no_answer_desc {
     color: #585858;
     font-family: var(--content-font);
     font-size: .875rem;
 }
 
+.no_answer_category {
+    margin-top: 12px;
+    color: white;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+}
+
+.no_answer_category span{
+    /* height: 1.5rem; */
+    padding: 1px 8px;
+    background: #FFBA42;
+    border-radius: 1.25rem;
+    color: white;
+    margin-right: 0.625rem;
+    text-align: center;
+}
+
 .no_answer_list a:visited {
     color: #585858;
 }
+
+.no_answer_created {
+    margin-left: auto;
+}
+
 .no_answer_title {
     font-size: 1rem;
     font-family: var(--title-font);
     color: #212529;
+}
+
+.no_answer_title:hover {
+    color: #FFBA42;
 }
 
 .desc_box {
@@ -266,6 +327,13 @@ meter::-webkit-meter-low-value {
     line-height: 1.5rem;
     color: #585858;
 }
+
+.no_user_info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .no_user_info img {
     width: 2rem;
     height: 2rem;
@@ -280,6 +348,21 @@ meter::-webkit-meter-low-value {
     font-size: .8125rem;
     line-height: 1.5rem;
 
+}
+
+.no_answer_username_json {
+    font-family: var(--btn-font);
+    color: #00537A;
+    font-size: 15px;
+    line-height: 1.5rem;
+    border: 2px solid #00537A;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.no_answer_username_json:hover {
+    color: white;
+    background-color: #00537A;
 }
 
 .no_answer_username img{
@@ -302,13 +385,14 @@ meter::-webkit-meter-low-value {
 
 .recommend_container {
     margin-top: 28px;
-    max-width: 840px;
+    max-width: 100%;
     display: flex;
     flex-direction: column;
     padding: 28px;
     border: solid 1px #ececec;
-    background-color: white;
+    background-color: #F8F8F8;
     height: 80vh;
+    border-radius: 1.25rem;
 }
 
 .search_input {
@@ -320,10 +404,10 @@ meter::-webkit-meter-low-value {
 
 .checkbox {
     border: solid 2px #62A1BF;
-    border-radius: 1.25rem;
+    border-radius: 10px;
     margin-bottom: 1rem;
     padding: 1.2rem 0.8rem 1.2rem 2.6rem;
-    background-color: white;
+    background-color: #F8F8F8;
     font-family: var(--content-font);
     color: #62A1BF;
     display: flex;
@@ -359,13 +443,12 @@ meter::-webkit-meter-low-value {
     color: #62A1BF;
     border: 0.0625rem solid #62A1BF;
     border-radius: 1.25rem;
-    background: white;
+    background: #F8F8F8;
     width: 6rem;
     height: 2rem;
     cursor: pointer;
     font-size: 0.875rem;
-    position: relative;
-    left: 86%;
+    float: right;
 }
 
 #preference_btn:hover {
@@ -411,6 +494,7 @@ meter::-webkit-meter-low-value {
     border: solid 1px #E5E5E5;
     margin-bottom: 5vh;
     padding: 1.875rem 1.5rem;
+    border-radius: 0rem 1.25rem 0rem 0rem;
 
 }
 .profile_image img {
@@ -425,7 +509,7 @@ meter::-webkit-meter-low-value {
     display: flex;
     align-items: center;
     flex-direction: row;
-    margin-bottom: 5%;
+    margin-bottom: 15%;
 }
 
 .profile_username .user_nickname {
@@ -455,12 +539,15 @@ meter::-webkit-meter-low-value {
     color: #FFBA42;
 }
 
+.user_level img {
+    margin-right: 0.3125rem;
+}
+
 .point_gage {
     margin-top: 8px;
 }
 
 .point_gage meter {
-    margin-left: 10px;
     height: 2rem;
     width: 90%;
 }
@@ -468,6 +555,9 @@ meter::-webkit-meter-low-value {
 /* ----------------------------------------디렉토리영역 ---------------- */
 
 /* 카테고리 탭 */
+#btn_tab {
+    margin-right: 10px;
+}
 
 #btn_tab button {
     font-family: var(--btn-font);
