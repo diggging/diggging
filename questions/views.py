@@ -33,7 +33,7 @@ def question_main(request):
     languages = [langs[0] for langs in Question_post.language_choices]
     search = request.POST.getlist("answers[]")
     str_search = "".join(search)
-    answer = Answer.objects.filter(user=request.user).values()
+    answer = Answer.objects.filter(user=request.user)
 
     # 지수가 필요해서 넣은 것 : 질문 관련 폴더
     # 질문 모음
@@ -443,7 +443,7 @@ def question_like(request):
         post.likes_user.add(user)
         message = "좋아요"
         new_alarm = Alarm.objects.create(user=post.user, reason="내가 남긴 질문 \""+ post.title + "\" 이 " + user.user_nickname + "님께 도움이 되었어요.")
-        new_sand = Sand.objects.create(user=post.user, amount=20, reason=user.user_nickname + "님에게 내 질문이 도움이 되었어요")
+        new_sand = Sand.objects.create(user=post.user, amount=20, reason="도움이 되었어요")
     ctx = {"likes_count": post.count_likes_user(), "message": message}
     return HttpResponse(json.dumps(ctx), content_type="application/json")
 
@@ -521,12 +521,25 @@ def questions_lang_folder(request, pk):
 
     return JsonResponse(list(data), safe=False)
 
+@csrf_exempt
 def questions_lang_post(request, pk):
     folder = QuestionFolder.objects.get(pk=pk)
     posts = Question_post.objects.filter(question_folder=folder)
-    data = posts.values()
-    return JsonResponse(list(data), safe=False)
 
+    user_list = [] 
+    for post in posts: 
+        user_list.append(post.user.user_nickname)
+    
+    data = posts.values()
+
+    ctx = {
+        'user': user_list,
+        'data': list(data)
+    }
+
+    return JsonResponse(ctx, safe=False)
+
+@csrf_exempt
 def questions_framework_folder(request, pk):
     host = get_object_or_404(User, pk=pk)
     folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
@@ -534,9 +547,19 @@ def questions_framework_folder(request, pk):
     
     return JsonResponse(list(data), safe=False)
 
+@csrf_exempt
 def questions_framework_post(request, pk):
     folder = QuestionFolder.objects.get(pk=pk)
     posts = Question_post.objects.filter(question_folder=folder)
+    user_list = [] 
+    for post in posts: 
+        user_list.append(post.user.user_nickname)
+    
     data = posts.values()
 
-    return JsonResponse(list(data), safe=False)
+    ctx = {
+        'user': user_list,
+        'data': list(data)
+    }
+
+    return JsonResponse(ctx, safe=False)

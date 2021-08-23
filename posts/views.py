@@ -126,7 +126,7 @@ def post_detail(request, user_id, post_id):
     folder = post_details.folder.get(
         folder_name=post_details.language, folder_user=post_details.user
     )
-    comments = post_details.comments.all()
+    comments = post_details.comments.all().order_by('created')
 
     ctx = {
         "post": post_details,
@@ -153,7 +153,7 @@ def post_like(request):
         post.likes_user.add(user)
         message = "좋아요"
         new_alarm = Alarm.objects.create(user=post.user, reason="내가 남긴 기록 \""+ post.title + "\" 이 " + user.user_nickname + "님께 도움이 되었어요.")
-        new_sand = Sand.objects.create(user=post.user, amount=20, reason=user.user_nickname + "님에게 도움이 되었어요")
+        new_sand = Sand.objects.create(user=post.user, amount=20, reason="도움이 되었어요")
     post.helped_num = post.count_likes_user()
     post.save()
     ctx = {"likes_count": post.count_likes_user(), "message": message}
