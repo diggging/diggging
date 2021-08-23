@@ -5,7 +5,7 @@ const btnTap = document.getElementById('question_btn_tap');
 
 const langBtn = document.querySelector('.question_language_btn');
 const frameworkBtn = document.querySelector('.question_framework_btn');
-const urlName = "https://diggging.com"
+var urlName = "https://diggging.com";
 
 langBtn.addEventListener('click', () => {
     langBtn.style.background = "#FFBA42";

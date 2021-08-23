@@ -9,16 +9,18 @@ const langBtn = document.querySelector('.language_btn');
 const frameworkBtn = document.querySelector('.framework_btn');
 const problemBtn = document.querySelector('.problem_btn');
 
-const urlName = "https://diggging.com"
-
+var urlName = "https://diggging.com";
 
 langBtn.addEventListener('click', () => {
+    
     langBtn.style.background = "#FFBA42";
     frameworkBtn.style.background = "#FFD358";
     problemBtn.style.background = "#FFD358";
 
     id =langBtn.value;
-    var a = urlName+"/users/" + id
+    //var a = "https://diggging.com"+"/users/" + id
+    var a = urlName + "/users/" + id
+    console.log(urlName)
     var url = a + "/lang_folder/"
     
     fetch(url, {
@@ -343,3 +345,4 @@ const framePost = () => {
         });
     }
 }
+

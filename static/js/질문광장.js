@@ -1,7 +1,7 @@
 // 언어별 폴더
 const categoryTab = document.querySelector('.folder_area');
 const langBtn = document.querySelector('.language_btn');
-const urlName = "https://diggging.com"
+var urlName = "https://diggging.com";
 
 
 //폴더 뜨는 버튼
