@@ -442,6 +442,8 @@ def question_like(request):
     else:
         post.likes_user.add(user)
         message = "좋아요"
+        new_alarm = Alarm.objects.create(user=post.user, reason="내가 남긴 질문 \""+ post.title + "\" 이 " + user.user_nickname + "님께 도움이 되었어요.")
+        new_sand = Sand.objects.create(user=post.user, amount=20, reason=user.user_nickname + "님에게 내 질문이 도움이 되었어요")
     ctx = {"likes_count": post.count_likes_user(), "message": message}
     return HttpResponse(json.dumps(ctx), content_type="application/json")
 
@@ -471,7 +473,7 @@ def question_scrap(request, user_id, post_id):
         new_folder = QuestionFolder.objects.create(
             folder_name=target_language, folder_user=me, folder_kind="language"
         )
-        question_post.folder.add(new_folder)
+        question_post.question_folder.add(new_folder)
     question_post.save()
 
     # framework 동일
@@ -488,20 +490,9 @@ def question_scrap(request, user_id, post_id):
         new_folder = QuestionFolder.objects.create(
             folder_name=target_framework, folder_user=me, folder_kind="framework"
         )  # create - 자동저장
-        question_post.folder.add(new_folder)
+        question_post.question_folder.add(new_folder)
     question_post.save()
 
-    # 퍼가기 할 때 sand 생성하기 - host꺼 생성해줘야함
-    new_sand = Sand.objects.create(
-        user=question_post.user, amount=50, reason=me.user_nickname + "님의 내 질문 퍼가기"
-    )
-    new_alarm = Alarm.objects.create(
-        user=question_post.user,
-        reason=request.user.user_nickname
-        + " 님이 내 질문 "
-        + question_post.title
-        + "을 퍼갔어요.",
-    )
     pk = request.POST.get("pk", None)
     post = get_object_or_404(Question_post, pk=pk)
     user = request.user
@@ -511,9 +502,12 @@ def question_scrap(request, user_id, post_id):
     else:
         post.scarps_user.add(user)
         message = "퍼가기"
+        # 퍼가기 할 때 sand 생성하기 - host꺼 생성해줘야함
+        new_sand = Sand.objects.create(user=question_post.user, amount=50, reason=me.user_nickname + "님의 내 질문 퍼가기")
+        new_alarm = Alarm.objects.create(user=question_post.user,reason=request.user.user_nickname+ " 님이 내 질문 "+ question_post.title+ "을 퍼갔어요.")
+
 
     post.scrap_num = post.count_scarps_user()
-    print(post.scrap_num)
     post.save()
     ctx = {"scarps_count": post.count_scarps_user(), "message": message}
     return HttpResponse(json.dumps(ctx), content_type="application/json")

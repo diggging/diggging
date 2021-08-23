@@ -139,7 +139,6 @@ def post_detail(request, user_id, post_id):
     # html added by 종권
     return render(request, "posts/post_detail.html", ctx)
 
-
 @login_required
 @require_POST
 def post_like(request):
@@ -153,6 +152,8 @@ def post_like(request):
     else:
         post.likes_user.add(user)
         message = "좋아요"
+        new_alarm = Alarm.objects.create(user=post.user, reason="내가 남긴 기록 \""+ post.title + "\" 이 " + user.user_nickname + "님께 도움이 되었어요.")
+        new_sand = Sand.objects.create(user=post.user, amount=20, reason=user.user_nickname + "님에게 도움이 되었어요")
     post.helped_num = post.count_likes_user()
     post.save()
     ctx = {"likes_count": post.count_likes_user(), "message": message}
@@ -210,15 +211,6 @@ def post_scrap(request, user_id, post_id):
         post.folder.add(new_folder)
     post.save()
 
-    # 퍼가기 할 때 sand 생성하기 - host꺼 생성해줘야함
-    new_sand = Sand.objects.create(
-        user=post.user, amount=50, reason=me.user_nickname + "님의 내 기록 퍼가기"
-    )
-
-    # 퍼가기 -> host 에게 alarm감
-    new_alarm = Alarm.objects.create(
-        user=post_host, reason=me.user_nickname + "님이 내 기록 " + post.title + "을 퍼갔어요."
-    )
     # url: 저장 후 post_detail 페이지에 남아있음.
     pk = request.POST.get("pk", None)
     post = get_object_or_404(Post, pk=pk)
@@ -230,6 +222,11 @@ def post_scrap(request, user_id, post_id):
     else:
         post.scarps_user.add(user)
         message = "퍼가기"
+        # 퍼가기 할 때 sand 생성하기 - host꺼 생성해줘야함
+        new_sand = Sand.objects.create(user=post.user, amount=50, reason=me.user_nickname + "님의 내 기록 퍼가기")
+
+        # 퍼가기 -> host 에게 alarm감
+        new_alarm = Alarm.objects.create(user=post_host, reason=me.user_nickname + "님이 내 기록 " + post.title + "을 퍼갔어요.")
 
     post.scrap_num = post.count_scarps_user()
     post.save()

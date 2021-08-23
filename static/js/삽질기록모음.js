@@ -93,7 +93,7 @@ const langPost = () => {
                 } else {
                     const txt = data.map(post => {
                         return `
-                    <a class="post_link" href= urlName + "/posts/${post.user_id}/${post.id}/detail">
+                    <a class="post_link" href= "https://diggging.com/posts/${post.user_id}/${post.id}/detail">
                         <div class="my_post_list">
                             <div class="post_title">
                                 ${post.title}
@@ -205,7 +205,7 @@ const problemPost = () => {
                 } else {
                     const txt = data.map(post => {
                         return `
-                        <a class="post_link" href= urlName + "/posts/${post.user_id}/${post.id}/detail">
+                        <a class="post_link" href= "https://diggging.com/posts/${post.user_id}/${post.id}/detail">
                             <div class="my_post_list">
                                 <div class="post_title">
                                     ${post.title}
@@ -314,7 +314,7 @@ const framePost = () => {
                 } else {
                     const txt = data.map(post => {
                         return `
-                    <a class="post_link" href= urlName+"/posts/${post.user_id}/${post.id}/detail">
+                    <a class="post_link" href= "https://diggging.com/posts/${post.user_id}/${post.id}/detail">
                         <div class="my_post_list">
                             <div class="post_title">
                                 ${post.title}

@@ -267,7 +267,7 @@ def my_page(request, pk):
     my_recent_logs = Post.objects.filter(user=host).order_by("-created")
 
     # 모래
-    my_sand = Sand.objects.filter(user = host)
+    my_sand = Sand.objects.filter(user = host).order_by("-id")
     my_sand_sum = my_sand.aggregate(Sum('amount'))
     sands = serializers.serialize('json', my_sand)
     if my_sand_sum['amount__sum'] == None:
@@ -326,7 +326,7 @@ def my_posts(request, host_id):
     my_recent_logs = Post.objects.filter(user=host).order_by("-created")
 
     # 모래
-    my_sand = Sand.objects.filter(user = host)
+    my_sand = Sand.objects.filter(user = host).order_by("-id")
     my_sand_sum = my_sand.aggregate(Sum('amount'))
     sands = serializers.serialize('json', my_sand)
     if my_sand_sum['amount__sum'] == None:
@@ -383,7 +383,7 @@ def my_questions(request, host_id):
     my_recent_logs = Post.objects.filter(user=host).order_by("-created")
 
     # 모래
-    my_sand = Sand.objects.filter(user = host)
+    my_sand = Sand.objects.filter(user = host).order_by("-id")
     my_sand_sum = my_sand.aggregate(Sum('amount'))
     sands = serializers.serialize('json', my_sand)
     if my_sand_sum['amount__sum'] == None:
@@ -440,7 +440,7 @@ def my_answers(request, host_id):
     my_recent_logs = Post.objects.filter(user=host).order_by("-created")
 
     # 모래
-    my_sand = Sand.objects.filter(user = host)
+    my_sand = Sand.objects.filter(user = host).order_by("-id")
     my_sand_sum = my_sand.aggregate(Sum('amount'))
     if my_sand_sum['amount__sum'] == None:
         my_sand_sum = 0
@@ -597,7 +597,7 @@ def follow(request, host_pk):
 def account_detail(request, pk):
     host = get_object_or_404(User,pk=pk)
     # 모래
-    my_sand = Sand.objects.filter(user = host)
+    my_sand = Sand.objects.filter(user = host).order_by("-id")
     my_sand_sum = my_sand.aggregate(Sum('amount'))
     sands = serializers.serialize('json', my_sand)
     if my_sand_sum['amount__sum'] == None:
@@ -682,14 +682,12 @@ def change_img(request, pk):
 def alarm(request, pk):
     me = User.objects.get(id=pk)    # 누구의 alarm인지
     my_alarm = Alarm.objects.filter(user=me)    # 주인의 alarm 모두 가져오기
+    my_alarm = my_alarm.order_by("-id")
     not_check_alarm = my_alarm.filter(is_checked = False)   # 그중 False인애들 가져와서
     for alarm in not_check_alarm:
         alarm.is_checked = True
         alarm.save()
 
-    if my_alarm.count() >10:
-        start = my_alarm.count()-10
-        my_alarm = my_alarm[start:]
 
     data = serializers.serialize('json', my_alarm)
 
