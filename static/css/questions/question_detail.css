@@ -313,21 +313,18 @@ code {
 #naver_icon path:active {
     fill: white;
 }
-
+.comment_Btn,
+.like,
 .scrap {
-    background-color: white;
-    cursor: pointer;
-    padding: 0.5rem;
-    /* width: 100%; */
-    height: 50%;
-    outline: none;
-    border-radius: 8px;
-    border: none;
-    text-align: left;
-    font-size: 16px;
-    transition: 0.4s;
+    color: #212529;
     font-family: var(--btn-font);
-    color: var(--text-color);
+    background-color: white;
+    border: solid 1px #FFBA42;
+    border-radius: 1.25rem;
+    text-align: center;
+    width: 7.1875rem;
+    height: 1.875rem;
+    cursor: pointer;
 }
 
 .scrap:visited {
@@ -347,7 +344,6 @@ code {
     transition-duration: 2s;
     padding: 1.1rem;
 }
-}
 
 .scrap_popup p {
     font-size: 14px;
@@ -355,79 +351,6 @@ code {
     color: var(--text-color);
     font-family: var(--content-font);
 }
-
-/* .share_button {
-    color: var(--sand-color);
-    font-family: var(--btn-font);
-    background-color: var(--btn-color);
-    border: solid 1px var(--border-color);
-    border-radius: 4px;
-    padding: 10px 8px;
-}
-
-.share_popup {
-    position: absolute;
-    top: 50%;
-    right: 30%;
-    border-radius: 16px;
-    border: none;
-    opacity: 0;
-    visibility: hidden;
-    width: 40%;
-    height: 20%;
-    background: white;
-    box-shadow: 0 5px 10px 9px rgb(60 36 35 / 6%);
-    transition-duration: 2s;
-}
-*/
-
-/* 공유하기 아코디언 */
-.accordion {
-    background-color: cornsilk;
-    cursor: pointer;
-    padding: 0.5rem;
-    /* width: 100%; */
-    outline: none;
-    border-radius: 8px;
-    border: none;
-    text-align: left;
-    font-size: 16px;
-    transition: 0.4s;
-    font-family: var(--btn-font);
-    color: var(--text-color);
-}
-
-
-.active, .accordion:hover {
-    background-color: var(--hover-color);
-    font-weight: bold;
-}
-
-
-.accordion:after {
-    content: '\002B';
-    font-weight: bold;
-    float: right;
-    margin-left: 5px;
-}
-
-.active:after {
-    content: "\2212";
-}
-
-.panel {
-    padding: 0 16px;
-    background-color: #FFFFFF;
-    overflow: hidden;
-    transition: max-height 0.2s ease-out;
-
-    max-height: 0;
-}
-
-.panel img {
-    vertical-align: middle;
-}
-
 
 .close_btn {
     margin: 10px;
@@ -448,34 +371,6 @@ code {
     justify-content: space-evenly;
     align-items: center;
 }
-
-.accordion_area:first-child {
-    width: 15%;
-    display: flex;
-    justify-content: flex-end;
-    flex-direction: column;
-}
-
-
-.panel_down {
-    border: solid 1px #ffd358;
-    width: 300px;
-    padding: 6px 8px;
-    margin-left: -14px;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    width: 200px;
-}
-
-
-.panel_down span {
-    vertical-align: middle;
-}
-
-
-
 
 .profile_username {
     display: flex;
@@ -679,7 +574,6 @@ code {
     border: solid 1px #FFBA42;
     border-radius: 1.25rem;
     text-align: center;
-    /* width: 10.5rem; */
     height: 1.875rem;
     cursor: pointer;
     padding: 4px 14px;

@@ -25,23 +25,20 @@
                 </div>
             </div>
             <!-- 제목영역 끝 -->
+            <!-- 글에 대한 버튼영역 -->
+            <div class="scrap_popup" style="opacity: 0;" >
+                <p>언어📁 {{post.language}} 프레임워크📁 {{post.framework}}으로 퍼왔습니다.
+                마이페이지에서 확인해보세요!</p>
+            </div>
             <div class="accordion_area">
                 {% if not request.user.id == post.user.id %}
-                <div class="post_{{post.id}}">
-                    <div class="scrap_popup" style="opacity: 0;" >
-                        <p>언어📁 {{post.language}} 프레임워크📁 {{post.framework}}으로 퍼왔습니다.
-                        마이페이지에서 확인해보세요!</p>
-                    </div>
-                    <div class="scrap_box">
-                        <button name="{{ post.id }}" class="scarp-{{ post.id }} scrap" id="scrap_btn"value="scrap">
-                            <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M13.369 2H7.83703L5.99302 0H1.38301C0.619183 0 0 0.671562 0 1.5V10.5C0 11.3284 0.619183 12 1.38301 12H13.369C14.1329 12 14.7521 11.3284 14.7521 10.5V3.5C14.7521 2.67156 14.1329 2 13.369 2ZM10.603 7.25C10.603 7.52625 10.3967 7.75 10.142 7.75H8.06753V10C8.06753 10.2763 7.86123 10.5 7.60653 10.5H7.14553C6.89082 10.5 6.68452 10.2763 6.68452 10V7.75H4.61002C4.35531 7.75 4.14902 7.52625 4.14902 7.25V6.75C4.14902 6.47375 4.35531 6.25 4.61002 6.25H6.68452V4C6.68452 3.72375 6.89082 3.5 7.14553 3.5H7.60653C7.86123 3.5 8.06753 3.72375 8.06753 4V6.25H10.142C10.3967 6.25 10.603 6.47375 10.603 6.75V7.25Z" fill="#FFBA42"/>
-                            </svg>                                
-                            <span>
-                                퍼가기&nbsp&nbsp{{ post.scarps_user.all.count }}
-                            </span>
-                        </button>
-                    </div>
+                <div class="post_{{post.id}} scrap_box">
+                    <button name="{{ post.id }}" class="scarp-{{ post.id }} scrap" id="scrap_btn"value="scrap">
+                        <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.369 2H7.83703L5.99302 0H1.38301C0.619183 0 0 0.671562 0 1.5V10.5C0 11.3284 0.619183 12 1.38301 12H13.369C14.1329 12 14.7521 11.3284 14.7521 10.5V3.5C14.7521 2.67156 14.1329 2 13.369 2ZM10.603 7.25C10.603 7.52625 10.3967 7.75 10.142 7.75H8.06753V10C8.06753 10.2763 7.86123 10.5 7.60653 10.5H7.14553C6.89082 10.5 6.68452 10.2763 6.68452 10V7.75H4.61002C4.35531 7.75 4.14902 7.52625 4.14902 7.25V6.75C4.14902 6.47375 4.35531 6.25 4.61002 6.25H6.68452V4C6.68452 3.72375 6.89082 3.5 7.14553 3.5H7.60653C7.86123 3.5 8.06753 3.72375 8.06753 4V6.25H10.142C10.3967 6.25 10.603 6.47375 10.603 6.75V7.25Z" fill="#FFBA42"/>
+                        </svg>                                
+                        <span>퍼가기&nbsp&nbsp{{ post.scarps_user.all.count }}</span>
+                    </button>
                 </div>
                 <div class="post_{{post.id}}">
                     <div>
@@ -56,8 +53,12 @@
                     </div>
                 </div>
                 {% endif %}
+                <!-- 댓글창열기 버튼 -->
+                <a href="javascript:doDisplay();" class="comment_btn">
+                    <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12.3529 0H1.76471C0.79136 0 0 0.672617 0 1.49991V8.24952C0 9.07681 0.79136 9.74943 1.76471 9.74943H4.41177V11.7181C4.41177 11.9477 4.72059 12.0813 4.93842 11.9454L8.38235 9.74943H12.3529C13.3263 9.74943 14.1176 9.07681 14.1176 8.24952V1.49991C14.1176 0.672617 13.3263 0 12.3529 0Z" fill="#FFBA42"/>
+                    </svg> 댓글 {{comments.count}}</a>
                 <!-- 공유하기 버튼영역 -->
-                <a href="javascript:doDisplay();" class="comment_btn">댓글 {{comments.count}}</a>
                 <div class="share_box">
                     <span class="sociallink ml-1" id="facebook_icon">
                         <a href="javascript:sendLinkFacebook()" title="페이스북으로 공유">
@@ -91,7 +92,6 @@
                     </span>
                 </div>
                 <!-- 공유하기버튼 영역 끝 -->
-               
             </div>
             <!-- 수정, 삭제하기 버튼 : 작성자에게만 뜬다 -->
             {% if request.user.id == post.user.id %}
@@ -346,27 +346,7 @@
         };
     };
 
-        // <div class='comment_id_${comment.id}'>
-        //     <div class="comment_info">
-        //         <div class="comment_profile">
-        //             <img src="{{comment.user.user_profile_image.url}}">
-        //             <span class="user_nicknamme">
-        //             {{comment.user.user_nickname}}
-        //             </span>
-        //         </div>
-        //         <div class="comment_content">
-        //             <div class="comment_created">
-        //                 {{comment.created}}
-        //             </div>
-        //             <div class="comment_text">
-        //                 ${text}
-        //             </div>
-        //         </div>
-        //     </div>
-        //     <div class="delete_btn">
-        //         <button onclick="onClickDelete(${id}, ${comment.id})">삭제</button>
-        //     </div>
-        // </div>
+
 
         //-------------------------------------------------------------------------------------------
       // 질문 코멘트 삭제 부분
@@ -521,6 +501,7 @@
 
         // <!-- 좋아요 , 스크랩 버튼 바뀐것 -->
 
+
         // function sendLinkFacebook(){
         // var facebook_share_url = "https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}";
         // window.open(facebook_share_url,
@@ -579,96 +560,56 @@ $(".scrap").click(function () { // .scarp 버튼을 클릭 감지
 })
 
 
-        // 채택팝업
-        // let answers = {{post_answers|safe}};
-        
-        const answerChoicePopup = (id) => {
-            console.log(id)
-            const answers = {{ answers| safe }};
-            let body = document.querySelector('body');
+// 채택팝업
+// let answers = {{post_answers|safe}};
 
-            let modalBody = document.querySelector(`.choice_modal_body_${id}`);
-            let modalDelete = document.querySelector(`.modal_delete_${id}`);
-            let noSelect = document.querySelector(`.no_select_${id}`);
+const answerChoicePopup = (id) => {
+    console.log(id)
+    const answers = {{ answers| safe }};
+    let body = document.querySelector('body');
 
-            if (modalBody.style.visibility === "hidden") {
-                modalBody.style.visibility = "visible"
-                modalBody.style.opacity = "1"
-            } else {
-                modalBody.style.visibility = "hidden"
-                modalBody.style.opacity = "0"
-            };
-            
-            modalDelete.addEventListener('click', () => {
-                modalBody.style.visibility = "hidden";
-                modalBody.style.opacity = "0"
-            });
+    let modalBody = document.querySelector(`.choice_modal_body_${id}`);
+    let modalDelete = document.querySelector(`.modal_delete_${id}`);
+    let noSelect = document.querySelector(`.no_select_${id}`);
+
+    if (modalBody.style.visibility === "hidden") {
+        modalBody.style.visibility = "visible"
+        modalBody.style.opacity = "1"
+    } else {
+        modalBody.style.visibility = "hidden"
+        modalBody.style.opacity = "0"
+    };
     
-            noSelect.addEventListener('click', () => {
-                modalBody.style.visibility = "hidden";
-                modalBody.style.opacity = "0"
-            });
-        }
-
-
-// ---------------------------퍼오기 팝업창 ---------------
-function scrapPopup() {
-    let scrapButton = document.querySelector('#scrap_btn');
-    let scrapBody = document.querySelector('.share_popup');
-    let closeBtn = document.querySelector('.close_btn');
-
-    shareButton.addEventListener('click', () => {
-        if (sharePopup.style.opacity === "0") {
-            sharePopup.style.opacity = "1"
-            sharePopup.style.visibility = "visibile"
-        } else {
-            sharePopup.style.opacity = "0"
-            sharePopup.style.visibility = 'hidden'
-        }
+    modalDelete.addEventListener('click', () => {
+        modalBody.style.visibility = "hidden";
+        modalBody.style.opacity = "0"
     });
 
-    closeBtn.addEventListener('click', () => {
-        sharePopup.style.opacity = "0"
-        sharePopup.style.visibility = "hidden"
+    noSelect.addEventListener('click', () => {
+        modalBody.style.visibility = "hidden";
+        modalBody.style.opacity = "0"
     });
 }
 
-// -----------------------------공유하기 팝업
-// function sharePopup() {
-//     let shareButton = document.querySelector('.share_button');
-//     let popupBody = document.querySelector('.share_popup');
-//     let closeBtn = document.querySelector('.close_btn');
+const scrapPopup = document.querySelector('.scrap_popup')
+const scrapButton = document.querySelector('.scrap');
 
-//     shareButton.addEventListener('click', () => {
-//         if (sharePopup.style.opacity === "0") {
-//             sharePopup.style.opacity = "1"
-//             sharePopup.style.visibility = "visibile"
-//         } else {
-//             sharePopup.style.opacity = "0"
-//             sharePopup.style.visibility = 'hidden'
-//         }
-//     });
+scrapButton.addEventListener('click', () => {
+    if (scrapPopup.style.opacity === "0") {
+        scrapPopup.style.opacity = "1";
+        scrapPopup.style.visibility = "visibile";
+    } else {
+        scrapPopup.style.opacity = "0"
+    }
+});
 
-//     closeBtn.addEventListener('click', () => {
-//         sharePopup.style.opacity = "0"
-//         sharePopup.style.visibility = "hidden"
-//     });
-// }
-// var acc = document.getElementsByClassName("accordion");
-// var i;
-// for (i = 0; i < acc.length; i++) {
-//     acc[i].addEventListener("click", function () {
-//         this.classList.toggle("active");
-//         var panel = this.nextElementSibling;
-//         if (panel.style.maxHeight) {
-//             panel.style.maxHeight = null;
-//         } else {
-//             panel.style.maxHeight = panel.scrollHeight + "px";
-//         }
-//     });
-// }
-// -------------------------------
+scrapPopup.addEventListener('click', () => {
+    scrapPopup.style.opacity = "0";
+    scrapPopup.style.visibility = "hidden";
+})
+</script>
 
+<script>
 function sendLinkFacebook() {
     var facebook_share_url = "https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}";
     window.open(facebook_share_url,
@@ -692,4 +633,5 @@ function sendLinkNaver() {
         'scrollbars=no, width=500, height=500');
 }
 </script>
+
 {% endblock script %}
