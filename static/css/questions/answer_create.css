@@ -58,7 +58,7 @@ form {
     align-items: center;
     background: #FFFFFF;
     box-sizing: border-box;
-    box-shadow: 0.75rem 0.75rem 3.75rem 0.5rem rgba(0, 0, 0, 0.2);
+    box-shadow: .75rem 0.75rem 2.5rem 0rem rgb(0 0 0 / 8%);
     border-radius: 1.25rem;
     width: 950px;
     margin: auto;

@@ -58,14 +58,16 @@
 
 code {
     font-family: var(--coding-font);
-    background-color: #fee5ce;
-    border-radius: .625rem;
+    background-color: lavender;
+    color: #00537A;
+    border-radius: .5rem;
     font-weight:500;
 }
 
 
 ::-webkit-scrollbar {
     height: 10px;
+    width: 8px;
 }
 ::-webkit-scrollbar-thumb {
     height: 4px;
@@ -82,32 +84,41 @@ code {
     margin-left: auto;
     margin-right: auto;
     margin-top: 5.5rem;
+    margin-bottom: 60px;
     display:flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
 }
 
-
-.thumbnail_area {
-    border-radius: 1.25rem 1.25rem 1rem 1rem;
-    border-bottom: none;
-    height: 25rem; 
+.thumbnail_area{
+    width: 768px;
+    border-radius: 20px 20px 0px 0px;
+    /* border-bottom: none; */
+    height: 25rem;
     max-width: 48rem;
-    display: flex;
-    justify-content: center;
-    object-fit: contain;
-    margin-bottom: 1.5rem;
+    /* display: flex; */
+    /* justify-content: center; */
+    object-fit: cover;
+    margin-bottom: 24px;
+}
+
+.thumbnail_box {
+    width: 768px;
+    object-fit: cover;
+    border-radius: 20px 20px 0px 0px;
+}
+.content_box {
+    padding: 1.875rem;
 }
 
 .post_container {
     max-width: 48rem;
-    padding: 1.875rem;
     display: flex;
     justify-content: center;
     box-sizing: border-box;
     border-radius: 1.25rem;
-    box-shadow: .75rem 0.75rem 2.5rem 0rem rgb(0 0 0 / 8%);
+    box-shadow: 0.75rem 0.75rem 3.75rem 0.2rem rgb(0 0 0 / 8%);
     flex-direction: column;
 }
 
@@ -115,8 +126,7 @@ code {
     font-size: 2.25rem;
     line-height: 3rem;
     color: #212529;
-    margin-bottom: 0.375rem;
-    /* height: 6rem; */
+    margin-bottom: 2rem;
 }
 
 .created_date {
@@ -162,14 +172,25 @@ code {
 
 .profile_username {
     display: flex;
-    flex-direction: row;
-    border-bottom: solid 1px #ececec;
+    align-items: center;
     border-top: solid 1px #ececec;
+    border-bottom: solid 1px #ececec;
+    margin-bottom: 1.25rem;
+    width: 42.375rem;
+    height: 9.0625rem;
+    display: flex;
+    flex-direction: row;
+    padding: 1.875rem;
 }
 
 .user_nickname {
-    margin-left: 20px;
+    font-family: 'Pretendard-SemiBold';
+    margin-left: 0.625rem;
+    margin-bottom: 0.625rem;
+    color: #00537A;
+    font-size: 1rem;
 }
+
 
 .post_user_info img {
     height: 36px;
@@ -178,20 +199,12 @@ code {
     margin: 10px;
 }
 
-.user_nickname {
-    display: flex;
-    align-items: center;
-}
-
 .auth_btn_area {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.auth_btn_area > div {
-    padding: 20px;
-}
 
 .auth_btn_area a {
     padding: 10px 14px;
@@ -284,10 +297,10 @@ code {
 }
 
 .accordion_area {
+    margin-bottom: 1.4rem;
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
-    padding-bottom: 1rem;
+    align-items: center;
 }
 
 #facebook_icon > a > svg > path {
@@ -313,8 +326,7 @@ code {
 #naver_icon path:active {
     fill: white;
 }
-.comment_Btn,
-.like,
+.comment_btn,
 .scrap {
     color: #212529;
     font-family: var(--btn-font);
@@ -327,23 +339,84 @@ code {
     cursor: pointer;
 }
 
+.scrap > svg, .comment_btn > svg {
+    margin-right: 0.3125rem;
+}
+
+.like {
+    color: #212529;
+    font-family: var(--btn-font);
+    background-color: white;
+    border: solid 1px #FFBA42;
+    border-radius: 1.25rem;
+    text-align: center;
+    width: 10.5rem;
+    height: 1.875rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    margin-right: 0.4rem;
+    margin-left: 0.4rem;
+}
+
+.comment_btn > svg {
+    vertical-align: middle;
+}
+
+.like > svg,
+.scrap > svg {
+    vertical-align: middle;
+}
+
+.scrap > svg,
+.btn_toggle > svg {
+    margin-right: 0.3125rem;
+}
+
+.scrap span,
+.btn_toggle span {
+    text-align: center;
+}
+
+.scrap_counts {
+    margin-left: 0.3125rem;
+}
+
 .scrap:visited {
     background-color: var(--hover-color);
 }
 
-.scrap_popup {
-    vertical-align: middle;
-    float: left;
-    position: relative;
-    top: -10px;
-    border: solid 1.5px #FFD358;
-    /* opacity: 0; */
-    /* visibility: hidden; */
-    width: 300px;
-    height: 80px;
-    transition-duration: 2s;
-    padding: 1.1rem;
+.like > svg {
+    margin-right: 0.3125rem;
 }
+
+.like span {
+    text-align: center;
+}
+
+.like:hover {
+    background-color: #FFBA42;
+    color: white;
+    border: solid 0.0625rem white;
+}
+
+
+
+
+
+
+
+.scrap_popup {
+    position: relative;
+    top: 50%;
+    opacity: 0;
+    /* visibility: hidden; */
+    width: 18.75rem;
+    height: 5rem;
+    background: rgb(231, 231, 230);
+    border: solid 0.0625rem var(--border-color);
+    transition-duration: 2s;
+}
+
 
 .scrap_popup p {
     font-size: 14px;
@@ -351,6 +424,9 @@ code {
     color: var(--text-color);
     font-family: var(--content-font);
 }
+
+
+
 
 .close_btn {
     margin: 10px;
@@ -362,6 +438,8 @@ code {
     color: var(--sand-color);
     display: inline-block;
 }
+
+
 
 .share_box {
     display: flex;
@@ -375,7 +453,9 @@ code {
 .profile_username {
     display: flex;
     align-items: center;
-    padding: 1.75rem 1.5rem 1.5rem 1.5rem;
+    border-top: solid 1px #ececec;
+    border-bottom: solid 1px #ececec;
+    margin-bottom: 2rem;
 }
 
 .profile_image {
@@ -386,6 +466,7 @@ code {
     align-items: center;
     margin-right: 1rem;
     margin-right: 1.5rem;
+    object-fit: cover;
 }
 
 .profile_image img {
@@ -410,6 +491,14 @@ code {
 }
 
 /* ----------------------------------댓글영역 -------------------------------- */
+
+
+.comment {
+    font-size: 0.875rem;
+    line-height: 1rem;
+    text-align: right;
+    color: #00537A;
+}
 
 .addComment > div {
     padding: 1.125rem 1.875rem 1.125rem 1.875rem;
@@ -575,6 +664,7 @@ code {
     border-radius: 1.25rem;
     text-align: center;
     height: 1.875rem;
+    line-height: 1.2rem;
     cursor: pointer;
     padding: 4px 14px;
     font-size: .75rem;
@@ -607,6 +697,30 @@ code {
 
 
 /* 답변 영역 */
+
+.answer_btn {
+    margin: 3.75rem auto;
+    font-family: var(--btn-font);
+    background-color: #FFE59C;
+    border-radius: 1.25rem;
+    color: #212529;
+    padding: 0;
+    width: 12.5rem;
+    height: 3.5rem;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 3.5rem;
+    font-size: 18px;
+}
+
+.answer_btn:hover {
+    background-color: #FFD358;
+}
+
+.answer_btn:active {
+    background-color: #FFBA42;
+}
+
 .answer_area {
     display: flex;
     align-items: center;
@@ -655,4 +769,11 @@ code {
 .modal_delete {
     width: 20px;
     height: 20px;
+}
+
+.answer_selected {
+    color: #00537A;
+    background-color: #CFF0F4;
+    border-radius: 3rem;
+    display: inline;
 }

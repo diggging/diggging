@@ -91,7 +91,7 @@
                         <div class="my_answer_list">
                             <div class="my_answer_title_box">
                                 <span class="my_answer_title">{{answers.title|truncatechars:20}}</span>
-                                <span class="my_answer_questioner">{{answers.user}}님의 질문</span>
+                                <span class="my_answer_questioner">{{answers.answers.question_user.user_nickname}}님의 질문</span>
                             </div>
                             <div class="my_answer_desc">{{answers.desc|safe}}</div>
                             <span>{{answers.desc.image}}</span>
