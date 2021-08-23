@@ -168,8 +168,8 @@ code {
 }
 
 .post_card {
-    width: 385px;
-    height: 420px;
+    width: 370px;
+    height: 452px;
     background: white;
     border: 0.0625rem solid #ECECEC;
     box-sizing: border-box;
@@ -223,18 +223,19 @@ code {
     display: block;
     text-decoration: none;
     cursor: pointer;
-    width: 385px;
+    width: 100%;
     height: 10.3125rem;
 }
 
 .post_title {
     font-family: 'Pretendard-SemiBold';
     color: #585858;
-    font-size: 1rem;
+    font-size: 22px;
     /* text-overflow: ellipsis; */
-    height: 1.875rem;
-    margin: -0.5rem 0 0.625rem 0;
-    line-height: 1.75rem;
+    height: 30px;
+    margin: -3px 0 10px 0;
+    line-height: 28px;
+    margin-bottom: 42px;
 }
 
 .post_select {
@@ -269,10 +270,10 @@ code {
 .post_title_img_none {
     font-family: 'Pretendard-SemiBold';
     color: #585858;
-    font-size: 1rem;
+    font-size: 1.375rem;
     text-overflow: ellipsis;
     height: 1.875rem;
-    margin: 0.625rem 0 0.625rem 0;
+    margin: 0.625rem 0 3.625rem 0;
     line-height: 1.75rem;
 }
 
@@ -290,7 +291,7 @@ code {
 
 .post_user_line {
     border-top: 0.0625rem solid rgba(219, 214, 199, 0.35);
-    width: 16.375rem;
+    width: 20rem;
     text-align: center;    
 }
 

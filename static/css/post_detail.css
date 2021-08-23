@@ -85,6 +85,14 @@ h1, h2, h3, h4, h5 {
     margin-bottom: 2rem;
 }
 
+.created_date {
+    font-size: 12px;
+    line-height: 14px;
+    color: #8C8D8D;
+    height: 24px;
+    margin-bottom: 10px;
+}
+
 .accordion_area {
     margin-bottom: 1.4rem;
     display: flex;
@@ -108,10 +116,13 @@ h1, h2, h3, h4, h5 {
     display: block;
 }
 
+.proflie_text {
+    margin-left: 10px;
+    line-height: 25px;
+    font-size: 14px;
+}
 
-
-
-#facebook_icon > a > svg > path {
+#facebook_icon > svg > path {
     fill: #FFD358;
 }
 
@@ -172,6 +183,11 @@ h1, h2, h3, h4, h5 {
     font-size: 0.875rem;
     font-family: var(--btn-font);
     color: var(--text-color);
+}
+
+.profile_text {
+    margin-left: 10px;
+    line-height: 24px;
 }
 
 .post_user_info img {
@@ -361,8 +377,8 @@ h1, h2, h3, h4, h5 {
 
 .comment_profile img {
     border-radius: 2rem;
-    width: 50px;
-    height: 50px;
+    width: 35px;
+    height: 35px;
 }
 
 

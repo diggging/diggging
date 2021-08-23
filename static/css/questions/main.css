@@ -490,11 +490,10 @@ meter::-webkit-meter-low-value {
 /* ------------------------------------프로필영역=---- */
 .profile_area {
     width: 23rem;
-    height: 25vh;
     border: solid 1px #E5E5E5;
     margin-bottom: 5vh;
     padding: 1.875rem 1.5rem;
-    border-radius: 0rem 1.25rem 0rem 0rem;
+    border-radius: 1.25rem 1.25rem 0rem 0rem;
 
 }
 .profile_image img {

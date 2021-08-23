@@ -3,8 +3,6 @@ const logFolderBtn = document.getElementById('log_folder_btn');
 const categoryTab = document.querySelector('.folder_category');
 const btnTap = document.getElementById('btn_tap');
 
-console.log(btnTap.childElementCount)
-
 const langBtn = document.querySelector('.language_btn');
 const frameworkBtn = document.querySelector('.framework_btn');
 const problemBtn = document.querySelector('.problem_btn');
@@ -15,7 +13,7 @@ langBtn.addEventListener('click', () => {
     problemBtn.style.background = "#FFD358";
 
     id =langBtn.value;
-    var a = "http://13.124.23.247:8000/users/" + id
+    var a = "https://diggging.com/users/" + id
     var url = a + "/lang_folder/"
     
     fetch(url, {
@@ -55,8 +53,7 @@ const langPost = () => {
         langPostBtn[i].addEventListener('click', () => {
 
             id =langPostBtn[i].value;
-            console.log(id)
-            var a = "http://13.124.23.247:8000/users/" + id
+            var a = "https://diggging.com/users/" + id
             var url = a + "/lang_folder_posts/"
             fetch(url, {
                 method: "GET",
@@ -68,7 +65,8 @@ const langPost = () => {
             // title, desc, scrap, help // username, userprofile, comments
             .then(res => res.json())
             .then(data => {
-
+                
+                //글자 수 잘라주기
                 let desc = [];
                 for(j=0; j < data.length; j++) {
                     if(data[j].desc.length > 300) {
@@ -76,25 +74,34 @@ const langPost = () => {
                         data[j].desc = desc[j]
                     }
                 }
+                
                 const extractTextPattern = /(<([^>]+)>)/gi;
-
+                // 태그 삭제하기
                 let replaceDesc = [];
                 for(k=0; k < desc.length; k++) {
-                    replaceDesc[k] = desc[k].replace(extractTextPattern, "")
+                        replaceDesc[k] = data[k].desc.replace(extractTextPattern, "")
                 }
-            
+
+                // 날짜 한글로 변환하기\
+                let dateToKo = [];
+                for(let l = 0; l < data.length; l++) {
+                    dateToKo[l] = moment(data[0].created, 'YYYY-MM-DDTHH:mm:ssZ')
+                    dateToKo[l].format('LLL')
+                    data[l].created = dateToKo[l].format('LLL')
+                }
+
                 if (data.length === 0) {
                     thirdContainer.innerHTML = ""
                 } else {
                     const txt = data.map(post => {
                         return `
-                    <a class="post_link" href="http://13.124.23.247:8000/posts/${post.user_id}/${post.id}/detail">
+                    <a class="post_link" href="https://diggging.com/posts/${post.user_id}/${post.id}/detail">
                         <div class="my_post_list">
                             <div class="post_title">
                                 ${post.title}
                             </div>
                             <div class="post_desc">
-                                ${post.desc}
+                                ${replaceDesc}
                             </div>
                             <div class="post_user">
                                 <div class="post_created">
@@ -120,6 +127,7 @@ const langPost = () => {
     }
 }
 
+
 //해결 미해결
 
 
@@ -129,7 +137,7 @@ problemBtn.addEventListener('click', () => {
     problemBtn.style.background = "#FFBA42";
 
     id =problemBtn.value;
-    var a = "http://13.124.23.247:8000/users/" + id
+    var a = "https://diggging.com/users/" + id
     var url = a + "/solved_folder/"
     
     fetch(url, {
@@ -168,7 +176,7 @@ const problemPost = () => {
         problemBtn[i].addEventListener('click', () => {
 
             id =problemBtn[i].value;
-            var a = "http://13.124.23.247:8000/users/" + id
+            var a = "https://diggging.com/users/" + id
             var url = a + "/solved_folder_posts/"
             
             fetch(url, {
@@ -181,6 +189,7 @@ const problemPost = () => {
             .then(res => res.json())
             .then(data => {
 
+                //글자 수 잘라주기
                 let desc = [];
                 for(j=0; j < data.length; j++) {
                     if(data[j].desc.length > 300) {
@@ -188,11 +197,20 @@ const problemPost = () => {
                         data[j].desc = desc[j]
                     }
                 }
+                
                 const extractTextPattern = /(<([^>]+)>)/gi;
-
+                // 태그 삭제하기
                 let replaceDesc = [];
                 for(k=0; k < desc.length; k++) {
-                    replaceDesc[k] = desc[k].replace(extractTextPattern, "")
+                        replaceDesc[k] = data[k].desc.replace(extractTextPattern, "")
+                }
+
+                // 날짜 한글로 변환하기\
+                let dateToKo = [];
+                for(let l = 0; l < data.length; l++) {
+                    dateToKo[l] = moment(data[0].created, 'YYYY-MM-DDTHH:mm:ssZ')
+                    dateToKo[l].format('LLL')
+                    data[l].created = dateToKo[l].format('LLL')
                 }
 
                 if (data.length === 0) {
@@ -200,13 +218,13 @@ const problemPost = () => {
                 } else {
                     const txt = data.map(post => {
                         return `
-                        <a class="post_link" href="http://13.124.23.247:8000/posts/${post.user_id}/${post.id}/detail">
+                        <a class="post_link" href="https://diggging.com/posts/${post.user_id}/${post.id}/detail">
                             <div class="my_post_list">
                                 <div class="post_title">
                                     ${post.title}
                                 </div>
                                 <div class="post_desc">
-                                    ${post.desc}
+                                    ${replaceDesc}
                                 </div>
                                 <div class="post_user">
                                     <div class="post_created">
@@ -239,7 +257,7 @@ const problemPost = () => {
         problemBtn.style.background = "#FFD358";
 
         id =frameworkBtn.value;
-        var a = "http://13.124.23.247:8000/users/" + id
+        var a = "https://diggging.com/users/" + id
         var url = a + "/framework_folder/"
         
         fetch(url, {
@@ -277,7 +295,7 @@ const framePost = () => {
         framePostBtn[i].addEventListener('click', () => {
 
             id =framePostBtn[i].value;
-            var a = "http://13.124.23.247:8000/users/" + id
+            var a = "https://diggging.com/users/" + id
             var url = a + "/framework_folder_posts/"
             
             fetch(url, {
@@ -290,6 +308,7 @@ const framePost = () => {
             .then(res => res.json())
             .then(data => {
 
+                //글자 수 잘라주기
                 let desc = [];
                 for(j=0; j < data.length; j++) {
                     if(data[j].desc.length > 300) {
@@ -297,11 +316,20 @@ const framePost = () => {
                         data[j].desc = desc[j]
                     }
                 }
+                
                 const extractTextPattern = /(<([^>]+)>)/gi;
-
+                // 태그 삭제하기
                 let replaceDesc = [];
                 for(k=0; k < desc.length; k++) {
-                    replaceDesc[k] = desc[k].replace(extractTextPattern, "")
+                        replaceDesc[k] = data[k].desc.replace(extractTextPattern, "")
+                }
+
+                // 날짜 한글로 변환하기\
+                let dateToKo = [];
+                for(let l = 0; l < data.length; l++) {
+                    dateToKo[l] = moment(data[0].created, 'YYYY-MM-DDTHH:mm:ssZ')
+                    dateToKo[l].format('LLL')
+                    data[l].created = dateToKo[l].format('LLL')
                 }
 
                 if (data.length === 0) {
@@ -309,13 +337,13 @@ const framePost = () => {
                 } else {
                     const txt = data.map(post => {
                         return `
-                    <a class="post_link" href="http://13.124.23.247:8000/posts/${post.user_id}/${post.id}/detail">
+                    <a class="post_link" href="https://diggging.com/posts/${post.user_id}/${post.id}/detail">
                         <div class="my_post_list">
                             <div class="post_title">
                                 ${post.title}
                             </div>
                             <div class="post_desc">
-                                ${post.desc}
+                                ${replaceDesc}
                             </div>
                             <div class="post_user">
                                 <div class="post_created">

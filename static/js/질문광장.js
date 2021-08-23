@@ -9,7 +9,7 @@ langBtn.addEventListener('click', () => {
     frameworkBtn.style.background = "#FFD358";
 
     id =langBtn.value;
-    var a = "http://13.124.23.247:8000/questions/" + id
+    var a = "https://diggging.com/questions/" + id
     var url = a + "/questions_lang_folder/"
     
     fetch(url, {
@@ -49,7 +49,7 @@ const langPost = () => {
         langPostBtn[i].addEventListener('click', () => {
 
             id =langPostBtn[i].value;
-            var a = "http://13.124.23.247:8000/questions/" + id
+            var a = "https://diggging.com/questions/" + id
             var url = a + "/questions_lang_post/"
             fetch(url, {
                 method: "GET",
@@ -61,18 +61,28 @@ const langPost = () => {
             .then(res => res.json())
             .then(data => {
                 
+                //글자 수 잘라주기
                 let desc = [];
-                for(j=0; j < data.data.length; j++) {
-                    if(data.data[j].desc.length > 150) {
-                        desc[j] = data.data[j].desc.slice(0, 40)
-                        data.data[j].desc = desc[j]
+                for(j=0; j < data.length; j++) {
+                    if(data[j].desc.length > 300) {
+                        desc[j] = data[j].desc.slice(0, 200)
+                        data[j].desc = desc[j]
                     }
                 }
+                
                 const extractTextPattern = /(<([^>]+)>)/gi;
-
+                // 태그 삭제하기
                 let replaceDesc = [];
                 for(k=0; k < desc.length; k++) {
-                    replaceDesc[k] = desc[k].replace(extractTextPattern, "")
+                        replaceDesc[k] = data[k].desc.replace(extractTextPattern, "")
+                }
+
+                // 날짜 한글로 변환하기\
+                let dateToKo = [];
+                for(let l = 0; l < data.length; l++) {
+                    dateToKo[l] = moment(data[0].created, 'YYYY-MM-DDTHH:mm:ssZ')
+                    dateToKo[l].format('LLL')
+                    data[l].created = dateToKo[l].format('LLL')
                 }
 
                 if (data.length === 0) {
@@ -81,17 +91,17 @@ const langPost = () => {
                     const txt = data.data.map(post => {
                         let img = "/media/" + post.image
                         return `
-                        <a href="http://13.124.23.247:8000/questions/${post.user_id}/${post.id}/detail">
+                        <a href="https://diggging.com/questions/${post.user_id}/${post.id}/detail">
                             <div class="no_answer_list_json" value="">
                                 <div class="no_answer_titlebox">
                                     <div class="no_answer_title">${post.title}</div>
-                                    <a href="http://13.124.23.247:8000/users/${post.user_id}/my_page/" class="">
+                                    <a href="https://diggging.com/users/${post.user_id}/my_page/" class="">
                                         <div class="no_user_info">
                                             <span class="no_answer_username_json">${data.user[0]}</span>
                                         </div>
                                     </a>
                                 </div>
-                                <span class="no_answer_desc">${post.desc}</span>
+                                <span class="no_answer_desc">${replaceDesc}</span>
                                 <span class="no_answer_category">
                                     <span>${post.language}</span>
                                     <span>${post.framework}</span>
@@ -118,7 +128,7 @@ const langPost = () => {
         langBtn.style.background = "#FFD358";
         frameworkBtn.style.background = "#FFBA42";
         id =frameworkBtn.value;
-        var a = "http://13.124.23.247:8000/questions/" + id
+        var a = "https://diggging.com/questions/" + id
         var url = a + "/questions_framework_folder/"
         
         fetch(url, {
@@ -157,7 +167,7 @@ const framePost = () => {
         framePostBtn[i].addEventListener('click', () => {
 
             id =framePostBtn[i].value;
-            var a = "http://13.124.23.247:8000/questions/" + id
+            var a = "https://diggging.com/questions/" + id
             var url = a + "/questions_framework_post/"
             
             fetch(url, {
@@ -170,18 +180,28 @@ const framePost = () => {
             .then(res => res.json())
             .then(data => {
 
+                //글자 수 잘라주기
                 let desc = [];
-                for(j=0; j < data.data.length; j++) {
-                    if(data.data[j].desc.length > 150) {
-                        desc[j] = data.data[j].desc.slice(0, 40)
-                        data.data[j].desc = desc[j]
+                for(j=0; j < data.length; j++) {
+                    if(data[j].desc.length > 300) {
+                        desc[j] = data[j].desc.slice(0, 200)
+                        data[j].desc = desc[j]
                     }
                 }
+                
                 const extractTextPattern = /(<([^>]+)>)/gi;
-
+                // 태그 삭제하기
                 let replaceDesc = [];
                 for(k=0; k < desc.length; k++) {
-                    replaceDesc[k] = desc[k].replace(extractTextPattern, "")
+                        replaceDesc[k] = data[k].desc.replace(extractTextPattern, "")
+                }
+
+                // 날짜 한글로 변환하기\
+                let dateToKo = [];
+                for(let l = 0; l < data.length; l++) {
+                    dateToKo[l] = moment(data[0].created, 'YYYY-MM-DDTHH:mm:ssZ')
+                    dateToKo[l].format('LLL')
+                    data[l].created = dateToKo[l].format('LLL')
                 }
 
                 if (data.length === 0) {
@@ -190,17 +210,17 @@ const framePost = () => {
                     const txt = data.data.map(post => {
                         let img = "/media/" + post.image
                         return `
-                        <a href="http://13.124.23.247:8000/questions/${post.user_id}/${post.id}/detail">
+                        <a href="https://diggging.com/questions/${post.user_id}/${post.id}/detail">
                             <div class="no_answer_list_json" value="">
                                 <div class="no_answer_titlebox">
                                     <div class="no_answer_title">${post.title}</div>
-                                    <a href="http://13.124.23.247:8000/users/${post.user_id}/my_page/" class="">
+                                    <a href="https://diggging.com/users/${post.user_id}/my_page/" class="">
                                         <div class="no_user_info">
                                             <span class="no_answer_username_json">${data.user[0]}</span>
                                         </div>
                                     </a>
                                 </div>
-                                <span class="no_answer_desc">${post.desc}</span>
+                                <span class="no_answer_desc">${replaceDesc}</span>
                                 <span class="no_answer_category">
                                     <span>${post.language}</span>
                                     <span>${post.framework}</span>

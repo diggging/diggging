@@ -13,6 +13,70 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script type="text/javascript">hljs.highlightAll();</script>
 <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+<script type='text/javascript'>
+    function sendLinkKakao(){
+      Kakao.Link.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: "{{post.title}}",
+              description: "{{post.desc}}",
+        imageUrl: "https://diggging.com"+"{{post.image.url}}",
+        link: {
+        mobileWebUrl: '{{ request.build_absolute_uri }}',
+        webUrl: '{{ request.build_absolute_uri }}'
+        }
+      },
+      buttons: [
+        {
+          title: '링크 열기',
+          link: {
+            mobileWebUrl: '{{ request.build_absolute_uri }}',
+            webUrl: '{{ request.build_absolute_uri }}'
+          }
+        }
+      ]
+    });
+}
+  //<![CDATA[
+    // // 사용할 앱의 JavaScript 키를 설정해 주세요.
+    Kakao.init("4bc6b6d10ce540d1bd347ad9fb8f61b5");
+    // // 카카오링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
+    Kakao.Link.createDefaultButton({
+      container: '#kakao-link-btn',
+      objectType: 'feed',
+      content: {
+              title: "{{post.title}}",
+              description: "{{post.desc|safe|escape }}",
+              imageUrl: "https://diggging.com"+"{{post.image.url}}",
+        link: {
+          mobileWebUrl: 'https://developers.kakao.com',
+          webUrl: 'https://developers.kakao.com'
+        }
+      },
+      social: {
+        likeCount: {{post.helped_num}},
+        sharedCount: {{post.scrap_num}}
+      },
+      buttons: [
+        {
+          title: '웹으로 보기',
+          link: {
+            mobileWebUrl: 'https://developers.kakao.com',
+            webUrl: 'https://developers.kakao.com'
+          }
+        },
+        {
+          title: '앱으로 보기',
+          link: {
+            mobileWebUrl: 'https://developers.kakao.com',
+            webUrl: 'https://developers.kakao.com'
+          }
+        }
+      ]
+    });
+  //]]>
+</script>
 <script>
     //빈 코멘트 게시 시 알람창 뜨게할 div
     const test = document.querySelector('.addComment');
@@ -77,7 +141,7 @@
                     <div class='comment_id_${comment_id}'>
                         <div class="comment_info">
                             <div class="comment_profile">
-                                <a href="http://13.124.23.247:8000/users/${userData[0].pk}/my_page/" class="user_info">
+                                <a href="https://diggging.com/users/${userData[0].pk}/my_page/" class="user_info">
                                     <img src="${img}">
                                 </a>
                             </div>
@@ -168,13 +232,16 @@
             data: { 'pk': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}' }, // 서버로 데이터 전송시 옵션, pk를 넘겨야 어떤 post인지 알 수 있음
             dataType: "json",
             success: function (response) { // 성공;
-                const helpedSvg = () => {
-                    return `
-                    <svg width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12.3831 0.820517C10.9153 -0.430353 8.73231 -0.205357 7.38502 1.1848L6.85735 1.72854L6.32968 1.1848C4.98506 -0.205357 2.79938 -0.430353 1.33155 0.820517C-0.350558 2.25621 -0.438949 4.83294 1.06638 6.38917L6.24932 11.7409C6.58414 12.0864 7.12788 12.0864 7.46269 11.7409L12.6456 6.38917C14.1536 4.83294 14.0653 2.25621 12.3831 0.820517Z" fill="#FFBA42"/>
-                    </svg>
-                    `
-                }
+                    if (response.form) {
+                        return
+                    }
+                    const helpedSvg = () => {
+                        return `
+                        <svg width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12.3831 0.820517C10.9153 -0.430353 8.73231 -0.205357 7.38502 1.1848L6.85735 1.72854L6.32968 1.1848C4.98506 -0.205357 2.79938 -0.430353 1.33155 0.820517C-0.350558 2.25621 -0.438949 4.83294 1.06638 6.38917L6.24932 11.7409C6.58414 12.0864 7.12788 12.0864 7.46269 11.7409L12.6456 6.38917C14.1536 4.83294 14.0653 2.25621 12.3831 0.820517Z" fill="#FFBA42"/>
+                        </svg>
+                        `
+                    }
                 $(".count-" + pk).html(helpedSvg() + "도움이되었어요&nbsp&nbsp" + response.likes_count); // 좋아요 개수 변경
             },
             error: function (request, status, error) { // 실패
@@ -193,6 +260,9 @@
             data: { 'pk': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}' }, // 서버로 데이터 전송시 옵션, pk를 넘겨야 어떤 post인지 알 수 있음
             dataType: "json",
             success: function (response) { // 성공;
+                if (response.form) {
+                    return
+                }
                 const scrapSvg = () => {
                     return `
                     <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -215,7 +285,7 @@
 <div class="container_detail">
     <div class="post_container">
         <div class="thumbnail_box">
-            {% if post.image %}
+            {% if post.image != "../static/image/default_image.PNG" %}
                 <img src="{{ post.image.url }}" class="thumbnail_area">
             {% endif %}            
         </div>
@@ -224,6 +294,9 @@
             <div class="post_top">
                 <div class="title_area">
                     <h1>{{post.title}}</h1>
+                    <span class="created_date">
+                        {{post.created}}
+                    </span>
                     <div class="category_area">
                         <span class="post_language">{{post.language}}</span>
                         <span class="folder_name">{{post.framework}}</span>
@@ -233,11 +306,6 @@
                 </div>
                 <div class="desc_area">
                     {{ post.desc|safe|escape }}
-                </div>
-    
-                <div class="scrap_popup" style="opacity: 0;" value="엥?">
-                    <p>언어📁 {{post.language}} 프레임워크📁 {{post.framework}}으로 퍼왔습니다.
-                    마이페이지에서 확인해보세요!</p>
                 </div>
                 <div class="accordion_area">
                     <div class="button_group">
