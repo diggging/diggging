@@ -70,14 +70,16 @@
     
                 const addComment = document.querySelector(`.addComment`);
                 const addRecent = document.querySelector('.addRecent');
-                console.log(userImg)
+                console.log(userData)
                 // 아무것도 입력안했을 때, 댓글 안달림
                 var img = "/media/" + userImg
                 addComment.innerHTML += `
                     <div class='comment_id_${comment_id}'>
                         <div class="comment_info">
                             <div class="comment_profile">
-                                <img src="${img}">
+                                <a href="http://13.124.23.247:8000/users/${userData[0].pk}/my_page/" class="user_info">
+                                    <img src="${img}">
+                                </a>
                             </div>
                             <div class="comment_content">
                                 <div class="comment_flex">
@@ -316,7 +318,9 @@
             
             <div class="profile_username">
                 <span class="profile_image">
-                    <img src="{{ post.user.user_profile_image.url}}">
+                    <a href="{% url 'users:my_page' post.user.id %}" class="user_info">
+                        <img src="{{ post.user.user_profile_image.url}}">
+                    </a>
                 </span>
                 <div class="flex_col">
                     <span class="user_nickname">{{ post.user.user_nickname }}
@@ -349,7 +353,9 @@
                         <div class='comment_id_{{comment.id}}'>
                             <div class="comment_info">
                                 <div class="comment_profile">
-                                    <img src="{{comment.user.user_profile_image.url}}">
+                                    <a href="{% url 'users:my_page' comment.user.id %}" class="user_info">
+                                        <img src="{{comment.user.user_profile_image.url}}">
+                                    </a>
                                 </div>
                                 <div class="comment_content">
                                     <div class="comment_flex">

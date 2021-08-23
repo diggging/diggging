@@ -249,7 +249,7 @@ code {
 .post_select > span {
     width: 4.375rem;
     height: 1.5rem;
-    padding: 0.25rem 1.125rem;
+    padding: 3px 8px;
     background: #FFBA42;
     border-radius: 1.25rem;
     color: white;
