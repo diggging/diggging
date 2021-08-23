@@ -22,16 +22,33 @@
 
 {% block content %}
 <div class="service_body">
+    <div class="introduction">
+        <h1>개발 중 겪는 어려움들을 체계적으로 기록하고 관리해보세요!<br>
+            따로 설정하지 않아도<br>
+            내가 사용한 언어와 프레임워크 폴더에 차곡차곡!</h1>
+        <div class="folder_icon_box flex_row">
+            <svg width="82" height="60" viewBox="0 0 108 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M97.875 13.3333H57.375L43.875 0H10.125C4.53305 0 0 4.47708 0 10V70C0 75.5229 4.53305 80 10.125 80H97.875C103.467 80 108 75.5229 108 70V23.3333C108 17.8104 103.467 13.3333 97.875 13.3333Z" fill="#FFE59C"/>
+            </svg>
+            <svg width="82" height="60" viewBox="0 0 108 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M97.875 13.3333H57.375L43.875 0H10.125C4.53305 0 0 4.47708 0 10V70C0 75.5229 4.53305 80 10.125 80H97.875C103.467 80 108 75.5229 108 70V23.3333C108 17.8104 103.467 13.3333 97.875 13.3333Z" fill="#FFD96D"/>
+            </svg>
+            <svg width="82" height="60" viewBox="0 0 108 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M97.875 13.3333H57.375L43.875 0H10.125C4.53305 0 0 4.47708 0 10V70C0 75.5229 4.53305 80 10.125 80H97.875C103.467 80 108 75.5229 108 70V23.3333C108 17.8104 103.467 13.3333 97.875 13.3333Z" fill="#FFCB44"/>
+            </svg>
+        </div>
+        <h2>이젠 개발하면서 겪은 어려움들을 체계적으로 기록하고, 
+            다른 개발자들과 함께 성장해요!</h2>
+    </div>
     <section class="content-section" data-scroll>
         <figure class="figure">
-            <img class="background_img" src="{% static 'image/rectangle232.png' %}" />
+            <img class="background_img" src="{% static 'image/yellow.jpg' %}" />
         </figure>
-
         <div class="content">
             <header class="header">
                 <h2 class="heading">
                     삽질을 하면 할수록<br />
-                    모래알이 쌓이는 월별 캘린더 🗓
+                    모래알이 쌓이는 월별 캘린더📅
                 </h2>
             </header>
             <p class="paragraph">
@@ -42,14 +59,14 @@
 
     <section class="content-section" data-scroll>
         <figure class="figure">
-            <img class="background_img" src="{% static 'image/rectangle232.png' %}" />
+            <img class="background_img" src="{% static 'image/sandbeach.jpg' %}" />
         </figure>
 
         <div class="content">
             <header class="header">
                 <h2 class="heading">
                     활동량에 따라 쌓이는 모래 포인트,<br />
-                    흙을 모아서 튼튼한 집을 지어요.
+                    흙을 모아서 튼튼한 집을 지어요.🏠
                 </h2>
             </header>
             <p class="paragraph">
@@ -60,13 +77,13 @@
 
     <section class="content-section" data-scroll>
         <figure class="figure">
-            <img class="background_img" src="{% static 'image/rectangle232.png' %}" />
+            <img class="background_img" src="{% static 'image/coding.jpg' %}" />
         </figure>
 
         <div class="content">
             <header class="header">
                 <h2 class="heading">
-                    에러가 해결되는 마법<br />
+                    에러가 해결되는 마법✨✨<br />
                     내 코드를 첨부하고 질문을 올려보세요!
                 </h2>
             </header>
@@ -78,138 +95,135 @@
 
     <section class="content-section" data-scroll>
         <figure class="figure">
-            <img class="background_img" src="{% static 'image/rectangle232.png' %}" />
+            <img class="background_img" src="{% static 'image/book.jpg' %}" />
         </figure>
 
         <div class="content">
             <header class="header">
                 <h2 class="heading">
                     내 디렉토리에 삽질 기록도, 질문도!<br />
-                    기록과 질문들을 언어와 프레임워크별로 담아보세요!
+                    기록과 질문들을 언어와 프레임워크별로 담아보세요!📁
                 </h2>
             </header>
             <p class="paragraph">
                 내가 쓴 글도 퍼온글도 모두<br />
                 언어, 프레임워크, 해결여부에 따라 나눠서 열어볼 수 있어요<br />
-                정말 편리하죠?
+                정말 편리하죠?😉
             </p>
         </div>
     </section>
 </div>
-<section class="rainbow_section_one">
-    <div class="rainbow_section_one_container">
-        <header class="rainbow_header_one">
-            <h3 class="heading_one">
-                시간을 쏟은 만큼 결과가 나오지 않더라도,<br />
-                더 견고한 집을 짓기 위한 과정임을 생각하며 나아가세요<br />
-                삽질모음이 함께할게요.
-            </h3>
-        </header>
-    </div>
-    <div>
-        <button class="service_signup_btn" href="#">
-            <span class="signup_btn_text">회원가입하기</span>
-        </button>
-    </div>
-    <div>
-        <button class="post_look_btn" href="#">
-            <span class="post_look_text">삽질기록 구경하기</span>
-        </button>
-    </div>
-</section>
+<div class="linear_gradient">
+    <section class="rainbow_section_one">
+        <div class="rainbow_section_one_container">
+            <header class="rainbow_header_one">
+                <h3 class="heading_one">
+                    ￣<br />
+                    시간을 쏟은 만큼 결과가 나오지 않더라도,<br />
+                    더 견고한 집을 짓기 위한 과정임을 생각하며 나아가세요 🏃🏻‍♂️🏃🏻‍♀️<br />
+                    삽질모음이 함께할게요.
+                </h3>
+            </header>
+        </div>
+        <div>
+            <a class="service_signup_btn" href="{% url 'users:signup' %}">
+                <span class="signup_btn_text">👉🏻  회원가입하기</span>
+            </a>
+        </div>
+        <div>
+            <a class="post_look_btn" href="{% url 'posts:main' %}">
+                <span class="post_look_text">👉🏻  삽질기록 구경하기</span>
+            </a>
+        </div>
+    </section>
+    
+    <section class="rainbow_section_two">
+        <div class="rainbow_section_two_container">
+            <header class="rainbow_header_two">
+                <h2>Our Vision</h2>
+            </header>
+            <p class="rainbow_two_paragraph">
+                대부분의 개발자들은 매일 같이 개발 중 문제들을 해결하기 위해 많은 시간을 쏟습니다.<br>
+                당장은 앞으로 나아가지 못해 시간낭비라는 생각이 들어도, 이런 경험이 쌓여<br>
+                더 훌륭한 개발자가 될 수 있을 것이라는 믿음으로 삽질모음 서비스를 만들었어요.<br><br>
 
-<section class="rainbow_section_two">
-    <div class="rainbow_section_two_container">
-        <header class="rainbow_header_two">
-            <h2>Our Vision</h2>
-        </header>
-        <p class="rainbow_two_paragraph">
-            대부분의 개발자들은 어려움을 겪고, 매일 같이 에러를 해결하기 위해 많은 시간을 쏟습니다.
-            당장은 앞으로 나아가지 못해 시간낭비라는 생각이 들어도, 이런 경험이 쌓여
-            더 훌륭한 개발자가 될 수 있을 것이라는 믿음으로 삽질모음 서비스를 만들었어요.
+                내가 지금 겪는 어려움은 다른 누구도 분명히 이전에 겪어본 문제일거에요.<br>
+                이곳에서 어려움을 공유하고 함께 에러 구덩이를 극복해보아요<br><br>
 
-            내가 지금 겪는 어려움은 다른 누구도 분명히 이전에 겪어본 문제일거에요.
-            이곳에서 어려움을 공유하고 함께 에러 구덩이를 극복해보아요☺
+                몇 시간 째 답을 알 수 없는 에러에 빠지더라도,<br>
+                이젠 시간낭비라고 생각하지 마세요!<br>
+                삽질모음에 기록하고, 다른 개발자들이 겪은 어려움을 찾아보며 더 빨리 성장하세요.<br><br>
 
-            몇 시간 째 답을 알 수 없는 에러에 빠지더라도,
-            이젠 시간낭비라고 생각하지 마세요!
-            삽질모음에 기록하고, 다른 개발자들이 겪은 어려움을 찾아보며 더 빨리 성장하세요.
-
-            알 수 없는 에러를 발견하더라도 당황하지 않고 이곳에서 검색해보세요!
-            많은 개발자들이 자신들의 삽질경험을 공유하고 있을 거에요😃
-        </p>
-    </div>
-</section>
-
-<section class="rainbow_section_three">
-    <div class="member_final_content">
-        <header class="member_header">
-            <h2>About Us</h2>
-        </header>
-        <div class="member-body">
-            <div class="member_container_section">
-                <div class="member_container">
-                    <div class="card">
-                        <div class="member_content">
-                            <div class="imgBx"><img src="{% static 'image/jonggwon_memoji3.jpg' %}" /></div>
-                            <div class="contentBx">
-                                <h3>김지수<br />
+                알 수 없는 에러를 발견하더라도 당황하지 않고 이곳에서 검색해보세요!<br>
+                많은 개발자들이 자신들의 삽질경험을 공유하고 있을 거에요😃<br>
+            </p>
+        </div>
+    </section>
+    <section class="rainbow_section_three">
+        <div class="member_final_content">
+            <header class="member_header">
+                <h2>About Us</h2>
+            </header>
+            <div class="member-body">
+                <div class="member_container_section">
+                    <div class="member_container">
+                        <div class="card">
+                            <div class="member_content">
+                                <div class="imgBx"><img src="{% static 'image/jonggwon_memoji3.jpg' %}" /></div>
+                                <div class="contentBx">
+                                    <h3>김지수</h3>
                                     <span>PM, Developer(Frontend)</span>
-                                </h3>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="member_content">
-                            <div class="imgBx"><img src="{% static 'image/jonggwon_memoji3.jpg' %}" /></div>
-                            <div class="contentBx">
-                                <h3>김종빈<br />
+    
+                        <div class="card">
+                            <div class="member_content">
+                                <div class="imgBx"><img src="{% static 'image/jonggwon_memoji3.jpg' %}" /></div>
+                                <div class="contentBx">
+                                    <h3>김종빈</h3>
                                     <span>Developer(Frontend)</span>
-                                </h3>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="member_content">
-                            <div class="imgBx"><img src="{% static 'image/jonggwon_memoji3.jpg' %}" /></div>
-                            <div class="contentBx">
-                                <h3>김현주<br />
+    
+                        <div class="card">
+                            <div class="member_content">
+                                <div class="imgBx"><img src="{% static 'image/jonggwon_memoji3.jpg' %}" /></div>
+                                <div class="contentBx">
+                                    <h3>김현주</h3>
                                     <span>Developer(Backend)</span>
-                                </h3>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="member_content">
-                            <div class="imgBx"><img src="{% static 'image/jonggwon_memoji3.jpg' %}" /></div>
-                            <div class="contentBx">
-                                <h3>손시형<br />
+    
+                        <div class="card">
+                            <div class="member_content">
+                                <div class="imgBx"><img src="{% static 'image/jonggwon_memoji3.jpg' %}" /></div>
+                                <div class="contentBx">
+                                    <h3>손시형</h3>
                                     <span>Developer(Backend)</span>
-                                </h3>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="member_content">
-                            <div class="imgBx"><img src="{% static 'image/jonggwon_memoji3.jpg' %}" /></div>
-                            <div class="contentBx">
-                                <h3>이종권<br />
+    
+                        <div class="card">
+                            <div class="member_content">
+                                <div class="imgBx"><img src="{% static 'image/jonggwon_memoji3.jpg' %}" /></div>
+                                <div class="contentBx">
+                                    <h3>이종권</h3>
                                     <span>Developer(Backend)</span>
-                                </h3>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class=" contact_container">
+                <h4>Contact Info</h4>
+                <span>teamdiggging@gmail.com</span>
+            </div>
         </div>
-        <div class=" contact_container">
-            <h4>Contact Info</h4>
-            <span>teamdiggging@gmail.com</span>
-        </div>
-    </div>
-</section>
+    </section>
+</div>
 {% endblock %}

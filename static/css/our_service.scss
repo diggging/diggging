@@ -1,3 +1,76 @@
+
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard-SemiBold';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-SemiBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard-Bold';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard-ExtraBold';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-ExtraBold.woff') format('woff');
+    font-weight: 800;
+    font-style: normal;
+}
+
+* {
+    box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+
+.flex_row {
+    display: flex;
+    flex-direction: row;
+}
+
+.introduction {
+    width: 768px;
+    height: 700px;
+    margin: auto auto;
+    margin-top: 220px;
+}
+
+.introduction h1 {
+    color: #0C223A;
+    font-family: 'Pretendard-Bold';
+    font-size: 2rem;
+    line-height: 3rem;
+    text-align: center;
+}
+
+.introduction h2 {
+    color: #0C223A;
+    font-family: 'Pretendard-Bold';
+    font-size: 1.875rem;
+    line-height: 3rem;
+    text-align: center;
+}
+
+
+.folder_icon_box {
+    margin: 5rem auto;
+    width: 500px;
+    justify-content: space-evenly;
+}
+
 .content-section {
     --scroll-length: 1.5;
     height: calc(var(--scroll-length) * 100vh);
@@ -46,20 +119,29 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    margin-left: 10%;
+    font-size: 2rem;
+    line-height: 2.875rem;
     align-content: space-between;}
 .content > .paragraph {
     grid-row: 2/3;
     line-height: 1.5; 
     display: flex;
     flex-direction: column;
-    align-items: center;
     align-content: space-between;
+    font-size: 1.75rem;
+    line-height: 2.625rem;
+    margin-left: 10%;
+    font-family: 'Pretendard-Regular';
 }
 
+
 .heading {
-    font-size: 2.75em;
-    margin: 0; }
+    font-size: 2rem;
+    line-height: 3.125rem;
+    margin: 0; 
+    font-family: "Pretendar-Bold";
+}
 
 .figure {
     --scale: calc(.8 + (.2 * var(--scroll-length) * var(--visible-y)));
@@ -97,8 +179,19 @@
     position: relative;
     box-sizing: border-box; }
 
+.heading_one {
+    color: #0C223A;
+    font-family: 'Pretendard-Bold';
+    font-size: 1.875rem;
+    line-height: 3rem;
+    margin: 6.25rem auto;
+    text-align: center;
+}
+
+
 .heading {
     font-weight: 700;
+    line-height: 3.3rem;
 }
 
 .service_body {
@@ -111,26 +204,37 @@
     letter-spacing: -.015em;
 }
 
+.linear_gradient {
+    width:100%;
+    height: 100%;
+    background: linear-gradient(-70deg, #FFB32E, #FFD768);
+}
+
 .rainbow_section_one {
     display: grid;
     grid-template-rows: 2fr 1fr 1fr;
     height: 100vh;
     width: 100%;
-    /*background color*/
-    background-color: white;
+
     text-align: center;
     justify-content: center;
     align-items: center;
+    margin-bottom: 13rem;
+    margin-top: -3rem;
 }
 
 .service_signup_btn {
-    width: 23.6875rem;
-    height: 3.125rem;
-    background: #FFFFFF;
-    border-color: #62A1BF;
+    width: 18rem;
+    height: 3.5rem;
+    padding: 1rem 3rem;
+    background: #ffffff8c;
     border-radius: 1.25rem;
     cursor: pointer;
     margin-bottom: 1.25rem;
+    outline: none;
+    box-shadow: none;
+    border: solid 2px whitesmoke;
+    margin-bottom: 4rem;
 }
 
 .signup_btn_text {
@@ -143,19 +247,20 @@
 }
 
 .service_signup_btn:hover {
-    background: #FFBA42;
-    color: white;
-    border: 0.125rem solid #FFBA42;
+    background: white;
 }
 
 .post_look_btn {
-    width: 23.6875rem;
-    height: 3.125rem;
-    background: #FFFFFF;
-    border-color: #62A1BF;
+    width: 18rem;
+    height: 3.5rem;
+    background: #ffffff8c;
+    padding: 1rem 3rem;
     border-radius: 1.25rem;
     cursor: pointer;
     margin-bottom: 1.25rem;
+    outline: none;
+    box-shadow: none;
+    border: solid 2px whitesmoke;
 }
 
 .post_look_text {
@@ -168,18 +273,65 @@
 }
 
 .post_look_btn:hover {
-    background: #FFBA42;
-    color: white;
-    border: 0.125rem solid #FFBA42;
+    background: white;
 }
 
 .rainbow_section_three {
-    height: 100vh;
+    height: 120vh;
     width: 100%;
-    background-color: white;
+}
+
+.rainbow_section_two_container {
+    width: 900px;
+    margin: auto auto;
+}
+
+.rainbow_header_two {
+    margin-bottom: 5rem;
+    border-bottom: solid 2px black;
+    padding-bottom: 0.8rem;
+}
+
+.rainbow_header_two h2{
+    color: black;
+    font-family: 'Pretendard-ExtraBold';
+    font-size: 2.5rem;
+}
+
+.rainbow_header_two {
+    color: black;
+    font-family: 'Pretendard-ExtraBold';
+    font-size: 2rem;
+    margin-bottom: 5rem;
+    border-bottom: solid 2px black;
+    padding-bottom: 0.8rem;
+}
+
+
+.rainbow_two_paragraph {
+    color: #212529;
+    font-size: 1.4rem;
+    line-height: 2.4rem;
+    margin-bottom: 17.5rem;
+    font-family: 'Pretendard-Regular';
+}
+
+.member_header {
+    width: 900px;
+    margin: auto auto;
+}
+
+.member_header h2 {
+    color: black;
+    font-family: 'Pretendard-ExtraBold';
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    border-bottom: solid 2px black;
+    padding-bottom: 0.8rem;
 }
 
 .member-body {
+    margin-top: -1rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -194,10 +346,12 @@
     width: 100%;
     height: 100%;
     display: grid;
+    margin-top: -8rem;
     grid-template-rows: 1fr 1fr;
-    color: white;
+    /* color: white; */
     padding: 2em;
-    font-size: 2.5vmin; }
+    font-size: 2.5vmin
+}
   
   .member_final_content .header{
     justify-content: center;
@@ -270,18 +424,33 @@
   }
   
   .member_container .card .member_content .contentBx h3 {
-    color: #FFBA42;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    font-weight: 500;
-    font-size: 18px;
     text-align: center;
     margin: 20px 0 10px;
-    line-height: 1.1em;
   }
   
   .member_container .card .member_content .contentBx h3 span {
-    font-size: 12px;
-    font-weight: 300;
+    
     text-transform: initial;
+  }
+
+  .contentBx {
+      text-align: center;
+  }
+
+  .contentBx > h3 {
+    color: black;
+    font-family: 'Pretendard-Bold';
+    font-size: 1.25rem;
+    text-align: center;
+    font-family: 'Pretendard-ExtraBold';
+    /* margin: 20px 6px; */
+    margin: 16px 0 10px;
+  }
+
+  .contentBx span {
+    color: white;
+    font-family: 'Pretendard-SemiBold';
+    font-size: 1rem;
+    text-align: center;
   }
