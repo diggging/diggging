@@ -9,13 +9,16 @@ const langBtn = document.querySelector('.language_btn');
 const frameworkBtn = document.querySelector('.framework_btn');
 const problemBtn = document.querySelector('.problem_btn');
 
+const urlName = "https://diggging.com"
+
+
 langBtn.addEventListener('click', () => {
     langBtn.style.background = "#FFBA42";
     frameworkBtn.style.background = "#FFD358";
     problemBtn.style.background = "#FFD358";
 
     id =langBtn.value;
-    var a = "http://13.124.23.247:8000/users/" + id
+    var a = urlName+"/users/" + id
     var url = a + "/lang_folder/"
     
     fetch(url, {
@@ -56,7 +59,7 @@ const langPost = () => {
 
             id =langPostBtn[i].value;
             console.log(id)
-            var a = "http://13.124.23.247:8000/users/" + id
+            var a = urlName +  "/users/" + id
             var url = a + "/lang_folder_posts/"
             fetch(url, {
                 method: "GET",
@@ -88,7 +91,7 @@ const langPost = () => {
                 } else {
                     const txt = data.map(post => {
                         return `
-                    <a class="post_link" href="http://13.124.23.247:8000/posts/${post.user_id}/${post.id}/detail">
+                    <a class="post_link" href= urlName + "/posts/${post.user_id}/${post.id}/detail">
                         <div class="my_post_list">
                             <div class="post_title">
                                 ${post.title}
@@ -129,7 +132,7 @@ problemBtn.addEventListener('click', () => {
     problemBtn.style.background = "#FFBA42";
 
     id =problemBtn.value;
-    var a = "http://13.124.23.247:8000/users/" + id
+    var a = urlName + "/users/" + id
     var url = a + "/solved_folder/"
     
     fetch(url, {
@@ -168,7 +171,7 @@ const problemPost = () => {
         problemBtn[i].addEventListener('click', () => {
 
             id =problemBtn[i].value;
-            var a = "http://13.124.23.247:8000/users/" + id
+            var a = urlName + "/users/" + id
             var url = a + "/solved_folder_posts/"
             
             fetch(url, {
@@ -200,7 +203,7 @@ const problemPost = () => {
                 } else {
                     const txt = data.map(post => {
                         return `
-                        <a class="post_link" href="http://13.124.23.247:8000/posts/${post.user_id}/${post.id}/detail">
+                        <a class="post_link" href= urlName + "/posts/${post.user_id}/${post.id}/detail">
                             <div class="my_post_list">
                                 <div class="post_title">
                                     ${post.title}
@@ -239,7 +242,7 @@ const problemPost = () => {
         problemBtn.style.background = "#FFD358";
 
         id =frameworkBtn.value;
-        var a = "http://13.124.23.247:8000/users/" + id
+        var a = urlName + "/users/" + id
         var url = a + "/framework_folder/"
         
         fetch(url, {
@@ -277,7 +280,7 @@ const framePost = () => {
         framePostBtn[i].addEventListener('click', () => {
 
             id =framePostBtn[i].value;
-            var a = "http://13.124.23.247:8000/users/" + id
+            var a = urlName + "/users/" + id
             var url = a + "/framework_folder_posts/"
             
             fetch(url, {
@@ -309,7 +312,7 @@ const framePost = () => {
                 } else {
                     const txt = data.map(post => {
                         return `
-                    <a class="post_link" href="http://13.124.23.247:8000/posts/${post.user_id}/${post.id}/detail">
+                    <a class="post_link" href= urlName+"/posts/${post.user_id}/${post.id}/detail">
                         <div class="my_post_list">
                             <div class="post_title">
                                 ${post.title}

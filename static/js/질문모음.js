@@ -5,13 +5,14 @@ const btnTap = document.getElementById('question_btn_tap');
 
 const langBtn = document.querySelector('.question_language_btn');
 const frameworkBtn = document.querySelector('.question_framework_btn');
+const urlName = "https://diggging.com"
 
 langBtn.addEventListener('click', () => {
     langBtn.style.background = "#FFBA42";
     frameworkBtn.style.background = "#FFD358";
 
     id =langBtn.value;
-    var a = "http://13.124.23.247:8000/users/" + id
+    var a = urlName+"/users/" + id
     var url = a + "/questions_lang_folder/"
     
     fetch(url, {
@@ -50,7 +51,7 @@ const langPost = () => {
         langPostBtn[i].addEventListener('click', () => {
 
             id =langPostBtn[i].value;
-            var a = "http://13.124.23.247:8000/users/" + id
+            var a = urlName+"/users/" + id
             var url = a + "/questions_lang_post/"
             fetch(url, {
                 method: "GET",
@@ -81,7 +82,7 @@ const langPost = () => {
                 } else {
                     const txt = data.map(post => {
                         return `
-                <a class="post_link" href="http://13.124.23.247:8000/questions/${post.user_id}/${post.id}/detail">
+                <a class="post_link" href=urlName+"/questions/${post.user_id}/${post.id}/detail">
                     <div class="my_post_list">
                         <div class="post_title">
                             ${post.title}
@@ -120,7 +121,7 @@ const langPost = () => {
         frameworkBtn.style.background = "#FFBA42";
 
         id =frameworkBtn.value;
-        var a = "http://13.124.23.247:8000/users/" + id
+        var a = urlName+"/users/" + id
         var url = a + "/questions_framework_folder/"
         
         fetch(url, {
@@ -159,7 +160,7 @@ const framePost = () => {
         framePostBtn[i].addEventListener('click', () => {
 
             id =framePostBtn[i].value;
-            var a = "http://13.124.23.247:8000/users/" + id
+            var a = urlName+"/users/" + id
             var url = a + "/questions_framework_post/"
             
             fetch(url, {
@@ -191,7 +192,7 @@ const framePost = () => {
                 } else {
                     const txt = data.map(post => {
                         return `
-                    <a class="post_link" href="http://13.124.23.247:8000/questions/${post.user_id}/${post.id}/detail">
+                    <a class="post_link" href=urlName+"/questions/${post.user_id}/${post.id}/detail">
                         <div class="my_post_list">
                             <div class="post_title">
                                 ${post.title}

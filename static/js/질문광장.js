@@ -1,11 +1,13 @@
 // 언어별 폴더
 const categoryTab = document.querySelector('.folder_area');
 const langBtn = document.querySelector('.language_btn');
+const urlName = "https://diggging.com"
+
 
 //폴더 뜨는 버튼
 langBtn.addEventListener('click', () => {
     id =langBtn.value;
-    var a = "http://127.0.0.1:8000/questions/" + id
+    var a = urlName+"/questions/" + id
     var url = a + "/questions_lang_folder/"
     
     fetch(url, {
@@ -43,7 +45,7 @@ const langPost = () => {
         langPostBtn[i].addEventListener('click', () => {
 
             id =langPostBtn[i].value;
-            var a = "http://127.0.0.1:8000/questions/" + id
+            var a = urlName+"/questions/" + id
             var url = a + "/questions_lang_post/"
             fetch(url, {
                 method: "GET",
@@ -78,7 +80,7 @@ const langPost = () => {
 const frameworkBtn = document.querySelector('.framework_btn');
     frameworkBtn.addEventListener('click', () => {
         id =frameworkBtn.value;
-        var a = "http://127.0.0.1:8000/questions/" + id
+        var a = urlName+"/questions/" + id
         var url = a + "/questions_framework_folder/"
         
         fetch(url, {
@@ -115,7 +117,7 @@ const framePost = () => {
         framePostBtn[i].addEventListener('click', () => {
 
             id =framePostBtn[i].value;
-            var a = "http://127.0.0.1:8000/questions/" + id
+            var a = urlName+"/questions/" + id
             var url = a + "/questions_framework_post/"
             
             fetch(url, {

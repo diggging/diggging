@@ -17,8 +17,8 @@
       objectType: 'feed',
       content: {
 	title: "{{post.title}}",
-	description: "{{post.desc|safe|escape }}",
-	imageUrl: "http://13.124.23.247:8000"+"{{post.image.url}}",
+	      description: "{{post.desc}}",
+	imageUrl: "https://diggging.com"+"{{post.image.url}}",
 	link: {
         mobileWebUrl: '{{ request.build_absolute_uri }}',
         webUrl: '{{ request.build_absolute_uri }}'
@@ -307,7 +307,7 @@ scrapPopup.addEventListener('click', () => {
             <div class="post_os">에러메시지|{{post.error_message}}</div>
         </div>
         <div class="desc_area">
-            {{ post.desc|safe|escape }}
+            {{ post.desc|safe|escape|truncatechars:300|striptags|cut:"&nbsp;"}}
         </div>
         {% if not request.user.id == post.user.id %}
         <div class="post_{{post.id}}">

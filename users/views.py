@@ -39,7 +39,7 @@ from django.http.response import JsonResponse
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
 # 회원가입
 my_site = Site.objects.get(pk=1)
-my_site.domain = '13.124.23.247:8000'
+my_site.domain = 'diggging.com'
 my_site.name ="digging_main"
 my_site.save()
 
