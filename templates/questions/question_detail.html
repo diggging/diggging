@@ -556,7 +556,7 @@ $(".like").click(function () {
             $(".count-" + pk).html("도움이되었어요 " + response.likes_count + "개"); // 좋아요 개수 변경
         },
         error: function (request, status, error) { // 실패
-            window.location.replace('/users/login')// 로그인 페이지로 넘어가기
+            window.location.replace('/questions/')// 로그인 페이지로 넘어가기
         },
     });
 })
@@ -573,7 +573,7 @@ $(".scrap").click(function () { // .scarp 버튼을 클릭 감지
             $(".scarp-" + pk).html("퍼가기" + response.scarps_count + "개"); // 좋아요 개수 변경
         },
         error: function (request, status, error) { // 실패
-            window.location.replace('/users/login')// 로그인 페이지로 넘어가기
+            window.location.replace('/questions/')// 로그인 페이지로 넘어가기
         },
     });
 })

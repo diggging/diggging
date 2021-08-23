@@ -37,7 +37,7 @@ def question_main(request):
     languages = [langs[0] for langs in Question_post.language_choices]
     search = request.POST.getlist("answers[]")
     str_search = "".join(search)
-    answer = Answer.objects.all()
+    answer = Answer.objects.filter(user=request.user)
 
     # 지수가 필요해서 넣은 것 : 질문 관련 폴더
     # 질문 모음

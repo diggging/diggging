@@ -96,22 +96,19 @@
             </div>
             <div class="my_answer_container">
                 <button class="accordion">내가 남긴 답변</button>
-                {% if request.user == answer.answer_user %}
-                    <div class="panel answerabc">
-                        {% for answers in answer %}
-                        <a href="{% url 'question:question_post_detail' answers.question.user.id answers.question.id %}">
-                            <div class="my_answer_list">
-                                <div class="my_answer_title_box">
-                                    <span class="my_answer_title">{{answers.title}}</span>
-                                    <span class="my_answer_questioner">{{answers.user}}님의 질문</span>
-                                </div>
-                                <div class="my_answer_desc">{{answers.desc}}</div>
+                <div class="panel answerabc">
+                    {% for answers in answer %}
+                    <a href="{% url 'question:question_post_detail' answers.question.user.id answers.question.id %}">
+                        <div class="my_answer_list">
+                            <div class="my_answer_title_box">
+                                <span class="my_answer_title">{{answers.title}}</span>
+                                <span class="my_answer_questioner">{{answers.question.user.user_nickname}}의 질문</span>
                             </div>
-                        </a>
-                        {% endfor %}
-                    </div>
-                {%else%}
-                {%endif%}
+                            <div class="my_answer_desc">{{answers.desc}}</div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>    
             </div>
         </div>
         <!-- 클래스명은 왼쪽이지만 사실오른쪽에있는 박스영역임 -->
