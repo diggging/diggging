@@ -360,6 +360,10 @@ h1, h2, h3, h4, h5 {
     margin-right: 2rem;
 }
 
+.comment_profile img {
+    border-radius: 100px;
+}
+
 .delete_btn > * {
     padding: 0.625rem 1.25rem;
     background-color: white;

@@ -19,7 +19,7 @@
     const body = document.querySelector('body');
     const nullComment = (input) => {
             const newDiv = document.createElement('div');
-            const newText = document.createTextNode('댓글을 입력하세여!!');
+            const newText = document.createTextNode('');
             newDiv.appendChild(newText);
             //newDiv 커스텀
             newDiv.style.width = "100px";
@@ -39,7 +39,7 @@
         const onClickComment = (id) => {
     
             if (!commentInput.value) {
-                nullComment(commentInput)
+                
                 return false
             } else {
                 const url = '/comments/comment/';
@@ -65,21 +65,19 @@
                 //유저 데이터 직렬화
                 const userData = JSON.parse(user); 
                 const userImg = userData[0].fields.user_profile_image;
-                console.log(userData[0].fields);
-                const userImgUrl = userImg.slice(2)
                 const userName = userData[0].fields.user_nickname;
                 const createDate = comment_date;
     
                 const addComment = document.querySelector(`.addComment`);
                 const addRecent = document.querySelector('.addRecent');
-                console.log(commentInput.value)
+                console.log(userImg)
                 // 아무것도 입력안했을 때, 댓글 안달림
-    
+                var img = "/media/" + userImg
                 addComment.innerHTML += `
                     <div class='comment_id_${comment_id}'>
                         <div class="comment_info">
                             <div class="comment_profile">
-                                <img src="${userImgUrl}">
+                                <img src="${img}">
                             </div>
                             <div class="comment_content">
                                 <div class="comment_flex">
@@ -207,25 +205,6 @@
             },
         });
     })
-
-
-    // -------------------------------퍼오기 눌렀을 때 알림창------------------     
-const scrapPopup = document.querySelector('.scrap_popup')
-const scrapButton = document.querySelector('.scrap');
-
-scrapButton.addEventListener('click', () => {
-    if (scrapPopup.style.opacity === "0") {
-        scrapPopup.style.opacity = "1";
-        scrapPopup.style.visibility = "visibile";
-    } else {
-        scrapPopup.style.opacity = "0"
-    }
-});
-
-scrapPopup.addEventListener('click', () => {
-    scrapPopup.style.opacity = "0";
-    scrapPopup.style.visibility = "hidden";
-})
 </script>
 {% endblock %}
 
@@ -254,7 +233,7 @@ scrapPopup.addEventListener('click', () => {
                     {{ post.desc|safe|escape }}
                 </div>
     
-                <div class="scrap_popup" style="opacity: 0;" >
+                <div class="scrap_popup" style="opacity: 0;" value="엥?">
                     <p>언어📁 {{post.language}} 프레임워크📁 {{post.framework}}으로 퍼왔습니다.
                     마이페이지에서 확인해보세요!</p>
                 </div>
@@ -399,48 +378,4 @@ scrapPopup.addEventListener('click', () => {
         </div>
     </div>
 </div>
-
-<script>
-//     // axios try
-// const likeButton = document.querySelector('.like_button')
-// likeButton.forEach(button => {
-//     button.addEventListener('click', function(event){
-//         const articleld = event.target.dataset.id
-//         const likeCount = document.querySelector(`.like_count-${articledId}`)
-
-//         $httpProvider.defaults.xsrfCookieName = 'csrftoken',
-//         $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken'
-
-//         axios.post(`/posts/${articled}/like/`)
-//         .then(response) => {
-//             likeCount.innerText = response.data.likeCount
-//             if(request.data.liked){
-//                 event.target.className = 'like_button'
-//                 event.target.style.color = '#FFEF9C'
-//             } else {
-//                 event.target.className = 'like_button'
-//                 event.target.style.color = '#FFF8CA'
-//             }
-//         }
-//     })
-// })
-
-// 스크랩, 도움버튼 axios 실습따라하기
-// const onClickLikeScrap = async(id, type) => { 
-//         const url = '/posts/count_like_scrap/';
-//         const {data} = await axios.post(url, {   //axios.method(url {JSON안해줘도됨 넘겨줄 인자}) {data}-? : axios다큐먼트 찾아보면 .. 하나의 약속 axios.post는 method=='POST'와 같다.
-//             id, type
-//         }); // {'id': 1, 'type': 'like'}로 처리  data.id로 접근 가능 data.type : 'like'
-//         likeHandleResponse(data.id, data.type)
-//     }
-
-// const likeHandleResponse = (id, type) => {
-//         const element = document.querySelector(`.post-id-${id} .post__${type}`); //id와 버튼type을 받아서
-//         const originHTML = element.innerHTML;
-//         const [buttonType, num] = originHTML.split(', ');  // ['Like', '0'] 쪼개서 변수에 저장
-//         const count = Number(num) + 1;//+1한 값을 count에 저장
-//         element.innerHTML = `${buttonType} ${count}`;
-//     }
-// ajax로 다시시도
-</script>
 {% endblock %}
