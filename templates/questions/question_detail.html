@@ -166,75 +166,96 @@
         <div class="answer_container answer-id-{{answer.id}}">
             <div class="post_top">
                 <div class="title_area">
-                    {% if answer.selection == True %}
-                        <h3 class="answer_selected">채택</h3>
-                    {% endif %}
-                    {{answer.title}}
-                    {% if request.user.id == answer.user.id %}
-                    <div class="auth_btn_area">
-                        <div class="edit_btn">
-                            <a href="{% url 'question:answer_update' post.id answer.id %}">수정하기</a>
-                        </div>
-                        <div class="delete_btn">
-                            <a href="{% url 'question:answer_delete' post.id answer.id %}">삭제하기</a>
-                        </div>
-                    </div>
-                    {% endif %}
+                    <h1>{{answer.title}}</h1>
+                    <span class="created_date">
+                        {{post.created}}
+                    </span>
                 </div>
                 <!--하나라도 채택되면 채택 버튼 삭제 기능-->
                 {% if not answer.question.is_selected %}
-                {% if request.user.id == post.user.id %}
-                {% if answer.selection == False %}
-                <div class="choice_btn">
-                    <button onclick="answerChoicePopup({{answer.id}})" value="{{answer.id}}">채택하기</button>
-                </div>
-                채택안된 답변
-                {% else %}
-                {% if answer.selection == True %}
-                채택되었어요
-                {% endif %}
-                {% endif %}
-                {% endif %}
-                <div class="choice_modal_body_{{answer.id}} choice_popup" style="visibility: hidden;">
-                    <button class="modal_delete_{{answer.id}}">x</button>
-                    <h3>해당 답변을 채택하시겠습니까?</h3>
-                    <a href="{% url 'question:chosen_answer' answer.id %}" class="yes_choice">예</a>
-                    <button class="no_select_{{answer.id}}">아니오</button>
-                </div>
-                {% else %}
-                {% if answer.selection == True %}
-                채택되었어요
-                {% endif %}
+                    {% if request.user.id == post.user.id %}
+                        {% if answer.selection == False %}
+                        <div class="choice_btn">
+                            <button onclick="answerChoicePopup({{answer.id}})" value="{{answer.id}}">채택하기</button>
+                        </div>
+                        {% else %}
+                            {% if answer.selection == True %}
+                            <h3 class="answer_selected">채택</h3>
+                            {% endif %}
+                        {% endif %}
+                    <div class="choice_modal_body_{{answer.id}} choice_popup" style="visibility: hidden;">
+                        <button class="modal_delete_{{answer.id}} close_choice"><img src="{% static 'image/close_icon.svg' %}" width="14"/></button>
+                        <h3>해당 답변을 채택하시겠습니까?</h3>
+                        <div class="choice_btn_group">
+                            <a href="{% url 'question:chosen_answer' answer.id %}" class="yes_choice">예</a>
+                            <button class="no_select_{{answer.id}} no_choice">아니오</button>
+                        </div>
+                    </div>
+                    {% else %}
+                        {% if answer.selection == True %}
+                        <h3 class="answer_selected">채택</h3>
+                        {% endif %}
+                    {% endif %}
                 {% endif %}
             </div>
-            <div class="answer_desc_box">
+            <div class="desc_area">
                 {{ answer.desc|safe|escape|linebreaks}}
             </div>
-            <a href="javascript:doDisplayAnswer({{answer.id}})">댓글 {{answer.comments|length}}</a>
+            {% if request.user.id == answer.user.id %}
+                <div class="auth_btn_area">
+                    <div class="edit_btn">
+                        <a href="{% url 'question:answer_update' post.id answer.id %}">수정하기</a>
+                    </div>
+                    <div class="delete_btn">
+                        <a href="{% url 'question:answer_delete' post.id answer.id %}">삭제하기</a>
+                    </div>
+                </div>
+            {% endif %}
+            <a href="javascript:doDisplayAnswer({{answer.id}})" class="comment_btn"> <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12.3529 0H1.76471C0.79136 0 0 0.672617 0 1.49991V8.24952C0 9.07681 0.79136 9.74943 1.76471 9.74943H4.41177V11.7181C4.41177 11.9477 4.72059 12.0813 4.93842 11.9454L8.38235 9.74943H12.3529C13.3263 9.74943 14.1176 9.07681 14.1176 8.24952V1.49991C14.1176 0.672617 13.3263 0 12.3529 0Z" fill="#FFBA42"/>
+            </svg> 댓글 {{answer.comments|length}}</a>
+            <div class="profile_username">
+                <span class="profile_image">
+                    <img src="{{ answer.user.user_profile_image.url}}">
+                </span>
+                <div class="flex_col">
+                    <h4 class="user_nickname">{{ answer.user.user_nickname }}</h4>
+                    <span class="user_level">Lv. {{answer.user.user_level}}</span>
+                </div>
+            </div>
             <!-- 답변의 댓글창영역 -->
             <div id="comment_box{{answer.id}}">
                 <div id="answer_comment_box">
                     <div class='addAnswerComment'>
-                        <div>
-                            <input class="answer_comment_input" type="text" placeholder="댓글달기" />
-                            <button onclick="onClickAnswerComment({{ answer.id }})">게시</button>
-                            <!--comment 별로 id 준당-->
-                        </div>
-                        <div>
-                            {% for comment in answer.answer_comments.all.reverse %}
-                            <img src="{{answer.user.user_profile_image.url}}" alt="" style="width:50px; height:50px;">
-                            <div class='answer_comment_id_{{comment.id}}'>
-                                <div class="answer_comment_text">
-                                    {{comment.text}}
-                                    {{answer.user}}
+                        {% for comment in answer.answer_comments.all.reverse %}
+                        <div class='answer_comment_id_{{comment.id}}'>
+                            <div class="comment_info">
+                                <div class="comment_profile">
+                                    <img src="{{comment.user.user_profile_image.url}}" width="50" height="50">
+                                    <span class="user_nicknamme">
+                                        {{comment.user.user_nickname}}
+                                    </span>
                                 </div>
-                                {% if request.user == comment.user %}
-                                <div class="add_comment_delete_btn">
-                                    <button onclick="onClickAnswerCommentDelete({{answer.id}}, {{comment.id}})">삭제</button>
+                                <div class="comment_content">
+                                    <div class="comment_created">
+                                        {{comment.created}}
+                                    </div>
+                                    <div class="comment_text">
+                                        {{comment.text}}
+                                    </div>
                                 </div>
-                                {%endif%}
                             </div>
-                            {% endfor %}
+                            {% if request.user == comment.user %}
+                            <div class="add_comment_delete_btn">
+                                <button onclick="onClickAnswerCommentDelete({{answer.id}}, {{comment.id}})">삭제</button>
+                            </div>
+                            {%endif%}
+                        </div>
+                        {% endfor %}
+                        <div class="comment_input_area">
+                            <input class="answer_comment_input" type="text" placeholder="댓글달기" />
+                            <button onclick="onClickAnswerComment({{ answer.id }})">댓글 남기기</button>
+                            <!--comment 별로 id 준당-->
                         </div>
                     </div>
                 </div>
@@ -429,17 +450,25 @@
             // comment_profile.innerHTML = `
             // <div>
             //코멘트 작성자의 닉네임이
-            
+           
+
                 addAnswerComment.innerHTML += `
             <div class='answer_comment_id_${comment_id}'>
                 <div class="comment_info">
                     <div class="comment_profile">
                         <img src="${userImgUrl}">
+                        <span class="user_nicknamme">
                             ${userName}
+                        </span>
+                    </div>
+                    <div class="comment_content">
+                        <div class="comment_created">
                             ${createDate}
-                <div class="answer_comment_text">
-                    ${text}
-                </div>
+                        </div>
+                        <div class="comment_text">
+                            ${text}
+                        </div>
+                    </div>
                 <div class="answer_comment_delete_btn">
                     <button onclick="onClickAnswerCommentDelete(${id}, ${comment_id})">삭제</button>
                 </div>
