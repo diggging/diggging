@@ -566,11 +566,11 @@ meter::-webkit-meter-low-value {
 }
 
 .sand_level_area {
-    margin-top: 1.25rem;
-
+    margin-top: 20px;
     display: flex;
     align-items: center;
 }
+
 .profile_container {
     display: flex;
     flex-direction: column;
@@ -605,10 +605,14 @@ meter::-webkit-meter-low-value {
     border-radius: 6.25rem;
 }
 
-.badge_img img,
-.badge_img span {
+.badge_img img {
     vertical-align: middle;
     margin-right: 0.25rem;
+}
+
+.badge_img span {
+    vertical-align: middle;
+    margin-right: 5px;
 }
 
 .badge_img .sand_level {
@@ -622,7 +626,6 @@ meter::-webkit-meter-low-value {
     font-size: .6875rem;
     line-height: 0.875rem;
     color: #9FAEB6;
-    top: 1px;
     position: relative;
 }
 

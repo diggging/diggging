@@ -1,4 +1,6 @@
 {%if post.is_public %}
+<title>삽질기록.txt</title>
+<link href="../../static/image/favicon.jpg" rel="shortcut icon" type="image/x-icon">
     <div class="post_card">
         {% if post.image != "../static/image/default_image.PNG" %}
         <a class="post_image" href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}">

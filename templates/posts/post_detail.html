@@ -20,7 +20,7 @@
       objectType: 'feed',
       content: {
         title: "{{post.title}}",
-              description: "{{post.desc}}",
+              description: "diggging에서 확인해보세요!",
         imageUrl: "https://diggging.com"+"{{post.image.url}}",
         link: {
         mobileWebUrl: '{{ request.build_absolute_uri }}',
@@ -47,7 +47,7 @@
       objectType: 'feed',
       content: {
               title: "{{post.title}}",
-              description: "{{post.desc|safe|escape }}",
+              description: "diggging에서 확인해보세요!",
               imageUrl: "https://diggging.com"+"{{post.image.url}}",
         link: {
           mobileWebUrl: 'https://developers.kakao.com',
@@ -114,7 +114,6 @@
                 );
                 const text = document.querySelector(`.comment_input`).value;
                 requestComment.send(JSON.stringify({ id: id, text: text}));
-                console.log(requestComment);
             }
         };
         
@@ -442,7 +441,7 @@
                             {% if request.user == comment.user %}
                             <div class="delete_btn">
                                 <button onclick="onClickDelete({{post.id}},{{comment.id}})">삭제</button>
-                                <!—comment 별로 id 준당—>
+                                <!--comment 별로 id 준당-->
                             </div>
                             {% endif %}
                         </div>

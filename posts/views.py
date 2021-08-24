@@ -657,3 +657,7 @@ def get_post(request, user_id, post_id):
     )
     # url: 저장 후 post_detail 페이지에 남아있음.
     return redirect("posts:post_detail", user_id, post_id)
+
+# 서비스 소개 페이지
+def service_view(request):
+    return render(request, "posts/our_service.html")

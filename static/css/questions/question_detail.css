@@ -131,7 +131,17 @@ code {
     font-size: 12px;
     line-height: 14px;
     color: #8C8D8D;
-    height: 24px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 80px;
+}
+
+.flex_row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .post_top {
@@ -743,6 +753,7 @@ code {
     border: solid 2px #00537A;
     box-shadow: 5px 5px 5px 1px rgb(0 0 0 / 8%);
     padding: 10px 20px;
+    margin-right: 25px;
 }
 
 .choice_btn_group {
@@ -834,7 +845,8 @@ code {
     border-radius: 3rem;
     display: inline;
     text-align: center;
-    padding-top: 0.875rem;
+    padding-top: 20px;
+    margin-right: 15px;
 }
 
 .answer_comment_input {

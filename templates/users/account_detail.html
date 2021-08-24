@@ -3,6 +3,7 @@
 
 {% block script %}
 <link rel="stylesheet" href="{% static 'css/account_detail.css' %}">
+<link href="../../static/image/favicon.jpg" rel="shortcut icon" type="image/x-icon">
 {% endblock %}
 
 {% block content %}
@@ -61,7 +62,7 @@
                 <form method="POST" action="{% url 'users:change_desc' host.id %}">
                     {% csrf_token %}
                     <div class="flex_row">    
-                        <input class="new_desc" name="new_desc" autocomplete="off" maxlength='150' >
+                        <input class="new_desc" name="new_desc" autocomplete="off" maxlength='50' >
                         <button class="setting_btn" type="submit">변경하기</button>
                     </div>
                 </form>

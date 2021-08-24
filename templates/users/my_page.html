@@ -2,7 +2,10 @@
 {% load static %}
 
 {% block script %}
+<link href="../static/image/favicon.jpg" rel="shortcut icon" type="image/x-icon">
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/ko.min.js" integrity="sha512-3kMAxw/DoCOkS6yQGfQsRY1FWknTEzdiz8DOwWoqf+eGRN45AmjS2Lggql50nCe9Q6m5su5dDZylflBY2YjABQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <link rel="stylesheet" href="{% static 'css/my_page.css' %}">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
     integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
@@ -449,19 +452,15 @@
                             <img src="{% static 'image/sand-castle.png' %}" style="height: 24px;">
                             <span class="sand_level">Lv. {{host.user_level}} 모래성</span>
                             <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
-
                             {% elif host.user_level == 2 %}
                             <img src="{% static 'image/home.png' %}" style="height: 24px;">
                             <span class="sand_level">Lv. {{host.user_level}} 벽돌집</span>
                             <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
-
                             {% else %}
                             <img src="{% static 'image/building.png' %}" style="height: 24px;">
                             <span class="sand_level">Lv. {{host.user_level}} 아파트</span>
                             <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
-
                             {% endif %}
-                            
                         </a>
                     </div>
                 </div>
@@ -477,16 +476,16 @@
                         value="{{my_sand_sum.amount__sum}}"></meter>
                     {% endif %}
                 </div>
-		<div class="follow_area">
+                <!-- 모래포인트, 레벨 영역 끝 -->
+                <div class="follow_area">
                     <div class="follow_btn_area">
                         <label for="value_low">모래포인트</label>
                         <button class="follow_btn" onclick="followModalPopup()">팔로잉
-                            {{request.user.user_following.count}}</button>
+                            {{host.user_following.count}}</button>
                         <button class="follower_button" onclick="followerModalPopup()">팔로워
-                            {{request.user.user_followed.count}}</button>
+                            {{host.user_followed.count}}</button>
                     </div>
                 </div>
-                <!-- 모래포인트, 레벨 영역 끝 -->
             </div>
             {% else %}
             <!-- 다른유저 마이페이지 -->
@@ -505,8 +504,8 @@
                     </span>
 
                     <div class="proflie_text">
-                        {% if request.user.user_profile_content %}
-                        {{request.user.user_profile_content}}
+                        {% if host.user_profile_content %}
+                            {{host.user_profile_content}}
                         {% else %}
                         <p>
                             아직 자기소개가 없습니다.
@@ -565,15 +564,6 @@
                         value="{{my_sand_sum.amount__sum}}"></meter>
                     {% endif %}
                 </div>
-            </div>
-            <div class="proflie_text">
-                {% if request.user.user_profile_content %}
-                {{request.user.user_profile_content}}
-                {% else %}
-                <p>
-                    아직 자기소개가 없습니다.
-                </p>
-                {% endif %}
             </div>
             <div class="follow_area">
                 <button onclick="otherFollowModalPopup()" class="other_follow_btn">팔로잉 {{ host_following|length }}</button>

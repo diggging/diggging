@@ -1,72 +1,7 @@
 {% extends 'questions/base.html' %}
+<link href="../../static/image/favicon.jpg" rel="shortcut icon" type="image/x-icon">
 {% load static %}
 {% block content %}
-<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-<script type='text/javascript'>
-    function sendLinkKakao(){
-      Kakao.Link.sendDefault({
-      objectType: 'feed',
-      content: {
-	title: "{{post.title}}",
-	      description: "{{post.desc}}",
-	imageUrl: "https://diggging.com"+"{{post.image.url}}",
-	link: {
-        mobileWebUrl: '{{ request.build_absolute_uri }}',
-        webUrl: '{{ request.build_absolute_uri }}'
-        }
-      },
-      buttons: [
-        {
-          title: '링크 열기',
-          link: {
-            mobileWebUrl: '{{ request.build_absolute_uri }}',
-            webUrl: '{{ request.build_absolute_uri }}'
-          }
-        }
-      ]
-    });
-}
-
-    //<![CDATA[
-    // // 사용할 앱의 JavaScript 키를 설정해 주세요.
-    Kakao.init("4bc6b6d10ce540d1bd347ad9fb8f61b5");
-    // // 카카오링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
-    Kakao.Link.createDefaultButton({
-      container: '#kakao-link-btn',
-      objectType: 'feed',
-      content: {
-	      title: "{{post.title}}",
-	      description: "{{post.desc|safe|escape }}",
-	      imageUrl: "https://diggging.com"+"{{post.image.url}}",
-        link: {
-          mobileWebUrl: 'https://developers.kakao.com',
-          webUrl: 'https://developers.kakao.com'
-        }
-      },
-      social: {
-	likeCount: {{post.helped_num}},
-	sharedCount: {{post.scrap_num}}
-      },
-      buttons: [
-        {
-          title: '웹으로 보기',
-          link: {
-            mobileWebUrl: 'https://developers.kakao.com',
-            webUrl: 'https://developers.kakao.com'
-          }
-        },
-        {
-          title: '앱으로 보기',
-          link: {
-            mobileWebUrl: 'https://developers.kakao.com',
-            webUrl: 'https://developers.kakao.com'
-          }
-        }
-      ]
-    });
-  //]]>
-</script>
-
 <div class="container">
 
     <div class="question_container">
@@ -95,10 +30,6 @@
                 </div>
                 <!-- 제목영역 끝 -->
                 <!-- 글에 대한 버튼영역 -->
-                <div class="scrap_popup" style="opacity: 0;" >
-                    <p>언어📁 {{post.language}} 프레임워크📁 {{post.framework}}으로 퍼왔습니다.
-                    마이페이지에서 확인해보세요!</p>
-                </div>
                 <div class="accordion_area">
                     {% if not request.user.id == post.user.id %}
                     <div class="post_{{post.id}} scrap_box">
@@ -176,11 +107,22 @@
                 <!-- 질문 하단 질문자 정보 -->
                 <div class="profile_username">
                     <span class="profile_image">
-                        <img src="{{ post.user.user_profile_image.url}}">
+                        <a href="{% url 'users:my_page' post.user.id %}" class="user_info">
+                            <img src="{{ post.user.user_profile_image.url}}">
+                        </a>
                     </span>
                     <div class="flex_col">
                         <h4 class="user_nickname">{{ post.user.user_nickname }}</h4>
                         <span class="user_level">Lv. {{post.user.user_level}}</span>
+                        <div class="proflie_text">
+                            {% if post.user.user_profile_content %}
+                                {{post.user.user_profile_content}}
+                            {% else %}
+                            <p>
+                                아직 자기소개가 없습니다.
+                            </p>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
                 <!-- 질문-댓글창 영역 -->
@@ -190,14 +132,18 @@
                         <div class='comment_id_{{comment.id}}'>
                             <div class="comment_info">
                                 <div class="comment_profile">
-                                    <img src="{{comment.user.user_profile_image.url}}" width="50" height="50">
-                                    <span class="user_nicknamme">
-                                        {{comment.user.user_nickname}}
-                                    </span>
+                                    <a href="{% url 'users:my_page' comment.user.id %}" class="user_info">
+                                        <img src="{{comment.user.user_profile_image.url}}">
+                                    </a>
                                 </div>
                                 <div class="comment_content">
-                                    <div class="comment_created">
-                                        {{comment.created}}
+                                    <div class="comment_flex">
+                                        <span class="user_nicknamme">
+                                            {{comment.user.user_nickname}}
+                                        </span>
+                                        <div class="comment_created">
+                                            {{comment.created}}
+                                        </div>
                                     </div>
                                     <div class="comment_text">
                                         {{comment.text}}
@@ -233,36 +179,41 @@
             <div class="post_top">
                 <div class="title_area">
                     <h1>{{answer.title}}</h1>
-                    <span class="created_date">
-                        {{post.created}}
-                    </span>
-                </div>
-                <!--하나라도 채택되면 채택 버튼 삭제 기능-->
-                {% if not answer.question.is_selected %}
-                    {% if request.user.id == post.user.id %}
-                        {% if answer.selection == False %}
-                        <div class="choice_btn">
-                            <button onclick="answerChoicePopup({{answer.id}})" value="{{answer.id}}">채택하기</button>
-                        </div>
-                        {% else %}
+                    <div class="flex_row">
+                        <span class="created_date">
+                            {{post.created}}
+                        </span>
+                        <div class="flex_row">
+                            {% if not answer.question.is_selected %}
+                            {% if request.user.id == post.user.id %}
+                            {% if answer.selection == False %}
+                            <div class="choice_btn">
+                                <button onclick="answerChoicePopup({{answer.id}})" value="{{answer.id}}">채택하기</button>
+                            </div>
+                            <h3 class="answer_selected">미채택</h3>
+                            {% else %}
                             {% if answer.selection == True %}
                             <h3 class="answer_selected">채택</h3>
                             {% endif %}
-                        {% endif %}
-                    <div class="choice_modal_body_{{answer.id}} choice_popup" style="visibility: hidden;">
-                        <button class="modal_delete_{{answer.id}} close_choice"><img src="{% static 'image/close_icon.svg' %}" width="14"/></button>
-                        <h3>해당 답변을 채택하시겠습니까?</h3>
-                        <div class="choice_btn_group">
-                            <a href="{% url 'question:chosen_answer' answer.id %}" class="yes_choice">예</a>
-                            <button class="no_select_{{answer.id}} no_choice">아니오</button>
+                            {% endif %}
+                            {% endif %}
+                            <div class="choice_modal_body_{{answer.id}} choice_popup" style="visibility: hidden;">
+                                <button class="modal_delete_{{answer.id}} close_choice"><img src="{% static 'image/close_icon.svg' %}" width="14"/></button>
+                                <h3>해당 답변을 채택하시겠습니까?</h3>
+                                <div class="choice_btn_group">
+                                    <a href="{% url 'question:chosen_answer' answer.id %}" class="yes_choice">예</a>
+                                    <button class="no_select_{{answer.id}} no_choice">아니오</button>
+                                </div>
+                            </div>
+                            {% else %}
+                            {% if answer.selection == True %}
+                            <h3 class="answer_selected">채택</h3>
+                            {% endif %}
+                            {% endif %}
                         </div>
                     </div>
-                    {% else %}
-                        {% if answer.selection == True %}
-                        <h3 class="answer_selected">채택</h3>
-                        {% endif %}
-                    {% endif %}
-                {% endif %}
+                </div>
+                <!--하나라도 채택되면 채택 버튼 삭제 기능-->
             </div>
             <div class="desc_area">
                 {{ answer.desc|safe|escape|linebreaks}}
@@ -279,14 +230,26 @@
             {% endif %}
             <a href="javascript:doDisplayAnswer({{answer.id}})" class="comment_btn"> <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12.3529 0H1.76471C0.79136 0 0 0.672617 0 1.49991V8.24952C0 9.07681 0.79136 9.74943 1.76471 9.74943H4.41177V11.7181C4.41177 11.9477 4.72059 12.0813 4.93842 11.9454L8.38235 9.74943H12.3529C13.3263 9.74943 14.1176 9.07681 14.1176 8.24952V1.49991C14.1176 0.672617 13.3263 0 12.3529 0Z" fill="#FFBA42"/>
-            </svg> 댓글 {{answer.comments|length}}</a>
-            <div class="profile_username">
+            </svg> 댓글 {{answer.answer_comments.count}}</a>
+		<div class="profile_username">
                 <span class="profile_image">
-                    <img src="{{ answer.user.user_profile_image.url}}">
+                    <a href="{% url 'users:my_page' answer.user.id %}" class="user_info">
+                        <img src="{{ answer.user.user_profile_image.url}}">
+                    </a>
                 </span>
                 <div class="flex_col">
                     <h4 class="user_nickname">{{ answer.user.user_nickname }}</h4>
                     <span class="user_level">Lv. {{answer.user.user_level}}</span>
+                    <!-- 이부분 추가 -->
+                    <div class="proflie_text">
+                        {% if answer.user.user_profile_content %}
+                            {{answer.user.user_profile_content}}
+                        {% else %}
+                        <p>
+                            아직 자기소개가 없습니다.
+                        </p>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
             <!-- 답변의 댓글창영역 -->
@@ -294,35 +257,39 @@
                 <div id="answer_comment_box">
                     <div class='addAnswerComment'>
                         {% for comment in answer.answer_comments.all.reverse %}
-                        <div class='answer_comment_id_{{comment.id}}'>
-                            <div class="comment_info">
-                                <div class="comment_profile">
-                                    <img src="{{comment.user.user_profile_image.url}}" width="50" height="50">
-                                    <span class="user_nicknamme">
-                                        {{comment.user.user_nickname}}
-                                    </span>
-                                </div>
-                                <div class="comment_content">
-                                    <div class="comment_created">
-                                        {{comment.created}}
+                            <div class='answer_comment_id_{{comment.id}}'>
+                                <div class="comment_info">
+                                    <div class="comment_profile">
+                                        <a href="{% url 'users:my_page' comment.user.id %}" class="user_info">
+                                            <img src="{{comment.user.user_profile_image.url}}">
+                                        </a>
                                     </div>
-                                    <div class="comment_text">
-                                        {{comment.text}}
+                                    <div class="comment_content">
+                                        <div class="comment_flex">
+                                            <span class="user_nicknamme">
+                                                {{comment.user.user_nickname}}
+                                            </span>
+                                            <div class="comment_created">
+                                                {{comment.created}}
+                                            </div>
+                                        </div>
+                                        <div class="comment_text">
+                                            {{comment.text}}
+                                        </div>
                                     </div>
                                 </div>
+                                {% if request.user == comment.user %}
+                                <div class="add_comment_delete_btn">
+                                    <button onclick="onClickAnswerCommentDelete({{answer.id}}, {{comment.id}})">삭제</button>
+                                </div>
+                                {%endif%}
                             </div>
-                            {% if request.user == comment.user %}
-                            <div class="add_comment_delete_btn">
-                                <button onclick="onClickAnswerCommentDelete({{answer.id}}, {{comment.id}})">삭제</button>
-                            </div>
-                            {%endif%}
-                        </div>
                         {% endfor %}
-                        <div class="comment_input_area">
-                            <input class="answer_comment_input" type="text" placeholder="댓글달기" />
-                            <button onclick="onClickAnswerComment({{ answer.id }})">댓글 남기기</button>
-                            <!--comment 별로 id 준당-->
-                        </div>
+                    </div>
+                    <div class="comment_input_area">
+                        <input class="answer_comment_input" type="text" placeholder="댓글달기" />
+                        <button onclick="onClickAnswerComment({{ answer.id }})">댓글 남기기</button>
+                        <!--comment 별로 id 준당-->
                     </div>
                 </div>
             </div>
@@ -338,10 +305,73 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/vs2015.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
     <!-- <script type="text/javascript">hljs.highlightAll();</script> -->
     <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
 
 <!-- 질문 코멘트 댓글 -->
+<script>
+    function sendLinkKakao(){
+        Kakao.Link.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: "{{post.title}}",
+                description: "diggging에서 확인해보세요!",
+          imageUrl: "https://diggging.com"+"{{post.image.url}}",
+          link: {
+          mobileWebUrl: '{{ request.build_absolute_uri }}',
+          webUrl: '{{ request.build_absolute_uri }}'
+          }
+        },
+        buttons: [
+          {
+            title: '링크 열기',
+            link: {
+              mobileWebUrl: '{{ request.build_absolute_uri }}',
+              webUrl: '{{ request.build_absolute_uri }}'
+            }
+          }
+        ]
+      });
+  }
+    //<![CDATA[
+      // // 사용할 앱의 JavaScript 키를 설정해 주세요.
+      Kakao.init("4bc6b6d10ce540d1bd347ad9fb8f61b5");
+      // // 카카오링크 버튼을 생성합니다. 처음 한번만 호출하면 됩니다.
+      Kakao.Link.createDefaultButton({
+        container: '#kakao-link-btn',
+        objectType: 'feed',
+        content: {
+                title: "{{post.title}}",
+                description: "diggging에서 확인해보세요!",
+                imageUrl: "https://diggging.com"+"{{post.image.url}}",
+          link: {
+            mobileWebUrl: 'https://developers.kakao.com',
+            webUrl: 'https://developers.kakao.com'
+          }
+        },
+        social: {
+          likeCount: {{post.helped_num}},
+          sharedCount: {{post.scrap_num}}
+        },
+        buttons: [
+          {
+            title: '웹으로 보기',
+            link: {
+              mobileWebUrl: 'https://developers.kakao.com',
+              webUrl: 'https://developers.kakao.com'
+            }
+          },
+          {
+            title: '앱으로 보기',
+            link: {
+              mobileWebUrl: 'https://developers.kakao.com',
+              webUrl: 'https://developers.kakao.com'
+            }
+          }
+        ]
+      });
+</script>
 <script type="text/javascript">
     // 빈 코멘트 게시 시 알람창 뜨게 할 div
     const test = document.querySelector('.addComment');
@@ -403,19 +433,23 @@
             const addComment = document.querySelector(`.addComment`);
             console.log(commentInput.value)
             // 아무것도 입력안했을 때, 댓글 안달림
-
+            var img = "/media/" + userImg
                 addComment.innerHTML += `
                 <div class='comment_id_${comment_id}'>
                     <div class="comment_info">
                         <div class="comment_profile">
-                            <img src="${userImgUrl}">
-                            <span class="user_nicknamme">
-                            ${userName}
-                            </span>
+                            <a href="https://diggging.com/users/${userData[0].pk}/my_page/" class="user_info">
+                                <img src="${img}">
+                            </a>
                         </div>
                         <div class="comment_content">
-                            <div class="comment_created">
-                                ${createDate}
+                            <div class="comment_flex">
+                                <span class="user_nicknamme">
+                                    ${userName}
+                                </span>
+                                <div class="comment_created">
+                                    ${createDate}
+                                </div>
                             </div>
                             <div class="comment_text">
                                 ${text}
@@ -500,10 +534,8 @@
             //유저 데이터
             const userData = JSON.parse(user); 
             const userImg = userData[0].fields.user_profile_image;
-            console.log(userImg)
+
             //이거 세개 사용하면 돼!
-            const userImgUrl = userImg.slice(2)
-            console.log(userImgUrl)
             const userName = userData[0].fields.user_nickname;
             const createDate = comment_date;
             
@@ -516,29 +548,33 @@
             // comment_profile.innerHTML = `
             // <div>
             //코멘트 작성자의 닉네임이
-           
-
+            var img = "/media/" + userImg
                 addAnswerComment.innerHTML += `
-            <div class='answer_comment_id_${comment_id}'>
-                <div class="comment_info">
-                    <div class="comment_profile">
-                        <img src="${userImgUrl}">
-                        <span class="user_nicknamme">
-                            ${userName}
-                        </span>
-                    </div>
-                    <div class="comment_content">
-                        <div class="comment_created">
-                            ${createDate}
+                <div class='comment_id_${comment_id}'>
+                    <div class="comment_info">
+                        <div class="comment_profile">
+                            <a href="https://diggging.com/users/${userData[0].pk}/my_page/" class="user_info">
+                                <img src="${img}">
+                            </a>
                         </div>
-                        <div class="comment_text">
-                            ${text}
+                        <div class="comment_content">
+                            <div class="comment_flex">
+                                <span class="user_nicknamme">
+                                    ${userName}
+                                </span>
+                                <div class="comment_created">
+                                    ${createDate}
+                                </div>
+                            </div>
+                            <div class="comment_text">
+                                ${text}
+                            </div>
                         </div>
                     </div>
-                <div class="answer_comment_delete_btn">
-                    <button onclick="onClickAnswerCommentDelete(${id}, ${comment_id})">삭제</button>
+                    <div class="delete_btn">
+                        <button onclick="onClickDelete(${id}, ${comment_id})">삭제</button>
+                    </div>
                 </div>
-            </div>
             `
             cmt_input.value = ''
         }
@@ -597,33 +633,28 @@
             }
         };
 
-
-        // <!-- 좋아요 , 스크랩 버튼 바뀐것 -->
-
-
-        // function sendLinkFacebook(){
-        // var facebook_share_url = "https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}";
-        // window.open(facebook_share_url,
-        //             'Share on Facebook',
-        //             'scrollbars=no, width=500, height=500');
-        // }    
-        // function sendLinkTwitter(){
-        //     var twitter_share_text="{{ post.title }}";
-        //     var twitter_share_url="{{ request.build_absolute_uri }}";
-        //     window.open("https://twitter.com/share?text="+twitter_share_text+"&url="+twitter_share_url,
-        //                 'Share on Twitter',
-        //                 'scrollbars=no, width=500, height=500');
-        // }
-        // function sendLinkNaver(){
-        //     var raw_url = "{{ request.build_absolute_uri }}";
-        //     var raw_title = "{{ post.title }}"
-        //     var naver_root_url = "http://share.naver.com/web/shareView.nhn?url="
-        //     var naver_share_url = naver_root_url+encodeURI(raw_url)+"&title="+encodeURI(raw_title);
-        //     window.open(naver_share_url,
-        //                 'Share on Naver',
-        //                 'scrollbars=no, width=500, height=500');    
-        // }
-
+        function sendLinkFacebook() {
+            var facebook_share_url = "https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}";
+            window.open(facebook_share_url,
+                'Share on Facebook',
+                'scrollbars=no, width=500, height=500');
+        }
+        function sendLinkTwitter() {
+            var twitter_share_text = "{{ post.title }}";
+            var twitter_share_url = "{{ request.build_absolute_uri }}";
+            window.open("https://twitter.com/share?text=" + twitter_share_text + "&url=" + twitter_share_url,
+                'Share on Twitter',
+                'scrollbars=no, width=500, height=500');
+        }
+        function sendLinkNaver() {
+            var raw_url = "{{ request.build_absolute_uri }}";
+            var raw_title = "{{ post.title }}"
+            var naver_root_url = "http://share.naver.com/web/shareView.nhn?url="
+            var naver_share_url = naver_root_url + encodeURI(raw_url) + "&title=" + encodeURI(raw_title);
+            window.open(naver_share_url,
+                'Share on Naver',
+                'scrollbars=no, width=500, height=500');
+        }
 
 $(".like").click(function () {
     var pk = $(this).attr('name')
@@ -633,7 +664,17 @@ $(".like").click(function () {
         data: { 'pk': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}' }, // 서버로 데이터 전송시 옵션, pk를 넘겨야 어떤 post인지 알 수 있음
         dataType: "json",
         success: function (response) { // 성공;
-            $(".count-" + pk).html("도움이되었어요 " + response.likes_count + "개"); // 좋아요 개수 변경
+            if (response.form) {
+                return
+            }
+            const helpedSvg = () => {
+                return `
+                <svg width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.3831 0.820517C10.9153 -0.430353 8.73231 -0.205357 7.38502 1.1848L6.85735 1.72854L6.32968 1.1848C4.98506 -0.205357 2.79938 -0.430353 1.33155 0.820517C-0.350558 2.25621 -0.438949 4.83294 1.06638 6.38917L6.24932 11.7409C6.58414 12.0864 7.12788 12.0864 7.46269 11.7409L12.6456 6.38917C14.1536 4.83294 14.0653 2.25621 12.3831 0.820517Z" fill="#FFBA42"/>
+                </svg>
+                `
+            }
+        $(".count-" + pk).html(helpedSvg() + "도움이되었어요&nbsp&nbsp" + response.likes_count); // 좋아요 개수 변경
         },
         error: function (request, status, error) { // 실패
             window.location.replace('/questions/')// 로그인 페이지로 넘어가기
@@ -650,7 +691,17 @@ $(".scrap").click(function () { // .scarp 버튼을 클릭 감지
         data: { 'pk': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}' }, // 서버로 데이터 전송시 옵션, pk를 넘겨야 어떤 post인지 알 수 있음
         dataType: "json",
         success: function (response) { // 성공;
-            $(".scarp-" + pk).html("퍼가기" + response.scarps_count + "개"); // 좋아요 개수 변경
+            if (response.form) {
+                return
+            }
+            const scrapSvg = () => {
+                return `
+                <svg width="15" height="12" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.369 2H7.83703L5.99302 0H1.38301C0.619183 0 0 0.671562 0 1.5V10.5C0 11.3284 0.619183 12 1.38301 12H13.369C14.1329 12 14.7521 11.3284 14.7521 10.5V3.5C14.7521 2.67156 14.1329 2 13.369 2ZM10.603 7.25C10.603 7.52625 10.3967 7.75 10.142 7.75H8.06753V10C8.06753 10.2763 7.86123 10.5 7.60653 10.5H7.14553C6.89082 10.5 6.68452 10.2763 6.68452 10V7.75H4.61002C4.35531 7.75 4.14902 7.52625 4.14902 7.25V6.75C4.14902 6.47375 4.35531 6.25 4.61002 6.25H6.68452V4C6.68452 3.72375 6.89082 3.5 7.14553 3.5H7.60653C7.86123 3.5 8.06753 3.72375 8.06753 4V6.25H10.142C10.3967 6.25 10.603 6.47375 10.603 6.75V7.25Z" fill="#FFBA42"/>
+                </svg>
+                `
+            }
+            $(".scarp-" + pk).html(scrapSvg() + "퍼가기&nbsp&nbsp" + response.scarps_count); // 좋아요 개수 변경
         },
         error: function (request, status, error) { // 실패
             window.location.replace('/questions/')// 로그인 페이지로 넘어가기
@@ -689,23 +740,6 @@ const answerChoicePopup = (id) => {
         modalBody.style.opacity = "0"
     });
 }
-
-const scrapPopup = document.querySelector('.scrap_popup')
-const scrapButton = document.querySelector('.scrap');
-
-scrapButton.addEventListener('click', () => {
-    if (scrapPopup.style.opacity === "0") {
-        scrapPopup.style.opacity = "1";
-        scrapPopup.style.visibility = "visibile";
-    } else {
-        scrapPopup.style.opacity = "0"
-    }
-});
-
-scrapPopup.addEventListener('click', () => {
-    scrapPopup.style.opacity = "0";
-    scrapPopup.style.visibility = "hidden";
-})
 </script>
 
 <script>

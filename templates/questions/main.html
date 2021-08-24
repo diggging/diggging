@@ -1,10 +1,11 @@
 {% extends 'questions/base.html' %}
 {% load static %}
 {% block script %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/ko.min.js" integrity="sha512-3kMAxw/DoCOkS6yQGfQsRY1FWknTEzdiz8DOwWoqf+eGRN45AmjS2Lggql50nCe9Q6m5su5dDZylflBY2YjABQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <link rel="stylesheet" href="{% static 'css/questions/main.css' %}">
 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
     integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/vs2015.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script type="text/javascript">hljs.highlightAll();</script>
@@ -35,25 +36,22 @@
                         </div>
                     </div>
                     <div class="user_level">
-                        {% if host.user_level == 0 %}
+                        {% if request.user.user_level == 0 %}
                         <img src="{% static 'image/sandbox.png' %}" style="height: 24px;">
-                        <span class="sand_level">Lv. {{host.user_level}} 맨바닥</span>
+                        <span class="sand_level">Lv. {{request.user.user_level}} 맨바닥</span>
                         <span class="sand_point">{{my_sand_sum.amount__sum}}모래</span>
-                        {% elif host.user_level == 1 %}
+                        {% elif request.user.user_level == 1 %}
                         <img src="{% static 'image/sand-castle.png' %}" style="height: 24px;">
-                        <span class="sand_level">Lv. {{host.user_level}} 모래성</span>
+                        <span class="sand_level">Lv. {{request.user.user_level}} 모래성</span>
                         <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
-
-                        {% elif host.user_level == 2 %}
+                        {% elif request.user.user_level == 2 %}
                         <img src="{% static 'image/home.png' %}" style="height: 24px;">
-                        <span class="sand_level">Lv. {{host.user_level}} 벽돌집</span>
+                        <span class="sand_level">Lv. {{request.user.user_level}} 벽돌집</span>
                         <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
-
                         {% else %}
                         <img src="{% static 'image/building.png' %}" style="height: 24px;">
-                        <span class="sand_level">Lv. {{host.user_level}} 아파트</span>
+                        <span class="sand_level">Lv. {{request.user.user_level}} 아파트</span>
                         <span class="sand_point">{{my_sand_sum.amount__sum}} 모래</span>
-
                         {% endif %}
                     </div>
                     <div class="point_gage">
@@ -104,7 +102,7 @@
                                 <span class="my_answer_title">{{answers.title|truncatechars:20}}</span>
                                 <span class="my_answer_questioner">{{answers.question.user.user_nickname}}의 질문</span>
                             </div>
-                            <div class="my_answer_desc">{{answers.desc|safe}}</div>
+                            <div class="my_answer_desc">{{ answers.desc|striptags|truncatechars:60 }}</div>
                             <span>{{answers.desc.image}}</span>
                         </div>
                     </a>
@@ -138,7 +136,7 @@
                                         </div>
                                     </a>
                                 </div>
-                                <span class="no_answer_desc">{{post.desc|safe|escape|truncatechars:80|striptags|cut:"&nbsp;"}}</span>
+                                <span class="no_answer_desc">{{post.desc|truncatechars:80|striptags|cut:"&nbsp;"}}</span>
                                 <span class="no_answer_category">
                                     <span>{{post.language}}</span>
                                     <span>{{post.framework}}</span>

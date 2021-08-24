@@ -87,7 +87,7 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-        return redirect("users:my_page", user.id)
+        return redirect("posts:main")
     else:
         return HttpResponse('Activation link is invalid!')
 
@@ -101,7 +101,7 @@ def log_in(request):
             # login(request, form.get_uer())
             login(request, form.get_user(), backend='django.contrib.auth.backends.ModelBackend') # 추가
             user = form.get_user()
-            return redirect('users:my_page', user.pk)
+            return redirect('posts:main')
         
     else:
         form = AuthenticationCustomForm()
@@ -188,7 +188,7 @@ def password_reset_form(request, pk):
 # github login
 def github_login(request):
     client_id = os.environ.get("GITHUB_ID")
-    redirect_uri = "http://13.124.23.247:8000/users/login/github/callback"
+    redirect_uri = "https://diggging.com/users/login/github/callback"
     return redirect(f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope=read:user")
 
 def github_callback(request):
@@ -233,7 +233,7 @@ def github_callback(request):
                     ctx = {
                         'user': user
                     }
-                    return redirect("users:my_page", user.id)
+                    return redirect("posts:main")
                 else:
                     raise Exception("Can't get your profile")
         else:
