@@ -31,10 +31,10 @@
     {% else %}
     <div class="post_container" id="scroll-element">
         {% for post in posts.all %}
-                {%if post.is_public %}
+                {% if post.image != "../static/image/default_image.PNG" %}
                 <div class="post_card">
-                    {% if post.image != "../static/image/default_image.PNG" %}
-			<a class="post_image" href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}">
+                    {% if post.image %}
+                    <a class="post_image" href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}">
                         <div class="post_image_container">
                             <img src="{{post.image.url}}" alt="" class="post_image_container">
                         </div>
@@ -45,9 +45,8 @@
                     {% endif %}
                     <div class="post_element">
                         <a class="post_link" href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}">
-                                {% if post.image != "../static/image/default_image.PNG" %}
-
-				<div class="post_title">
+                            {%if post.image %}
+                                <div class="post_title">
                                     {{ post.title|truncatechars:24 }}
                                 </div>
                                 <div class="post_select">
@@ -65,7 +64,8 @@
                                     </span>
                                 </div>
                                 <p class="post_desc">
-                                    {{ post.desc|safe|escape|truncatechars:150|striptags|cut:"&nbsp;"}}
+                                    {{ post.desc|safe|escape|truncatechars:110|striptags|cut:"&nbsp;"}}
+                                    <span id="desc_img">{{post.desc.img}}</span>
                                 </p>
                             {% else %}
                                 <div class="post_title_img_none">
@@ -86,7 +86,7 @@
                                     </span>
                                 </div>
                                 <p class="post_desc_img_none">
-                                    {{ post.desc|safe|escape|truncatechars:500|striptags|cut:"&nbsp;"}}
+                                    {{ post.desc|safe|escape|truncatechars:300|striptags|cut:"&nbsp;"}}
                                 </p>
                             {% endif %}
                         </a>
@@ -107,7 +107,7 @@
                                     댓글 {{post.comments.count}}개
                                 </span>
                                 <span class="username">
-                                    by {{post.user.username}}
+                                    by {{post.user.user_nickname}}
                                 </span>
                             </div>
                         </a>

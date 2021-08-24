@@ -13,8 +13,8 @@
 {% block content %}
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <div class="main_container">
-    <div class="service_desc">
-        <div class="desc">
+    <div class="service_desc" onclick="location.href='{% url 'posts:service_view' %}'">    
+	<div class="desc">
             <h1>개발자들을 위한</h1>
             <h1>삽질 기록 질문 커뮤니티</h1>
             <h3>
