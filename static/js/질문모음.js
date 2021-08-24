@@ -5,14 +5,13 @@ const btnTap = document.getElementById('question_btn_tap');
 
 const langBtn = document.querySelector('.question_language_btn');
 const frameworkBtn = document.querySelector('.question_framework_btn');
-var urlName = "https://diggging.com";
 
 langBtn.addEventListener('click', () => {
     langBtn.style.background = "#FFBA42";
     frameworkBtn.style.background = "#FFD358";
 
     id =langBtn.value;
-    var a = urlName+"/users/" + id
+    var a = "https://diggging.com/users/" + id
     var url = a + "/questions_lang_folder/"
     
     fetch(url, {
@@ -51,7 +50,7 @@ const langPost = () => {
         langPostBtn[i].addEventListener('click', () => {
 
             id =langPostBtn[i].value;
-            var a = urlName+"/users/" + id
+            var a = "https://diggging.com/users/" + id
             var url = a + "/questions_lang_post/"
             fetch(url, {
                 method: "GET",
@@ -63,18 +62,35 @@ const langPost = () => {
             .then(res => res.json())
             .then(data => {
 
+                 //글자 수 잘라주기
                 let desc = [];
                 for(j=0; j < data.length; j++) {
-                    if(data[j].desc.length > 150) {
+                    if(data[j].desc.length > 300) {
                         desc[j] = data[j].desc.slice(0, 100)
                         data[j].desc = desc[j]
+                    } else {
+                        data[j].desc = data[j].desc
                     }
                 }
+                console.log(data[0].desc);
                 const extractTextPattern = /(<([^>]+)>)/gi;
-
+                // 태그 삭제하기
                 let replaceDesc = [];
-                for(k=0; k < desc.length; k++) {
-                    replaceDesc[k] = desc[k].replace(extractTextPattern, "")
+                for(k=0; k < data.length; k++) {
+                    if(data[k].desc != null) {
+                        replaceDesc[k] = data[k].desc.replace(extractTextPattern, "")
+                        data[k].desc = replaceDesc[k]
+                    }else {
+                        data[k].desc = data[k].desc
+                    }
+                }
+
+                // 날짜 한글로 변환하기\
+                let dateToKo = [];
+                for(let l = 0; l < data.length; l++) {
+                    dateToKo[l] = moment(data[0].created, 'YYYY-MM-DDTHH:mm:ssZ')
+                    dateToKo[l].format('LLL')
+                    data[l].created = dateToKo[l].format('LLL')
                 }
                 
                 if (data.length === 0) {
@@ -82,7 +98,7 @@ const langPost = () => {
                 } else {
                     const txt = data.map(post => {
                         return `
-                <a class="post_link" href=urlName+"/questions/${post.user_id}/${post.id}/detail">
+                <a class="post_link" href="https://diggging.com/questions/${post.user_id}/${post.id}/detail">
                     <div class="my_post_list">
                         <div class="post_title">
                             ${post.title}
@@ -121,7 +137,7 @@ const langPost = () => {
         frameworkBtn.style.background = "#FFBA42";
 
         id =frameworkBtn.value;
-        var a = urlName+"/users/" + id
+        var a = "https://diggging.com/users/" + id
         var url = a + "/questions_framework_folder/"
         
         fetch(url, {
@@ -160,7 +176,7 @@ const framePost = () => {
         framePostBtn[i].addEventListener('click', () => {
 
             id =framePostBtn[i].value;
-            var a = urlName+"/users/" + id
+            var a = "https://diggging.com/users/" + id
             var url = a + "/questions_framework_post/"
             
             fetch(url, {
@@ -173,26 +189,43 @@ const framePost = () => {
             .then(res => res.json())
             .then(data => {
 
+                 //글자 수 잘라주기
                 let desc = [];
                 for(j=0; j < data.length; j++) {
-                    if(data[j].desc.length > 150) {
+                    if(data[j].desc.length > 300) {
                         desc[j] = data[j].desc.slice(0, 100)
                         data[j].desc = desc[j]
+                    } else {
+                        data[j].desc = data[j].desc
                     }
                 }
+                console.log(data[0].desc);
                 const extractTextPattern = /(<([^>]+)>)/gi;
-
+                // 태그 삭제하기
                 let replaceDesc = [];
-                for(k=0; k < desc.length; k++) {
-                    replaceDesc[k] = desc[k].replace(extractTextPattern, "")
+                for(k=0; k < data.length; k++) {
+                    if(data[k].desc != null) {
+                        replaceDesc[k] = data[k].desc.replace(extractTextPattern, "")
+                        data[k].desc = replaceDesc[k]
+                    }else {
+                        data[k].desc = data[k].desc
+                    }
                 }
-                console.log(data)
+
+                // 날짜 한글로 변환하기\
+                let dateToKo = [];
+                for(let l = 0; l < data.length; l++) {
+                    dateToKo[l] = moment(data[0].created, 'YYYY-MM-DDTHH:mm:ssZ')
+                    dateToKo[l].format('LLL')
+                    data[l].created = dateToKo[l].format('LLL')
+                }
+                
                 if (data.length === 0) {
                     thirdContainer.innerHTML = ""
                 } else {
                     const txt = data.map(post => {
                         return `
-                    <a class="post_link" href=urlName+"/questions/${post.user_id}/${post.id}/detail">
+                    <a class="post_link" href="https://diggging.com/questions/${post.user_id}/${post.id}/detail">
                         <div class="my_post_list">
                             <div class="post_title">
                                 ${post.title}

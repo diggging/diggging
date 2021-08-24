@@ -2,8 +2,6 @@
 const categoryTab = document.querySelector('.folder_area');
 const langBtn = document.querySelector('.language_btn');
 const frameworkBtn = document.querySelector('.framework_btn');
-var urlName = "https://diggging.com";
-
 
 //폴더 뜨는 버튼
 langBtn.addEventListener('click', () => {
@@ -11,7 +9,7 @@ langBtn.addEventListener('click', () => {
     frameworkBtn.style.background = "#FFD358";
 
     id =langBtn.value;
-    var a = "https://diggging.com/questions/"+id;
+    var a = "https://diggging.com/questions/" + id
     var url = a + "/questions_lang_folder/"
     
     fetch(url, {
@@ -51,7 +49,7 @@ const langPost = () => {
         langPostBtn[i].addEventListener('click', () => {
 
             id =langPostBtn[i].value;
-            var a = urlName+"/questions/" + id
+            var a = "https://diggging.com/questions/" + id
             var url = a + "/questions_lang_post/"
             fetch(url, {
                 method: "GET",
@@ -62,22 +60,36 @@ const langPost = () => {
             })
             .then(res => res.json())
             .then(data => {
+                 //글자 수 잘라주기
                 
                 let desc = [];
                 for(j=0; j < data.data.length; j++) {
-                    if(data.data[j].desc.length > 150) {
-                        desc[j] = data.data[j].desc.slice(0, 40)
+                    if(data.data[j].desc.length > 300) {
+                        desc[j] = data.data[j].desc.slice(0, 100)
                         data.data[j].desc = desc[j]
+                    } else {
+                        data.data[j].desc = data.data[j].desc
                     }
                 }
+                
                 const extractTextPattern = /(<([^>]+)>)/gi;
-
+                // 태그 삭제하기
                 let replaceDesc = [];
-                for(k=0; k < desc.length; k++) {
-                    replaceDesc[k] = desc[k].replace(extractTextPattern, "")
+                for(k=0; k < data.data.length; k++) {
+                    replaceDesc[k] = data.data[k].desc.replace(extractTextPattern, "")
+                    data.data[k].desc = replaceDesc[k]
+                }
+                // console.log(replaceDesc)
+                
+                // 날짜 한글로 변환하기\
+                let dateToKo = [];
+                for(let l = 0; l < data.data.length; l++) {
+                    dateToKo[l] = moment(data.data[0].created, 'YYYY-MM-DDTHH:mm:ssZ')
+                    dateToKo[l].format('LLL')
+                    data.data[l].created = dateToKo[l].format('LLL')
                 }
 
-                if (data.length === 0) {
+                if (data.data.length === 0) {
                     noAnswerListBox.innerHTML = ""
                 } else {
                     const txt = data.data.map(post => {
@@ -174,19 +186,32 @@ const framePost = () => {
 
                 let desc = [];
                 for(j=0; j < data.data.length; j++) {
-                    if(data.data[j].desc.length > 150) {
-                        desc[j] = data.data[j].desc.slice(0, 40)
+                    if(data.data[j].desc.length > 300) {
+                        desc[j] = data.data[j].desc.slice(0, 100)
                         data.data[j].desc = desc[j]
+                    } else {
+                        data.data[j].desc = data.data[j].desc
                     }
                 }
+                
                 const extractTextPattern = /(<([^>]+)>)/gi;
-
+                // 태그 삭제하기
                 let replaceDesc = [];
-                for(k=0; k < desc.length; k++) {
-                    replaceDesc[k] = desc[k].replace(extractTextPattern, "")
+                for(k=0; k < data.data.length; k++) {
+                    replaceDesc[k] = data.data[k].desc.replace(extractTextPattern, "")
+                    data.data[k].desc = replaceDesc[k]
                 }
-
-                if (data.length === 0) {
+                // console.log(replaceDesc)
+                
+                // 날짜 한글로 변환하기\
+                let dateToKo = [];
+                for(let l = 0; l < data.data.length; l++) {
+                    dateToKo[l] = moment(data.data[0].created, 'YYYY-MM-DDTHH:mm:ssZ')
+                    dateToKo[l].format('LLL')
+                    data.data[l].created = dateToKo[l].format('LLL')
+                }
+                
+                if (data.data.length === 0) {
                     noAnswerListBox.innerHTML = ""
                 } else {
                     const txt = data.data.map(post => {
