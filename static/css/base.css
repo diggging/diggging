@@ -86,21 +86,8 @@
 .nav_main_title {
     font-family: 'GmarketSansBold';
     font-size: 1.375rem;
-    color: $c4c4c4;
-    text-transform: capitalize;
-    white-space: nowrap;
-    color: transparent;
-    position: absolute;
+    color: #00537A;
 }
-
-.nav_main_title::before{
-    content: "삽질모음.TXT";
-    position: absolute;
-    overflow: hidden;
-    color: #c4c4c4;
-    border-right: 3px solid #000000;
-    animation: typing 6s steps(8) infinite;    
-} 
 
 .nav_right {
     display: flex;
@@ -159,8 +146,8 @@
     text-align: center;
     width: 2.5rem;
     height: 2.5rem;
-    background-size: contain;
     border-radius: 6.25rem;
+    object-fit: cover;
 }
 
 .user_name {
@@ -271,16 +258,4 @@
     margin: 0rem;
     border-radius: 0rem;
     text-align: left;
-}
-
-@keyframes typing{
-    0%{
-        width: 0%;
-    }
-    50%{
-        width: 100%;
-    }
-    100%{
-        width: 0%;
-    }
 }

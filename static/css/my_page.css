@@ -457,7 +457,7 @@ meter::-webkit-meter-low-value {
     width: 100%;
     height: 13.75rem;
     border-bottom: 0.0625rem solid #E5E5E5;
-    padding: 3.125rem 1.5rem 0.875rem 1.5rem;
+    padding: 0.5rem 1.5rem 0.875rem 1.5rem;
 }
 
 .post_title {

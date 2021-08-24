@@ -63,6 +63,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
 .desc {
@@ -246,10 +247,10 @@ html, body {
 .post_title {
     font-family: 'Pretendard-SemiBold';
     color: #585858;
-    font-size: 1.25rem;
+    font-size: 18px;
     /* text-overflow: ellipsis; */
     height: 1.875rem;
-    margin: 1.25rem 0 0.625rem 0;
+    margin: 20px 0 30px 0;
     line-height: 1.75rem;
 }
 
@@ -268,7 +269,7 @@ html, body {
     font-size: 1.25rem;
     text-overflow: ellipsis;
     height: 1.875rem;
-    margin: 0 0 0.625rem 0;
+    margin: 0 0 50px 0;
     line-height: 1.75rem;
 }
 
@@ -367,4 +368,3 @@ html, body {
     width: 0px;
     display: none;
 }
-

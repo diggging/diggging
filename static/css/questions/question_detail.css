@@ -1,4 +1,3 @@
-
 * {
     box-sizing: border-box;
 }
@@ -139,7 +138,6 @@ code {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    border-bottom: solid 1px #ececec;
     padding-bottom: 1rem;
 }
 
@@ -302,6 +300,7 @@ code {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 3.7125rem;
 }
 
 #facebook_icon > a > svg > path {
@@ -459,6 +458,11 @@ code {
     margin: 2rem 0;
 }
 
+.profile_text {
+    margin-left: 10px;
+    line-height: 24px;
+} 
+
 .profile_image {
     font-size: 0.825rem;
     color: var(--text-color);
@@ -601,8 +605,8 @@ code {
 
 .comment_profile img {
     border-radius: 2rem;
-    width: 50px;
-    height: 50px;
+    width: 35px;
+    height: 35px;
 }
 
 
@@ -617,7 +621,7 @@ code {
     height: 2.5rem;
     border: 0.0625rem solid #00537A;
     cursor: pointer;
-    margin: 0.875rem 0 1.875rem 35.8125rem;
+    margin: 14px 0 30px 573px;
 }
 
 .comment_input_area button:hover {
@@ -756,7 +760,6 @@ code {
     height: 100px;
     line-height: 2rem;
     padding: 10px;
-    right: 100px;
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 3px 0 rgb(34 36 38 / 15%);
@@ -817,6 +820,12 @@ code {
     height: 20px;
 }
 
+.proflie_text {
+    margin-left: 10px;
+    line-height: 25px;
+    font-size: 14px;
+}
+
 .answer_selected {
     width: 3.625rem;
     height: 3.625rem;
@@ -825,7 +834,7 @@ code {
     border-radius: 3rem;
     display: inline;
     text-align: center;
-
+    padding-top: 0.875rem;
 }
 
 .answer_comment_input {
@@ -843,10 +852,9 @@ code {
 .addAnswerComment {
     font-size: 1rem;
     font-family: var(--content-font);
-    padding: 10px;
 }
 
-/* .addAnswerComment > div {
+.addAnswerComment > div {
     padding: 1.125rem 1.875rem 1.125rem 1.875rem;
     background: #FFFFFF;
     border: 0.0625rem solid #62A1BF;
@@ -854,14 +862,20 @@ code {
     border-radius: 1.25rem;
     width: 44rem;
     margin-bottom: 1.5rem;
-} */
+}
+
+.addAnswerComment > * {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
 .add_comment_delete_btn > button {
     padding: 0.625rem 1.25rem;
     background-color: white;
     border: 0.0625rem solid #00537A;
     color: #00537A;
-    font-family: var(--btn-font);
+    font-family: var(—btn-font);
     border-radius: 1.25rem;
     width: 4.8125rem;
     height: 2.5rem;
