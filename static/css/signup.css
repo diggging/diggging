@@ -1,5 +1,6 @@
 * {
     box-sizing: border-box;
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
     list-style-type: none;
@@ -12,49 +13,8 @@
     --title-font: 'Pretendard-ExtraBold';
     --content-font: 'Pretendard-Regular';
     --btn-font: 'Pretendard-SemiBold';
-    --border-radius: 8px;
+    --border-radius: 0.5rem;
 }
-
-a {
-    color: var(--sand-color);
-    font-weight: 400;
-}
-
-h1, h2, h3, h4, h5 {
-    margin: 0;
-    color: var(--text-color);
-}
-
-p {
-    color:var(--text-color);
-}
-
-@media only screen and (max-width: 767px) {
-    .container > .form_container {
-        padding: 1.5rem;
-        display: flex;
-        width: 100%;
-        height: 100vh;
-        flex-direction: column;
-        justify-content: space-around;
-        align-items: center;
-    }
-}
-
-@media only screen and (min-width:768px) {
-    .container > .form_container {
-        padding: 1.5rem;
-        display: flex;
-        width: 600px;
-        height: 580px;
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        flex-direction: column;
-        justify-content: space-around;
-        align-items: center;
-    }
-}
-
 @font-face {
     font-family: 'Pretendard-Regular';
     src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
@@ -76,6 +36,15 @@ p {
     font-style: normal;
 }
 
+html, body {
+    background: #FFD358;
+}
+
+.flex_row {
+    display: flex;
+    flex-direction: row;
+}
+
 .container {
     display: flex;
     justify-content: center;
@@ -83,91 +52,194 @@ p {
     height: 100vh;
 }
 
-.form_container > .signup_top {
+.form_container {
+    width: 31.25rem;
+    height: 42.375rem;
+    background: #FFFFFF;
+    box-shadow: 0.625rem 0.625rem 0.25rem 0.25rem rgba(0, 0, 0, 0.04);
+    border-radius: 1.25rem;
+}
+
+.signup_text {
+    font-family: 'Pretendard-SemiBold';
+    font-size: 1.25rem;
+    line-height: 1.8125rem;
     text-align: center;
+    color: #00537A;
+    width: 100%;
+    padding-top: 1.125rem;
+    padding-bottom: 1.125rem;
+    border-bottom: 0.0625rem solid #E5E5E5;
 }
 
 .signup_logo {
-    height: 3rem;
-}
-
-.signup_top > .signup_question {
-    width: 100%;
     display: flex;
-    padding: 0.625em;
-    font-family: var(--content-font);
-}
-
-.signup_question h4 {
-    font-size: 16px;
-    margin-right: 1.5rem;
-}
-
-.signup_question > a {
-    font-family: var(--btn-font);
-    font-size: 16px;
-    margin-right: 1.5rem;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2.875rem;
+    text-decoration: none;
+    font-family: 'Pretendard-ExtraBold';
+    font-size: 1.625rem;
+    line-height: 1.875rem;
+    text-align: center;
+    color: #00537A;
 }
 
 .signup_middle {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.signup_input {
-    font-family: var(--content-font);
     margin-top: 1.5rem;
-    text-align: center;
 }
 
-.signup_input .input_label {
-    font-family: var(--btn-font);
-    font-size: 1rem;
-    color: var(--sand-color);
-    padding-right: 10px;
+.signup_container {
+    width: 23.6875rem;
 }
 
-.password_format {
-    font-family: var(--content-font);
-    font-size: 0.75rem;
-    color: red;
-    padding-right: 10px;
-    text-align: center;
-    margin: 2px 100px 0 0;
+.input_password_container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.signup_input input {
-    padding: 10px 10px;
-    width: 300px;
-    height: 40px;
-    border-radius: var(--border-radius);
-    border: 1px solid var(--border-color);
+.input_password_container div {
+    /* margin: auto; */
 }
 
-#id_password1 {
-    margin-right: 10px;
-}
-
+#id_username,#id_email,
+#id_user_nickname, #id_password1,
 #id_password2 {
-    margin-right: 37px;
+    width: 100%;
+    height: 3.125rem;
+    padding: 1rem;
+    background: rgba(241, 241, 241, 0.6);
+    border: none;
+    margin-bottom: 1.5rem;
+    border-radius: 0.625rem;
+}
+
+#id_username:focus, #id_email:focus,
+#id_user_nickname:focus, #id_password1:focus,
+#id_password2:focus {
+    outline: none;
+}
+
+::-webkit-input-placeholder {
+    font-family: 'Pretendard-Regular';
+    text-align: start;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #C4C4C4;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+    font-family: 'Pretendard-Regular';
+    text-align: start;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #C4C4C4;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+    font-family: 'Pretendard-Regular';
+    text-align: start;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #C4C4C4; 
+}
+
+:-ms-input-placeholder {  
+    font-family: 'Pretendard-Regular';
+    text-align: start;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #C4C4C4;
 }
 
 .error_message {
-    font-family: var(--content-font);
-    font-size: 0.75rem;
-    color: red;
+    font-family: 'Pretendard-SemiBold';
+    font-size: 0.875rem;
     text-align: center;
+    color: #62A1BF;
+    margin-bottom: 1.125rem;
 }
 
-.signup_btn {
-    background-color: #FFF8CA;
-    color: #4E4E4E;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    font-family: var(--btn-font);
-    width: 300px;
-    height: 40px;
-    margin-left: 100px;
-    margin-top: 20px;
+.login_btn {
+    width: 23.6875rem;
+    height: 3.125rem;
+    background: #FFE59C;
+    border-radius: 1.25rem;
+    border: none;
+    font-size: 1.25rem;
+    line-height: 1.8125rem;
+    text-align: center;
+    color: #FFBA42;
+    font-family: 'Pretendard-SemiBold';
+    cursor: pointer;
+    margin-bottom: 1.25rem;
 }
+
+.login_btn:hover {
+    background: #FFBA42;
+    color: white;
+    border: 0.125rem solid #FFBA42;
+}
+
+.social_login {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    width: 23.6875rem;
+    height: 3.125rem;
+    margin: auto;
+    font-family: 'Pretendard-SemiBold';
+    color: #585858;
+    font-size: 1rem;
+    line-height: 1.4375rem;
+}
+
+.github {
+    text-decoration: none;
+}
+
+.naver {
+    margin-left: 1.8125rem;
+    margin-right: 0.3125rem;
+    text-decoration: none;
+}
+
+.signup_question,
+.login_question_forget {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    width: 23.6875rem;
+    margin: auto;
+    margin-top: 0.625rem;
+    margin-bottom: 1rem;
+    color: #585858;
+    font-size: 1rem;
+    line-height: 1.4375rem;
+}
+
+.signup_margin {
+    margin-bottom: 0.625rem;
+}
+
+.signup_question > a,
+.login_question_forget > a {
+    color: #62A1BF;
+    text-decoration: underline;
+    text-underline-position: under;
+}
+
+.signup_question > a:hover,
+.login_question_forget > a:hover {
+    color: #00537A;
+    text-decoration: underline;
+    text-underline-position: under;
+}
+
+

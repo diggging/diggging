@@ -1,33 +1,22 @@
 from django import forms
-# from django.forms.utils import ErrorList
-# from django.contrib.sites.shortcuts import get_current_site
-# from django.core.mail.message import EmailMessage
-# from django.db.models import fields
-# from django.template.loader import render_to_string
-# from django.utils.encoding import force_bytes
-# from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-# from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from .models import User
-# from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user, get_user_model, authenticate
-#from django.contrib.auth.forms import UserChangeForm
-#from django.utils.text import capfirst
 import re
 
 # 회원 가입을 위한 form
 class UserCustomCreationForm(UserCreationForm):
     #placeholder
     username= forms.CharField(widget=forms.TextInput
-                        (attrs={'placeholder':'사용할 아이디를 입력해 주세요'}))
+                        (attrs={'placeholder':'사용할 아이디'}))
     email = forms.CharField(widget=forms.TextInput
-                        (attrs={'placeholder': '사용할 이메일을 입력해 주세요'}))
+                        (attrs={'placeholder': '사용할 이메일'}))
     user_nickname = forms.CharField(widget=forms.TextInput
-                        (attrs={'placeholder': '사용할 닉네임을 입력해주세요(최대8자)'}))
+                        (attrs={'placeholder': '사용할 닉네임'}))
     password1 = forms.CharField(widget=forms.PasswordInput
-                        (attrs={'placeholder': '사용할 비밀번호를 입력해주세요'}))
+                        (attrs={'placeholder': '비밀번호'}))
     password2 = forms.CharField(widget=forms.PasswordInput
-                        (attrs={'placeholder': '비밀번호를 재입력해주세요'}))
+                        (attrs={'placeholder': '비밀번호 확인'}))
 
     #eror_messages custom
     error_messages = {
@@ -65,11 +54,6 @@ class UserCustomCreationForm(UserCreationForm):
                 code='email_format_error'
             )
         
-        # if input_email and User.objects.filter(email=input_email):
-        #     raise forms.ValidationError(
-        #         self.error_messages['existed_email'],
-        #         code='existed_email'
-        #     )
         return input_email
     
     #이미 존재하는 닉네임 검사
@@ -112,9 +96,9 @@ class UserCustomCreationForm(UserCreationForm):
 class AuthenticationCustomForm(AuthenticationForm):
 
     username= forms.CharField(widget=forms.TextInput
-                        (attrs={'placeholder':'아이디를 입력해 주세요'}))
+                        (attrs={'placeholder':'아이디'}))
     password = forms.CharField(widget=forms.PasswordInput
-                        (attrs={'placeholder': '비밀번호를 입력해주세요'}))
+                        (attrs={'placeholder': '비밀번호'}))
 
     error_messages = {
         'invalid_login': "로그인을 다시 확인해주세요",

@@ -28,7 +28,7 @@ from django.utils.encoding import force_bytes, force_text
 from .tokens import account_activation_token, password_reset_token
 from django.contrib import messages
 # from django.contrib.messages.views import SuccessMessageMixin
-# from django.contrib.sites.models import Site
+from django.contrib.sites.models import Site
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 from django.http.response import JsonResponse
@@ -38,6 +38,12 @@ from django.http.response import JsonResponse
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
 # 회원가입
+my_site = Site.objects.get(pk=1)
+my_site.domain = 'diggging.com'
+my_site.name ="digging_main"
+my_site.save()
+
+@csrf_exempt
 def signup(request):
     if request.method == "POST":
         user_form = UserCustomCreationForm(request.POST)
@@ -59,8 +65,6 @@ def signup(request):
             email.send()
 
             # user가 생기자마자 바로 해결, 미해결 폴더 만들기
-            solved = Folder.objects.create(folder_user=user, folder_name="해결", folder_kind="solved")
-            not_solved = Folder.objects.create(folder_user=user, folder_name="미해결", folder_kind="solved")
             # return HttpResponse('Please confirm your email address to complete the registration') -> 이메일 인증 성공 확인 가능 메세지
 
             return redirect('users:login')
@@ -83,11 +87,12 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-        return HttpResponse('Thank you for your email confirmation. Now you can login your account')
+        return redirect("posts:main")
     else:
         return HttpResponse('Activation link is invalid!')
 
 # 로그인
+@csrf_exempt
 def log_in(request):
     context = {}
     if request.method == "POST":
@@ -96,7 +101,7 @@ def log_in(request):
             # login(request, form.get_uer())
             login(request, form.get_user(), backend='django.contrib.auth.backends.ModelBackend') # 추가
             user = form.get_user()
-            return redirect('users:my_page', user.pk)
+            return redirect('posts:main')
         
     else:
         form = AuthenticationCustomForm()
@@ -183,7 +188,7 @@ def password_reset_form(request, pk):
 # github login
 def github_login(request):
     client_id = os.environ.get("GITHUB_ID")
-    redirect_uri = "http://127.0.0.1:8000/users/login/github/callback"
+    redirect_uri = "https://diggging.com/users/login/github/callback"
     return redirect(f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope=read:user")
 
 def github_callback(request):
@@ -224,13 +229,11 @@ def github_callback(request):
                         )
                         user.set_unusable_password()
                         user.save()
-                        solved = Folder.objects.create(folder_user=user, folder_name="해결", folder_kind="solved")
-                        not_solved = Folder.objects.create(folder_user=user, folder_name="미해결", folder_kind="solved")
                     login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                     ctx = {
                         'user': user
                     }
-                    return redirect("users:my_page", user.id)
+                    return redirect("posts:main")
                 else:
                     raise Exception("Can't get your profile")
         else:
@@ -264,7 +267,7 @@ def my_page(request, pk):
     my_recent_logs = Post.objects.filter(user=host).order_by("-created")
 
     # 모래
-    my_sand = Sand.objects.filter(user = host)
+    my_sand = Sand.objects.filter(user = host).order_by("-id")
     my_sand_sum = my_sand.aggregate(Sum('amount'))
     sands = serializers.serialize('json', my_sand)
     if my_sand_sum['amount__sum'] == None:
@@ -323,7 +326,7 @@ def my_posts(request, host_id):
     my_recent_logs = Post.objects.filter(user=host).order_by("-created")
 
     # 모래
-    my_sand = Sand.objects.filter(user = host)
+    my_sand = Sand.objects.filter(user = host).order_by("-id")
     my_sand_sum = my_sand.aggregate(Sum('amount'))
     sands = serializers.serialize('json', my_sand)
     if my_sand_sum['amount__sum'] == None:
@@ -380,7 +383,7 @@ def my_questions(request, host_id):
     my_recent_logs = Post.objects.filter(user=host).order_by("-created")
 
     # 모래
-    my_sand = Sand.objects.filter(user = host)
+    my_sand = Sand.objects.filter(user = host).order_by("-id")
     my_sand_sum = my_sand.aggregate(Sum('amount'))
     sands = serializers.serialize('json', my_sand)
     if my_sand_sum['amount__sum'] == None:
@@ -437,7 +440,7 @@ def my_answers(request, host_id):
     my_recent_logs = Post.objects.filter(user=host).order_by("-created")
 
     # 모래
-    my_sand = Sand.objects.filter(user = host)
+    my_sand = Sand.objects.filter(user = host).order_by("-id")
     my_sand_sum = my_sand.aggregate(Sum('amount'))
     if my_sand_sum['amount__sum'] == None:
         my_sand_sum = 0
@@ -502,6 +505,26 @@ def lang_folder_posts(request, pk):
     folder = Folder.objects.get(pk=pk)
     posts = Post.objects.filter(folder=folder)
     data = posts.values()
+
+    #comment, user정보를 보내줘야 할거 같음
+    # 내정보 받아오기
+    # user = User.objects.filter(pk=folder.folder_user.id)
+    # user_data = serializers.serialize('json', user)
+    
+    # comments = []
+    # for post in posts:
+    #     comments.append(post.comments.all())
+    # comments_data = serializers.serialize('json',comments)
+    
+    # questions user
+    # a = User.objects.get(pk=question_post.user.id)
+    # question_comments 개수
+
+    # ctx = {
+    #     'data': data,
+    #     'user': user_data,
+    #     'comments': comments_data,
+    # }
 
     return JsonResponse(list(data), safe=False)
 
@@ -574,7 +597,7 @@ def follow(request, host_pk):
 def account_detail(request, pk):
     host = get_object_or_404(User,pk=pk)
     # 모래
-    my_sand = Sand.objects.filter(user = host)
+    my_sand = Sand.objects.filter(user = host).order_by("-id")
     my_sand_sum = my_sand.aggregate(Sum('amount'))
     sands = serializers.serialize('json', my_sand)
     if my_sand_sum['amount__sum'] == None:
@@ -659,14 +682,12 @@ def change_img(request, pk):
 def alarm(request, pk):
     me = User.objects.get(id=pk)    # 누구의 alarm인지
     my_alarm = Alarm.objects.filter(user=me)    # 주인의 alarm 모두 가져오기
+    my_alarm = my_alarm.order_by("-id")
     not_check_alarm = my_alarm.filter(is_checked = False)   # 그중 False인애들 가져와서
     for alarm in not_check_alarm:
         alarm.is_checked = True
         alarm.save()
 
-    if my_alarm.count() >10:
-        start = my_alarm.count()-10
-        my_alarm = my_alarm[start:]
 
     data = serializers.serialize('json', my_alarm)
 

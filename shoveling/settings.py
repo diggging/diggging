@@ -14,6 +14,9 @@ import os
 from pathlib import Path
 import json
 import sys
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,10 +33,9 @@ ROOT_DIR = os.path.dirname(BASE_DIR)
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['13.124.23.247', 'diggging.com' ]
 
 # Application definition
 
@@ -62,7 +64,10 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.naver",
     #select search
+    "sass_processor",
 ]
+
+SASS_PROCESSOR_ENABLED = True
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 
@@ -96,6 +101,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = "shoveling.urls"
@@ -170,13 +176,22 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-STATIC_ROOT = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+#STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+
+#STATICFILES_DIRS = [
+#    os.path.join(BASE_DIR, "static"),
+#]
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'sass_processor.finders.CssFinder',
 ]
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, 'static')
+
 
 AUTH_USER_MODEL = "users.User"
 

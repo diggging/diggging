@@ -50,7 +50,7 @@ def scrap_axios(request):
 
     post = Post.objects.filter()
 
-    paginator = Paginator(all_posts_scrap, 8)
+    paginator = Paginator(all_posts_scrap, 10)
     page_num = request.GET.get("page")
     posts_scrap = paginator.page(page_num)
 
@@ -61,14 +61,11 @@ def scrap_axios(request):
     return render(request, 'posts/post_scrap.html', {'posts': posts_scrap, "user":me})
 
 
-    return render(request, "posts/test.html")
-
-
 @require_GET
 def helped_axios(request):
     me = request.user
     all_posts_helped = Post.objects.all().order_by("-helped_num")
-    paginator = Paginator(all_posts_helped, 8)
+    paginator = Paginator(all_posts_helped, 10)
     page_num = request.GET.get("page")
     posts_helped = paginator.page(page_num)
 
@@ -94,7 +91,7 @@ def follow_axios(request):
     else:
         all_followings_posts = []
 
-    paginator = Paginator(all_followings_posts, 8)
+    paginator = Paginator(all_followings_posts, 10)
     page_num = request.GET.get("page")
     posts_follow = paginator.page(page_num)
 
@@ -108,7 +105,7 @@ def follow_axios(request):
 def my_recent_axios(request):
     me = request.user
     my_recent_post = Post.objects.filter(user=me).order_by("-created")
-    paginator = Paginator(my_recent_post, 8)
+    paginator = Paginator(my_recent_post, 10)
     page_num = request.GET.get("page")
     posts_my = paginator.page(page_num)
 
@@ -129,7 +126,7 @@ def post_detail(request, user_id, post_id):
     folder = post_details.folder.get(
         folder_name=post_details.language, folder_user=post_details.user
     )
-    comments = post_details.comments.all()
+    comments = post_details.comments.all().order_by('created')
 
     ctx = {
         "post": post_details,
@@ -141,7 +138,6 @@ def post_detail(request, user_id, post_id):
     }
     # html added by 종권
     return render(request, "posts/post_detail.html", ctx)
-
 
 @login_required
 @require_POST
@@ -156,6 +152,8 @@ def post_like(request):
     else:
         post.likes_user.add(user)
         message = "좋아요"
+        new_alarm = Alarm.objects.create(user=post.user, reason="내가 남긴 기록 \""+ post.title + "\" 이 " + user.user_nickname + "님께 도움이 되었어요.")
+        new_sand = Sand.objects.create(user=post.user, amount=20, reason="도움이 되었어요")
     post.helped_num = post.count_likes_user()
     post.save()
     ctx = {"likes_count": post.count_likes_user(), "message": message}
@@ -213,15 +211,6 @@ def post_scrap(request, user_id, post_id):
         post.folder.add(new_folder)
     post.save()
 
-    # 퍼가기 할 때 sand 생성하기 - host꺼 생성해줘야함
-    new_sand = Sand.objects.create(
-        user=post.user, amount=50, reason=me.user_nickname + "님의 내 기록 퍼가기"
-    )
-
-    # 퍼가기 -> host 에게 alarm감
-    new_alarm = Alarm.objects.create(
-        user=post_host, reason=me.user_nickname + "님이 내 기록 " + post.title + "을 퍼갔어요."
-    )
     # url: 저장 후 post_detail 페이지에 남아있음.
     pk = request.POST.get("pk", None)
     post = get_object_or_404(Post, pk=pk)
@@ -233,6 +222,11 @@ def post_scrap(request, user_id, post_id):
     else:
         post.scarps_user.add(user)
         message = "퍼가기"
+        # 퍼가기 할 때 sand 생성하기 - host꺼 생성해줘야함
+        new_sand = Sand.objects.create(user=post.user, amount=50, reason=me.user_nickname + "님의 내 기록 퍼가기")
+
+        # 퍼가기 -> host 에게 alarm감
+        new_alarm = Alarm.objects.create(user=post_host, reason=me.user_nickname + "님이 내 기록 " + post.title + "을 퍼갔어요.")
 
     post.scrap_num = post.count_scarps_user()
     post.save()
@@ -425,191 +419,182 @@ def post_delete(request, pk):
     return redirect("posts:main")
 
 
-## search input ajax
-@csrf_exempt
-def search_input(request):
-    if request.method == "POST":
-        search_str = json.loads(request.body).get("text")
+## search input ajax ------------------------------------------
+# @csrf_exempt
+# def search_input(request):
+#     if request.method == "POST":
+#         search_str = json.loads(request.body).get("text")
 
-        posts = Post.objects.filter(
-            title__icontains=search_str).values() | Post.objects.filter(
-            desc__icontains=search_str).values()
+#         posts = Post.objects.filter(
+#             title__icontains=search_str) | Post.objects.filter(
+#             desc__icontains=search_str)
         
-        # paginator = Paginator(posts, 10)
-        # try:
-        #     page_num = request.GET.get("page")
-        #     posts_list = paginator.page(page_num)
-        # except PageNotAnInteger:
-        #     posts_list = paginator.page(1)
+#         # paginator = Paginator(posts, 10)
+#         # try:
+#         #     page_num = request.GET.get("page")
+#         #     posts_list = paginator.page(page_num)
+#         # except PageNotAnInteger:
+#         #     posts_list = paginator.page(1)
 
-        data = posts.values()
+#         data = posts.values()
+
+#         return JsonResponse(list(data), safe=False)
+
+# @csrf_exempt
+# def search_quests_input(request):
+#     if request.method == "POST":
+#         search_str = json.loads(request.body).get("text")
+
+#         questions = Question_post.objects.filter(
+#             title__icontains=search_str).values() | Question_post.objects.filter(
+#             desc__icontains=search_str).values()
         
-        return JsonResponse(list(data), safe=False)
-
-@csrf_exempt
-def search_quests_input(request):
-    if request.method == "POST":
-        search_str = json.loads(request.body).get("text")
-
-        questions = Question_post.objects.filter(
-            title__icontains=search_str).values() | Question_post.objects.filter(
-            desc__icontains=search_str).values()
+#         #페이지
+#         # paginator = Paginator(questions, 10)
+#         # try:
+#         #     page_num = request.GET.get("page")
+#         #     questions_list = paginator.page(page_num)
+#         # except PageNotAnInteger:
+#         #     questions_list = paginator.page(1)
         
-        #페이지
-        # paginator = Paginator(questions, 10)
-        # try:
-        #     page_num = request.GET.get("page")
-        #     questions_list = paginator.page(page_num)
-        # except PageNotAnInteger:
-        #     questions_list = paginator.page(1)
-        
-        data = questions.values()
+#         data = questions.values()
 
-        return JsonResponse(list(data), safe=False)
+#         return JsonResponse(list(data), safe=False)
 
 
 ## search select ajax
-@csrf_exempt
-def search_select(request):
-    if request.method == "POST":
+# @csrf_exempt
+# def search_select(request):
+#     if request.method == "POST":
 
-        language = json.loads(request.body).get("language")
-        os = json.loads(request.body).get("os")
-        framework = json.loads(request.body).get("framework")
-        problem_solving = json.loads(request.body).get("problem_solving")
+#         language = json.loads(request.body).get("language")
+#         os = json.loads(request.body).get("os")
+#         framework = json.loads(request.body).get("framework")
+#         problem_solving = json.loads(request.body).get("problem_solving")
 
-        lang_filter = Post.objects.filter(language__exact=language)
-        os_filter = Post.objects.filter(os__exact=os)
-        frame_filter = Post.objects.filter(framework__exact=framework)
-        problem_filter = Post.objects.filter(problem_solving__exact=problem_solving)
+#         lang_filter = Post.objects.filter(language__exact=language)
+#         os_filter = Post.objects.filter(os__exact=os)
+#         frame_filter = Post.objects.filter(framework__exact=framework)
+#         problem_filter = Post.objects.filter(problem_solving__exact=problem_solving)
 
-        result = Post.objects.none()
+#         result = Post.objects.none()
 
-        if language == "전체":
-            lang_filter = Post.objects.all()
+#         if language == "전체":
+#             lang_filter = Post.objects.all()
 
-        if lang_filter.exists():
-            result = lang_filter
+#         if lang_filter.exists():
+#             result = lang_filter
 
-        if os == "전체":
-            os_filter = Post.objects.all()
+#         if os == "전체":
+#             os_filter = Post.objects.all()
 
-        if os_filter.exists() and result.exists():
-            result = result & os_filter
-        elif os_filter.exists():
-            result = os_filter
-        else:
-            result = result
+#         if os_filter.exists() and result.exists():
+#             result = result & os_filter
+#         elif os_filter.exists():
+#             result = os_filter
+#         else:
+#             result = result
 
-        if framework == "전체":
-            frame_filter = Post.objects.all()
+#         if framework == "전체":
+#             frame_filter = Post.objects.all()
 
-        if frame_filter.exists() and result.exists():
-            result = result & frame_filter
-        elif frame_filter.exists():
-            result = frame_filter
-        else:
-            result = result
+#         if frame_filter.exists() and result.exists():
+#             result = result & frame_filter
+#         elif frame_filter.exists():
+#             result = frame_filter
+#         else:
+#             result = result
 
-        if problem_filter.exists() and result.exists():
-            result = result & problem_filter
-        elif problem_filter.exists():
-            result = problem_filter
-        else:
-            result = result
+#         if problem_filter.exists() and result.exists():
+#             result = result & problem_filter
+#         elif problem_filter.exists():
+#             result = problem_filter
+#         else:
+#             result = result
 
-        # posts = result.values()
-        ##페이지네이터
-        # paginator = Paginator(posts, 10)
-        # try:
-        #     page_num = request.GET.get("page")
-        #     posts_list = paginator.page(page_num)
-        # except PageNotAnInteger:
-        #     posts_list = paginator.page(1)
+#         # posts = result.values()
+#         ##페이지네이터
+#         # paginator = Paginator(posts, 10)
+#         # try:
+#         #     page_num = request.GET.get("page")
+#         #     posts_list = paginator.page(page_num)
+#         # except PageNotAnInteger:
+#         #     posts_list = paginator.page(1)
 
-        data = result.values()
+#         data = result.values()
 
-    return JsonResponse(list(data), safe=False)
+#     return JsonResponse(list(data), safe=False)
 
 
-@csrf_exempt
-def search_quests_select(request):
-    if request.method == "POST":
+# @csrf_exempt
+# def search_quests_select(request):
+#     if request.method == "POST":
 
-        language = json.loads(request.body).get("language")
-        framework = json.loads(request.body).get("framework")
+#         language = json.loads(request.body).get("language")
+#         framework = json.loads(request.body).get("framework")
 
-        lang_filter = Question_post.objects.filter(language__exact=language)
-        frame_filter = Question_post.objects.filter(framework__exact=framework)
+#         lang_filter = Question_post.objects.filter(language__exact=language)
+#         frame_filter = Question_post.objects.filter(framework__exact=framework)
 
-        result = Question_post.objects.none()
+#         result = Question_post.objects.none()
 
-        if language == "전체":
-            lang_filter = Question_post.objects.all()
+#         if language == "전체":
+#             lang_filter = Question_post.objects.all()
         
-        if lang_filter.exists():
-            result = lang_filter
+#         if lang_filter.exists():
+#             result = lang_filter
 
-        if framework == "전체":
-            frame_filter = Question_post.objects.all()
+#         if framework == "전체":
+#             frame_filter = Question_post.objects.all()
 
-        if frame_filter.exists() and result.exists():
-            result = result & frame_filter
-        elif frame_filter.exists():
-            result = frame_filter
-        else:
-            result = result
+#         if frame_filter.exists() and result.exists():
+#             result = result & frame_filter
+#         elif frame_filter.exists():
+#             result = frame_filter
+#         else:
+#             result = result
 
-        # questions = result.values()
-        # ##페이지네이터
-        # paginator = Paginator(questions, 10)
-        # try:
-        #     page_num = request.GET.get("page")
-        #     questions_list = paginator.page(page_num)
-        # except PageNotAnInteger:
-        #     questions_list = paginator.page(1)
+#         # questions = result.values()
+#         # ##페이지네이터
+#         # paginator = Paginator(questions, 10)
+#         # try:
+#         #     page_num = request.GET.get("page")
+#         #     questions_list = paginator.page(page_num)
+#         # except PageNotAnInteger:
+#         #     questions_list = paginator.page(1)
 
-        data = result.values()
+#         data = result.values()
 
-    return JsonResponse(list(data), safe=False)
+#     return JsonResponse(list(data), safe=False)
+
+#---------------------------------------------------------
 
 def search(request):
     posts = Post.objects.all()
+    q = request.POST.get('q',"")
 
-    form = SelectForm()
-    ctx = {
-        "posts": posts,
-        "form": form,
-    }
-    return render(request, "posts/search.html", ctx)
+    if q:
+        posts = posts.filter(title__icontains=q) | posts.filter(desc__icontains=q) | posts.filter(language__icontains=q) | posts.filter(os__icontains=q) | posts.filter(problem_solving__icontains=q) | posts.filter(framework__icontains=q) 
+
+        return render(request, 'posts/search.html',{'posts': posts, 'q':q })
+
+    else:    
+        return render(request, "posts/search.html")
+
 
 def search_quest(request):
     questions = Question_post.objects.all() ##질문만 받아오기
-    form = SelectForm()
-    
-    ctx = {
-            'questions': questions,
-            'form': form,
-        }
+    p = request.POST.get('p',"")
 
-    return render(request, "posts/search_quest.html", ctx)
+    if p:
+        questions = questions.filter(title__icontains=p) | questions.filter(desc__icontains=p) | questions.filter(language__icontains=p) | questions.filter(os__icontains=p) | questions.filter(framework__icontains=p) 
 
-#post data 보내주기 -> 지워도 무방
-@csrf_exempt
-def search_post_axios(request):
-    post = Post.objects.all()
-    post_list = serializers.serialize("json", post)
+        return render(request, 'posts/search_quest.html',{'posts': questions, 'p':p })
 
-    return HttpResponse(post_list, content_type="text/json-comment-filtered")
+    else:
+        return render(request, "posts/search_quest.html")
 
-
-# user data 보내주기
-@csrf_exempt
-def search_user_axios(request):
-    user = User.objects.all()
-    user_list = serializers.serialize("json", user)
-    return HttpResponse(user_list, content_type="text/json-comment-filtered")
-
+#---------------------------------------------------------
 
 # 삽질 기록 퍼오기
 def get_post(request, user_id, post_id):
@@ -672,3 +657,7 @@ def get_post(request, user_id, post_id):
     )
     # url: 저장 후 post_detail 페이지에 남아있음.
     return redirect("posts:post_detail", user_id, post_id)
+
+# 서비스 소개 페이지
+def service_view(request):
+    return render(request, "posts/our_service.html")

@@ -2,36 +2,141 @@
 {% load static %}
 
 {% block script %}
-<script src="{% static 'js/search.js' %}"></script>
+<!-- <script src="{% static 'js/search.js' %}"></script> -->
 <link rel="stylesheet" href="{% static 'css/search.css' %}">
 {% endblock %}
 
 {% block content %}
-
 <body>
-    <div class="main_container">
-        삽질 검색
-        <a href="{% url 'posts:search'%}">삽질 검색</a>
-        <a href="{% url 'posts:search_quest'%}">질문 검색</a>
-        <div class="input_container">
-            <form class="input_form" method="post">
-                {% csrf_token %}
-                <input type="text" class="search" id="search_input" placeholder="뭐라고 할까요?">
-            </form>
-        </div>
-
-        <div>
-            <form id="select" method="post" action="">
-                {% csrf_token %}
-                {{form.field}}
-                {{form.field2}}
-                {{form.field3}}
-                {{form.field4}}
-            </form>
-        </div>
-            
-            <div class="post_container">
-                {{post}}
+    <div class="input_container">
+        <form class="input_form" method="post">
+            {% csrf_token %}
+            <svg width="29" height="28" viewBox="0 0 29 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="11.5" cy="11.5" r="10" stroke="#9FAEB6" stroke-width="3"/>
+                <path d="M19 18L28 26" stroke="#9FAEB6" stroke-width="3"/>
+            </svg>                    
+            <input type="text" class="search" id="search_input" placeholder="" name="q" value="{{q}}">
+            <button class="btn" type="submit"></button>
+        </form>
+        <div class="link_margin">
+            <div class="search_link">
+                <a href="{% url 'posts:search'%}" style="color: #00537A">삽질모음</a>
+                <a href="{% url 'posts:search_quest'%}">질문광장</a>
             </div>
-</div>
+        </div>
+    </div>
+
+    
+    {% if not posts %}
+    {% else %}
+    <div class="post_container" id="scroll-element">
+        {% for post in posts.all %}
+                {% if post.image != "../static/image/default_image.PNG" %}
+                <div class="post_card">
+                    {% if post.image %}
+                    <a class="post_image" href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}">
+                        <div class="post_image_container">
+                            <img src="{{post.image.url}}" alt="" class="post_image_container">
+                        </div>
+                    </a>
+                    {% else %}
+                    <div>
+                    </div>
+                    {% endif %}
+                    <div class="post_element">
+                        <a class="post_link" href="{% url 'posts:post_detail' user_id=post.user.id post_id=post.id %}">
+                            {%if post.image %}
+                                <div class="post_title">
+                                    {{ post.title|truncatechars:24 }}
+                                </div>
+                                <div class="post_select">
+                                    <span>
+                                        {{post.language}}
+                                    </span>
+                                    <span>
+                                        {{post.os}}
+                                    </span>
+                                    <span>
+                                        {{post.framework}}
+                                    </span>
+                                    <span>
+                                        {{post.problem_solving}}
+                                    </span>
+                                </div>
+                                <p class="post_desc">
+                                    {{ post.desc|safe|escape|truncatechars:110|striptags|cut:"&nbsp;"}}
+                                    <span id="desc_img">{{post.desc.img}}</span>
+                                </p>
+                            {% else %}
+                                <div class="post_title_img_none">
+                                    {{ post.title|truncatechars:26 }}
+                                </div>
+                                <div class="post_select">
+                                    <span>
+                                        {{post.language}}
+                                    </span>
+                                    <span>
+                                        {{post.os}}
+                                    </span>
+                                    <span>
+                                        {{post.framework}}
+                                    </span>
+                                    <span>
+                                        {{post.problem_solving}}
+                                    </span>
+                                </div>
+                                <p class="post_desc_img_none">
+                                    {{ post.desc|safe|escape|truncatechars:300|striptags|cut:"&nbsp;"}}
+                                </p>
+                            {% endif %}
+                        </a>
+                    </div>
+                    <div class="line_flex">
+                        <div class="post_user_line"></div>
+                    </div>
+                    <div class="post_user">
+                        <a href="{% url 'users:my_page' post.user.id %}" class="user_info">
+                            {% if post.user.user_profile_image %}
+                            <img src="{{post.user.user_profile_image.url}}" class="user_info_image">
+                            {% endif %}
+                            <div class="user_info_left">
+                                <p>
+            
+                                </p>
+                                <span class="comments">
+                                    댓글 {{post.comments.count}}개
+                                </span>
+                                <span class="username">
+                                    by {{post.user.user_nickname}}
+                                </span>
+                            </div>
+                        </a>
+                        <div class="likes">
+                            <div class="likes_flex">
+                                <p>
+                                    퍼가기
+                                </p>
+                                <div class="scrap_num">
+                                    {{post.scrap_num}}
+                                </div>
+                            </div>
+                            <div class="likes_flex">
+                                <p>
+                                    도움
+                                </p>
+                                <div class="helped_num">
+                                    {{post.helped_num}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div>
+                </div>
+            {%endif%}
+        {% endfor %}
+    </div>
+    {% endif %}
+        <div id="bottom-sentinel"></div>
 {% endblock %}

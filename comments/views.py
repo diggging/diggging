@@ -27,13 +27,14 @@ def comment(request):        #! 이름 바꿈!
     #댓글을 단 유저의 정보를 담았음!
     user = User.objects.filter(id=comment.user.id)
     data = serializers.serialize('json', user)
+    total_num_comments = post.comments.count()
 
     return JsonResponse({
         "id": post_id, 
         "text": comment_content,
         "comment_id": comment.id,
         "comment_date": comment.created,
-        # "count" : total_num_comments,
+        "count" : total_num_comments,
         "user": data,
     })
 

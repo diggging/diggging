@@ -8,10 +8,6 @@ from django.shortcuts import get_object_or_404, render, redirect
 from .models import Question_post, Answer, QuestionFolder
 from users.models import Sand, Alarm
 from django.views.decorators.csrf import csrf_exempt
-
-
-# from django.core import serializers
-# from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse  # , JsonResponse
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
@@ -37,7 +33,7 @@ def question_main(request):
     languages = [langs[0] for langs in Question_post.language_choices]
     search = request.POST.getlist("answers[]")
     str_search = "".join(search)
-    answer = Answer.objects.all()
+    answer = Answer.objects.filter(user=request.user)
 
     # 지수가 필요해서 넣은 것 : 질문 관련 폴더
     # 질문 모음
@@ -156,8 +152,8 @@ def get_answer_comments(request, answer_id):
 
 def question_update(request, pk):
     question_post = get_object_or_404(Question_post, pk=pk)
-    origin_lang_fol = question_post.question_folder.get(folder_kind="language")
-    origin_frame_fol = question_post.question_folder.get(folder_kind="framework")
+    origin_lang_fol = question_post.question_folder.get(folder_user=question_post.user, folder_kind="language")
+    origin_frame_fol = question_post.question_folder.get(folder_user=question_post.user, folder_kind="framework")
     if request.method == "POST":
         form = QuestionPostForm(request.POST, request.FILES, instance=question_post)
         if form.is_valid():
@@ -288,6 +284,7 @@ def question_post_detail(request, user_id, post_id):
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------------
 # 질문 답변 작성 폼 관련 함수
+@login_required(login_url='/users/login/')
 def answer_create(request, question_post_id):
     question = Question_post.objects.get(pk=question_post_id)
     if request.method == "POST":
@@ -446,6 +443,8 @@ def question_like(request):
     else:
         post.likes_user.add(user)
         message = "좋아요"
+        new_alarm = Alarm.objects.create(user=post.user, reason="내가 남긴 질문 \""+ post.title + "\" 이 " + user.user_nickname + "님께 도움이 되었어요.")
+        new_sand = Sand.objects.create(user=post.user, amount=20, reason="도움이 되었어요")
     ctx = {"likes_count": post.count_likes_user(), "message": message}
     return HttpResponse(json.dumps(ctx), content_type="application/json")
 
@@ -475,7 +474,7 @@ def question_scrap(request, user_id, post_id):
         new_folder = QuestionFolder.objects.create(
             folder_name=target_language, folder_user=me, folder_kind="language"
         )
-        question_post.folder.add(new_folder)
+        question_post.question_folder.add(new_folder)
     question_post.save()
 
     # framework 동일
@@ -492,20 +491,9 @@ def question_scrap(request, user_id, post_id):
         new_folder = QuestionFolder.objects.create(
             folder_name=target_framework, folder_user=me, folder_kind="framework"
         )  # create - 자동저장
-        question_post.folder.add(new_folder)
+        question_post.question_folder.add(new_folder)
     question_post.save()
 
-    # 퍼가기 할 때 sand 생성하기 - host꺼 생성해줘야함
-    new_sand = Sand.objects.create(
-        user=question_post.user, amount=50, reason=me.user_nickname + "님의 내 질문 퍼가기"
-    )
-    new_alarm = Alarm.objects.create(
-        user=question_post.user,
-        reason=request.user.user_nickname
-        + " 님이 내 질문 "
-        + question_post.title
-        + "을 퍼갔어요.",
-    )
     pk = request.POST.get("pk", None)
     post = get_object_or_404(Question_post, pk=pk)
     user = request.user
@@ -515,9 +503,12 @@ def question_scrap(request, user_id, post_id):
     else:
         post.scarps_user.add(user)
         message = "퍼가기"
+        # 퍼가기 할 때 sand 생성하기 - host꺼 생성해줘야함
+        new_sand = Sand.objects.create(user=question_post.user, amount=50, reason=me.user_nickname + "님의 내 질문 퍼가기")
+        new_alarm = Alarm.objects.create(user=question_post.user,reason=request.user.user_nickname+ " 님이 내 질문 "+ question_post.title+ "을 퍼갔어요.")
+
 
     post.scrap_num = post.count_scarps_user()
-    print(post.scrap_num)
     post.save()
     ctx = {"scarps_count": post.count_scarps_user(), "message": message}
     return HttpResponse(json.dumps(ctx), content_type="application/json")
@@ -531,12 +522,25 @@ def questions_lang_folder(request, pk):
 
     return JsonResponse(list(data), safe=False)
 
+@csrf_exempt
 def questions_lang_post(request, pk):
     folder = QuestionFolder.objects.get(pk=pk)
     posts = Question_post.objects.filter(question_folder=folder)
-    data = posts.values()
-    return JsonResponse(list(data), safe=False)
 
+    user_list = [] 
+    for post in posts: 
+        user_list.append(post.user.user_nickname)
+    
+    data = posts.values()
+
+    ctx = {
+        'user': user_list,
+        'data': list(data)
+    }
+
+    return JsonResponse(ctx, safe=False)
+
+@csrf_exempt
 def questions_framework_folder(request, pk):
     host = get_object_or_404(User, pk=pk)
     folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
@@ -544,9 +548,19 @@ def questions_framework_folder(request, pk):
     
     return JsonResponse(list(data), safe=False)
 
+@csrf_exempt
 def questions_framework_post(request, pk):
     folder = QuestionFolder.objects.get(pk=pk)
     posts = Question_post.objects.filter(question_folder=folder)
+    user_list = [] 
+    for post in posts: 
+        user_list.append(post.user.user_nickname)
+    
     data = posts.values()
 
-    return JsonResponse(list(data), safe=False)
+    ctx = {
+        'user': user_list,
+        'data': list(data)
+    }
+
+    return JsonResponse(ctx, safe=False)

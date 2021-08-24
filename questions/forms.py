@@ -4,6 +4,7 @@ from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 
 class QuestionPostForm(forms.ModelForm):
+    image = forms.ImageField(required=False, widget=forms.FileInput)
     class Meta:
         model = Question_post
         fields = {
