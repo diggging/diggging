@@ -284,6 +284,7 @@ def question_post_detail(request, user_id, post_id):
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------------
 # 질문 답변 작성 폼 관련 함수
+@login_required(login_url='/users/login/')
 def answer_create(request, question_post_id):
     question = Question_post.objects.get(pk=question_post_id)
     if request.method == "POST":
