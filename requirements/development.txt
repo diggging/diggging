@@ -28,6 +28,9 @@ six==1.16.0
 sqlparse==0.4.1
 typing-extensions==3.10.0.0
 urllib3==1.26.6
-django-sass-processor==1.0.1
+django-appconf==1.0.4
 django-compressor==2.4.1
+django-sass-processor==1.0.1
 libsass==0.21.0
+rcssmin==1.0.6
+rjsmin==1.1.0
