@@ -1,19 +1,17 @@
 from users.models import Alarm, User
-from django.http.response import JsonResponse
-from django.core import serializers
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 from .models import Post, Folder
 from users.models import Sand
-from .forms import SelectForm, PostForm
+from .forms import PostForm
 import json
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.core.paginator import Paginator, PageNotAnInteger
+from django.core.paginator import Paginator
 from questions.models import Question_post
 
+from rest_framework import serializers
 
 # main 페이지
 def main(request):

@@ -63,6 +63,8 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.naver",
     #select search
     "sass_processor",
+    #rest framework
+    'rest_framework',
 ]
 
 SASS_PROCESSOR_ENABLED = True
