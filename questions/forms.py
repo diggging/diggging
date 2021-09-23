@@ -26,7 +26,6 @@ class QuestionPostForm(forms.ModelForm):
             "desc": forms.CharField(widget=CKEditorUploadingWidget()),
         }
 
-# 답변도 질문과 비솟한 폼에서 작업할 수 있도록 질문폼 상속
 class AnswerPostForm(forms.ModelForm):
     class Meta:
         model = Answer

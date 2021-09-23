@@ -34,3 +34,6 @@ django-sass-processor==1.0.1
 libsass==0.21.0
 rcssmin==1.0.6
 rjsmin==1.1.0
+
+djangorestframework==3.12.4
+pygments==2.10.0

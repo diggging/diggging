@@ -4,7 +4,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from django.conf import settings
 
 # Create your models here.
-class Question_post(core_models.TimeStampModel):
+class QuestionPost(core_models.TimeStampModel):
     user = models.ForeignKey(
         "users.User", related_name="question_user", on_delete=models.CASCADE
     )
@@ -216,7 +216,7 @@ class Answer(core_models.TimeStampModel):
         "users.User", related_name="answer_user", on_delete=models.CASCADE
     )
     title = models.CharField(verbose_name="제목", max_length=50)
-    question = models.ForeignKey("questions.Question_post", related_name="answers", on_delete=models.CASCADE)
+    question = models.ForeignKey("questions.QuestionPost", related_name="answers", on_delete=models.CASCADE)
     selection = models.BooleanField(verbose_name="채택", default=False)
     desc = RichTextUploadingField(verbose_name="설명", blank=False, config_name="default")
     code = RichTextUploadingField(verbose_name="코드", blank=True, config_name="default")
