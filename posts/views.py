@@ -1,3 +1,4 @@
+from posts import serializers
 from users.models import Alarm, User
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.http import HttpResponse
@@ -11,12 +12,27 @@ from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator
 from questions.models import Question_post
 
-from rest_framework import serializers
+from rest_framework.views import APIView
+from posts.serializers import PostSerializer, UserSerializer
+from rest_framework.response import Response
+from rest_framework import viewsets, permissions
+from rest_framework.decorators import action
+from rest_framework.renderers import JSONRenderer
 
 # main 페이지
-def main(request):
-    me = request.user   
-    return render(request, "posts/post_scrap.html", {"user":me})
+# def main(request):
+#     me = request.user   
+#     return render(request, "posts/post_scrap.html", {"user":me})
+
+class Main(APIView):
+    def get(self, request, format=None, **kwargs):
+        me = request.user
+        posts = Post.objects.all()
+
+        me_serializer = UserSerializer(me)
+        posts_serializer = PostSerializer(posts, many=True)
+
+        return Response({"me": me_serializer.data, "all_posts":posts_serializer.data})
 
 
 def helped(request):
@@ -33,11 +49,9 @@ def my_recent(request):
     me = request.user 
     return render(request, "posts/my_recent.html", {"user":me})
 
-
 # -----------------------------------------------------------------------
 def is_ajax(request):
     return request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest"
-
 
 # main axios
 @require_GET
@@ -55,9 +69,7 @@ def scrap_axios(request):
     if is_ajax(request):
         return render(request, 'posts/_posts.html', {'posts': posts_scrap, "user":me})
         # return JsonResponse(ctx, safe=False)
-
     return render(request, 'posts/post_scrap.html', {'posts': posts_scrap, "user":me})
-
 
 @require_GET
 def helped_axios(request):
@@ -69,13 +81,10 @@ def helped_axios(request):
 
     if is_ajax(request):
         return render(request, 'posts/_posts.html', {'posts': posts_helped, "user":me})
-
     return render(request, 'posts/post_helped.html', {'posts': posts_helped , "user":me})
-
 
 @require_GET
 def follow_axios(request):
-
     me = request.user
     followings = me.user_following.all()
     if followings:
@@ -118,24 +127,41 @@ def my_recent_axios(request):
 # 프론트에서 해당 포스트 id 넘겨주면
 
 
-def post_detail(request, user_id, post_id):
-    post_details = Post.objects.get(pk=post_id)
-    me = get_object_or_404(User, pk=user_id)
-    folder = post_details.folder.get(
-        folder_name=post_details.language, folder_user=post_details.user
-    )
-    comments = post_details.comments.all().order_by('created')
+# def post_detail(request, user_id, post_id):
+#     post_details = Post.objects.get(pk=post_id)
+#     me = get_object_or_404(User, pk=user_id)
+#     folder = post_details.folder.get(
+#         folder_name=post_details.language, folder_user=post_details.user
+#     )
+#     comments = post_details.comments.all().order_by('created')
 
-    ctx = {
-        "post": post_details,
-        "host": me,
-        "folder": folder,
-        "comments": comments,
-        "user_id": user_id,
-        "post_id": post_id,
-    }
-    # html added by 종권
-    return render(request, "posts/post_detail.html", ctx)
+#     ctx = {
+#         "post": post_details,
+#         "folder": folder,
+#         "comments": comments,
+#         "user_id": user_id,
+#         "post_id": post_id,
+#     }
+#     # html added by 종권
+#     return render(request, "posts/post_detail.html", ctx)
+# class PostDetailViewSet(viewsets.ViewSet):
+
+#     # 이거 url 에 있는 숫자를 어떻게 가져오는지를 모르겠다....
+#     # RetrieveDestroyAPIView
+
+#     def list(self, request):
+#         postdetail = Postdetail(
+#             posts=Post.objects.get(pk=self.kwargs['post_id'])
+#             folders = posts.folder.get(folder_name=post_details.language, folder_user=post_details.user)
+#             comments=Post.objects.get(pk=self.kwargs['post_id'])
+#         )
+
+class PostDetail(APIView):
+    def get(self, request, format=None, **kwargs):
+        posts = Post.objects.get(pk=self.kwargs['post_id'])
+        serializer = PostSerializer(posts)
+        return Response(serializer.data)
+
 
 @login_required
 @require_POST
@@ -415,157 +441,6 @@ def post_delete(request, pk):
         frame_folder.delete()
 
     return redirect("posts:main")
-
-
-## search input ajax ------------------------------------------
-# @csrf_exempt
-# def search_input(request):
-#     if request.method == "POST":
-#         search_str = json.loads(request.body).get("text")
-
-#         posts = Post.objects.filter(
-#             title__icontains=search_str) | Post.objects.filter(
-#             desc__icontains=search_str)
-        
-#         # paginator = Paginator(posts, 10)
-#         # try:
-#         #     page_num = request.GET.get("page")
-#         #     posts_list = paginator.page(page_num)
-#         # except PageNotAnInteger:
-#         #     posts_list = paginator.page(1)
-
-#         data = posts.values()
-
-#         return JsonResponse(list(data), safe=False)
-
-# @csrf_exempt
-# def search_quests_input(request):
-#     if request.method == "POST":
-#         search_str = json.loads(request.body).get("text")
-
-#         questions = Question_post.objects.filter(
-#             title__icontains=search_str).values() | Question_post.objects.filter(
-#             desc__icontains=search_str).values()
-        
-#         #페이지
-#         # paginator = Paginator(questions, 10)
-#         # try:
-#         #     page_num = request.GET.get("page")
-#         #     questions_list = paginator.page(page_num)
-#         # except PageNotAnInteger:
-#         #     questions_list = paginator.page(1)
-        
-#         data = questions.values()
-
-#         return JsonResponse(list(data), safe=False)
-
-
-## search select ajax
-# @csrf_exempt
-# def search_select(request):
-#     if request.method == "POST":
-
-#         language = json.loads(request.body).get("language")
-#         os = json.loads(request.body).get("os")
-#         framework = json.loads(request.body).get("framework")
-#         problem_solving = json.loads(request.body).get("problem_solving")
-
-#         lang_filter = Post.objects.filter(language__exact=language)
-#         os_filter = Post.objects.filter(os__exact=os)
-#         frame_filter = Post.objects.filter(framework__exact=framework)
-#         problem_filter = Post.objects.filter(problem_solving__exact=problem_solving)
-
-#         result = Post.objects.none()
-
-#         if language == "전체":
-#             lang_filter = Post.objects.all()
-
-#         if lang_filter.exists():
-#             result = lang_filter
-
-#         if os == "전체":
-#             os_filter = Post.objects.all()
-
-#         if os_filter.exists() and result.exists():
-#             result = result & os_filter
-#         elif os_filter.exists():
-#             result = os_filter
-#         else:
-#             result = result
-
-#         if framework == "전체":
-#             frame_filter = Post.objects.all()
-
-#         if frame_filter.exists() and result.exists():
-#             result = result & frame_filter
-#         elif frame_filter.exists():
-#             result = frame_filter
-#         else:
-#             result = result
-
-#         if problem_filter.exists() and result.exists():
-#             result = result & problem_filter
-#         elif problem_filter.exists():
-#             result = problem_filter
-#         else:
-#             result = result
-
-#         # posts = result.values()
-#         ##페이지네이터
-#         # paginator = Paginator(posts, 10)
-#         # try:
-#         #     page_num = request.GET.get("page")
-#         #     posts_list = paginator.page(page_num)
-#         # except PageNotAnInteger:
-#         #     posts_list = paginator.page(1)
-
-#         data = result.values()
-
-#     return JsonResponse(list(data), safe=False)
-
-
-# @csrf_exempt
-# def search_quests_select(request):
-#     if request.method == "POST":
-
-#         language = json.loads(request.body).get("language")
-#         framework = json.loads(request.body).get("framework")
-
-#         lang_filter = Question_post.objects.filter(language__exact=language)
-#         frame_filter = Question_post.objects.filter(framework__exact=framework)
-
-#         result = Question_post.objects.none()
-
-#         if language == "전체":
-#             lang_filter = Question_post.objects.all()
-        
-#         if lang_filter.exists():
-#             result = lang_filter
-
-#         if framework == "전체":
-#             frame_filter = Question_post.objects.all()
-
-#         if frame_filter.exists() and result.exists():
-#             result = result & frame_filter
-#         elif frame_filter.exists():
-#             result = frame_filter
-#         else:
-#             result = result
-
-#         # questions = result.values()
-#         # ##페이지네이터
-#         # paginator = Paginator(questions, 10)
-#         # try:
-#         #     page_num = request.GET.get("page")
-#         #     questions_list = paginator.page(page_num)
-#         # except PageNotAnInteger:
-#         #     questions_list = paginator.page(1)
-
-#         data = result.values()
-
-#     return JsonResponse(list(data), safe=False)
-
-#---------------------------------------------------------
 
 def search(request):
     posts = Post.objects.all()
