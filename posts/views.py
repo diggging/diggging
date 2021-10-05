@@ -13,11 +13,14 @@ from django.core.paginator import Paginator
 from questions.models import Question_post
 
 from rest_framework.views import APIView
-from posts.serializers import PostSerializer, UserSerializer
+from posts.serializers import PostSerializer, UserSerializer, PostDetailSerializer
 from rest_framework.response import Response
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, status, generics, mixins
 from rest_framework.decorators import action
 from rest_framework.renderers import JSONRenderer
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from .permissions import IsOwnerOrReadOnly
 
 # main 페이지
 # def main(request):
@@ -144,23 +147,138 @@ def my_recent_axios(request):
 #     }
 #     # html added by 종권
 #     return render(request, "posts/post_detail.html", ctx)
-# class PostDetailViewSet(viewsets.ViewSet):
 
-#     # 이거 url 에 있는 숫자를 어떻게 가져오는지를 모르겠다....
-#     # RetrieveDestroyAPIView
+# class PostDetail(APIView):
+#     def get(self, request, format=None, **kwargs):
+#         post = Post.objects.get(pk=self.kwargs['post_id'])
+#         serializer = PostDetailSerializer(post)
+#         return Response(serializer.data)
+    
+#     def put(self, request,post_id, format=None):
+#         post = Post.objects.get(pk=post_id)
+#         serializer = PostDetailSerializer(post, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+# class PostDetail(mixins.RetrieveModelMixin,
+#                      mixins.UpdateModelMixin,
+#                      mixins.DestroyModelMixin,
+#                      generics.GenericAPIView):
+#     queryset = Post.objects.all()
+#     serializer_class = PostDetailSerializer
 
-#     def list(self, request):
-#         postdetail = Postdetail(
-#             posts=Post.objects.get(pk=self.kwargs['post_id'])
-#             folders = posts.folder.get(folder_name=post_details.language, folder_user=post_details.user)
-#             comments=Post.objects.get(pk=self.kwargs['post_id'])
-#         )
+#     def get(self, request, *args, **kwargs):
+#         return self.retrieve(request, *args, **kwargs)
 
-class PostDetail(APIView):
-    def get(self, request, format=None, **kwargs):
-        posts = Post.objects.get(pk=self.kwargs['post_id'])
-        serializer = PostSerializer(posts)
+#     def patch(self, request, *args, **kwargs):
+#         return self.partial_update(request, *args, **kwargs)
+
+#------------------------------------------------------- post detail -------------------------------------------------------
+class PostDetailGetView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [BasicAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly] # 로그인한, 쓴사람만 수정 가능
+    queryset = Post.objects.all()
+    serializer_class = PostDetailSerializer
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        origin_lang_fol = instance.folder.get(folder_user=request.user, folder_kind="language")
+        origin_frame_fol = instance.folder.get(folder_user=request.user, folder_kind="framework")
+        origin_solve_fol = instance.folder.get(folder_user=request.user, folder_kind="solved")
+
+        new_lang = request.data.get("language")
+        new_frame = request.data.get("framework")
+        new_solve = request.data.get("problem_solving")
+
+        if new_lang != origin_lang_fol.folder_name:
+                origin_lang_fol.related_posts.remove(instance)
+                lang_folder = Folder.objects.filter(
+                    folder_name=new_lang, folder_user=instance.user, folder_kind="language"
+                )
+                if lang_folder.exists():
+                    existed_folder = Folder.objects.get(
+                        folder_name=new_lang,
+                        folder_user=instance.user,
+                        folder_kind="language",
+                    )
+                    instance.folder.add(existed_folder)
+                else:
+                    new_folder = Folder.objects.create(
+                        folder_name=new_lang,
+                        folder_user=instance.user,
+                        folder_kind="language",
+                    )
+                    instance.folder.add(new_folder)
+                
+                if not origin_lang_fol.related_posts.all():
+                    origin_lang_fol.delete()
+
+        if new_frame != origin_frame_fol.folder_name:
+            origin_frame_fol.related_posts.remove(instance)
+            frame_folder = Folder.objects.filter(
+                folder_name=new_frame,
+                folder_user=instance.user,
+                folder_kind="framework",
+            )
+            if frame_folder.exists():
+                existed_folder = Folder.objects.get(
+                    folder_name=new_frame,
+                    folder_user=instance.user,
+                    folder_kind="framework",
+                )
+                instance.folder.add(existed_folder)
+            else:
+                new_folder = Folder.objects.create(
+                    folder_name=new_frame,
+                    folder_user=instance.user,
+                    folder_kind="framework",
+                )
+                instance.folder.add(new_folder)
+            if not origin_frame_fol.related_posts.all():
+                origin_frame_fol.delete()
+
+        if new_solve != origin_solve_fol.folder_name:
+            origin_solve_fol.related_posts.remove(instance)
+            solve_folder = Folder.objects.get(
+                folder_name=new_solve, folder_user=instance.user, folder_kind="solved"
+            )
+            instance.folder.add(solve_folder)
+
+        instance.save()
+
+        serializer = self.serializer_class(instance, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+
         return Response(serializer.data)
+
+# class PostDetailUpdateView(generics.UpdateAPIView):
+#     authentication_classes = [BasicAuthentication, SessionAuthentication]
+#     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly] # 로그인한, 쓴사람만 수정 가능
+#     queryset = Post.objects.all()
+#     serializer_class = PostDetailSerializer
+#     lookup_field = 'pk'
+
+#     def update(self, request, *args, **kwargs):
+#         instance = self.get_object()
+#         #instance.name = request.data.get("name")
+#         #instance.save()
+
+#         #serializer = self.get_serializer(instance, partial=True)
+#         serializer = self.serializer_class(instance, data=request.data, partial=True)
+#         if serializer.is_valid():
+#             serializer.save()
+
+#         return Response(serializer.data)
+
+# class PostDetailDeleteView(generics.DestroyAPIView):
+#     authentication_classes = [BasicAuthentication, SessionAuthentication]
+#     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly] # 로그인한, 쓴사람만 수정 가능
+#     queryset = Post.objects.all()
+#     serializer_class = PostDetailSerializer
+#     # 2. 수정하면 폴더 변경되어야함
 
 
 @login_required

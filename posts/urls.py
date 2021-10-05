@@ -10,11 +10,14 @@ urlpatterns = [
     # path("main/helped/", views.helped, name="helped"),
     # path("main/follow/", views.follow, name="follow"),
     # path("main/my_recent/", views.my_recent, name="my_recent"),
-    path("<int:post_id>/detail", view = views.PostDetail.as_view(), name="post_detail"),  # 처음 <int:pk> 의 pk: user의 id
-    # # 두번째 <int:pk> 의 pk: post의 id
-    path("create/", views.post_create, name="post_create"),
-    # path("<int:pk>/update", views.post_update, name="post_update"),
-    # path("<int:pk>/delete", views.post_delete, name="post_delete"),
+
+    # post detail crud
+    #path("create/", views.post_create, name="post_create"),
+    path("<int:pk>/detail", views.PostDetailGetView.as_view(), name="post_detail"),
+    #path("<int:pk>/update", views.PostDetailUpdateView.as_view(), name="post_update"),
+    #path("<int:pk>/delete", views.PostDetailDeleteView.as_view(), name="post_delete"),
+    
+    
     path("search/", views.search, name="search"),
     
     # path("search_quest/", views.search_quest, name="search_quest"),
