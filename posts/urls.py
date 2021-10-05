@@ -12,7 +12,7 @@ urlpatterns = [
     # path("main/my_recent/", views.my_recent, name="my_recent"),
 
     # post detail crud
-    #path("create/", views.post_create, name="post_create"),
+    path("create/", views.post_create, name="post_create"),
     path("<int:pk>/detail", views.PostDetailGetView.as_view(), name="post_detail"),
     #path("<int:pk>/update", views.PostDetailUpdateView.as_view(), name="post_update"),
     #path("<int:pk>/delete", views.PostDetailDeleteView.as_view(), name="post_delete"),

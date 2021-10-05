@@ -183,7 +183,7 @@ class PostDetailGetView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PostDetailSerializer
 
     def update(self, request, *args, **kwargs):
-        instance = self.get_object()
+        instance = self.get_object()    # 해당 오브젝트 가져옴. pk신경쓸 필요 없음
         origin_lang_fol = instance.folder.get(folder_user=request.user, folder_kind="language")
         origin_frame_fol = instance.folder.get(folder_user=request.user, folder_kind="framework")
         origin_solve_fol = instance.folder.get(folder_user=request.user, folder_kind="solved")
@@ -253,6 +253,21 @@ class PostDetailGetView(generics.RetrieveUpdateDestroyAPIView):
             serializer.save()
 
         return Response(serializer.data)
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        lang_folder = Folder.objects.get(folder_user=instance.user, related_posts=instance, folder_kind="language")
+        frame_folder = Folder.objects.get(folder_user=instance.user, related_posts=instance, folder_kind="framework")
+        
+        instance.delete()
+
+        if not lang_folder.related_posts.exists():
+            lang_folder.delete()
+
+        if not frame_folder.related_posts.exists():
+            frame_folder.delete()
+        return Response(status=status.HTTP_200_OK)
 
 # class PostDetailUpdateView(generics.UpdateAPIView):
 #     authentication_classes = [BasicAuthentication, SessionAuthentication]
