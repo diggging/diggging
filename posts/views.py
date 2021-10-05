@@ -177,6 +177,7 @@ def my_recent_axios(request):
 
 #------------------------------------------------------- post detail -------------------------------------------------------
 class PostDetailGetView(generics.RetrieveUpdateDestroyAPIView):
+    #comment 보내주기
     authentication_classes = [BasicAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly] # 로그인한, 쓴사람만 수정 가능
     queryset = Post.objects.all()

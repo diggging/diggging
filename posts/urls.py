@@ -19,7 +19,6 @@ urlpatterns = [
     
     
     path("search/", views.search, name="search"),
-    
     # path("search_quest/", views.search_quest, name="search_quest"),
     
     # path("<int:user_id>/<int:post_id>/get_post", view=views.get_post, name="get_post"),

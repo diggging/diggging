@@ -21,8 +21,20 @@ class FolderSerializer(serializers.ModelSerializer):
         model = Folder
         fields = ["folder_name","folder_kind","folder_user"]
 
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = "__all__"
+    
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['user'] = UserSerializer(instance.user, read_only=True).data
+        return response
+
+
 class PostDetailSerializer(serializers.ModelSerializer):
     folder = FolderSerializer(read_only=True, many=True)
+    comments = CommentSerializer(read_only=True, many=True)
     image = serializers.ImageField(use_url=True)
     class Meta:
         model = Post
@@ -32,10 +44,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
         response = super().to_representation(instance)
         response['user'] = UserSerializer(instance.user, read_only=True).data
         response['folder'] = FolderSerializer(instance.folder, many=True).data
+        response['commnets'] = CommentSerializer(instance.comments, many=True).data
         return response
 
-class CommentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comment
-        fields = "__all__"
 
