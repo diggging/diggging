@@ -1,6 +1,12 @@
+import React from 'react';
+import styled from 'styled-components';
+import Link from 'next/link';
+import Image from 'next/image'
+import NavSearch from '../public/static/images/Search';
+import Alarm from '../public/static/images/Alarm';
+import Directory from '../public/static/images/Directory';
+import ToggleBtn from '../public/static/images/ToggleBtn';
 import React, { Children } from "react";
-import styled from "styled-components";
-import Link from "next/link";
 import SvgDiggging from "../public/static/images/Diggging";
 
 const Nav = styled.nav`
