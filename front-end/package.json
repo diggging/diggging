@@ -17,6 +17,7 @@
   },
   
   "devDependencies": {
+    "babel-plugin-styled-components": "^1.13.2",
     "eslint": "8.0.1",
     "eslint-config-next": "11.1.2",
     "babel-plugin-styled-components": "^1.12.0"
