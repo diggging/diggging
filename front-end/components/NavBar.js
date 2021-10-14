@@ -1,12 +1,12 @@
-import React, { Children } from "react";
+import React from "react";
 import styled from "styled-components";
 import Link from "next/link";
-import Image from "next/image";
 import NavSearch from "../public/static/images/Search";
 import Alarm from "../public/static/images/Alarm";
 import Directory from "../public/static/images/Directory";
 import ToggleBtn from "../public/static/images/ToggleBtn";
 import SvgDiggging from "../public/static/images/Diggging";
+import img from "../public/static/images/profile_img.jpg";
 
 const Nav = styled.nav`
   z-index: 1000;
@@ -29,20 +29,11 @@ const NavLeft = styled.div`
   margin-left: 3.125rem;
 `;
 
-// const NavItem = React.forwardRef(({ onClick, href }, ref, children) => {
-//   return (
-//     <a href={href} onClick={onClick} ref={ref}>
-//       {children}
-//     </a>
-//   );
-// });
-
 const NavItem = styled.a`
-  margin: 0.5rem 0.5rem;
+  margin: 16px 16px;
   border-radius: 0.625rem;
   text-align: center;
   text-decoration: none;
-  padding-right: 0.4rem;
   color: #b6b6b6;
 `;
 
@@ -53,7 +44,36 @@ const NavRight = styled.div`
   margin-right: 3.125rem;
 `;
 
-function navBar({isLoggedIn}) {
+const ToggleContainer = styled.button`
+    background-color: #ffffff;
+    border-radius: 0.625rem;
+    text-align: center;
+    padding: 0.3125rem;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #9faeb6;
+
+    & svg {
+        margin-left: 10px;
+    }
+`;
+
+const UserImg = styled.div`
+    background-image: url(${Alarm});
+    background-position: center;
+    background-repeat: no-repeat;
+    text-align: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #b6b6b6;
+`;
+
+function navBar({ isLoggedIn }) {
   return (
     <div>
       <Nav>
@@ -94,10 +114,12 @@ function navBar({isLoggedIn}) {
                     <Directory />
                 </NavItem>
             </Link>
-            {/* //프로필 */}
             <Link href="/" passHref>
                 <NavItem>
-                    <Directory />
+                    <ToggleContainer>
+                        <UserImg />
+                        <ToggleBtn />
+                    </ToggleContainer>
                 </NavItem>
             </Link>
             </>
