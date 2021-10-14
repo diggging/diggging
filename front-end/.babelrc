@@ -1,13 +1,4 @@
 {
   "presets": ["next/babel"],
-<<<<<<< Updated upstream
   "plugins": ["styled-components"]
-=======
-  "plugins": [
-    [
-      "babel-plugin-styled-components",
-      { "fileName": true, "displayName": true, "pure": true }
-    ]
-  ]
->>>>>>> Stashed changes
 }
