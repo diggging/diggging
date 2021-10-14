@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import NavBar from '../components/NavBar';
+import NavBar from "../components/NavBar";
 
 function index() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   return (
     <div>
-      <NavBar isLoggedIn={isLoggedIn}/>
+      <NavBar isLoggedIn={isLoggedIn} />
     </div>
   );
 }

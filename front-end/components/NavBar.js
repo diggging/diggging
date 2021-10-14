@@ -30,11 +30,27 @@ const NavLeft = styled.div`
 `;
 
 const NavItem = styled.a`
-  margin: 16px 16px;
+  font-family: "Pretendard-SemiBold";
+  display: flex;
+  margin: 0.5rem 0.5rem;
   border-radius: 0.625rem;
   text-align: center;
+  -webkit-text-decoration: none;
   text-decoration: none;
+  padding-right: 0.4rem;
   color: #b6b6b6;
+  align-items: center;
+
+  &:hover {
+    color: #202020;
+    font-family: "Pretendard-Bold";
+    transition: all ease-in 200ms;
+  }
+
+  &:hover path {
+    fill: #202020;
+    transition: all ease-in 200ms;
+  }
 `;
 
 const NavRight = styled.div`
@@ -45,32 +61,32 @@ const NavRight = styled.div`
 `;
 
 const ToggleContainer = styled.button`
-    background-color: #ffffff;
-    border-radius: 0.625rem;
-    text-align: center;
-    padding: 0.3125rem;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: #9faeb6;
+  background-color: #ffffff;
+  border-radius: 0.625rem;
+  text-align: center;
+  padding: 0.3125rem;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #9faeb6;
 
-    & svg {
-        margin-left: 10px;
-    }
+  & svg {
+    margin-left: 10px;
+  }
 `;
 
 const UserImg = styled.div`
-    background-image: url(${Alarm});
-    background-position: center;
-    background-repeat: no-repeat;
-    text-align: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    background-color: #b6b6b6;
+  background-image: url(${Alarm});
+  background-position: center;
+  background-repeat: no-repeat;
+  text-align: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #b6b6b6;
 `;
 
 function navBar({ isLoggedIn }) {
@@ -88,9 +104,9 @@ function navBar({ isLoggedIn }) {
           </Link>
           {isLoggedIn ? (
             <>
-            <Link href="/questions" passHref>
+              <Link href="/questions" passHref>
                 <NavItem>질문광장</NavItem>
-            </Link>
+              </Link>
             </>
           ) : (
             <></>
@@ -104,33 +120,33 @@ function navBar({ isLoggedIn }) {
           </Link>
           {isLoggedIn ? (
             <>
-            <Link href="/" passHref>
+              <Link href="/" passHref>
                 <NavItem>
-                    <Alarm />
+                  <Alarm />
                 </NavItem>
-            </Link>
-            <Link href="/" passHref>
+              </Link>
+              <Link href="/" passHref>
                 <NavItem>
-                    <Directory />
+                  <Directory />
                 </NavItem>
-            </Link>
-            <Link href="/" passHref>
+              </Link>
+              <Link href="/" passHref>
                 <NavItem>
-                    <ToggleContainer>
-                        <UserImg />
-                        <ToggleBtn />
-                    </ToggleContainer>
+                  <ToggleContainer>
+                    <UserImg />
+                    <ToggleBtn />
+                  </ToggleContainer>
                 </NavItem>
-            </Link>
+              </Link>
             </>
           ) : (
             <>
-            <Link href="/login" passHref>
+              <Link href="/login" passHref>
                 <NavItem>로그인</NavItem>
-            </Link>
-            <Link href="/signup" passHref>
+              </Link>
+              <Link href="/signup" passHref>
                 <NavItem>회원가입</NavItem>
-            </Link>
+              </Link>
             </>
           )}
         </NavRight>
