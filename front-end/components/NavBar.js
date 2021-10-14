@@ -37,6 +37,7 @@ const NavItem = styled.a`
   text-align: center;
   text-decoration: none;
   padding-right: 0.4rem;
+  color: #b6b6b6;
 `;
 
 const NavRight = styled.div`
