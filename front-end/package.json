@@ -6,9 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "svg": "svgr -d public/static/images public/static/images/svg"
   },
   "dependencies": {
+    "@svgr/cli": "^5.5.0",
     "firebase": "^9.1.2",
     "next": "^11.1.2",
     "react": "17.0.2",
