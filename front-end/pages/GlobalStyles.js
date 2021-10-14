@@ -1,7 +1,7 @@
 import React from "react";
-import { createGlobalStyle } from "sytled-components";
+import { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
-import "./static/fonts/font.css";
+import "../public/static/fonts/font.css";
 
 const GlobalStyles = createGlobalStyle`
   ${reset};
@@ -13,7 +13,7 @@ const GlobalStyles = createGlobalStyle`
   }
 
   body {
-    font-family: 'Prentendard-Regular', 'Arial', sans-serif;
+    font-family: 'Pretendard-Regular', 'Arial', sans-serif;
     line-height: 1.5;
   }
   /* 태그 설정 */
