@@ -207,9 +207,7 @@ class QuestionFolder(core_models.TimeStampModel):
     #     ("language", "language"),
     #     ("solved", "solved"),
     # )
-    # folder_kind = models.CharField(
-    #     verbose_name="폴더 종류", max_length=10, choices=kind_choices, blank=False
-    # )
+    # folder_kind = models.CharField(verbose_name="폴더 종류", max_length=10, choices=kind_choices, blank=False)
 
     def __str__(self):
         return self.folder_name
