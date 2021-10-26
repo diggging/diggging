@@ -10,7 +10,7 @@ from django.urls import reverse
 from .forms import UserCustomCreationForm, AuthenticationCustomForm
 from .models import User, Sand, Alarm
 from posts.models import Folder, Post
-from questions.models import Question_post, Answer, QuestionFolder
+from questions.models import QuestionPost, Answer, QuestionFolder
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
@@ -257,12 +257,12 @@ def my_page(request, pk):
     solve_folders = Folder.objects.filter(folder_user=host, folder_kind="solved")
     
     # 질문 모음
-    my_questions = Question_post.objects.filter(user=host)
+    my_questions = QuestionPost.objects.filter(user=host)
     questions_language_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="language")
     questions_framework_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
 
     # 최근에 남긴 질문
-    my_recent_questions = Question_post.objects.filter(user=host).order_by("-created")
+    my_recent_questions = QuestionPost.objects.filter(user=host).order_by("-created")
     # 지수가 필요해서 넣었음
     my_recent_logs = Post.objects.filter(user=host).order_by("-created")
 
@@ -316,12 +316,12 @@ def my_posts(request, host_id):
     solve_folders = Folder.objects.filter(folder_user=host, folder_kind="solved")
     
     # 질문 모음
-    my_questions = Question_post.objects.filter(user=host)
+    my_questions = QuestionPost.objects.filter(user=host)
     questions_language_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="language")
     questions_framework_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
 
     # 최근에 남긴 질문
-    my_recent_questions = Question_post.objects.filter(user=host).order_by("-created")
+    my_recent_questions = QuestionPost.objects.filter(user=host).order_by("-created")
     # 지수가 필요해서 넣었음
     my_recent_logs = Post.objects.filter(user=host).order_by("-created")
 
@@ -373,12 +373,12 @@ def my_questions(request, host_id):
     solve_folders = Folder.objects.filter(folder_user=host, folder_kind="solved")
     
     # 질문 모음
-    my_questions = Question_post.objects.filter(user=host)
+    my_questions = QuestionPost.objects.filter(user=host)
     questions_language_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="language")
     questions_framework_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
 
     # 최근에 남긴 질문
-    my_recent_questions = Question_post.objects.filter(user=host).order_by("-created")
+    my_recent_questions = QuestionPost.objects.filter(user=host).order_by("-created")
     # 지수가 필요해서 넣었음
     my_recent_logs = Post.objects.filter(user=host).order_by("-created")
 
@@ -430,12 +430,12 @@ def my_answers(request, host_id):
     solve_folders = Folder.objects.filter(folder_user=host, folder_kind="solved")
     
     # 질문 모음
-    my_questions = Question_post.objects.filter(user=host)
+    my_questions = QuestionPost.objects.filter(user=host)
     questions_language_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="language")
     questions_framework_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
 
     # 최근에 남긴 질문
-    my_recent_questions = Question_post.objects.filter(user=host).order_by("-created")
+    my_recent_questions = QuestionPost.objects.filter(user=host).order_by("-created")
     # 지수가 필요해서 넣었음
     my_recent_logs = Post.objects.filter(user=host).order_by("-created")
 
@@ -555,7 +555,7 @@ def questions_lang_folder(request, pk):
 
 def questions_lang_post(request, pk):
     folder = QuestionFolder.objects.get(pk=pk)
-    posts = Question_post.objects.filter(question_folder=folder)
+    posts = QuestionPost.objects.filter(question_folder=folder)
     data = posts.values()
     return JsonResponse(list(data), safe=False)
 
@@ -568,7 +568,7 @@ def questions_framework_folder(request, pk):
 
 def questions_framework_post(request, pk):
     folder = QuestionFolder.objects.get(pk=pk)
-    posts = Question_post.objects.filter(question_folder=folder)
+    posts = QuestionPost.objects.filter(question_folder=folder)
     data = posts.values()
 
     return JsonResponse(list(data), safe=False)

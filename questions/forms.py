@@ -1,12 +1,12 @@
 from django import forms
-from .models import Answer, Question_post
+from .models import Answer, QuestionPost
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 
 class QuestionPostForm(forms.ModelForm):
     image = forms.ImageField(required=False, widget=forms.FileInput)
     class Meta:
-        model = Question_post
+        model = QuestionPost
         fields = {
             "title",
             "os",

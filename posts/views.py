@@ -5,12 +5,12 @@ from django.http import HttpResponse
 from django.views.decorators.http import require_POST, require_GET
 from .models import Post, Folder
 from users.models import Sand
-from .forms import PostForm
+#from .forms import PostForm
 import json
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator
-from questions.models import Question_post
+from questions.models import QuestionPost
 
 from rest_framework.views import APIView
 from posts.serializers import PostSerializer, UserSerializer, PostDetailSerializer
@@ -60,7 +60,7 @@ def is_ajax(request):
 @require_GET
 def scrap_axios(request):
     me = request.user    
-    posts = Question_post.objects.all() ##질문만 받아오기
+    posts = QuestionPost.objects.all() ##질문만 받아오기
     all_posts_scrap = Post.objects.all().order_by("-scrap_num")
 
     post = Post.objects.filter()
@@ -659,7 +659,7 @@ def post_scrap(request, user_id, post_id):
 
 
 def search_quest(request):
-    questions = Question_post.objects.all() ##질문만 받아오기
+    questions = QuestionPost.objects.all() ##질문만 받아오기
     p = request.POST.get('p',"")
 
     if p:

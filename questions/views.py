@@ -3,9 +3,9 @@ from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from users.models import User
-from .forms import AnswerPostForm, QuestionPostForm
+# from .forms import AnswerPostForm, QuestionPostForm
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Question_post, Answer, QuestionFolder
+from .models import QuestionPost, Answer, QuestionFolder
 from users.models import Sand, Alarm
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse  # , JsonResponse
