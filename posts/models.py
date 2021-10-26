@@ -20,6 +20,7 @@ class Post(core_models.TimeStampModel):
     likes_user = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name="likes_user")
     scarps_user = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name="scarps_user")
 
+
     # problem_choices = (
     #     ("==선택==", "==선택=="),
     #     ("해결", "해결"),
@@ -176,7 +177,7 @@ class Post(core_models.TimeStampModel):
     # desc = RichTextUploadingField(verbose_name="설명", blank=False, config_name="default")
     # code = RichTextUploadingField(verbose_name="코드", blank=True, config_name="default")
     
-    objects = models.Manager() # 손씨한테 물어보기
+    # objects = models.Manager() # 손씨한테 물어보기
 
     def count_likes_user(self):
         return self.likes_user.count()

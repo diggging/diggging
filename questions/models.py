@@ -23,7 +23,7 @@ class QuestionPost(core_models.TimeStampModel):
 
     is_selected = models.BooleanField(default=False)
 
-    objects = models.Manager()  # 손씨한테 물어봐야함
+    # objects = models.Manager()  # 손씨한테 물어봐야함
 
     # os_choices = (
     #     ("==선택==", "==선택=="),
