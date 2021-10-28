@@ -111,6 +111,9 @@ function navBar({ isLoggedIn }) {
           ) : (
             <></>
           )}
+          <Link href="/posts" passHref>
+            <NavItem>댓글</NavItem>
+          </Link>
         </NavLeft>
         <NavRight>
           <Link href="/search" passHref>
