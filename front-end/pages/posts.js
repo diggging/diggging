@@ -7,8 +7,14 @@ function posts() {
 
   const fetchComments = async () => {
     try {
-      const getResponse = await axios.get('');
-      setCommentLists(getResponse.data);
+      const getResponse = await axios.get('http://127.0.0.1:8000/comments/list_create_comment/');
+      console.log(getResponse.data.results);
+      // setCommentLists(getResponse.data);
+      // setCommentLists((prev => ({
+      //   ...prev,
+        
+      // })));
+      // setCommentLists(getResponse.data.results);
     } catch (e) {
       console.log('comment 받아오기 실패');
     }

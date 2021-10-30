@@ -33,9 +33,9 @@ function Comments({ CommentLists }) {
     e.preventDefault();
     try {
       const postResponse = await axios
-        .post("", {
-          //post body
-          comment: Comment,
+        .post('http://127.0.0.1:8000/comments/list_create_comment/', {
+          text: Comment,
+          user: 1,
         })
         .then((response) => {
           if (response.data.success) {

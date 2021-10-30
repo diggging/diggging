@@ -65,6 +65,8 @@ INSTALLED_APPS = [
     "sass_processor",
     #rest framework
     'rest_framework',
+    #cors
+    'corsheaders',
 ]
 
 REST_FRAMEWORK = {
@@ -106,6 +108,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    #cors
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = "shoveling.urls"
@@ -225,3 +229,11 @@ AUTHENTICATION_BACKENDS = (
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SITE_ID = 1
 LOGIN_REDIRECT_URL = "/"
+
+#cors
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = [
+       'http://127.0.0.1:8000',
+       'http://127.0.0.1:3000',
+]
+
