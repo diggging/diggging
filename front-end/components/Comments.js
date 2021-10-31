@@ -22,7 +22,7 @@ const CommentSubMit = styled.button``;
 
 function Comments({ CommentLists }) {
   // post용
-  const [Comment, setComment] = useState([]);
+  const [Comment, setComment] = useState('');
 
   // input change
   const handleChange = (e) => {
@@ -39,25 +39,25 @@ function Comments({ CommentLists }) {
           user: 1,
         })
         .then((response) => {
-          if (response.data.success) {
-            console.log(response.data.result);
+          if (response.data) {
             setComment("");
           } else {
             console.log("comments save error");
           }
+          // setComment("");
         });
     } catch (e) {
       console.log(e);
     }
   };
+  console.log(CommentLists);
 
   return (
     <div>
       <CenterContainer>
         <CommentContainer>
           {/* Comment Lists  */}
-          {/* { CommentLists[0].id } */}
-          {/* {console.log(CommentLists[0].text)} */}
+          {CommentLists.map((item) => item.text)}
           
           {/* Comment Form  */}
           <CommentInput onChange={handleChange} value={Comment} />
