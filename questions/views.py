@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from users.models import User
 from .forms import AnswerPostForm, QuestionPostForm
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Question_post, Answer, QuestionFolder
+from .models import QuestionPost, Answer, QuestionFolder
 from users.models import Sand, Alarm
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse  # , JsonResponse
@@ -18,26 +18,26 @@ from django.core import serializers
 @login_required
 def question_main(request):
     # 질문 최신순으로 정렬
-    question_posts = Question_post.objects.all().order_by("-created")
+    question_posts = QuestionPost.objects.all().order_by("-created")
     #  모든 전체질문에서 스크랩 순위대로 추천
-    all_question_scrap = Question_post.objects.all().order_by("-scrap_num")
+    all_question_scrap = QuestionPost.objects.all().order_by("-scrap_num")
     # 모든 전체 질문에서 도움 순위대로 추천
-    all_posts_helped = Question_post.objects.all().order_by("-helped_num")
-    
-    not_selected_questions = Question_post.objects.filter(is_selected=False)
-    
+    all_posts_helped = QuestionPost.objects.all().order_by("-helped_num")
+
+    not_selected_questions = QuestionPost.objects.filter(is_selected=False)
+
     ##개수 제한
     if len(not_selected_questions) > 20:
         not_selected_questions = not_selected_questions[:20]
-        
-    languages = [langs[0] for langs in Question_post.language_choices]
+
+    languages = [langs[0] for langs in QuestionPost.language_choices]
     search = request.POST.getlist("answers[]")
     str_search = "".join(search)
     answer = Answer.objects.filter(user=request.user)
 
     # 지수가 필요해서 넣은 것 : 질문 관련 폴더
     # 질문 모음
-    my_questions = Question_post.objects.filter(user=request.user)
+    my_questions = QuestionPost.objects.filter(user=request.user)
     questions_language_folder = QuestionFolder.objects.filter(
         folder_user=request.user, folder_kind="language"
     )
@@ -46,7 +46,7 @@ def question_main(request):
     )
 
     # 최근에 남긴 질문
-    my_recent_questions = Question_post.objects.filter(user=request.user).order_by(
+    my_recent_questions = QuestionPost.objects.filter(user=request.user).order_by(
         "-created"
     )
 
@@ -151,9 +151,13 @@ def get_answer_comments(request, answer_id):
 
 
 def question_update(request, pk):
-    question_post = get_object_or_404(Question_post, pk=pk)
-    origin_lang_fol = question_post.question_folder.get(folder_user=question_post.user, folder_kind="language")
-    origin_frame_fol = question_post.question_folder.get(folder_user=question_post.user, folder_kind="framework")
+    question_post = get_object_or_404(QuestionPost, pk=pk)
+    origin_lang_fol = question_post.question_folder.get(
+        folder_user=question_post.user, folder_kind="language"
+    )
+    origin_frame_fol = question_post.question_folder.get(
+        folder_user=question_post.user, folder_kind="framework"
+    )
     if request.method == "POST":
         form = QuestionPostForm(request.POST, request.FILES, instance=question_post)
         if form.is_valid():
@@ -229,7 +233,7 @@ def question_update(request, pk):
 
 
 def question_delete(request, pk):
-    question_post = Question_post.objects.get(pk=pk)
+    question_post = QuestionPost.objects.get(pk=pk)
 
     lang_folder = QuestionFolder.objects.get(
         folder_user=question_post.user,
@@ -255,7 +259,7 @@ def question_delete(request, pk):
 
 # ------------------------------------------------------------------------------------------------------------------
 def question_post_detail(request, user_id, post_id):
-    post_details = Question_post.objects.get(pk=post_id)
+    post_details = QuestionPost.objects.get(pk=post_id)
     me = get_object_or_404(User, pk=user_id)
 
     folder = post_details.question_folder.get(
@@ -264,8 +268,8 @@ def question_post_detail(request, user_id, post_id):
     # comments = post_details.comments.all() comments는 ajax로 따로 띄워준다고 해서 지웠습니다
     # post_answers: 질문 포스트에 해당 되는 답변들
     post_answers = post_details.answers.all().order_by("-created")
-    answers = serializers.serialize('json', post_answers)
-    
+    answers = serializers.serialize("json", post_answers)
+
     # question_comments 역참조
     comments = post_details.question_comments.all()
     # answer_comments = [answer.answer_comments for answer in post_answers]
@@ -284,9 +288,9 @@ def question_post_detail(request, user_id, post_id):
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------------
 # 질문 답변 작성 폼 관련 함수
-@login_required(login_url='/users/login/')
+@login_required(login_url="/users/login/")
 def answer_create(request, question_post_id):
-    question = Question_post.objects.get(pk=question_post_id)
+    question = QuestionPost.objects.get(pk=question_post_id)
     if request.method == "POST":
         form = AnswerPostForm(request.POST, request.FILES)
         if form.is_valid():
@@ -315,7 +319,7 @@ def answer_create(request, question_post_id):
 
 # 질문 답변 업데이트
 def answer_update(request, question_post_id, answer_id):
-    question_post = get_object_or_404(Question_post, pk=question_post_id)
+    question_post = get_object_or_404(QuestionPost, pk=question_post_id)
     answer = get_object_or_404(Answer, pk=answer_id)
     if request.method == "POST":
         form = AnswerPostForm(request.POST, request.FILES, instance=answer)
@@ -332,7 +336,7 @@ def answer_update(request, question_post_id, answer_id):
 
 # 질문 답변 삭제
 def answer_delete(request, question_post_id, answer_id):
-    question_post = Question_post.objects.get(pk=question_post_id)
+    question_post = QuestionPost.objects.get(pk=question_post_id)
     answer = Answer.objects.get(pk=answer_id)
     answer.delete()
     return redirect(
@@ -344,7 +348,7 @@ def answer_delete(request, question_post_id, answer_id):
 # 질문 기록 퍼오기
 def get_question(request, question_post_id):
     print("넘어감?")
-    question_post = get_object_or_404(Question_post, pk=question_post_id)
+    question_post = get_object_or_404(QuestionPost, pk=question_post_id)
     target_language = question_post.language
     target_framework = question_post.framework  # 어떤 framework인지 - 프레임워크 생성용
     me = request.user
@@ -435,7 +439,7 @@ def chosen_answer(request, question_answer_id):
 @require_POST
 def question_like(request):
     pk = request.POST.get("pk", None)
-    post = get_object_or_404(Question_post, pk=pk)
+    post = get_object_or_404(QuestionPost, pk=pk)
     user = request.user
     if post.likes_user.filter(id=user.id).exists():
         post.likes_user.remove(user)
@@ -443,7 +447,14 @@ def question_like(request):
     else:
         post.likes_user.add(user)
         message = "좋아요"
-        new_alarm = Alarm.objects.create(user=post.user, reason="내가 남긴 질문 \""+ post.title + "\" 이 " + user.user_nickname + "님께 도움이 되었어요.")
+        new_alarm = Alarm.objects.create(
+            user=post.user,
+            reason='내가 남긴 질문 "'
+            + post.title
+            + '" 이 '
+            + user.user_nickname
+            + "님께 도움이 되었어요.",
+        )
         new_sand = Sand.objects.create(user=post.user, amount=20, reason="도움이 되었어요")
     ctx = {"likes_count": post.count_likes_user(), "message": message}
     return HttpResponse(json.dumps(ctx), content_type="application/json")
@@ -452,7 +463,7 @@ def question_like(request):
 @login_required
 @require_POST
 def question_scrap(request, user_id, post_id):
-    question_post = get_object_or_404(Question_post, pk=post_id)
+    question_post = get_object_or_404(QuestionPost, pk=post_id)
     target_language = question_post.language
     target_framework = question_post.framework  # 어떤 framework인지 - 프레임워크 생성용
     me = request.user
@@ -495,7 +506,7 @@ def question_scrap(request, user_id, post_id):
     question_post.save()
 
     pk = request.POST.get("pk", None)
-    post = get_object_or_404(Question_post, pk=pk)
+    post = get_object_or_404(QuestionPost, pk=pk)
     user = request.user
     if post.scarps_user.filter(id=user.id).exists():
         post.scarps_user.remove(user)
@@ -504,16 +515,24 @@ def question_scrap(request, user_id, post_id):
         post.scarps_user.add(user)
         message = "퍼가기"
         # 퍼가기 할 때 sand 생성하기 - host꺼 생성해줘야함
-        new_sand = Sand.objects.create(user=question_post.user, amount=50, reason=me.user_nickname + "님의 내 질문 퍼가기")
-        new_alarm = Alarm.objects.create(user=question_post.user,reason=request.user.user_nickname+ " 님이 내 질문 "+ question_post.title+ "을 퍼갔어요.")
-
+        new_sand = Sand.objects.create(
+            user=question_post.user, amount=50, reason=me.user_nickname + "님의 내 질문 퍼가기"
+        )
+        new_alarm = Alarm.objects.create(
+            user=question_post.user,
+            reason=request.user.user_nickname
+            + " 님이 내 질문 "
+            + question_post.title
+            + "을 퍼갔어요.",
+        )
 
     post.scrap_num = post.count_scarps_user()
     post.save()
     ctx = {"scarps_count": post.count_scarps_user(), "message": message}
     return HttpResponse(json.dumps(ctx), content_type="application/json")
 
-#---------------질문광장 질문 모음
+
+# ---------------질문광장 질문 모음
 @csrf_exempt
 def questions_lang_folder(request, pk):
     host = get_object_or_404(User, pk=pk)
@@ -522,45 +541,42 @@ def questions_lang_folder(request, pk):
 
     return JsonResponse(list(data), safe=False)
 
+
 @csrf_exempt
 def questions_lang_post(request, pk):
     folder = QuestionFolder.objects.get(pk=pk)
-    posts = Question_post.objects.filter(question_folder=folder)
+    posts = QuestionPost.objects.filter(question_folder=folder)
 
-    user_list = [] 
-    for post in posts: 
+    user_list = []
+    for post in posts:
         user_list.append(post.user.user_nickname)
-    
+
     data = posts.values()
 
-    ctx = {
-        'user': user_list,
-        'data': list(data)
-    }
+    ctx = {"user": user_list, "data": list(data)}
 
     return JsonResponse(ctx, safe=False)
+
 
 @csrf_exempt
 def questions_framework_folder(request, pk):
     host = get_object_or_404(User, pk=pk)
     folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
     data = folder.values()
-    
+
     return JsonResponse(list(data), safe=False)
+
 
 @csrf_exempt
 def questions_framework_post(request, pk):
     folder = QuestionFolder.objects.get(pk=pk)
-    posts = Question_post.objects.filter(question_folder=folder)
-    user_list = [] 
-    for post in posts: 
+    posts = QuestionPost.objects.filter(question_folder=folder)
+    user_list = []
+    for post in posts:
         user_list.append(post.user.user_nickname)
-    
+
     data = posts.values()
 
-    ctx = {
-        'user': user_list,
-        'data': list(data)
-    }
+    ctx = {"user": user_list, "data": list(data)}
 
     return JsonResponse(ctx, safe=False)

@@ -2,7 +2,7 @@ from django.contrib import admin
 from . import models
 
 # Register your models here.
-@admin.register(models.Question_post)
+@admin.register(models.QuestionPost)
 class QuestionPostAdmin(admin.ModelAdmin):
     fields = (
         "user",
@@ -46,7 +46,7 @@ class AnswerAdmin(admin.ModelAdmin):
     fields = (
         "user",
         "desc",
-        'selection',
+        "selection",
     )
     list_display = [
         "user",

@@ -33,7 +33,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['13.124.23.247', 'diggging.com' ]
+ALLOWED_HOSTS = ["13.124.23.247", "diggging.com"]
 
 # Application definition
 
@@ -61,15 +61,25 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.naver",
-    #select search
+    # select search
     "sass_processor",
-    #rest framework
-    'rest_framework',
+    # rest framework
+    "rest_framework",
+    # rest_auth
+    "rest_framework.authtoken",
+    "knox",
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+        "knox.auth.TokenAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
 }
 
 SASS_PROCESSOR_ENABLED = True
@@ -79,21 +89,29 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_ALLOW_NONIMAGE_FILES = True
 
 CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'Default',
-        'toolbar_Default': [
-            ['Bold', 'Font', 'FontSize', 'Bold', 'Strike', 'Underline'],
-            ['TextColor', 'BGColor'],
-            ['NumberedList', 'BulletedList','-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-            {'name': 'insert',
-            'items': ['Image', 'Table','CodeSnippet']},
-            ],
-        'extraPlugins': ','.join(
+    "default": {
+        "toolbar": "Default",
+        "toolbar_Default": [
+            ["Bold", "Font", "FontSize", "Bold", "Strike", "Underline"],
+            ["TextColor", "BGColor"],
             [
-                'codesnippet', 'autoembed',
+                "NumberedList",
+                "BulletedList",
+                "-",
+                "JustifyLeft",
+                "JustifyCenter",
+                "JustifyRight",
+                "JustifyBlock",
+            ],
+            {"name": "insert", "items": ["Image", "Table", "CodeSnippet"]},
+        ],
+        "extraPlugins": ",".join(
+            [
+                "codesnippet",
+                "autoembed",
             ]
         ),
-        'codeSnippet_theme': 'monokai_sublime',
+        "codeSnippet_theme": "monokai_sublime",
     },
 }
 
@@ -135,7 +153,7 @@ WSGI_APPLICATION = "shoveling.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
     }
 }
 
@@ -165,8 +183,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'ko-kr'
-TIME_ZONE = 'Asia/Seoul'
+LANGUAGE_CODE = "ko-kr"
+TIME_ZONE = "Asia/Seoul"
 
 USE_I18N = True
 
@@ -180,21 +198,21 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-#STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
-#STATICFILES_DIRS = [
+# STATICFILES_DIRS = [
 #    os.path.join(BASE_DIR, "static"),
-#]
+# ]
 
 STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'sass_processor.finders.CssFinder',
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "sass_processor.finders.CssFinder",
 ]
 
-SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, 'static')
+SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, "static")
 
 
 AUTH_USER_MODEL = "users.User"
