@@ -15,71 +15,75 @@ from django.views.decorators.http import require_POST
 from django.core import serializers
 
 # Create your views here.
-@login_required
-def question_main(request):
-    # 질문 최신순으로 정렬
-    question_posts = Question_post.objects.all().order_by("-created")
-    #  모든 전체질문에서 스크랩 순위대로 추천
-    all_question_scrap = Question_post.objects.all().order_by("-scrap_num")
-    # 모든 전체 질문에서 도움 순위대로 추천
-    all_posts_helped = Question_post.objects.all().order_by("-helped_num")
+
+# refactoring 전
+# @login_required
+# def question_main(request):
+#     # 질문 최신순으로 정렬
+#     question_posts = Question_post.objects.all().order_by("-created")
+#     #  모든 전체질문에서 스크랩 순위대로 추천
+#     all_question_scrap = Question_post.objects.all().order_by("-scrap_num")
+#     # 모든 전체 질문에서 도움 순위대로 추천
+#     all_posts_helped = Question_post.objects.all().order_by("-helped_num")
     
-    not_selected_questions = Question_post.objects.filter(is_selected=False)
+#     not_selected_questions = Question_post.objects.filter(is_selected=False)
     
-    ##개수 제한
-    if len(not_selected_questions) > 20:
-        not_selected_questions = not_selected_questions[:20]
+#     ##개수 제한
+#     if len(not_selected_questions) > 20:
+#         not_selected_questions = not_selected_questions[:20]
         
-    languages = [langs[0] for langs in Question_post.language_choices]
-    search = request.POST.getlist("answers[]")
-    str_search = "".join(search)
-    answer = Answer.objects.filter(user=request.user)
+#     languages = [langs[0] for langs in Question_post.language_choices]
+#     search = request.POST.getlist("answers[]")
+#     str_search = "".join(search)
+#     answer = Answer.objects.filter(user=request.user)
 
-    # 지수가 필요해서 넣은 것 : 질문 관련 폴더
-    # 질문 모음
-    my_questions = Question_post.objects.filter(user=request.user)
-    questions_language_folder = QuestionFolder.objects.filter(
-        folder_user=request.user, folder_kind="language"
-    )
-    questions_framework_folder = QuestionFolder.objects.filter(
-        folder_user=request.user, folder_kind="framework"
-    )
+#     # 지수가 필요해서 넣은 것 : 질문 관련 폴더
+#     # 질문 모음
+#     my_questions = Question_post.objects.filter(user=request.user)
+#     questions_language_folder = QuestionFolder.objects.filter(
+#         folder_user=request.user, folder_kind="language"
+#     )
+#     questions_framework_folder = QuestionFolder.objects.filter(
+#         folder_user=request.user, folder_kind="framework"
+#     )
 
-    # 최근에 남긴 질문
-    my_recent_questions = Question_post.objects.filter(user=request.user).order_by(
-        "-created"
-    )
+#     # 최근에 남긴 질문
+#     my_recent_questions = Question_post.objects.filter(user=request.user).order_by(
+#         "-created"
+#     )
 
-    question_folder = QuestionFolder.objects.filter(folder_user=request.user)
+#     question_folder = QuestionFolder.objects.filter(folder_user=request.user)
 
-    # 지수가 필요해서 넣은 것 : 모래 포인트
-    my_sand = Sand.objects.filter(user=request.user)
-    my_sand_sum = my_sand.aggregate(Sum("amount"))
-    print(my_sand_sum)
-    if my_sand_sum["amount__sum"] == None:
-        my_sand_sum = 0
-    else:
-        if int(my_sand_sum["amount__sum"]) < 2000:
-            request.user.user_level = 0
-        elif int(my_sand_sum["amount__sum"]) < 7000:
-            request.user.user_level = 1
-        elif int(my_sand_sum["amount__sum"]) < 18000:
-            request.user.user_level = 2
-        else:
-            request.user.user_level = 3
-    ctx = {
-        "not_selected_questions": not_selected_questions,
-        "posts": question_posts,
-        "language": languages,
-        "str_search": str_search,
-        "answer": answer,
-        # 내 모래포인트와 질문 관련한 폴더 접근 가능해야해요,,
-        "my_all_sands": my_sand,  # sand 모든 object list
-        "my_sand_sum": my_sand_sum,  # 현재까지 sand 총합
-        #  질문 관련한 폴더 접근 가능해야해요,, -> 헸습니다. 현주
-        "question_folder": question_folder,
-    }
-    return render(request, "questions/main.html", ctx)
+#     # 지수가 필요해서 넣은 것 : 모래 포인트
+#     my_sand = Sand.objects.filter(user=request.user)
+#     my_sand_sum = my_sand.aggregate(Sum("amount"))
+#     print(my_sand_sum)
+#     if my_sand_sum["amount__sum"] == None:
+#         my_sand_sum = 0
+#     else:
+#         if int(my_sand_sum["amount__sum"]) < 2000:
+#             request.user.user_level = 0
+#         elif int(my_sand_sum["amount__sum"]) < 7000:
+#             request.user.user_level = 1
+#         elif int(my_sand_sum["amount__sum"]) < 18000:
+#             request.user.user_level = 2
+#         else:
+#             request.user.user_level = 3
+#     ctx = {
+#         "not_selected_questions": not_selected_questions,
+#         "posts": question_posts,
+#         "language": languages,
+#         "str_search": str_search,
+#         "answer": answer,
+#         # 내 모래포인트와 질문 관련한 폴더 접근 가능해야해요,,
+#         "my_all_sands": my_sand,  # sand 모든 object list
+#         "my_sand_sum": my_sand_sum,  # 현재까지 sand 총합
+#         #  질문 관련한 폴더 접근 가능해야해요,, -> 헸습니다. 현주
+#         "question_folder": question_folder,
+#     }
+#     return render(request, "questions/main.html", ctx)
+
+# refactoring 후
 
 
 # -----------------------------------------------------------------------------------------------------
