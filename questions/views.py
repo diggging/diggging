@@ -585,59 +585,11 @@ class QuestionCreateView(generics.ListCreateAPIView):
     pagination_class = None 
 
     def create(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
-        if serializers.is_valid():
+        serializer = self.serializer_class(data=request.data, context={'request': self.request})
+        if serializer.is_valid():
             instance = serializer.save()
         
         me = request.user
-        language = request.data.get("language") # language 가져옴
-        framework = request.data.get("framework") # framework 가져옴.
-        solve = request.data.get("problem_solving") # 해결여부
-
-        lang_folder = QuestionFolder.objects.filter(
-            folder_name = language, folder_user = me, folder_kind = "language"
-        ) # lang folder 가져옴
-        frame_folder = QuestionFolder.objects.filter(
-            folder_name = framework, folder_user = me, folder_kind = "framework"
-        ) # framework folder 가져옴
-
-        if lang_folder.exists():
-            # 있으면 foreign key 연결
-            existed_folder = QuestionFolder.objects.get(
-                folder_name = language, folder_user = me, folder_kind = "language"
-            )
-            instance.question_folder.add(existed_folder) 
-        else:
-            # 없으면 folder 만들어서
-            new_folder = QuestionFolder.objects.create(
-                folder_name = language, folder_user = me, folder_kind = "language"
-            )
-            instance.question_folder.add(new_folder)
-
-        if frame_folder.exists():
-            # 있으면 foreignkey 연결
-            existed_folder = QuestionFolder.objects.get(
-                folder_name = framework, folder_user = me, folder_kind = "framework"
-            )
-            instance.question_folder.add(existed_folder)
-        else:
-            # 없으면 folder 만들어서
-            new_folder = QuestionFolder.objects.create(
-                folder_name = framework, folder_user = me, folder_kind = "framework"
-            )
-            instance.question_folder.add(new_folder)
-
-        # 해결, 미해결 폴더에 넣기
-        if solve == "해결":
-            existed_folder = QuestionFolder.objects.get(
-                folder_user = me, folder_name = solve, folder_kind = "solved"
-            )
-            instance.question_folder.add(existed_folder)
-        else:
-            existed_folder = QuestionFolder.objects.get(
-                folder_user = me, folder_name = solve, folder_kind = "solved"
-            )
-            instance.question_folder.add(existed_folder)
 
         # 포스팅 시에 sand 추가해주기
         new_sand = Sand.objects.create(user=me, amount = 100, reason="삽질 기록 작성")

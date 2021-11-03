@@ -1,4 +1,5 @@
 from rest_framework import fields, serializers
+from posts.models import Folder
 from questions.models import QuestionPost, Answer, QuestionFolder
 from users.models import User
 from comments.models import Comment
@@ -44,7 +45,6 @@ class QuestionDetailSerializer(serializers.ModelSerializer):
     question_comments = CommentSerializer(read_only=True, many=True)
     answer = AnswerSerializer(read_only = True, many=True)
     answer_comments = CommentSerializer(read_only=True, many=True)
-    image = serializers.ImageField(use_url = True)
 
     class Meta:
         model = QuestionPost
@@ -58,3 +58,8 @@ class QuestionDetailSerializer(serializers.ModelSerializer):
         response['answer'] = AnswerSerializer(instance.answer, many=True)
         response['answercomments'] = CommentSerializer(instance.answer_comments, many=True).data
         return response
+    
+    def __init__(self, *args, **kwargs):
+        super(QuestionDetailSerializer, self).__init__(*args, **kwargs)
+        user = self.context['request'].user
+        self.fields['question_folder'] = serializers.ChoiceField(choices=QuestionFolder.objects.filter(folder_user=user))
