@@ -7,7 +7,10 @@ import os
 from django_resized import ResizedImageField
 from posts.models import Folder
 
-# Create your models here.
+# django user create token
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
 
 
 class User(AbstractUser):
@@ -45,7 +48,7 @@ class User(AbstractUser):
         help_text="Designates whther the user can log into admin site",
     )
     is_active = models.BooleanField(
-        verbose_name="active", default=True
+        verbose_name="active", default=False
     )  # 이메일 인증 완료되기 전까지 False로 설정
     email = models.EmailField(
         blank=True, max_length=254, verbose_name="email address", null=False
@@ -65,18 +68,18 @@ class User(AbstractUser):
     def following_count(self):
         return self.user_following.all().count()
 
-    def delete(self, *args, **kargs):
+    """def delete(self, *args, **kargs):
         if self.upload_files:
             os.remove(os.path.join(settings.MEDIA_ROOT, self.upload_files.path))
-        super(User, self).delete(*args, **kargs)
+        super(User, self).delete(*args, **kargs)"""
 
     def save(self, *args, **kwargs):
         # if self.pk is None:  # create
         super().save(*args, **kwargs)  # Call the "real" save() method.
         # 스크랩 폴더.
-        scrap = Folder.objects.filter(folder_name="스크랩 모음", folder_user=self)
-        if not scrap.exists():
-            Folder.objects.create(folder_user=self, folder_name="스크랩 모음")
+        # scrap = Folder.objects.filter(folder_name="스크랩 모음", folder_user=self)
+        # if not scrap.exists():
+        # Folder.objects.create(folder_user=self, #folder_name="스크랩 모음")
 
 
 class Sand(core_model.TimeStampModel):
@@ -95,3 +98,9 @@ class Alarm(core_model.TimeStampModel):
 
     def __str__(self):
         return self.reason
+
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)

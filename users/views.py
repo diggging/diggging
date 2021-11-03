@@ -10,7 +10,7 @@ from django.urls import reverse
 # from django.views.generic.base import TemplateView
 # from .forms import SignUpForm
 from .forms import UserCustomCreationForm, AuthenticationCustomForm
-from .models import User, Sand, Alarm
+from .models import User, Sand, Alarm, create_auth_token
 from posts.models import Folder, Post
 from questions.models import QuestionPost, Answer, QuestionFolder
 from django.views import View
@@ -40,12 +40,21 @@ from django.http.response import JsonResponse
 # api
 from rest_framework import generics, permissions
 from .serializers import UserSerializer, RegisterSerializer
-from knox.models import AuthToken
 from rest_framework.response import Response
-from knox.views import LoginView as KnoxLoginView
 from django.contrib.auth import login
 from rest_framework import permissions
-from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.decorators import api_view
+from rest_framework.authtoken.models import Token
+
+# new
+from django.shortcuts import render
+from rest_framework.response import Response
+from rest_framework import status, mixins
+from rest_framework import generics  # generics class-based view 사용할 계획
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
+from rest_framework.decorators import permission_classes, authentication_classes
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
@@ -56,21 +65,24 @@ my_site.name = "digging_main"
 my_site.save()
 
 
-class registerAPI(generics.GenericAPIView):
-    serializers_class = RegisterSerializer
+@permission_classes([AllowAny])
+class Registration(generics.GenericAPIView):
+    serializer_class = RegisterSerializer
 
     def post(self, request, *args, **kwargs):
-        serializers = self.get_serializer(data=request.data)
-        serializers.is_valid(raise_exception=True)
-        user = serializers.save()
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid(raise_exception=True):
+            return Response({"message": "이미 존재함"}, status=status.HTTP_409_CONFLICT)
 
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save(request)  # request 필요 -> 오류 발생
         return Response(
             {
-                "user": UserSerializer(
-                    user, context=self.get_serializer_context()
-                ).data,
-                "token": AuthToken.objects.create(user)[1],
-            }
+                # get_serializer_context: serializer에 포함되어야 할 어떠한 정보의 context를 딕셔너리 형태로 리턴
+                # 디폴트 정보 context는 request, view, format
+                "user": UserSerializer(user, context=self.get_serializer_context()).data
+            },
+            status=status.HTTP_201_CREATED,
         )
 
 
@@ -365,12 +377,12 @@ def my_posts(request, host_id):
 
     # 질문 모음
     my_questions = QuestionPost.objects.filter(user=host)
-    questions_language_folder = QuestionFolder.objects.filter(
+    """questions_language_folder = QuestionFolder.objects.filter(
         folder_user=host, folder_kind="language"
     )
     questions_framework_folder = QuestionFolder.objects.filter(
         folder_user=host, folder_kind="framework"
-    )
+    )"""
 
     # 최근에 남긴 질문
     my_recent_questions = QuestionPost.objects.filter(user=host).order_by("-created")
@@ -398,11 +410,6 @@ def my_posts(request, host_id):
         "host": host,
         "host_follower": host_follower,
         "host_following": host_following,
-        "language_folders": language_folders,
-        "framework_folders": framework_folders,
-        "solve_folders": solve_folders,
-        "questions_language_folder": questions_language_folder,
-        "questions_framework_folder": questions_framework_folder,
         #'my_questions': my_questions,
         "my_recent_questions": my_recent_questions,
         "my_recent_logs": my_recent_logs,
@@ -420,18 +427,9 @@ def my_questions(request, host_id):
     host_follower = host.user_followed.all()
 
     # 폴더 보여주기위한 변수
-    language_folders = Folder.objects.filter(folder_user=host, folder_kind="language")
-    framework_folders = Folder.objects.filter(folder_user=host, folder_kind="framework")
-    solve_folders = Folder.objects.filter(folder_user=host, folder_kind="solved")
 
     # 질문 모음
     my_questions = QuestionPost.objects.filter(user=host)
-    questions_language_folder = QuestionFolder.objects.filter(
-        folder_user=host, folder_kind="language"
-    )
-    questions_framework_folder = QuestionFolder.objects.filter(
-        folder_user=host, folder_kind="framework"
-    )
 
     # 최근에 남긴 질문
     my_recent_questions = QuestionPost.objects.filter(user=host).order_by("-created")
@@ -459,11 +457,6 @@ def my_questions(request, host_id):
         "host": host,
         "host_follower": host_follower,
         "host_following": host_following,
-        "language_folders": language_folders,
-        "framework_folders": framework_folders,
-        "solve_folders": solve_folders,
-        "questions_language_folder": questions_language_folder,
-        "questions_framework_folder": questions_framework_folder,
         #'my_questions': my_questions,
         "my_recent_questions": my_recent_questions,
         "my_recent_logs": my_recent_logs,
@@ -480,19 +473,8 @@ def my_answers(request, host_id):
     host_following = host.user_following.all()
     host_follower = host.user_followed.all()
 
-    # 폴더 보여주기위한 변수
-    language_folders = Folder.objects.filter(folder_user=host, folder_kind="language")
-    framework_folders = Folder.objects.filter(folder_user=host, folder_kind="framework")
-    solve_folders = Folder.objects.filter(folder_user=host, folder_kind="solved")
-
     # 질문 모음
     my_questions = QuestionPost.objects.filter(user=host)
-    questions_language_folder = QuestionFolder.objects.filter(
-        folder_user=host, folder_kind="language"
-    )
-    questions_framework_folder = QuestionFolder.objects.filter(
-        folder_user=host, folder_kind="framework"
-    )
 
     # 최근에 남긴 질문
     my_recent_questions = QuestionPost.objects.filter(user=host).order_by("-created")
@@ -519,11 +501,6 @@ def my_answers(request, host_id):
         "host": host,
         "host_follower": host_follower,
         "host_following": host_following,
-        "language_folders": language_folders,
-        "framework_folders": framework_folders,
-        "solve_folders": solve_folders,
-        "questions_language_folder": questions_language_folder,
-        "questions_framework_folder": questions_framework_folder,
         #'my_questions': my_questions,
         "my_recent_questions": my_recent_questions,
         "my_recent_logs": my_recent_logs,

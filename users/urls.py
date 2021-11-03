@@ -2,11 +2,13 @@ from django.conf.urls import url
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
+from rest_framework.authtoken.views import obtain_auth_token
 
 app_name = "users"
 
 urlpatterns = [
-    path("api/register/", view=views.registerAPI.as_view(), name="register"),
+    path("api/Signup/", views.Registration.as_view(), name="Signup"),
+    path("login", obtain_auth_token, name="login"),
     # url(r'^signup/$', views.signup, name='signup'),
     path("activate/<slug:uidb64>/<slug:token>/", views.activate, name="activate"),
     # path("api/login/", views.LoginAPI.as_view(), name="login"),
