@@ -21,21 +21,27 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .permissions import IsOwnerOrReadOnly
+from django.db.models import Prefetch
+
+# class Main(APIView):
+#     def get(self, request, format=None, **kwargs):
+#         me = request.user
+#         posts = Post.objects.all()
+
+#         me_serializer = UserSerializer(me)
+#         posts_serializer = PostSerializer(posts, many=True)
+
+#         return Response({"me": me_serializer.data, "all_posts":posts_serializer.data})
+
+class Main(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostDetailSerializer
 
 # main 페이지
 # def main(request):
 #     me = request.user   
 #     return render(request, "posts/post_scrap.html", {"user":me})
 
-class Main(APIView):
-    def get(self, request, format=None, **kwargs):
-        me = request.user
-        posts = Post.objects.all()
-
-        me_serializer = UserSerializer(me)
-        posts_serializer = PostSerializer(posts, many=True)
-
-        return Response({"me": me_serializer.data, "all_posts":posts_serializer.data})
 
 
 def helped(request):
@@ -179,68 +185,13 @@ def my_recent_axios(request):
 class PostCreateView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
- 
-    def create(self, request, *args, **kwargs):
 
+    def create(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             instance = serializer.save()
-
-        me = request.user  # folder 주인 가져오기
-        language = request.data.get("language")  # language 가져옴
-        framework = request.data.get("framework")  # framework 가져옴
-        solve = request.data.get("problem_solving")  # 해결 여부
-
-        lang_folder = Folder.objects.filter(
-            folder_name=language, folder_user=me, folder_kind="language"
-        )  # lang folder 가져옴
-        frame_folder = Folder.objects.filter(
-            folder_name=framework, folder_user=me, folder_kind="framework"
-        )  # frameworkd folder 가져옴
-
-        if lang_folder.exists():
-            # 있으면 foriegn key 연결
-            existed_folder = Folder.objects.get(
-                folder_name=language, folder_user=me, folder_kind="language"
-            )
-            instance.folder.add(existed_folder)
-        else:
-            # 없으면 folder 만들어서
-            new_folder = Folder.objects.create(
-                folder_name=language, folder_user=me, folder_kind="language"
-            )
-            instance.folder.add(new_folder)
-
-        if frame_folder.exists():
-            # 있으면 foriegn key 연결
-            existed_folder = Folder.objects.get(
-                folder_name=framework, folder_user=me, folder_kind="framework"
-            )
-            instance.folder.add(existed_folder)
-        else:
-            # 없으면 folder 만들어서
-            new_folder = Folder.objects.create(
-                folder_name=framework, folder_user=me, folder_kind="framework"
-            )
-            instance.folder.add(new_folder)
-
-        # 해결, 미해결 폴더에 넣기
-        if solve == "해결":
-            existed_folder = Folder.objects.get(
-                folder_user=me, folder_name=solve, folder_kind="solved"
-            )
-            instance.folder.add(existed_folder)
-
-        else:
-            existed_folder = Folder.objects.get(
-                folder_user=me, folder_name=solve, folder_kind="solved"
-            )
-            instance.folder.add(existed_folder)
-
         # 포스팅 시에 sand 추가해주기
-        new_sand = Sand.objects.create(user=me, amount=100, reason="삽질 기록 작성")
-
-        
+        new_sand = Sand.objects.create(user=request.user, amount=100, reason="삽질 기록 작성")
 
         return Response(serializer.data)
 
@@ -411,32 +362,6 @@ class PostDetailGetView(generics.RetrieveUpdateDestroyAPIView):
         if not frame_folder.related_posts.exists():
             frame_folder.delete()
         return Response(status=status.HTTP_200_OK)
-
-# class PostDetailUpdateView(generics.UpdateAPIView):
-#     authentication_classes = [BasicAuthentication, SessionAuthentication]
-#     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly] # 로그인한, 쓴사람만 수정 가능
-#     queryset = Post.objects.all()
-#     serializer_class = PostDetailSerializer
-#     lookup_field = 'pk'
-
-#     def update(self, request, *args, **kwargs):
-#         instance = self.get_object()
-#         #instance.name = request.data.get("name")
-#         #instance.save()
-
-#         #serializer = self.get_serializer(instance, partial=True)
-#         serializer = self.serializer_class(instance, data=request.data, partial=True)
-#         if serializer.is_valid():
-#             serializer.save()
-
-#         return Response(serializer.data)
-
-# class PostDetailDeleteView(generics.DestroyAPIView):
-#     authentication_classes = [BasicAuthentication, SessionAuthentication]
-#     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly] # 로그인한, 쓴사람만 수정 가능
-#     queryset = Post.objects.all()
-#     serializer_class = PostDetailSerializer
-#     # 2. 수정하면 폴더 변경되어야함
 
 # def post_update(request, pk):
     #     # 눈물나는 update.......................
