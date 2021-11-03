@@ -40,10 +40,10 @@ class AnswerSerializer(serializers.ModelSerializer):
         return response
 
 class QuestionDetailSerializer(serializers.ModelSerializer):
-    questionfolder = QuestionFolderSerializer(read_only=True, many=True)
-    questioncomments = CommentSerializer(read_only=True, many=True)
+    question_folder = QuestionFolderSerializer(read_only=True, many=True)  
+    question_comments = CommentSerializer(read_only=True, many=True)
     answer = AnswerSerializer(read_only = True, many=True)
-    answercomments = CommentSerializer(read_only=True, many=True)
+    answer_comments = CommentSerializer(read_only=True, many=True)
     image = serializers.ImageField(use_url = True)
 
     class Meta:
@@ -53,8 +53,8 @@ class QuestionDetailSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['user'] = UserSerializer(instance.user, read_only=True).data
-        response['questionfolder'] = QuestionFolderSerializer(instance.questionfolder, many=True).data
-        response['questioncomments'] = CommentSerializer(instance.questioncomments, many=True).data
+        response['questionfolder'] = QuestionFolderSerializer(instance.question_folder, many=True).data
+        response['questioncomments'] = CommentSerializer(instance.question_comments, many=True).data
         response['answer'] = AnswerSerializer(instance.answer, many=True)
-        response['answercomments'] = CommentSerializer(instance.answercomments, many=True).data
+        response['answercomments'] = CommentSerializer(instance.answer_comments, many=True).data
         return response
