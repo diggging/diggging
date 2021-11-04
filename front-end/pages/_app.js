@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { Component } from "react";
-import { ThemeProvider } from 'styled-components'
+import { ThemeProvider } from "styled-components";
 import { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
 import "../public/static/fonts/font.css";
+
+import { Provider } from "react-redux";
+import store from "../redux/store.js";
 
 const GlobalStyles = createGlobalStyle`
   ${reset};
@@ -24,23 +27,25 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 const colors = {
-  darkBlue: '#00537A',
-  lightBlue: '#9FAEB6',
-  deepYellow: '#FFBA42',
-  yellow: '#FFD358',
-  lightYellow: '#FFE59C',
-  gray: '#C4C4C4',
-}
+  darkBlue: "#00537A",
+  lightBlue: "#9FAEB6",
+  deepYellow: "#FFBA42",
+  yellow: "#FFD358",
+  lightYellow: "#FFE59C",
+  gray: "#C4C4C4",
+};
 
 function MyApp({ Component, pageProps }) {
   return (
     <>
-    <GlobalStyles/>
-    <ThemeProvider theme={colors}>
-      <Component {...pageProps} />;
-    </ThemeProvider>
+      <Provider store={store}>
+        <GlobalStyles />
+        <ThemeProvider theme={colors}>
+          <Component {...pageProps} />;
+        </ThemeProvider>
+      </Provider>
     </>
-  )
+  );
 }
 
 export default MyApp;

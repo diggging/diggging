@@ -144,7 +144,7 @@ function navBar({ isLoggedIn }) {
             </>
           ) : (
             <>
-              <Link href="/login" passHref>
+              <Link href="/loginPage" passHref>
                 <NavItem>로그인</NavItem>
               </Link>
               <Link href="/signup" passHref>
