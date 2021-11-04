@@ -48,7 +48,7 @@ class User(AbstractUser):
         help_text="Designates whther the user can log into admin site",
     )
     is_active = models.BooleanField(
-        verbose_name="active", default=False
+        verbose_name="active", default=True
     )  # 이메일 인증 완료되기 전까지 False로 설정
     email = models.EmailField(
         blank=True, max_length=254, verbose_name="email address", null=False
@@ -77,9 +77,9 @@ class User(AbstractUser):
         # if self.pk is None:  # create
         super().save(*args, **kwargs)  # Call the "real" save() method.
         # 스크랩 폴더.
-        # scrap = Folder.objects.filter(folder_name="스크랩 모음", folder_user=self)
-        # if not scrap.exists():
-        # Folder.objects.create(folder_user=self, #folder_name="스크랩 모음")
+        scrap = Folder.objects.filter(folder_name="스크랩 모음", folder_user=self)
+        if not scrap.exists():
+            Folder.objects.create(folder_user=self, folder_name="스크랩 모음")
 
 
 class Sand(core_model.TimeStampModel):

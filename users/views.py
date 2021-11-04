@@ -39,7 +39,7 @@ from django.http.response import JsonResponse
 
 # api
 from rest_framework import generics, permissions
-from .serializers import UserSerializer, RegisterSerializer
+from .serializers import UserSerializer, RegisterSerializer, UserLoginSerializer
 from rest_framework.response import Response
 from django.contrib.auth import login
 from rest_framework import permissions
@@ -59,10 +59,10 @@ from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
 # 회원가입
-my_site = Site.objects.get(pk=1)
+"""my_site = Site.objects.get(pk=1)
 my_site.domain = "diggging.com"
 my_site.name = "digging_main"
-my_site.save()
+my_site.save()"""
 
 
 @permission_classes([AllowAny])
@@ -75,7 +75,10 @@ class Registration(generics.GenericAPIView):
             return Response({"message": "이미 존재함"}, status=status.HTTP_409_CONFLICT)
 
         serializer.is_valid(raise_exception=True)
-        user = serializer.save(request)  # request 필요 -> 오류 발생
+        user = serializer.save(request)
+        user.is_active = False
+        user.save()
+        # request 필요 -> 오류 발생
         return Response(
             {
                 # get_serializer_context: serializer에 포함되어야 할 어떠한 정보의 context를 딕셔너리 형태로 리턴
@@ -138,7 +141,23 @@ def activate(request, uidb64, token):
 
 
 # 로그인
-@csrf_exempt
+@permission_classes([AllowAny])
+class UserLoginSerializer(generics.GenericAPIView):
+    serializer_class = UserLoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        if not serializer.is_vaild(raise_exception=True):
+            return Response(
+                {"message": "Request Body Error"}, status=status.HTTP_409_CONFLICT
+            )
+
+        serializer.is_vaild(raise_exception=True)
+        user = serializer.vaildated_data
+
+
+"""@csrf_exempt
 def log_in(request):
     context = {}
     if request.method == "POST":
@@ -157,7 +176,7 @@ def log_in(request):
         form = AuthenticationCustomForm()
     ctx = {"form": form}
     return render(request, template_name="users/login.html", context=ctx)
-
+"""
 
 # 로그아웃
 @login_required
