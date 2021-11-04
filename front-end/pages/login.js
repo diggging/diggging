@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import Link from "next/link";
 
 const BackgroundColor = styled.div`
   width: 100%;
@@ -17,7 +18,7 @@ const LoginBox = styled.div`
   box-shadow: 10px 10px 35px 0 rgb(1 1 1 / 10%);
   border-radius: 20px;
   width: 480px;
-  height: 528px;
+  height: auto;
   padding: 40px 50px;
   display: block;
 `;
@@ -27,12 +28,15 @@ const Logo = styled.a`
   outline: none;
   background-color: none;
   text-align: center;
+  display: inherit;
 `;
 
 const GuideMessage = styled.p`
   color: #848484;
   font-size: 12px;
   font-family: "Pretendard-Regular";
+  text-align: center;
+  margin-bottom: 30px;
 `;
 
 const LoginInput = styled.input`
@@ -43,16 +47,31 @@ const LoginInput = styled.input`
   border: none;
   outline: none;
   margin-top: 14px;
-  color: #c4c4c4;
+  color: #8d8c85;
 `;
 
 const LoginBtn = styled.button`
   background-color: #ffd358;
   border-radius: 8px;
   color: white;
+  box-shadow: none;
+  border: none;
+
+  padding: 14px;
+  margin-top: 22px;
+  margin-bottom: 28px;
+  width: 100%;
+
   font-size: 20px;
   text-align: center;
-  margin-top: 22px;
+  font-family: "Pretendard-SemiBold";
+
+  cursor: pointer;
+
+  &:hover {
+    background-color: #ffd664;
+    box-shadow: 0, 4, 12, rgba(1, 1, 1, 8%);
+  }
 `;
 
 const LinkBtn = styled.a`
@@ -71,15 +90,31 @@ const Button = styled.button`
 `;
 
 function login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [inputs, setInputs] = useState({
+    username: "",
+    password: ""    
+  });
+  const [errMessage, setErrMessage] = useState("");
 
-  const handleIDinput = (e) => {
-    setUsername(e.target.value);
-  };
+  const {username, password} = inputs;
+  const onChange = (e) => {
+    setInputs({
+      ...inputs,
+      [e.target.name]: e.target.value;
+    })
+  }
+  const onSubmit = (e) => {
+    e.preventDefault();
+    //입력 값 맞는지 체크 후 api 요청
+    //아이디-비밀번호 일치하지 않으면 에러메시지
 
-  const handlePWinput = (e) => {
-    setPassword(e.target.value);
+    //하나라도 입력 안한 것 있으면 에러메시지
+    if (username === "" || password === "") {
+      setErrMessage("아이디와 비밀번호를 확인해주세요.");
+      return;
+    }
+    //authenticated한지 확인하고
+    //Redirect to home하기
   };
 
   return (
@@ -102,22 +137,29 @@ function login() {
         <GuideMessage>
           실력있는 개발자들에게 질문하고 매일매일 성장하세요
         </GuideMessage>
-        <form>
+        <form onSubmit={e => onSubmit(e)}>
           <LoginInput
-            value={username}
-            onChange={handleIDinput}
+            type="text"
             placeholder="아이디"
-            type="text"
+            name="username"
+            value={username}
+            onChange={e => onChange(e)}
+            required
           />
           <LoginInput
-            value={password}
-            onChange={handlePWinput}
+            type="password"
             placeholder="비밀번호"
-            type="text"
+            name="password"
+            value={password}
+            onChange={e => onChange(e)}
+            minLength="8"
+            required
           />
-          <LoginBtn>로그인</LoginBtn>
+          <span>{errMessage}</span>
+          <LoginBtn type="submit">로그인</LoginBtn>
         </form>
-        <LinkBtn>회원가입하기 </LinkBtn> | <LinkBtn>비밀번호 찾기</LinkBtn>
+        <Link href="/signup">회원가입하기</Link> |
+        <Link href="/reset-password">비밀번호 찾기</Link>
         <Button>네이버 로그인</Button>
         <Button>깃헙 로그인</Button>
       </LoginBox>
@@ -125,4 +167,4 @@ function login() {
   );
 }
 
-export default login;
+export default connect(null, {})(login);
