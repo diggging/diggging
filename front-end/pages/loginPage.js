@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import axios from "axios";
 import Link from "next/link";
+import {login} from '../actions/auth';
 
 const BackgroundColor = styled.div`
   width: 100%;
@@ -89,7 +89,7 @@ const Button = styled.button`
   border: none;
 `;
 
-function login() {
+function loginPage({login}) {
   const [inputs, setInputs] = useState({
     username: "",
     password: ""    
@@ -167,4 +167,4 @@ function login() {
   );
 }
 
-export default connect(null, {})(login);
+export default connect(null, {login})(loginPage);
