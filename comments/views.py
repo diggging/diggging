@@ -56,6 +56,7 @@ class CommentCreateView(generics.ListCreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
+
     # def create(self, request, *args, **kwargs):
     #     serializer = self.serializer_class(data=request.data)
     #     if serializer.is_valid():
@@ -67,6 +68,7 @@ class CommentGetView(generics.RetrieveUpdateDestroyAPIView):
     #permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly] # 로그인한, 쓴사람만 수정 가능
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+    pagination_class=None
 
 # delete comment
 # @csrf_exempt

@@ -34,6 +34,7 @@ from django.db.models import Prefetch
 #         return Response({"me": me_serializer.data, "all_posts":posts_serializer.data})
 
 class Main(generics.ListAPIView):
+    authentication_classes = [BasicAuthentication, SessionAuthentication]
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
 
@@ -182,12 +183,12 @@ def my_recent_axios(request):
 #         return self.partial_update(request, *args, **kwargs)
 
 #------------------------------------------------------- post detail -------------------------------------------------------
-class PostCreateView(generics.ListCreateAPIView):
+class PostCreateView(generics.CreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
 
     def create(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
+        serializer = self.serializer_class(data=request.data, context={'request': request})
         if serializer.is_valid():
             instance = serializer.save()
         # 포스팅 시에 sand 추가해주기
@@ -275,93 +276,6 @@ class PostDetailGetView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly] # 로그인한, 쓴사람만 수정 가능
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
-
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()    # 해당 오브젝트 가져옴. pk신경쓸 필요 없음
-        origin_lang_fol = instance.folder.get(folder_user=request.user, folder_kind="language")
-        origin_frame_fol = instance.folder.get(folder_user=request.user, folder_kind="framework")
-        origin_solve_fol = instance.folder.get(folder_user=request.user, folder_kind="solved")
-
-        new_lang = request.data.get("language")
-        new_frame = request.data.get("framework")
-        new_solve = request.data.get("problem_solving")
-
-        if new_lang != origin_lang_fol.folder_name:
-                origin_lang_fol.related_posts.remove(instance)
-                lang_folder = Folder.objects.filter(
-                    folder_name=new_lang, folder_user=instance.user, folder_kind="language"
-                )
-                if lang_folder.exists():
-                    existed_folder = Folder.objects.get(
-                        folder_name=new_lang,
-                        folder_user=instance.user,
-                        folder_kind="language",
-                    )
-                    instance.folder.add(existed_folder)
-                else:
-                    new_folder = Folder.objects.create(
-                        folder_name=new_lang,
-                        folder_user=instance.user,
-                        folder_kind="language",
-                    )
-                    instance.folder.add(new_folder)
-                
-                if not origin_lang_fol.related_posts.all():
-                    origin_lang_fol.delete()
-
-        if new_frame != origin_frame_fol.folder_name:
-            origin_frame_fol.related_posts.remove(instance)
-            frame_folder = Folder.objects.filter(
-                folder_name=new_frame,
-                folder_user=instance.user,
-                folder_kind="framework",
-            )
-            if frame_folder.exists():
-                existed_folder = Folder.objects.get(
-                    folder_name=new_frame,
-                    folder_user=instance.user,
-                    folder_kind="framework",
-                )
-                instance.folder.add(existed_folder)
-            else:
-                new_folder = Folder.objects.create(
-                    folder_name=new_frame,
-                    folder_user=instance.user,
-                    folder_kind="framework",
-                )
-                instance.folder.add(new_folder)
-            if not origin_frame_fol.related_posts.all():
-                origin_frame_fol.delete()
-
-        if new_solve != origin_solve_fol.folder_name:
-            origin_solve_fol.related_posts.remove(instance)
-            solve_folder = Folder.objects.get(
-                folder_name=new_solve, folder_user=instance.user, folder_kind="solved"
-            )
-            instance.folder.add(solve_folder)
-
-        instance.save()
-
-        serializer = self.serializer_class(instance, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-
-        return Response(serializer.data)
-
-    def delete(self, request, *args, **kwargs):
-        instance = self.get_object()
-
-        lang_folder = Folder.objects.get(folder_user=instance.user, related_posts=instance, folder_kind="language")
-        frame_folder = Folder.objects.get(folder_user=instance.user, related_posts=instance, folder_kind="framework")
-        
-        instance.delete()
-
-        if not lang_folder.related_posts.exists():
-            lang_folder.delete()
-
-        if not frame_folder.related_posts.exists():
-            frame_folder.delete()
-        return Response(status=status.HTTP_200_OK)
 
 # def post_update(request, pk):
     #     # 눈물나는 update.......................

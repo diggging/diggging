@@ -1,5 +1,6 @@
 
 from rest_framework import fields, serializers
+from rest_framework.relations import PrimaryKeyRelatedField
 
 from posts.models import Post
 from users.models import User
@@ -47,14 +48,19 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class PostDetailSerializer(serializers.ModelSerializer):
-    #folder = serializers.SerializerMethodField("get_folder")
+    #folder = serializers.SerializerMethodField()
+    #folder = serializers.ChoiceField(choices=Folder.objects.filter(folder_user=user))
     comments = CommentSerializer(read_only=True, many=True)
-    image = serializers.ImageField(use_url=True)
+    image = serializers.ImageField(allow_empty_file=True, use_url=True)
     class Meta:
         model = Post
         fields = "__all__"
         #fields = ["user","title","image","desc","code","folder","comments","is_public","is_friend","scrap_num","helped_num","likes_user","scarps_user"]
-    
+    # def get_folder(self, obj):
+    #     qs = Folder.objects.filter(folder_user="hj")
+    #     serializer = FolderSerializer(instance=qs, many=True)
+    #     return serializer.data
+
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['user'] = UserSerializer(instance.user, read_only=True).data
@@ -66,10 +72,8 @@ class PostDetailSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super(PostDetailSerializer, self).__init__(*args, **kwargs)
         user = self.context['request'].user
-        self.fields['folder'] = serializers.ChoiceField(choices=Folder.objects.filter(folder_user=user))
-    # def get_folder(self):
-    #     qs = Folder.objects.filter(folder_user="hj")
-    #     serializer = FolderSerializer(instance=qs, many=True, read_only=False)
-    #     return serializer.data
+        #self.fields['folder'].queryset = serializers.Field(Folder.objects.filter(folder_user=user))
+        self.fields['folder'] = serializers.ManyRelatedField(child_relation=PrimaryKeyRelatedField(queryset= Folder.objects.filter(folder_user=user), required=False), required=False)#Folder.objects.filter(folder_user=user)
+        print(self.fields['folder'])
 
 
