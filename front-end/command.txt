@@ -1,0 +1,4 @@
+yarn add redux redux-thunk react-redux redux-devtools-extension
+-> 리덕스 관련
+
+yarn add styled-components

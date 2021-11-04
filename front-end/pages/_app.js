@@ -6,7 +6,7 @@ import reset from "styled-reset";
 import "../public/static/fonts/font.css";
 
 import { Provider } from "react-redux";
-import store from "../redux/store.js";
+import { useStore } from "../redux/store.js";
 
 const GlobalStyles = createGlobalStyle`
   ${reset};
@@ -36,6 +36,8 @@ const colors = {
 };
 
 function MyApp({ Component, pageProps }) {
+  const store = useStore(pageProps.initialReduxState);
+
   return (
     <>
       <Provider store={store}>
