@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import router, { useRouter } from 'next/router';
-// import {register} from '../actions/auth';
-// import Loader from "react-loader-spinner";
+import { register } from '../redux/actions/auth';
+import Loader from '"react-loader-spinner';
 
 import styled from 'styled-components';
 import axios from 'axios';
@@ -95,6 +95,11 @@ const Button = styled.button`
 `;
 
 function signup() {
+  const dispatch = useDispatch();
+  const register_success = useSelector((state) => state.auth.register_success);
+  //reducer의 loading state가져오기(auth라는 이름으로 combine되어있음)
+  const loading = useSelector((state) => state.auth.loading);
+
   //여러 개의 인풋 관리를 위해서 inputs state만들었음
   const [passwordError, setPasswordError] = useState(false);
   //이메일 인증 에러도 추가 필요
@@ -132,11 +137,11 @@ function signup() {
   const onSubmit = (e) => {
     //새로고침방지
     e.preventDefault();
-    if (password !== passwordCheck) {
-      return setPasswordError(true);
+    if (dispatch && dispatch !== null && dispatch !== undefined) {
+      dispatch(register(username, nickname, email, password, passwordCheck));
     }
-    //email 인증했는지 검증 필요
 
+    //email 인증했는지 검증 필요
     return axios
       .post('api자리', {
         username: username,

@@ -1,3 +1,10 @@
+import {
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
+  SET_AUTH_LOADING,
+  REMOVE_AUTH_LOADING,
+} from '../actions/types';
+
 const initialState = {
   user: null,
   isAuthenticated: false,
