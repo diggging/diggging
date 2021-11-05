@@ -39,7 +39,7 @@ from django.http.response import JsonResponse
 
 # api
 from rest_framework import generics, permissions
-from .serializers import UserSerializer, RegisterSerializer, UserLoginSerializer
+from .serializers import UserSerializer, RegisterSerializer, LoginSerializer
 from rest_framework.response import Response
 from django.contrib.auth import login
 from rest_framework import permissions
@@ -142,19 +142,32 @@ def activate(request, uidb64, token):
 
 # 로그인
 @permission_classes([AllowAny])
-class UserLoginSerializer(generics.GenericAPIView):
-    serializer_class = UserLoginSerializer
+class Login(generics.GenericAPIView):
+    serializer_class = LoginSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
 
-        if not serializer.is_vaild(raise_exception=True):
+        if not serializer.is_valid(raise_exception=True):
             return Response(
                 {"message": "Request Body Error"}, status=status.HTTP_409_CONFLICT
             )
 
-        serializer.is_vaild(raise_exception=True)
-        user = serializer.vaildated_data
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data
+        if user["username"] == "None":
+            return Response(
+                {"message": "username error"}, status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        return Response(
+            {
+                "user": UserSerializer(
+                    user, context=self.get_serializer_context()
+                ).data,
+                "token": user["token"],
+            }
+        )
 
 
 """@csrf_exempt

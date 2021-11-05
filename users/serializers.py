@@ -7,6 +7,7 @@ from rest_framework_jwt.settings import api_settings
 from django.contrib.auth import get_user_model
 from rest_auth.registration.serializers import RegisterSerializer
 from django.contrib.auth.models import update_last_login
+from django.contrib.auth import authenticate
 
 JWT_PAYLOAD_HANDLER = api_settings.JWT_PAYLOAD_HANDLER
 JWT_ENCODE_HANDLER = api_settings.JWT_ENCODE_HANDLER
@@ -25,7 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
             "user_profile_content",
             "user_profile_image",
             "email",
-            "user_following",
+            # "user_following",
             "login_method",
             "is_active",
         ]
@@ -79,7 +80,9 @@ class RegisterSerializer(RegisterSerializer):
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=30)
-    password = serializers.CharField(max_length=128, write_only=True)
+    password = serializers.CharField(
+        style={"input_type": "password"}, max_length=128, write_only=True
+    )
     token = serializers.CharField(max_length=255, read_only=True)
 
     def validate(self, data):
@@ -89,7 +92,7 @@ class LoginSerializer(serializers.Serializer):
         user = authenticate(username=username, password=password)
 
         if user is None:
-            return {"username": None}
+            return {"username": "None"}
         try:
             payload = JWT_PAYLOAD_HANDLER(user)
             jwt_token = JWT_ENCODE_HANDLER(payload)
