@@ -55,6 +55,9 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.decorators import permission_classes, authentication_classes
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
+from rest_framework.exceptions import NotFound
+from rest_framework.views import APIView
+from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
@@ -159,7 +162,10 @@ class Login(generics.GenericAPIView):
             return Response(
                 {"message": "username error"}, status=status.HTTP_401_UNAUTHORIZED
             )
-
+        if user["password"] != request.password:
+            return Response(
+                {"message": "password error"}, status=status.HTTP_401_UNAUTHORIZED
+            )
         return Response(
             {
                 "user": UserSerializer(
@@ -237,7 +243,34 @@ def password_reset(request):
 
 
 # 이메일 인증
-def password_reset_email(request, uidb64, token):
+class EmailView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, *args, **kwargs):
+        self.object = confirmation = self.get_object()
+        confirmation.confirm(self.request)
+        return HttpResponse("/login/success/")
+
+    def get_object(self, queryset=None):
+        key = self.kwargs["key"]
+        email_confirmation = EmailConfirmationHMAC.from_key(key)
+        if not email_confirmation:
+            if queryset is None:
+                queryset = self.get_queryset()
+
+            try:
+                email_confirmation = queryset.get(key=key.lower())
+            except EmailConfirmation.DoesNotExist:
+                return HttpResponse("login/failure/")
+        return email_confirmation
+
+    def get_queryset(self):
+        qs = EmailConfirmation.objects.all_vaild()
+        qs = qs.select_related("email_address__user")
+        return qs
+
+
+"""def password_reset_email(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
@@ -252,6 +285,7 @@ def password_reset_email(request, uidb64, token):
     else:
         ctx = {"user": user}
         return render(request, template_name="password_email_fail.html", context=ctx)
+"""
 
 
 def password_reset_form(request, pk):

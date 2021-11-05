@@ -14,13 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import include
 from posts import views as posts_views
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
+from accounts.views import ConfirmEmailView
 
 urlpatterns = [
     path("ckeditor/", include("ckeditor_uploader.urls")),
@@ -29,6 +30,17 @@ urlpatterns = [
     path("users/", include("users.urls", namespace="users")),
     path("comments/", include("comments.urls", namespace="comments")),
     path("accounts/", include("allauth.urls")),
+    re_path(
+        r"^account-confirm-email/$",
+        VerifyEmailView.as_view(),
+        name="account_email_verification_sent",
+    ),
+    # 유저가 클릭한 이메일(=링크) 확인
+    re_path(
+        r"^account-confirm-email/(?P<key>[-:\w]+)/$",
+        ConfirmEmailView.as_view(),
+        name="account_confirm_email",
+    ),
     path("questions/", include("questions.urls")),
     path("", posts_views.Main.as_view(), name="main"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
