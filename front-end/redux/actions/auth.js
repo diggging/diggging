@@ -25,7 +25,7 @@ export const register =
     });
 
     try {
-      const res = await fetch('/api/주세요/signup하는거', {
+      const res = await fetch('/api/account/register', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
