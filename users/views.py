@@ -270,7 +270,7 @@ class EmailView(APIView):
         return qs
 
 
-"""def password_reset_email(request, uidb64, token):
+def password_reset_email(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
@@ -285,7 +285,6 @@ class EmailView(APIView):
     else:
         ctx = {"user": user}
         return render(request, template_name="password_email_fail.html", context=ctx)
-"""
 
 
 def password_reset_form(request, pk):

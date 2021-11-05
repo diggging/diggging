@@ -21,32 +21,23 @@ class UserSerializer(serializers.ModelSerializer):
             "id",
             "username",
             "user_nickname",
-            "user_level",
-            "user_point",
-            "user_profile_content",
-            "user_profile_image",
             "email",
-            # "user_following",
             "login_method",
-            "is_active",
         ]
 
 
 class RegisterSerializer(RegisterSerializer):
 
     user_nickname = serializers.CharField()
-    profile_image = serializers.ImageField(
-        default="../static/image/profile_img.jpg",
-    )
+    email = serializers.EmailField()
     password1 = serializers.CharField(style={"input_type": "password"}, write_only=True)
     password2 = serializers.CharField(style={"input_type": "password"}, write_only=True)
-    login_method = serializers.ChoiceField(choices=["email", "github"])
+    #login_method = serializers.ChoiceField(choices=["email", "github"])
 
     def get_cleaned_data(self):
         data_dict = super().get_cleaned_data()  # username, password, email이 디폴트
         data_dict["user_nickname"] = self.validated_data.get("user_nickname", "")
-        data_dict["profile_image"] = self.validated_data.get("profile_image", "")
-        data_dict["login_method"] = self.validated_data.get("login_method", "")
+        #data_dict["login_method"] = self.validated_data.get("login_method", "")
 
         return data_dict
 

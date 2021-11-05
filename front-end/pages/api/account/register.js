@@ -13,11 +13,11 @@ export default async (req, res) => {
     });
 
     try {
-      const apiRes = await fetch(`${API_URL}/api주세요`, {
+      const apiRes = await fetch(`${API_URL}/api/Signup/`, {
         method: 'POST',
-        header: {
-          Accept: 'application/json',
+        headers: {
           'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
         body: body,
       });
