@@ -15,6 +15,7 @@ from pathlib import Path
 import json
 import sys
 from dotenv import load_dotenv, find_dotenv
+from datetime import timedelta
 
 load_dotenv(find_dotenv())
 
@@ -33,7 +34,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['13.124.23.247', 'diggging.com' ]
+ALLOWED_HOSTS = ["13.124.23.247", "diggging.com"]
 
 # Application definition
 
@@ -61,19 +62,53 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.naver",
-    #select search
+    # select search
     "sass_processor",
-    #rest framework
-    'rest_framework',
+    # rest framework
+    "rest_framework",
+    # rest_auth
+    "rest_framework.authtoken",
+    "rest_auth.registration",
     #cors
     'corsheaders',
 ]
-
+REST_AUTH_REGISTER_SERIALIZERS = {
+    "REGISTER_SERIALIZER": "thenameofyourapp.serializers.CustomRegisterSerializer",
+}
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+}
+JWT_AUTH = {
+    "JWT_ENCODE_HANDLER": "rest_framework_jwt.utils.jwt_encode_handler",
+    "JWT_DECODE_HANDLER": "rest_framework_jwt.utils.jwt_decode_handler",
+    "JWT_PAYLOAD_HANDLER": "rest_framework_jwt.utils.jwt_payload_handler",
+    "JWT_PAYLOAD_GET_USER_ID_HANDLER": "rest_framework_jwt.utils.jwt_get_user_id_from_payload_handler",
+    "JWT_RESPONSE_PAYLOAD_HANDLER": "rest_framework_jwt.utils.jwt_response_payload_handler",
+    "JWT_SECRET_KEY": SECRET_KEY,
+    "JWT_GET_USER_SECRET_KEY": None,
+    "JWT_PUBLIC_KEY": None,
+    "JWT_PRIVATE_KEY": None,
+    "JWT_ALGORITHM": "HS256",
+    "JWT_VERIFY": True,
+    "JWT_VERIFY_EXPIRATION": True,
+    "JWT_LEEWAY": 0,
+    "JWT_EXPIRATION_DELTA": timedelta(days=30),
+    "JWT_AUDIENCE": None,
+    "JWT_ISSUER": None,
+    "JWT_ALLOW_REFRESH": False,
+    "JWT_REFRESH_EXPIRATION_DELTA": timedelta(days=30),
+    "JWT_AUTH_HEADER_PREFIX": "JWT",
+    "JWT_AUTH_COOKIE": None,
 }
 
+REST_USE_JWT = True
 SASS_PROCESSOR_ENABLED = True
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
@@ -81,21 +116,29 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_ALLOW_NONIMAGE_FILES = True
 
 CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'Default',
-        'toolbar_Default': [
-            ['Bold', 'Font', 'FontSize', 'Bold', 'Strike', 'Underline'],
-            ['TextColor', 'BGColor'],
-            ['NumberedList', 'BulletedList','-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-            {'name': 'insert',
-            'items': ['Image', 'Table','CodeSnippet']},
-            ],
-        'extraPlugins': ','.join(
+    "default": {
+        "toolbar": "Default",
+        "toolbar_Default": [
+            ["Bold", "Font", "FontSize", "Bold", "Strike", "Underline"],
+            ["TextColor", "BGColor"],
             [
-                'codesnippet', 'autoembed',
+                "NumberedList",
+                "BulletedList",
+                "-",
+                "JustifyLeft",
+                "JustifyCenter",
+                "JustifyRight",
+                "JustifyBlock",
+            ],
+            {"name": "insert", "items": ["Image", "Table", "CodeSnippet"]},
+        ],
+        "extraPlugins": ",".join(
+            [
+                "codesnippet",
+                "autoembed",
             ]
         ),
-        'codeSnippet_theme': 'monokai_sublime',
+        "codeSnippet_theme": "monokai_sublime",
     },
 }
 
@@ -139,7 +182,7 @@ WSGI_APPLICATION = "shoveling.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
     }
 }
 
@@ -169,8 +212,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'ko-kr'
-TIME_ZONE = 'Asia/Seoul'
+LANGUAGE_CODE = "ko-kr"
+TIME_ZONE = "Asia/Seoul"
 
 USE_I18N = True
 
@@ -184,21 +227,21 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-#STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
-#STATICFILES_DIRS = [
+# STATICFILES_DIRS = [
 #    os.path.join(BASE_DIR, "static"),
-#]
+# ]
 
 STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'sass_processor.finders.CssFinder',
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "sass_processor.finders.CssFinder",
 ]
 
-SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, 'static')
+SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, "static")
 
 
 AUTH_USER_MODEL = "users.User"
@@ -229,6 +272,11 @@ AUTHENTICATION_BACKENDS = (
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SITE_ID = 1
 LOGIN_REDIRECT_URL = "/"
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_EMAIL_REQUIRED = True
+EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "/"
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
+ACCOUNT_EMAIL_SUBJECT_PREFIX = "Diggging"
 
 #cors
 CORS_ORIGIN_ALLOW_ALL = True

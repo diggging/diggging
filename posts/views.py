@@ -24,8 +24,9 @@ from .permissions import IsOwnerOrReadOnly
 
 # main 페이지
 # def main(request):
-#     me = request.user   
+#     me = request.user
 #     return render(request, "posts/post_scrap.html", {"user":me})
+
 
 class Main(APIView):
     def get(self, request, format=None, **kwargs):
@@ -35,32 +36,34 @@ class Main(APIView):
         me_serializer = UserSerializer(me)
         posts_serializer = PostSerializer(posts, many=True)
 
-        return Response({"me": me_serializer.data, "all_posts":posts_serializer.data})
+        return Response({"me": me_serializer.data, "all_posts": posts_serializer.data})
 
 
 def helped(request):
-    me = request.user 
-    return render(request, "posts/post_helped.html", {"user":me})
+    me = request.user
+    return render(request, "posts/post_helped.html", {"user": me})
 
 
 def follow(request):
-    me = request.user 
-    return render(request, "posts/post_follow.html", {"user":me})
+    me = request.user
+    return render(request, "posts/post_follow.html", {"user": me})
 
 
 def my_recent(request):
-    me = request.user 
-    return render(request, "posts/my_recent.html", {"user":me})
+    me = request.user
+    return render(request, "posts/my_recent.html", {"user": me})
+
 
 # -----------------------------------------------------------------------
 def is_ajax(request):
     return request.META.get("HTTP_X_REQUESTED_WITH") == "XMLHttpRequest"
 
+
 # main axios
 @require_GET
 def scrap_axios(request):
-    me = request.user    
-    posts = QuestionPost.objects.all() ##질문만 받아오기
+    me = request.user
+    posts = QuestionPost.objects.all()  ##질문만 받아오기
     all_posts_scrap = Post.objects.all().order_by("-scrap_num")
 
     post = Post.objects.filter()
@@ -70,9 +73,10 @@ def scrap_axios(request):
     posts_scrap = paginator.page(page_num)
 
     if is_ajax(request):
-        return render(request, 'posts/_posts.html', {'posts': posts_scrap, "user":me})
+        return render(request, "posts/_posts.html", {"posts": posts_scrap, "user": me})
         # return JsonResponse(ctx, safe=False)
-    return render(request, 'posts/post_scrap.html', {'posts': posts_scrap, "user":me})
+    return render(request, "posts/post_scrap.html", {"posts": posts_scrap, "user": me})
+
 
 @require_GET
 def helped_axios(request):
@@ -83,8 +87,11 @@ def helped_axios(request):
     posts_helped = paginator.page(page_num)
 
     if is_ajax(request):
-        return render(request, 'posts/_posts.html', {'posts': posts_helped, "user":me})
-    return render(request, 'posts/post_helped.html', {'posts': posts_helped , "user":me})
+        return render(request, "posts/_posts.html", {"posts": posts_helped, "user": me})
+    return render(
+        request, "posts/post_helped.html", {"posts": posts_helped, "user": me}
+    )
+
 
 @require_GET
 def follow_axios(request):
@@ -153,7 +160,7 @@ def my_recent_axios(request):
 #         post = Post.objects.get(pk=self.kwargs['post_id'])
 #         serializer = PostDetailSerializer(post)
 #         return Response(serializer.data)
-    
+
 #     def put(self, request,post_id, format=None):
 #         post = Post.objects.get(pk=post_id)
 #         serializer = PostDetailSerializer(post, data=request.data)
@@ -161,7 +168,7 @@ def my_recent_axios(request):
 #             serializer.save()
 #             return Response(serializer.data, status=status.HTTP_200_OK)
 #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 # class PostDetail(mixins.RetrieveModelMixin,
 #                      mixins.UpdateModelMixin,
 #                      mixins.DestroyModelMixin,
@@ -175,11 +182,11 @@ def my_recent_axios(request):
 #     def patch(self, request, *args, **kwargs):
 #         return self.partial_update(request, *args, **kwargs)
 
-#------------------------------------------------------- post detail -------------------------------------------------------
+# ------------------------------------------------------- post detail -------------------------------------------------------
 class PostCreateView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
- 
+
     def create(self, request, *args, **kwargs):
 
         serializer = self.serializer_class(data=request.data)
@@ -239,8 +246,6 @@ class PostCreateView(generics.ListCreateAPIView):
 
         # 포스팅 시에 sand 추가해주기
         new_sand = Sand.objects.create(user=me, amount=100, reason="삽질 기록 작성")
-
-        
 
         return Response(serializer.data)
 
@@ -317,46 +322,54 @@ class PostCreateView(generics.ListCreateAPIView):
 #     return render(request, "posts/post_create.html", context=ctx)
 
 
-
 class PostDetailGetView(generics.RetrieveUpdateDestroyAPIView):
-    #comment 보내주기
+    # comment 보내주기
     authentication_classes = [BasicAuthentication, SessionAuthentication]
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly] # 로그인한, 쓴사람만 수정 가능
+    permission_classes = [
+        IsAuthenticatedOrReadOnly,
+        IsOwnerOrReadOnly,
+    ]  # 로그인한, 쓴사람만 수정 가능
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
 
     def update(self, request, *args, **kwargs):
-        instance = self.get_object()    # 해당 오브젝트 가져옴. pk신경쓸 필요 없음
-        origin_lang_fol = instance.folder.get(folder_user=request.user, folder_kind="language")
-        origin_frame_fol = instance.folder.get(folder_user=request.user, folder_kind="framework")
-        origin_solve_fol = instance.folder.get(folder_user=request.user, folder_kind="solved")
+        instance = self.get_object()  # 해당 오브젝트 가져옴. pk신경쓸 필요 없음
+        origin_lang_fol = instance.folder.get(
+            folder_user=request.user, folder_kind="language"
+        )
+        origin_frame_fol = instance.folder.get(
+            folder_user=request.user, folder_kind="framework"
+        )
+        origin_solve_fol = instance.folder.get(
+            folder_user=request.user, folder_kind="solved"
+        )
 
         new_lang = request.data.get("language")
         new_frame = request.data.get("framework")
         new_solve = request.data.get("problem_solving")
 
         if new_lang != origin_lang_fol.folder_name:
-                origin_lang_fol.related_posts.remove(instance)
-                lang_folder = Folder.objects.filter(
-                    folder_name=new_lang, folder_user=instance.user, folder_kind="language"
+            origin_lang_fol.related_posts.remove(instance)
+            lang_folder = Folder.objects.filter(
+                folder_name=new_lang, folder_user=instance.user, folder_kind="language"
+            )
+            if lang_folder.exists():
+                existed_folder = Folder.objects.get(
+                    folder_name=new_lang,
+                    folder_user=instance.user,
+                    folder_kind="language",
                 )
-                if lang_folder.exists():
-                    existed_folder = Folder.objects.get(
-                        folder_name=new_lang,
-                        folder_user=instance.user,
-                        folder_kind="language",
-                    )
-                    instance.folder.add(existed_folder)
-                else:
-                    new_folder = Folder.objects.create(
-                        folder_name=new_lang,
-                        folder_user=instance.user,
-                        folder_kind="language",
-                    )
-                    instance.folder.add(new_folder)
-                
-                if not origin_lang_fol.related_posts.all():
-                    origin_lang_fol.delete()
+                instance.folder.add(existed_folder)
+            else:
+                new_folder = Folder.objects.create(
+                    folder_name=new_lang,
+                    folder_user=instance.user,
+                    folder_kind="language",
+                )
+                instance.folder.add(new_folder)
+
+            if not origin_lang_fol.related_posts.all():
+                origin_lang_fol.delete()
 
         if new_frame != origin_frame_fol.folder_name:
             origin_frame_fol.related_posts.remove(instance)
@@ -400,9 +413,13 @@ class PostDetailGetView(generics.RetrieveUpdateDestroyAPIView):
     def delete(self, request, *args, **kwargs):
         instance = self.get_object()
 
-        lang_folder = Folder.objects.get(folder_user=instance.user, related_posts=instance, folder_kind="language")
-        frame_folder = Folder.objects.get(folder_user=instance.user, related_posts=instance, folder_kind="framework")
-        
+        lang_folder = Folder.objects.get(
+            folder_user=instance.user, related_posts=instance, folder_kind="language"
+        )
+        frame_folder = Folder.objects.get(
+            folder_user=instance.user, related_posts=instance, folder_kind="framework"
+        )
+
         instance.delete()
 
         if not lang_folder.related_posts.exists():
@@ -411,6 +428,7 @@ class PostDetailGetView(generics.RetrieveUpdateDestroyAPIView):
         if not frame_folder.related_posts.exists():
             frame_folder.delete()
         return Response(status=status.HTTP_200_OK)
+
 
 # class PostDetailUpdateView(generics.UpdateAPIView):
 #     authentication_classes = [BasicAuthentication, SessionAuthentication]
@@ -439,7 +457,7 @@ class PostDetailGetView(generics.RetrieveUpdateDestroyAPIView):
 #     # 2. 수정하면 폴더 변경되어야함
 
 # def post_update(request, pk):
-    #     # 눈물나는 update.......................
+#     # 눈물나는 update.......................
 #     # 수정히기 -> 폴더 바뀌면 폴더 바꿔야함
 #     # 원래 있던 폴더에 글이 하나밖에 없었다면 폴더가 삭제 되어야함(하지만 해결 미해결은 아님)
 #     # 으아ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ
@@ -549,16 +567,24 @@ class PostDetailGetView(generics.RetrieveUpdateDestroyAPIView):
 
 #     return redirect("posts:main")
 
+
 def search(request):
     posts = Post.objects.all()
-    q = request.POST.get('q',"")
+    q = request.POST.get("q", "")
 
     if q:
-        posts = posts.filter(title__icontains=q) | posts.filter(desc__icontains=q) | posts.filter(language__icontains=q) | posts.filter(os__icontains=q) | posts.filter(problem_solving__icontains=q) | posts.filter(framework__icontains=q) 
+        posts = (
+            posts.filter(title__icontains=q)
+            | posts.filter(desc__icontains=q)
+            | posts.filter(language__icontains=q)
+            | posts.filter(os__icontains=q)
+            | posts.filter(problem_solving__icontains=q)
+            | posts.filter(framework__icontains=q)
+        )
 
-        return render(request, 'posts/search.html',{'posts': posts, 'q':q })
+        return render(request, "posts/search.html", {"posts": posts, "q": q})
 
-    else:    
+    else:
         return render(request, "posts/search.html")
 
 
@@ -575,7 +601,14 @@ def post_like(request):
     else:
         post.likes_user.add(user)
         message = "좋아요"
-        new_alarm = Alarm.objects.create(user=post.user, reason="내가 남긴 기록 \""+ post.title + "\" 이 " + user.user_nickname + "님께 도움이 되었어요.")
+        new_alarm = Alarm.objects.create(
+            user=post.user,
+            reason='내가 남긴 기록 "'
+            + post.title
+            + '" 이 '
+            + user.user_nickname
+            + "님께 도움이 되었어요.",
+        )
         new_sand = Sand.objects.create(user=post.user, amount=20, reason="도움이 되었어요")
     post.helped_num = post.count_likes_user()
     post.save()
@@ -646,10 +679,15 @@ def post_scrap(request, user_id, post_id):
         post.scarps_user.add(user)
         message = "퍼가기"
         # 퍼가기 할 때 sand 생성하기 - host꺼 생성해줘야함
-        new_sand = Sand.objects.create(user=post.user, amount=50, reason=me.user_nickname + "님의 내 기록 퍼가기")
+        new_sand = Sand.objects.create(
+            user=post.user, amount=50, reason=me.user_nickname + "님의 내 기록 퍼가기"
+        )
 
         # 퍼가기 -> host 에게 alarm감
-        new_alarm = Alarm.objects.create(user=post_host, reason=me.user_nickname + "님이 내 기록 " + post.title + "을 퍼갔어요.")
+        new_alarm = Alarm.objects.create(
+            user=post_host,
+            reason=me.user_nickname + "님이 내 기록 " + post.title + "을 퍼갔어요.",
+        )
 
     post.scrap_num = post.count_scarps_user()
     post.save()
@@ -659,18 +697,25 @@ def post_scrap(request, user_id, post_id):
 
 
 def search_quest(request):
-    questions = QuestionPost.objects.all() ##질문만 받아오기
-    p = request.POST.get('p',"")
+    questions = Question_post.objects.all()  ##질문만 받아오기
+    p = request.POST.get("p", "")
 
     if p:
-        questions = questions.filter(title__icontains=p) | questions.filter(desc__icontains=p) | questions.filter(language__icontains=p) | questions.filter(os__icontains=p) | questions.filter(framework__icontains=p) 
+        questions = (
+            questions.filter(title__icontains=p)
+            | questions.filter(desc__icontains=p)
+            | questions.filter(language__icontains=p)
+            | questions.filter(os__icontains=p)
+            | questions.filter(framework__icontains=p)
+        )
 
-        return render(request, 'posts/search_quest.html',{'posts': questions, 'p':p })
+        return render(request, "posts/search_quest.html", {"posts": questions, "p": p})
 
     else:
         return render(request, "posts/search_quest.html")
 
-#---------------------------------------------------------
+
+# ---------------------------------------------------------
 
 # 삽질 기록 퍼오기
 def get_post(request, user_id, post_id):
@@ -733,6 +778,7 @@ def get_post(request, user_id, post_id):
     )
     # url: 저장 후 post_detail 페이지에 남아있음.
     return redirect("posts:post_detail", user_id, post_id)
+
 
 # 서비스 소개 페이지
 def service_view(request):

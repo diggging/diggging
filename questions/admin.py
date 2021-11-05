@@ -46,7 +46,7 @@ class AnswerAdmin(admin.ModelAdmin):
     fields = (
         "user",
         "desc",
-        'selection',
+        "selection",
     )
     list_display = [
         "user",

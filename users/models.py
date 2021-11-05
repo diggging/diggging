@@ -7,7 +7,10 @@ import os
 from django_resized import ResizedImageField
 from posts.models import Folder
 
-# Create your models here.
+# django user create token
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
 
 
 class User(AbstractUser):
@@ -65,10 +68,10 @@ class User(AbstractUser):
     def following_count(self):
         return self.user_following.all().count()
 
-    def delete(self, *args, **kargs):
+    """def delete(self, *args, **kargs):
         if self.upload_files:
             os.remove(os.path.join(settings.MEDIA_ROOT, self.upload_files.path))
-        super(User, self).delete(*args, **kargs)
+        super(User, self).delete(*args, **kargs)"""
 
     def save(self, *args, **kwargs):
         # if self.pk is None:  # create
@@ -95,3 +98,9 @@ class Alarm(core_model.TimeStampModel):
 
     def __str__(self):
         return self.reason
+
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)

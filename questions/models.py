@@ -5,21 +5,37 @@ from django.conf import settings
 
 # Create your models here.
 class QuestionPost(core_models.TimeStampModel):
-    user = models.ForeignKey("users.User", related_name="question_user", on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        "users.User", related_name="question_user", on_delete=models.CASCADE
+    )
     title = models.CharField(verbose_name="제목", max_length=200)
     desc = models.TextField(verbose_name="설명", blank=False)
     code = models.TextField(verbose_name="코드", blank=True)
 
-    question_folder = models.ManyToManyField("QuestionFolder",related_name="question_folder",blank=True,)
+    question_folder = models.ManyToManyField(
+        "QuestionFolder",
+        related_name="question_folder",
+        blank=True,
+    )
 
-    is_public = models.BooleanField(verbose_name="전체공개", default=True)  # 해당코드 false로 변경시 비공개
+    is_public = models.BooleanField(
+        verbose_name="전체공개", default=True
+    )  # 해당코드 false로 변경시 비공개
 
     is_friend = models.BooleanField(verbose_name="이웃공개", default=False)  # 나를 팔로잉 하는 사람.
 
     scrap_num = models.IntegerField(default=0)
     helped_num = models.IntegerField(default=0)
-    likes_user = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name="question_likes_user",)
-    scarps_user = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name="question_scarps_user",)    
+    likes_user = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        related_name="question_likes_user",
+    )
+    scarps_user = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        related_name="question_scarps_user",
+    )
 
     is_selected = models.BooleanField(default=False)
 
@@ -164,9 +180,9 @@ class QuestionPost(core_models.TimeStampModel):
     # framework = models.CharField(verbose_name="프레임워크", max_length=20, choices=framework_choices, blank=False)
     # error_message = models.TextField(verbose_name="에러메세지", blank=True)
     # image = models.ImageField( verbose_name="게시물 사진", upload_to="images/posts", blank=True, null=True, default='../static/image/default_image.PNG')
-    #desc = RichTextUploadingField(verbose_name="설명", blank=False, config_name="default")
-    #code = RichTextUploadingField(verbose_name="코드", blank=True, config_name="default")
-    #sand_point = models.IntegerField(default=0)
+    # desc = RichTextUploadingField(verbose_name="설명", blank=False, config_name="default")
+    # code = RichTextUploadingField(verbose_name="코드", blank=True, config_name="default")
+    # sand_point = models.IntegerField(default=0)
 
     def count_likes_user(self):
         return self.likes_user.count()
@@ -174,29 +190,36 @@ class QuestionPost(core_models.TimeStampModel):
     def count_scarps_user(self):
         return self.scarps_user.count()
 
+
 # sand_point_count.short_description = "current sand point"
 
 # 채택된 답변의 개수 세는 함수 이걸로 답변 채택 여부 확인 할 것임.
-    # def answer_selection_count(self):
-    #     answer_selection_count = 0
-    #     for answer_selected in self.answers.all():
-    #         if answer_selected:
-    #             answer_selection_count += 1
+# def answer_selection_count(self):
+#     answer_selection_count = 0
+#     for answer_selected in self.answers.all():
+#         if answer_selected:
+#             answer_selection_count += 1
 
-    #     return answer_selection_count
+#     return answer_selection_count
+
 
 class Answer(core_models.TimeStampModel):
-    user = models.ForeignKey("users.User", related_name="answer_user", on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        "users.User", related_name="answer_user", on_delete=models.CASCADE
+    )
     title = models.CharField(verbose_name="제목", max_length=200)
-    question = models.ForeignKey("questions.QuestionPost", related_name="answers", on_delete=models.CASCADE)
+    question = models.ForeignKey(
+        "questions.QuestionPost", related_name="answers", on_delete=models.CASCADE
+    )
     selection = models.BooleanField(verbose_name="채택", default=False)
-    #desc = RichTextUploadingField(verbose_name="설명", blank=False, config_name="default")
-    #code = RichTextUploadingField(verbose_name="코드", blank=True, config_name="default")
+    # desc = RichTextUploadingField(verbose_name="설명", blank=False, config_name="default")
+    # code = RichTextUploadingField(verbose_name="코드", blank=True, config_name="default")
     desc = models.TextField(verbose_name="설명", blank=False)
     code = models.TextField(verbose_name="코드", blank=True)
 
     # objects = models.Manager()
-    
+
+
 class QuestionFolder(core_models.TimeStampModel):
     folder_name = models.CharField(max_length=100)
     folder_user = models.ForeignKey(
