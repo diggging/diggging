@@ -1,48 +1,90 @@
-import {
-  LOGIN_SUCCESS,
-  LOGIN_fAIL,
-  USER_LOADED_SUCCESS,
-  USER_LOADED_FAIL,
-} from "../actions/types";
-
-//디폴트 값
 const initialState = {
-  access: localStorage.getItem("access"),
-  refresh: localStorage.getItem("refresh"),
-  isAuthenticated: null,
   user: null,
+  isAuthenticated: false,
+  loading: false,
+  register_success: false,
 };
 
-export default function (state = initialState, action) {
-  const { type, payload } = action; //reducer쓸때 보내주는 action에서 type과 payload 가져오기
-  //action의 type에 따라 기능구현
+const authReducer = (state = initialState, action) => {
+  const { type, payload } = action;
+
   switch (type) {
+    case REGISTER_SUCCESS:
+      return {
+        ...state,
+        register_success: true,
+      };
+    case REGISTER_FAIL:
+      return {
+        ...state,
+      };
+    case RESET_REGISTER_SUCCESS:
+      return {
+        ...state,
+        register_success: false,
+      };
     case LOGIN_SUCCESS:
       return {
         ...state,
         isAuthenticated: true,
-        access: payload.access,
-        refresh: payload.refresh,
       };
-    case USER_LOADED_SUCCESS:
+    case LOGIN_FAIL:
       return {
         ...state,
-        user: payload,
+        isAuthenticated: false,
       };
-    case USER_LOADED_FAIL:
+    case LOGOUT_SUCCESS:
       return {
         ...state,
-        user: null,
-      };
-    case LOGIN_fAIL:
-      localStorage.removeItem("access");
-      localStorage.removeItem("refresh");
-      return {
-        ...state,
-        access: null,
-        refresh: null,
         isAuthenticated: false,
         user: null,
       };
+    case LOGOUT_FAIL:
+      return {
+        ...state,
+      };
+    case LOAD_USER_SUCCESS:
+      return {
+        ...state,
+        user: payload.user,
+      };
+    case LOAD_USER_FAIL:
+      return {
+        ...state,
+        user: null,
+      };
+    case AUTHENTICATED_SUCCESS:
+      return {
+        ...state,
+        isAuthenticated: true,
+      };
+    case AUTHENTICATED_FAIL:
+      return {
+        ...state,
+        isAuthenticated: false,
+        user: null,
+      };
+    case REFRESH_SUCCESS:
+      return {
+        ...state,
+      };
+    case REFRESH_FAIL:
+      return {
+        ...state,
+        isAuthenticated: false,
+        user: null,
+      };
+    case SET_AUTH_LOADING:
+      return {
+        ...state,
+        loading: true,
+      };
+    case REMOVE_AUTH_LOADING:
+      return {
+        ...state,
+        loading: false,
+      };
+    default:
+      return state;
   }
-}
+};
