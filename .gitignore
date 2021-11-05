@@ -290,3 +290,6 @@ ehthumbs_vista.db
 *\migrations
 
 # End of https://www.toptal.com/developers/gitignore/api/venv,visualstudiocode,django,python,git
+yarn.lock
+
+node_modules/
