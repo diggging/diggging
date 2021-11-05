@@ -1,6 +1,6 @@
 export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 export const REGISTER_FAIL = 'REGISTER_FAIL';
-export const RESET_REGISTER_SUCCESS = 'RESET_REGISTER_SUCCESS';
+export const RESET_REGISTER_SUCCESS = 'RESET_REGISTER_SUCCESS'; //가입성공했을 때 register_success값을 초기화시켜주기위해
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';

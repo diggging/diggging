@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import router, { useRouter } from 'next/router';
 import { register } from '../redux/actions/auth';
-import Loader from '"react-loader-spinner';
+import Loader from 'react-loader-spinner';
 
 import styled from 'styled-components';
 import axios from 'axios';
@@ -96,7 +96,10 @@ const Button = styled.button`
 
 function signup() {
   const dispatch = useDispatch();
+  const router = useRouter();
+
   const register_success = useSelector((state) => state.auth.register_success);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   //reducer의 loading state가져오기(auth라는 이름으로 combine되어있음)
   const loading = useSelector((state) => state.auth.loading);
 
@@ -139,6 +142,13 @@ function signup() {
     e.preventDefault();
     if (dispatch && dispatch !== null && dispatch !== undefined) {
       dispatch(register(username, nickname, email, password, passwordCheck));
+    }
+
+    if (isAuthenticated) {
+      router.push('/main');
+    }
+    if (register_success) {
+      router.push('/loginPage');
     }
 
     //email 인증했는지 검증 필요
@@ -239,7 +249,13 @@ function signup() {
               minLength="8"
               required
             />
-            <SignupBtn type="submit">회원가입하기</SignupBtn>
+            {loading ? (
+              <div>
+                <Loader type="Oval" color="#00bfff" width={50} height={50} />
+              </div>
+            ) : (
+              <SignupBtn type="submit">회원가입하기</SignupBtn>
+            )}
           </form>
           <LinkBtn> 로그인 </LinkBtn> |{}
           <LinkBtn>비밀번호 찾기</LinkBtn>

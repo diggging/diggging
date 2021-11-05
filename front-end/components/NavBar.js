@@ -1,12 +1,12 @@
-import React from "react";
-import styled from "styled-components";
-import Link from "next/link";
-import NavSearch from "../public/static/images/Search";
-import Alarm from "../public/static/images/Alarm";
-import Directory from "../public/static/images/Directory";
-import ToggleBtn from "../public/static/images/ToggleBtn";
-import SvgDiggging from "../public/static/images/Diggging";
-import img from "../public/static/images/profile_img.jpg";
+import React from 'react';
+import styled from 'styled-components';
+import Link from 'next/link';
+import NavSearch from '../public/static/images/Search';
+import Alarm from '../public/static/images/Alarm';
+import Directory from '../public/static/images/Directory';
+import ToggleBtn from '../public/static/images/ToggleBtn';
+import SvgDiggging from '../public/static/images/Diggging';
+import img from '../public/static/images/profile_img.jpg';
 
 const Nav = styled.nav`
   z-index: 1000;
@@ -30,7 +30,7 @@ const NavLeft = styled.div`
 `;
 
 const NavItem = styled.a`
-  font-family: "Pretendard-SemiBold";
+  font-family: 'Pretendard-SemiBold';
   display: flex;
   margin: 0.5rem 0.5rem;
   border-radius: 0.625rem;
@@ -43,7 +43,7 @@ const NavItem = styled.a`
 
   &:hover {
     color: #202020;
-    font-family: "Pretendard-Bold";
+    font-family: 'Pretendard-Bold';
     transition: all ease-in 200ms;
   }
 

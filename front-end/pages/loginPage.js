@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import Link from "next/link";
-import { login } from '../actions/auth';
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import Link from 'next/link';
+import { login, reset_register_success } from '../redux/actions/auth';
 import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
+import Loader from 'react-loader-spinner';
 
 const BackgroundColor = styled.div`
   width: 100%;
@@ -35,7 +37,7 @@ const Logo = styled.a`
 const GuideMessage = styled.p`
   color: #848484;
   font-size: 12px;
-  font-family: "Pretendard-Regular";
+  font-family: 'Pretendard-Regular';
   text-align: center;
   margin-bottom: 30px;
 `;
@@ -65,7 +67,7 @@ const LoginBtn = styled.button`
 
   font-size: 20px;
   text-align: center;
-  font-family: "Pretendard-SemiBold";
+  font-family: 'Pretendard-SemiBold';
 
   cursor: pointer;
 
@@ -90,38 +92,50 @@ const Button = styled.button`
   border: none;
 `;
 
-function loginPage({login}) {
+function loginPage() {
+  const dispatch = useDispatch();
   const router = useRouter();
-  const [inputs, setInputs] = useState({
-    username: "",
-    password: ""    
-  });
-  const [errMessage, setErrMessage] = useState("");
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const loading = useSelector((state) => state.auth.loading);
 
-  const {username, password} = inputs;
+  const [inputs, setInputs] = useState({
+    username: '',
+    password: '',
+  });
+  const [errMessage, setErrMessage] = useState('');
+
+  const { username, password } = inputs;
+
+  useEffect(() => {
+    if (dispatch && dispatch !== null && dispatch !== undefined) {
+      dispatch(reset_register_success());
+    }
+  }, []);
 
   const onChange = (e) => {
     setInputs({
       ...inputs,
-      [e.target.name]: e.target.value;
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
+
   const onSubmit = (e) => {
     e.preventDefault();
 
-    // if (dispatch && dispatch !== null && dispatch !== undefined)
+    if (dispatch && dispatch !== null && dispatch !== undefined) {
+      dispatch(login(username, password));
+    }
     //입력 값 맞는지 체크 후 api 요청
     //아이디-비밀번호 일치하지 않으면 에러메시지
 
     //하나라도 입력 안한 것 있으면 에러메시지
-    if (username === "" || password === "") {
-      setErrMessage("아이디와 비밀번호를 확인해주세요.");
+    if (username === '' || password === '') {
+      setErrMessage('아이디와 비밀번호를 확인해주세요.');
       return;
     }
   };
 
-
-    //router가 있는지, authenticated한지 확인하고
+  //router가 있는지, authenticated한지 확인하고
   if (typeof window !== 'undefined' && isAuthenticated) {
     //Redirect to main
     router.push('/main');
@@ -147,13 +161,13 @@ function loginPage({login}) {
         <GuideMessage>
           실력있는 개발자들에게 질문하고 매일매일 성장하세요
         </GuideMessage>
-        <form onSubmit={e => onSubmit(e)}>
+        <form onSubmit={(e) => onSubmit(e)}>
           <LoginInput
             type="text"
             placeholder="아이디"
             name="username"
             value={username}
-            onChange={e => onChange(e)}
+            onChange={(e) => onChange(e)}
             required
           />
           <LoginInput
@@ -161,12 +175,17 @@ function loginPage({login}) {
             placeholder="비밀번호"
             name="password"
             value={password}
-            onChange={e => onChange(e)}
+            onChange={(e) => onChange(e)}
             minLength="8"
             required
           />
           <span>{errMessage}</span>
           <LoginBtn type="submit">로그인</LoginBtn>
+          {loading ? (
+            <div>
+              <Loader type="Oval" color="#00bfff" width={50} height={50} />
+            </div>
+          ) : null}
         </form>
         <Link href="/signup">회원가입하기</Link> |
         <Link href="/reset-password">비밀번호 찾기</Link>
@@ -177,4 +196,4 @@ function loginPage({login}) {
   );
 }
 
-export default connect(null, {login})(loginPage);
+export default loginPage;

@@ -1,14 +1,16 @@
 import axios from 'axios';
 import {
   LOGIN_SUCCESS,
-  LOGIN_fAIL,
+  LOGIN_FAIL,
   USER_LOADED_SUCCESS,
   USER_LOADED_FAIL,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
   SET_AUTH_LOADING,
   REMOVE_AUTH_LOADING,
-} from './actions/types';
+} from './types';
+
+import { RESET_REGISTER_SUCCESS } from './types';
 
 export const register =
   (username, nickname, email, password, passwordCheck) => async (dispatch) => {
@@ -54,12 +56,50 @@ export const register =
     });
   };
 
+export const reset_register_success = () => (dispatch) => {
+  dispatch({
+    type: RESET_REGISTER_SUCCESS,
+  });
+};
+
+//login하는 액션
 export const login = (username, password) => async (dispatch) => {
+  //username과 password를 받아와서
   const body = JSON.stringify({
     username,
     password,
   });
 
+  dispatch({
+    type: SET_AUTH_LOADING,
+  });
+
   try {
-  } catch (err) {}
+    const res = await fetch('api/account/login', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: body,
+    });
+
+    if (res.status === 200) {
+      dispatch({
+        type: LOGIN_SUCCESS,
+      });
+    } else {
+      dispatch({
+        type: LOGIN_FAIL,
+      });
+    }
+  } catch (err) {
+    dispatch({
+      type: LOGIN_FAIL,
+    });
+  }
+
+  dispatch({
+    type: REMOVE_AUTH_LOADING,
+  });
 };
