@@ -4,58 +4,52 @@ import {
   LOGIN_fAIL,
   USER_LOADED_SUCCESS,
   USER_LOADED_FAIL,
-} from "./actions/types";
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
+  SET_AUTH_LOADING,
+  REMOVE_AUTH_LOADING,
+} from './actions/types';
 
-export const load_user = () => async dispatch => {
-  if (localStorage.getItem('access')) {
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `JWT ${localStorage.getItem('access')}`,
-        'Accept': 'application/json'
-      }
-    };
+export const register =
+  (username, nickname, email, password, passwordCheck) => async (dispatch) => {
+    const body = JSON.stringify({
+      username,
+      nickname,
+      email,
+      password,
+      passwordCheck,
+    });
+    // 회원가입 버튼 누르면 일단 로딩중.
+    dispatch({
+      type: SET_AUTH_LOADING,
+    });
 
     try {
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api주세요흑흑`, config);
-
-      dispatch({
-        type: USER_LOADED_SUCCESS,
-        payload: res.data
+      const res = await fetch('/api/주세요/signup하는거', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: body,
       });
+
+      if (res.status === 201) {
+        dispatch({
+          type: REGISTER_SUCCESS,
+        });
+      } else {
+        dispatch({
+          type: REGISTER_FAIL,
+        });
+      }
     } catch (err) {
       dispatch({
-        type: USER_LOADED_FAIL
-      })
+        type: REGISTER_FAIL,
+      });
     }
-  } else {
+    // 가입 끝나면 AUTH_LOADING지우기
     dispatch({
-      type: USER_LOADED_FAIL
+      type: REMOVE_AUTH_LOADING,
     });
-  }
-};
-
-export const login = (username, password) => async dispatch => {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json'
-    }
   };
-
-  const body = JSON.stringify({email, password});
-
-  try {
-    const res = await axios.post(`${process.env.REACT_APP_API_URL}/어쩌고저쩌고url주세요`, body, config);
-
-    dispatch({
-      type: LOGIN_SUCCESS,
-      payload: res.data
-    });
-
-    dispatch(load_user());
-  } catch (err) {
-    dispatch({
-      type: LOGIN_fAIL
-    })
-  }
-};
