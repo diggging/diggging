@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Link from "next/link";
-import {login} from '../actions/auth';
+import { login } from '../actions/auth';
+import { useRouter } from 'next/router';
 
 const BackgroundColor = styled.div`
   width: 100%;
@@ -90,6 +91,7 @@ const Button = styled.button`
 `;
 
 function loginPage({login}) {
+  const router = useRouter();
   const [inputs, setInputs] = useState({
     username: "",
     password: ""    
@@ -97,6 +99,7 @@ function loginPage({login}) {
   const [errMessage, setErrMessage] = useState("");
 
   const {username, password} = inputs;
+
   const onChange = (e) => {
     setInputs({
       ...inputs,
@@ -105,6 +108,8 @@ function loginPage({login}) {
   }
   const onSubmit = (e) => {
     e.preventDefault();
+
+    // if (dispatch && dispatch !== null && dispatch !== undefined)
     //입력 값 맞는지 체크 후 api 요청
     //아이디-비밀번호 일치하지 않으면 에러메시지
 
@@ -113,9 +118,14 @@ function loginPage({login}) {
       setErrMessage("아이디와 비밀번호를 확인해주세요.");
       return;
     }
-    //authenticated한지 확인하고
-    //Redirect to home하기
   };
+
+
+    //router가 있는지, authenticated한지 확인하고
+  if (typeof window !== 'undefined' && isAuthenticated) {
+    //Redirect to main
+    router.push('/main');
+  }
 
   return (
     <BackgroundColor>
