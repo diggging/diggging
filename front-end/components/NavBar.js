@@ -112,7 +112,7 @@ function navBar({ isLoggedIn }) {
             <></>
           )}
           <Link href="/postCreate" passHref>
-            <NavItem>댓글</NavItem>
+            <NavItem>기록하기</NavItem>
           </Link>
         </NavLeft>
         <NavRight>
