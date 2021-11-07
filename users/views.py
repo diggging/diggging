@@ -162,10 +162,6 @@ class Login(generics.GenericAPIView):
             return Response(
                 {"message": "username error"}, status=status.HTTP_401_UNAUTHORIZED
             )
-        if user["password"] != request.password:
-            return Response(
-                {"message": "password error"}, status=status.HTTP_401_UNAUTHORIZED
-            )
         return Response(
             {
                 "user": UserSerializer(

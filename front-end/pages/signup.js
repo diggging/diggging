@@ -110,14 +110,14 @@ function signup() {
 
   const [inputs, setInputs] = useState({
     username: '',
-    nickname: '',
+    user_nickname: '',
     email: '',
-    password: '',
-    passwordCheck: '',
+    password1: '',
+    password2: '',
   });
   const [errors, setErrors] = useState(false);
   //비구조화할당으로 inputs에서 값 가져오기
-  const { username, nickname, email, password, passwordCheck } = inputs;
+  const { username, user_nickname, email, password1, password2 } = inputs;
 
   const onInput = (e) => {
     const { value, name } = e.target; //e.target에서 value와 name추출
@@ -130,48 +130,52 @@ function signup() {
   const onReset = () => {
     setInputs({
       username: '',
-      nickname: '',
+      user_nickname: '',
       email: '',
-      password: '',
-      passwordCheck: '',
+      password1: '',
+      password2: '',
     });
   };
 
   const onSubmit = (e) => {
     //새로고침방지
     e.preventDefault();
+
     if (dispatch && dispatch !== null && dispatch !== undefined) {
-      dispatch(register(username, nickname, email, password, passwordCheck));
+      dispatch(register(username, user_nickname, email, password1, password2));
     }
 
-    if (isAuthenticated) {
-      router.push('/main');
-    }
+    if (typeof window !== 'undefined' && isAuthenticated){
+      router.push('/main')};
+
     if (register_success) {
       router.push('/loginPage');
     }
+  }
+  //email 인증했는지 검증 필요
 
-    //email 인증했는지 검증 필요
-    return axios
-      .post('api자리', {
-        username: username,
-        nickname: nickname,
-        email: email,
-        password: password,
-        passwordCheck: passwordCheck,
-      })
-      .then((response) => {
-        if (response.status >= 200 && response.status <= 204) {
-          alert('회원가입 성공');
-          onReset();
-          this.props.history.push('/');
-        }
-      })
-      .catch(() => {
-        setErrors(true);
-        console.log('회원가입 실패');
-      });
-  };
+
+  //   return axios
+  //     .post('api자리', {
+  //       username: username,
+  //       user_nickname: user_nickname,
+  //       email: email,
+  //       password1: password1,
+  //       password2: password2,
+  //     })
+  //     .then((response) => {
+  //       if (response.status >= 200 && response.status <= 204) {
+  //         alert('회원가입 성공');
+  //         onReset();
+  //         this.props.history.push('/');
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       setErrors(true);
+  //       console.log('회원가입 실패');
+  //       console.log( error.response );
+  //     });
+  // };
 
   return (
     <>
@@ -213,8 +217,8 @@ function signup() {
               required
             />
             <SignupInput
-              name="nickname"
-              value={nickname}
+              name="user_nickname"
+              value={user_nickname}
               onChange={onInput}
               placeholder="사용할 닉네임"
               type="text"
@@ -230,10 +234,10 @@ function signup() {
             />
             <SignupInput
               type="password"
-              name="password"
+              name="password1"
               placeholder="비밀번호"
               onChange={onInput}
-              value={password}
+              value={password1}
               minLength="8"
               required
             />
@@ -242,10 +246,10 @@ function signup() {
             )}
             <SignupInput
               type="password"
-              name="passwordCheck"
+              name="password2"
               placeholder="비밀번호확인"
               onChange={onInput}
-              value={passwordCheck}
+              value={password2}
               minLength="8"
               required
             />

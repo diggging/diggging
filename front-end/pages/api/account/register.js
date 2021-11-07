@@ -2,22 +2,22 @@ import { API_URL } from '../../../config/index';
 
 export default async (req, res) => {
   if (req.method === 'POST') {
-    const { username, nickname, email, password, passwordCheck } = req.body;
+    const { username, user_nickname, email, password1, password2 } = req.body;
 
     const body = JSON.stringify({
       username,
-      nickname,
+      user_nickname,
       email,
-      password,
-      passwordCheck,
+      password1,
+      password2,
     });
 
     try {
-      const apiRes = await fetch(`${API_URL}/api/Signup/`, {
+      const apiRes = await fetch(`${API_URL}/users/api/Signup/`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
         body: body,
       });
@@ -32,6 +32,7 @@ export default async (req, res) => {
         });
       }
     } catch (err) {
+      console.log( error.response.request._response );
       return res.status(500).json({
         error: '회원가입 도중 문제가 발생했습니다.',
       });

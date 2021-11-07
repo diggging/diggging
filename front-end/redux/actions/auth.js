@@ -13,13 +13,13 @@ import {
 import { RESET_REGISTER_SUCCESS } from './types';
 
 export const register =
-  (username, nickname, email, password, passwordCheck) => async (dispatch) => {
+  (username, user_nickname, email, password1, password2) => async (dispatch) => {
     const body = JSON.stringify({
       username,
-      nickname,
+      user_nickname,
       email,
-      password,
-      passwordCheck,
+      password1,
+      password2,
     });
     // 회원가입 버튼 누르면 일단 로딩중.
     dispatch({

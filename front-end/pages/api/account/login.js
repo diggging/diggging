@@ -11,11 +11,11 @@ export default async (req, res) => {
     });
 
     try {
-      const apiRes = await fetch(`${API_URL}/api/token/`, {
+      const apiRes = await fetch(`${API_URL}/users/api/Login/`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
-          'Content-Type': 'application/json,',
+          'Content-Type': 'application/json',
         },
         body: body,
       });
