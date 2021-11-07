@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import TextEditor from '../components/TextEditor';
@@ -94,9 +94,11 @@ const Btn = styled.button`
 function postCreate() {
   const [thumbNail, setThumbNail] = useState(null);
   const [title, setTitle] = useState('');
-  const [folder, setFolder] = useState('');
+  const [folder, setFolder] = useState([]);
   const [text, setText] = useState('');
   const [select, setSelect] = useState('전체공개');
+
+  const [testDate, setTestData] = useState([]);
   
   const onChangeTitle = (e) => {
     setTitle(e.target.value);
@@ -114,6 +116,15 @@ function postCreate() {
   const handleSelect = (e) => {
     setSelect(e.target.value);
   }
+  //폴더 정보
+  const Test = async () => {
+    await axios.get('http://127.0.0.1:8000/posts/create/')
+    .then((res) => setTestData(res.data));
+  }
+
+  useEffect(() => {
+    Test();
+  }, []);
 
   const handlePostCreate = async () => {
     const formData = new FormData();
@@ -122,11 +133,12 @@ function postCreate() {
     // formData.append("", setFolder, setFolder.name);
     // formData.append("", setText, setText.name);
     try {
-      await axios.post('', {
+      await axios.post('http://127.0.0.1:8000/posts/create/', {
+        user : 1,
         image: formData,
         title : title,
-        folder : folder,
-        content : text,
+        folder : '폴더',
+        desc : "테스트",
       })
       .then(response => {
         console.log(response);

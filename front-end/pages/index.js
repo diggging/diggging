@@ -8,22 +8,22 @@ function index() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [list, setList] = useState([]);
 
-  const fetchPost = () => {
-    index.getInitialProps = async () => {
-      const {data : post} = await axios.get(``);
-      setList(post)
-      return { post }
-    };
-  };
+  // const fetchPost = () => {
+  //   index.getInitialProps = async () => {
+  //     const {data : post} = await axios.get(``);
+  //     setList(post)
+  //     return { post }
+  //   };
+  // };
 
-  useEffect(() => {
-    fetchPost();
-  }, []);
+  // useEffect(() => {
+  //   fetchPost();
+  // }, []);
 
   return (
     <div>
       <NavBar isLoggedIn={isLoggedIn} />
-      <Main list={list}></Main>
+      <Main ></Main>
     </div>
   );
 }

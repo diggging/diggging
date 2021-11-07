@@ -102,6 +102,9 @@ function navBar({ isLoggedIn }) {
           <Link href="/aboutus" passHref>
             <NavItem>디깅소개</NavItem>
           </Link>
+          <Link href="/main" passHref>
+            <NavItem>메인</NavItem>
+          </Link>
           {isLoggedIn ? (
             <>
               <Link href="/questions" passHref>

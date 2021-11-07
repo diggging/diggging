@@ -183,7 +183,8 @@ def my_recent_axios(request):
 #         return self.partial_update(request, *args, **kwargs)
 
 #------------------------------------------------------- post detail -------------------------------------------------------
-class PostCreateView(generics.CreateAPIView):
+# class PostCreateView(generics.CreateAPIView):
+class PostCreateView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
 
