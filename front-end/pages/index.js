@@ -8,12 +8,16 @@ function index() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [list, setList] = useState([]);
 
-  useEffect(() => {
+  const fetchPost = () => {
     index.getInitialProps = async () => {
       const {data : post} = await axios.get(``);
       setList(post)
       return { post }
-    }
+    };
+  };
+
+  useEffect(() => {
+    fetchPost();
   }, []);
 
   return (
