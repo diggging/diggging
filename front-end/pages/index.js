@@ -6,6 +6,7 @@ function index() {
   return (
     <div>
       <NavBar isLoggedIn={isLoggedIn} />
+      <Editor />
     </div>
   );
 }

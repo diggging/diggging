@@ -33,8 +33,7 @@ function Comments({ CommentLists }) {
     //refresh 방지
     e.preventDefault();
     try {
-      const postResponse = await axios
-        .post('http://127.0.0.1:8000/comments/list_create_comment/', {
+      await axios.post('http://127.0.0.1:8000/comments/list_create_comment/', {
           text: Comment,
           user: 1,
         })
@@ -50,7 +49,6 @@ function Comments({ CommentLists }) {
       console.log(e);
     }
   };
-  console.log(CommentLists);
 
   return (
     <div>
