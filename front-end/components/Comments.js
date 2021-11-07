@@ -21,7 +21,8 @@ const CommentInput = styled.input``;
 const CommentSubMit = styled.button``;
 
 function Comments({ CommentLists }) {
-  const [Comment, setComment] = useState("");
+  // post용
+  const [Comment, setComment] = useState('');
 
   // input change
   const handleChange = (e) => {
@@ -32,18 +33,17 @@ function Comments({ CommentLists }) {
     //refresh 방지
     e.preventDefault();
     try {
-      const postResponse = await axios
-        .post('http://127.0.0.1:8000/comments/list_create_comment/', {
+      await axios.post('http://127.0.0.1:8000/comments/list_create_comment/', {
           text: Comment,
           user: 1,
         })
         .then((response) => {
-          if (response.data.success) {
-            console.log(response.data.result);
+          if (response.data) {
             setComment("");
           } else {
             console.log("comments save error");
           }
+          // setComment("");
         });
     } catch (e) {
       console.log(e);
@@ -55,9 +55,8 @@ function Comments({ CommentLists }) {
       <CenterContainer>
         <CommentContainer>
           {/* Comment Lists  */}
-
-          { CommentLists }
-
+          {CommentLists.map((item) => item.text)}
+          
           {/* Comment Form  */}
           <CommentInput onChange={handleChange} value={Comment} />
           <CommentSubMit onClick={onSubmit}>댓글 남기기</CommentSubMit>
