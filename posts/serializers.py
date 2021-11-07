@@ -74,6 +74,5 @@ class PostDetailSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         #self.fields['folder'].queryset = serializers.Field(Folder.objects.filter(folder_user=user))
         self.fields['folder'] = serializers.ManyRelatedField(child_relation=PrimaryKeyRelatedField(queryset= Folder.objects.filter(folder_user=user), required=False), required=False)#Folder.objects.filter(folder_user=user)
-        print(self.fields['folder'])
 
 

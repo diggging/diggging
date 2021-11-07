@@ -20,6 +20,8 @@ class Post(core_models.TimeStampModel):
     likes_user = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name="likes_user")
     scarps_user = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name="scarps_user")
 
+    hits = models.PositiveIntegerField(verbose_name="조회수", default=0)
+
 
     # problem_choices = (
     #     ("==선택==", "==선택=="),
