@@ -27,7 +27,7 @@ class QuestionFolderSerializer(serializers.ModelSerializer):
         model = QuestionFolder
         fields = ["folder_name", "folder_user"]
 class QuestionPostSerializer(serializers.ModelSerializer):
-    question_comments = CommentSerializer(many=True, read_only=True)
+    # question_comments = CommentSerializer(many=True, read_only=True)
     answers = AnswerSerializer(many=True, read_only=True)
     class Meta:
         model = QuestionPost

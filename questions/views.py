@@ -2,7 +2,7 @@ import json
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from questions.serializers import QuestionDetailSerializer
+from questions.serializers import QuestionDetailSerializer, QuestionPostSerializer
 from users.models import User
 # from .forms import AnswerPostForm, QuestionPostForm
 from django.shortcuts import get_object_or_404, render, redirect
@@ -24,7 +24,7 @@ from rest_framework import viewsets, permissions, status, generics, mixins
 
 class QuestionCreateView(generics.ListCreateAPIView):
     queryset = QuestionPost.objects.all()
-    serializer_class = QuestionDetailSerializer
+    serializer_class = QuestionPostSerializer
     pagination_class = None 
 
     def create(self, request, *args, **kwargs):
