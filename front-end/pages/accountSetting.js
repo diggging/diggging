@@ -7,6 +7,8 @@ function accountSetting() {
       <input />
       <input />
       <input />
+
+      <button>회원탈퇴하기</button>
       {/* <Link href="">변경하기</Link> 여기에 reset password url필요 */}
     </div>
   );

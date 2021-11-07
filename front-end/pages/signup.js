@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import router, { useRouter } from 'next/router';
 import { register } from '../redux/actions/auth';
 import Loader from 'react-loader-spinner';
+import {lighten, darken} from 'polished';
 
 import styled from 'styled-components';
 import axios from 'axios';
@@ -53,6 +54,24 @@ const SignupInput = styled.input`
   outline: none;
   margin-top: 14px;
   color: #8d8c85;
+`;
+
+const EmailInput = styled(SignupInput)`
+  width: 80%;
+`;
+
+const EmailBtn = styled.button`
+  background-color: #3F3F3F;
+  border-radius: 4px;
+  border: none;
+  color: white;
+  font-family: "Pretendard-SemiBold";
+  padding: 12px 16px;
+  margin-left: 14px;
+
+  &:hover {
+    background-color: ${lighten(0.1, '#3F3F3F')};
+  }
 `;
 
 const SignupBtn = styled.button`
@@ -152,8 +171,13 @@ function signup() {
       router.push('/loginPage');
     }
   }
-  //email 인증했는지 검증 필요
 
+
+  //email 인증했는지 검증 필요
+  const onCheckEmail = (e) => {
+    e.preventDefault();
+    console.log('이메일 인증')
+  }
 
   //   return axios
   //     .post('api자리', {
@@ -224,7 +248,7 @@ function signup() {
               type="text"
               required
             />
-            <SignupInput
+            <EmailInput
               type="email"
               name="email"
               placeholder="이메일"
@@ -232,6 +256,7 @@ function signup() {
               value={email}
               required
             />
+            <EmailBtn onClick={onCheckEmail}>인증</EmailBtn>
             <SignupInput
               type="password"
               name="password1"
