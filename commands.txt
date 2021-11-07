@@ -1,1 +1,4 @@
 python manage.py runserver --settings=shoveling.settings.local
+python manage.py createsuperuser --settings=shoveling.settings.local
+python manage.py makemigrations --settings=shoveling.settings.local
+python manage.py migrate --settings=shoveling.settings.local

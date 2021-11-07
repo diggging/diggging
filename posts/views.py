@@ -273,7 +273,7 @@ class PostCreateView(generics.ListCreateAPIView):
 
 class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
     #comment 보내주기
-    authentication_classes = [BasicAuthentication, SessionAuthentication]
+    #authentication_classes = [BasicAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly] # 로그인한, 쓴사람만 수정 가능
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
@@ -284,7 +284,7 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
         print(instance.hits)
         instance.hits += 1
         instance.save()
-        
+
         return self.retrieve(request, *args, **kwargs)
 
 # def post_update(request, pk):
