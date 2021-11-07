@@ -22,6 +22,56 @@ from rest_framework import viewsets, permissions, status, generics, mixins
 
 # Create your views here.
 
+class QuestionCreateView(generics.ListCreateAPIView):
+    queryset = QuestionPost.objects.all()
+    serializer_class = QuestionDetailSerializer
+    pagination_class = None 
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data, context={'request': self.request})
+        if serializer.is_valid():
+            instance = serializer.save()
+        
+        me = request.user
+
+        # 포스팅 시에 sand 추가해주기
+        new_sand = Sand.objects.create(user=me, amount = 100, reason="삽질 기록 작성")
+
+        return Response(serializer.data)
+
+class QuestionDetailGetView(generics.RetrieveUpdateDestroyAPIView):
+    # comment 보내주기
+    authentication_classes = [BasicAuthentication, SessionAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    queryset = QuestionPost.objects.all()
+    serializer_class = QuestionDetailSerializer
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object() # 해당 오브젝트 가져옴. (pk 영향X)
+        
+        instance.save()
+
+        serializer = self.serializer_class(instance, data = request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+
+        return Response(serializer.data)
+    
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        lang_folder = QuestionFolder.objects.get(folder_user = instance.user, question_folder = instance, folder_kind = "language")
+        frame_folder = QuestionFolder.objects.get(folder_user = instance.user, question_folder = instance, folder_kind = "framework")
+
+        instance.delete()
+
+        if not lang_folder.question_folder.exists():
+            lang_folder.delete()
+
+        if not frame_folder.question_folder.exists():
+            frame_folder.delete()
+        return Response(status = status.HTTP_200_OK)
+
 # refactoring 전
 # @login_required
 # def question_main(request):
@@ -579,112 +629,3 @@ from rest_framework import viewsets, permissions, status, generics, mixins
 
 # ------------------------- Question Detail ----------------------------------------------------------------
 
-class QuestionCreateView(generics.ListCreateAPIView):
-    queryset = QuestionPost.objects.all()
-    serializer_class = QuestionDetailSerializer
-    pagination_class = None 
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data, context={'request': self.request})
-        if serializer.is_valid():
-            instance = serializer.save()
-        
-        me = request.user
-
-        # 포스팅 시에 sand 추가해주기
-        new_sand = Sand.objects.create(user=me, amount = 100, reason="삽질 기록 작성")
-
-        return Response(serializer.data)
-
-class QuestionDetailGetView(generics.RetrieveUpdateDestroyAPIView):
-    # comment 보내주기
-    authentication_classes = [BasicAuthentication, SessionAuthentication]
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
-    queryset = QuestionPost.objects.all()
-    serializer_class = QuestionDetailSerializer
-
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object() # 해당 오브젝트 가져옴. (pk 영향X)
-        origin_lang_fol = instance.question_folder.get(folder_user=request.user, folder_kind="language")
-        origin_frame_fol = instance.question_folder.get(folder_user=request.user, folder_kind = "framework")
-        origin_solve_fol = instance.question_folder.get(folder_user=request.user, folder_kind="solved")
-
-        new_lang = request.data.get("language")
-        new_frame = request.data.get("framework")
-        new_solve = request.data.get("problem_solving")
-
-        if new_lang != origin_lang_fol.folder_name:
-            origin_lang_fol.question_folder.remove(instance)
-            lang_folder = QuestionFolder.objects.filter(
-                folder_name = new_lang, folder_user = instance.user, folder_kind = "language"
-            )
-            if lang_folder.exists():
-                existed_folder = QuestionFolder.objects.get(
-                    folder_name = new_lang,
-                    folder_user = instance.user,
-                    folder_kind = "language"
-                )
-                instance.question_folder.add(existed_folder)
-            else:
-                new_folder = QuestionFolder.objects.create(
-                    folder_name = new_lang,
-                    folder_user = instance.user,
-                    folder_kind = "language",
-                )
-                instance.question_folder.add(new_folder)
-            if not origin_lang_fol.question_folder.all():
-                origin_lang_fol.delete()
-
-        if new_frame != origin_frame_fol.folder_name:
-            origin_frame_fol.question_folder.remove(instance)
-            frame_folder = QuestionFolder.objects.filter(
-                folder_name = new_frame,
-                folder_user = instance.user,
-                folder_kind = "framework"
-            )
-            if frame_folder.exits():
-                existed_folder = QuestionFolder.objects.get(
-                    foler_name = new_frame,
-                    folder_user = instance.user,
-                    folder_kind = "framework",
-                )
-                instance.question_folder.add(existed_folder)
-            else:
-                new_folder = QuestionFolder.objects.create(
-                    folder_name = new_frame,
-                    folder_user = instance.user,
-                    folder_kind = "framework"
-                )
-                instance.question_folder.add()
-            if not origin_frame_fol.question_folder.all():
-                origin_frame_fol.delete()
-        
-        if new_solve != origin_solve_fol.folder_name:
-            origin_solve_fol.question_folder.remove(instance)
-            solve_folder = QuestionFolder.objects.get(
-                folder_name = new_solve, folder_user = instance.user, folder_kind = "solved"
-            )
-            instance.question_folder.add(solve_folder)
-        
-        instance.save()
-
-        serializer = self.serializer_class(instance, data = request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-
-        return Response(serializer.data)
-    
-    def delete(self, request, *args, **kwargs):
-        instance = self.get_object()
-
-        lang_folder = QuestionFolder.objects.get(folder_user = instance.user, question_folder = instance, folder_kind = "language")
-        frame_folder = QuestionFolder.objects.get(folder_user = instance.user, question_folder = instance, folder_kind = "framework")
-
-        instance.delete()
-
-        if not lang_folder.question_folder.exists():
-            lang_folder.delete()
-
-        if not frame_folder.question_folder.exists():
-            frame_folder.delete()
-        return Response(status = status.HTTP_200_OK)
