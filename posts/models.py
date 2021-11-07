@@ -10,7 +10,6 @@ class Post(core_models.TimeStampModel):
 
     image = models.ImageField(verbose_name="게시물 사진", upload_to="images/posts", blank=True, null=True, default='../static/image/default_image.PNG')
     desc = models.TextField(verbose_name="설명", blank=False)
-    code = models.TextField(verbose_name="코드", blank=True)
 
     folder = models.ManyToManyField("Folder",related_name="related_posts",blank=True)
     is_public = models.BooleanField(verbose_name="전체공개", default=True)  # 해당코드 false로 변경시 비공개
@@ -19,6 +18,8 @@ class Post(core_models.TimeStampModel):
     helped_num = models.IntegerField(default=0)
     likes_user = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name="likes_user")
     scarps_user = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name="scarps_user")
+
+    hits = models.PositiveIntegerField(verbose_name="조회수", default=0)
 
 
     # problem_choices = (
