@@ -44,6 +44,7 @@ class QuestionDetailGetView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [BasicAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     queryset = QuestionPost.objects.all()
+    # TODO: fix needed.
     serializer_class = QuestionDetailSerializer
 
     def update(self, request, *args, **kwargs):
