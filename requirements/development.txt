@@ -34,3 +34,6 @@ django-sass-processor==1.0.1
 libsass==0.21.0
 rcssmin==1.0.6
 rjsmin==1.1.0
+django-rest-auth==0.9.5
+PyJWT==1.7.1
+djangorestframework-jwt==1.11.0

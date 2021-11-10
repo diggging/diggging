@@ -2,7 +2,7 @@ import json
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from questions.serializers import QuestionDetailSerializer, QuestionPostSerializer
+from questions.serializers import QuestionPostSerializer
 from users.models import User
 # from .forms import AnswerPostForm, QuestionPostForm
 from django.shortcuts import get_object_or_404, render, redirect
@@ -45,7 +45,7 @@ class QuestionDetailGetView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     queryset = QuestionPost.objects.all()
     # TODO: fix needed.
-    serializer_class = QuestionDetailSerializer
+    serializer_class = QuestionPostSerializer
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object() # 해당 오브젝트 가져옴. (pk 영향X)
@@ -61,16 +61,6 @@ class QuestionDetailGetView(generics.RetrieveUpdateDestroyAPIView):
     def delete(self, request, *args, **kwargs):
         instance = self.get_object()
 
-        lang_folder = QuestionFolder.objects.get(folder_user = instance.user, question_folder = instance, folder_kind = "language")
-        frame_folder = QuestionFolder.objects.get(folder_user = instance.user, question_folder = instance, folder_kind = "framework")
-
-        instance.delete()
-
-        if not lang_folder.question_folder.exists():
-            lang_folder.delete()
-
-        if not frame_folder.question_folder.exists():
-            frame_folder.delete()
         return Response(status = status.HTTP_200_OK)
 
 # refactoring 전
