@@ -8,6 +8,7 @@ import {lighten, darken} from 'polished';
 import styled from 'styled-components';
 import axios from 'axios';
 import Head from 'next/head';
+import Layout from '../hocs/Layout';
 
 const BackgroundColor = styled.div`
   width: 100%;
@@ -203,13 +204,11 @@ function signup() {
 
   return (
     <>
-      <Head>
-        <title>회원가입</title>
-        <meta
-          name="viewport"
-          content="initial-scale=1.0, width=device-width"
-        ></meta>
-      </Head>
+      <Layout
+        title='Diggging| 회원가입'
+        content='개발자들을 위한 커뮤니티 디깅 회원가입 페이지'  
+      >
+      </Layout>
       <BackgroundColor>
         <SignupBox>
           <Logo>

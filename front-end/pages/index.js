@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import Main from "../pages/main";
 import axios from "axios";
+import Layout from '../hocs/Layout';
 
 
 function index() {
@@ -20,10 +21,10 @@ function index() {
   // }, []);
 
   return (
-    <div>
+    <Layout>
       <NavBar />
       <Main ></Main>
-    </div>
+    </Layout>
   );
 }
 
