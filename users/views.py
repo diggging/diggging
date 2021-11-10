@@ -57,7 +57,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView
-from rest_framework.renderers import JSONRenderer
+from rest_framework_simplejwt.tokens import RefreshToken
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
@@ -179,10 +179,6 @@ class Login(generics.GenericAPIView):
             return Response(
                 {"message": "username error"}, status=status.HTTP_401_UNAUTHORIZED
             )
-        if user["password"] != request.password:
-            return Response(
-                {"message": "password error"}, status=status.HTTP_401_UNAUTHORIZED
-            )
         return Response(
             {
                 "user": UserSerializer(
@@ -215,10 +211,24 @@ def log_in(request):
 """
 
 # 로그아웃
-@login_required
+"""@login_required
 def log_out(request):
     logout(request)
-    return redirect("users:login")
+    return redirect("users:login")"""
+
+
+class LogoutView(APIView):
+    permission_classes = IsAuthenticated
+
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh_token"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 # 비밀번호를 모르겠을때, email을 작성하는 부분
@@ -260,7 +270,7 @@ def password_reset(request):
 
 
 # 이메일 인증
-class EmailView(APIView):
+"""class EmailView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, *args, **kwargs):
@@ -303,6 +313,7 @@ class EmailView(APIView):
             return render(
                 request, template_name="password_email_fail.html", context=ctx
             )
+            """
 
 
 def password_reset_form(request, pk):
