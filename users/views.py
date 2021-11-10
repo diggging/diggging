@@ -57,7 +57,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView
-from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC
+from rest_framework.renderers import JSONRenderer
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
@@ -74,13 +74,30 @@ class Registration(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
+        current_site = get_current_site(request)
         if not serializer.is_valid(raise_exception=True):
             return Response({"message": "이미 존재함"}, status=status.HTTP_409_CONFLICT)
 
         serializer.is_valid(raise_exception=True)
         user = serializer.save(request)
         user.is_active = False
+
         user.save()
+        to_email = user.email
+        message = render_to_string(
+            "users/user_activate_email.html",
+            {
+                "user": user,
+                "domain": current_site.domain,
+                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                "token": account_activation_token.make_token(user),
+            },
+        )
+        # sending mail to future user
+        mail_subject = "Activate your blog account."
+        to_email = serializer.cleaned_data.get("email")
+        email = EmailMessage(mail_subject, message, to=[to_email])
+        email.send()
         # request 필요 -> 오류 발생
         return Response(
             {
@@ -269,23 +286,23 @@ class EmailView(APIView):
         qs = qs.select_related("email_address__user")
         return qs
 
-
-"""def password_reset_email(request, uidb64, token):
-    try:
-        uid = force_text(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-    # 잘 넘어오면
-    if user is not None and password_reset_token.check_token(user, token):
-        ctx = {
-            "user": user,
-        }
-        return redirect("users:password_reset_form", user.id)
-    else:
-        ctx = {"user": user}
-        return render(request, template_name="password_email_fail.html", context=ctx)
-"""
+    def password_reset_email(request, uidb64, token):
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        # 잘 넘어오면
+        if user is not None and password_reset_token.check_token(user, token):
+            ctx = {
+                "user": user,
+            }
+            return redirect("users:password_reset_form", user.id)
+        else:
+            ctx = {"user": user}
+            return render(
+                request, template_name="password_email_fail.html", context=ctx
+            )
 
 
 def password_reset_form(request, pk):

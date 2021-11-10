@@ -5,9 +5,10 @@ from .models import User
 from django.contrib.auth import authenticate
 from rest_framework_jwt.settings import api_settings
 from django.contrib.auth import get_user_model
-from rest_auth.registration.serializers import RegisterSerializer
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth import authenticate
+from allauth.account import app_settings as allauth_settings
+from rest_auth.registration.serializers import RegisterSerializer
 
 JWT_PAYLOAD_HANDLER = api_settings.JWT_PAYLOAD_HANDLER
 JWT_ENCODE_HANDLER = api_settings.JWT_ENCODE_HANDLER
@@ -35,9 +36,7 @@ class UserSerializer(serializers.ModelSerializer):
 class RegisterSerializer(RegisterSerializer):
 
     user_nickname = serializers.CharField()
-    profile_image = serializers.ImageField(
-        default="../static/image/profile_img.jpg",
-    )
+    email = serializers.EmailField(required=allauth_settings.EMAIL_REQUIRED)
     password1 = serializers.CharField(style={"input_type": "password"}, write_only=True)
     password2 = serializers.CharField(style={"input_type": "password"}, write_only=True)
     login_method = serializers.ChoiceField(choices=["email", "github"])
@@ -45,7 +44,8 @@ class RegisterSerializer(RegisterSerializer):
     def get_cleaned_data(self):
         data_dict = super().get_cleaned_data()  # username, password, email이 디폴트
         data_dict["user_nickname"] = self.validated_data.get("user_nickname", "")
-        data_dict["profile_image"] = self.validated_data.get("profile_image", "")
+        data_dict["password1"] = self.validated_data.get("password1", "")
+        data_dict["password2"] = self.validated_data.get("password2", "")
         data_dict["login_method"] = self.validated_data.get("login_method", "")
 
         return data_dict
@@ -101,3 +101,7 @@ class LoginSerializer(serializers.Serializer):
         except User.DoesNotExist:
             raise serializers.ValidationError("User 가 존재하지않습니다.")
         return {"username": user.username, "token": jwt_token}
+
+
+class VerifyEmailSerializer(serializers.Serializer):
+    key = serializers.CharField()
