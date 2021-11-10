@@ -7,6 +7,8 @@ import Directory from '../public/static/images/Directory';
 import ToggleBtn from '../public/static/images/ToggleBtn';
 import SvgDiggging from '../public/static/images/Diggging';
 import img from '../public/static/images/profile_img.jpg';
+import {useSelector, useDispatch} from 'react-redux;'
+import {logout} from '../redux/actions/auth';
 
 const Nav = styled.nav`
   z-index: 1000;
@@ -89,7 +91,33 @@ const UserImg = styled.div`
   background-color: #b6b6b6;
 `;
 
-function navBar({ isLoggedIn }) {
+const DropBox = styled.div`
+  background-color: white;
+  box-shadow: 0.25rem 0.25rem 0.25rem rgba(0, 0, 0, 0.05);
+  width: 11.875rem;
+  padding: 0 1.5rem;
+`;
+
+const DropList = styled.ul`
+  list-style: none;
+  line-height: 2rem;
+  font-family: 'Pretendard-Regular';
+  color: '#B6B6B6';
+
+`;
+
+function navBar() {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+  
+  const logoutHandler = () => {
+    if (dispatch && dispatch !== null && dispatch !== undefined) {
+      dispatch(logout());
+    }
+  };
   return (
     <div>
       <Nav>
@@ -105,7 +133,7 @@ function navBar({ isLoggedIn }) {
           <Link href="/main" passHref>
             <NavItem>메인</NavItem>
           </Link>
-          {isLoggedIn ? (
+          {isAuthenticated ? (
             <>
               <Link href="/questions" passHref>
                 <NavItem>질문광장</NavItem>
@@ -124,7 +152,7 @@ function navBar({ isLoggedIn }) {
               <NavSearch />
             </NavItem>
           </Link>
-          {isLoggedIn ? (
+          {isAuthenticated ? (
             <>
               <Link href="/" passHref>
                 <NavItem>
@@ -136,14 +164,20 @@ function navBar({ isLoggedIn }) {
                   <Directory />
                 </NavItem>
               </Link>
-              <Link href="/" passHref>
-                <NavItem>
-                  <ToggleContainer>
-                    <UserImg />
-                    <ToggleBtn />
-                  </ToggleContainer>
-                </NavItem>
-              </Link>
+              <NavItem>
+                <ToggleContainer onClick={() => {setOpen(!open)}}>
+                  <UserImg />
+                  <ToggleBtn />
+                </ToggleContainer>
+                <DropBox>
+                  <DropList>
+                    <li>새 글 작성</li>
+                    <li>내 디렉토리</li>
+                    <li>계정설정</li>
+                    <li><a href="#!" onclick={logoutHandler}>로그아웃</a></li>
+                  </DropList>
+                </DropBox>
+              </NavItem>
             </>
           ) : (
             <>

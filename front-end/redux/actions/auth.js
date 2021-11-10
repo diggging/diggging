@@ -6,12 +6,15 @@ import {
   USER_LOADED_FAIL,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  LOGOUT_SUCCESS,
+  LOGOUT_FAIL,
   SET_AUTH_LOADING,
   REMOVE_AUTH_LOADING,
 } from './types';
 
 import { RESET_REGISTER_SUCCESS } from './types';
 
+//회원가입
 export const register =
   (username, user_nickname, email, password1, password2) => async (dispatch) => {
     const body = JSON.stringify({
@@ -62,6 +65,8 @@ export const reset_register_success = () => (dispatch) => {
   });
 };
 
+
+
 //login하는 액션
 export const login = (username, password) => async (dispatch) => {
   //username과 password를 받아와서
@@ -98,8 +103,35 @@ export const login = (username, password) => async (dispatch) => {
       type: LOGIN_FAIL,
     });
   }
-
+//로그인 성공/실패하고나면 로딩중 제거
   dispatch({
     type: REMOVE_AUTH_LOADING,
   });
+};
+
+
+//로그아웃
+export const logout = () => async dispatch => {
+  try {
+    const res = await fetch('api/account/logout', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+      }
+    });
+
+    if (res.status === 200) {
+      dispatch({
+        type: LOGOUT_SUCCESS
+      });
+    } else {
+      dispatch({
+        type: LOGOUT_FAIL
+      });
+    }
+  } catch (err) {
+    dispatch({
+      type: LOGOUT_FAIL
+    });
+  }
 };

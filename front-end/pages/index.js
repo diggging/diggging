@@ -5,7 +5,6 @@ import axios from "axios";
 
 
 function index() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [list, setList] = useState([]);
 
   // const fetchPost = () => {
@@ -22,7 +21,7 @@ function index() {
 
   return (
     <div>
-      <NavBar isLoggedIn={isLoggedIn} />
+      <NavBar />
       <Main ></Main>
     </div>
   );

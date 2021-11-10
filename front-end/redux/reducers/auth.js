@@ -54,7 +54,7 @@ const authReducer = (state = initialState, action) => {
     case LOGOUT_SUCCESS:
       return {
         ...state,
-        isAuthenticated: false,
+        isAuthenticated: false, //logout일땐 더이상 authenticated하지 않게.
         user: null,
       };
     case LOGOUT_FAIL:
