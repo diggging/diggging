@@ -64,7 +64,7 @@ const authReducer = (state = initialState, action) => {
     case LOAD_USER_SUCCESS:
       return {
         ...state,
-        user: payload.user,
+        user: payload.user, //data에서 user정보추출. 확인필요
       };
     case LOAD_USER_FAIL:
       return {
