@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import NavSearch from '../public/static/images/Search';
@@ -7,8 +7,9 @@ import Directory from '../public/static/images/Directory';
 import ToggleBtn from '../public/static/images/ToggleBtn';
 import SvgDiggging from '../public/static/images/Diggging';
 import img from '../public/static/images/profile_img.jpg';
-import {useSelector, useDispatch} from 'react-redux;'
+import {useSelector, useDispatch} from 'react-redux';
 import {logout} from '../redux/actions/auth';
+
 
 const Nav = styled.nav`
   z-index: 1000;
@@ -108,7 +109,6 @@ const DropList = styled.ul`
 
 function navBar() {
   const dispatch = useDispatch();
-  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);

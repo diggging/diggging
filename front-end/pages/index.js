@@ -22,8 +22,7 @@ function index() {
 
   return (
     <Layout>
-      <NavBar />
-      <Main ></Main>
+      <Main />
     </Layout>
   );
 }

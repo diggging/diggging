@@ -18,14 +18,14 @@ function main() {
   //   };
   // };
 
-  const fetchPost = async () => {
-   const res = await axios.get('http://127.0.0.1:8000/posts/1/detail');
-   setList(res.data);
-  }
+  // const fetchPost = async () => {
+  //  const res = await axios.get('http://127.0.0.1:8000/posts/1/detail');
+  //  setList(res.data);
+  // }
 
-  useEffect(() => {
-    fetchPost();
-  }, []);
+  // useEffect(() => {
+  //   fetchPost();
+  // }, []);
 
     return (
         <div>

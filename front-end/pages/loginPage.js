@@ -111,7 +111,7 @@ function loginPage() {
     if (dispatch && dispatch !== null && dispatch !== undefined) {
       dispatch(reset_register_success());
     }
-  }, []);
+  }, [dispatch]);
 
   const onChange = (e) => {
     setInputs({
