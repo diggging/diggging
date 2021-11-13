@@ -20,7 +20,7 @@ export default async (req, res) => {
         path: '/api/',
       }
     )
-  ])
+  ]);
     return res.status(200).json({
       success: 'Successfully logged out'
     });
@@ -28,6 +28,6 @@ export default async (req, res) => {
     res.setHeader('Allow', ['POST']);
     return res.status(405).json({
       error: `Method ${req.method} now allowed`
-    })
+    });
   }
-}
+};
