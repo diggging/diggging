@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { check_auth_status } from '../redux/actions/auth';
-// import { request_refresh } from '../redux/actions/auth';
+// import { check_auth_status } from '../redux/actions/auth';
+import { request_refresh } from '../redux/actions/auth';
 import Head from 'next/head';
 import Navbar from '../components/NavBar';
 
@@ -9,7 +9,7 @@ const Layout = ({title, content, children}) => {
   const dispatch = useDispatch();
   useEffect(()=>{
     if (dispatch && dispatch !== null && dispatch !== undefined)
-        dispatch(check_auth_status());
+        dispatch(request_refresh());
   }, [dispatch])
 
   return (

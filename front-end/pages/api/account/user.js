@@ -9,7 +9,7 @@ export default async (req, res) => {
     //header에 cookie가 있을 땐 해당 쿠키를 parse하고 access, refresh token을 갖게됨
     //header에 cookie가 없을 땐 {}빈 object가 반환됨
     const access = cookies.access ?? false; //cookie가 빈 문자열일 땐 => undefined되어서 access가 false가 됨
-    
+
     //access가 false일 때 = cookie가 없을 때 unauthorized user 에러를 보내주자
     if (access === false) {
       return res.status(401).json({
@@ -18,7 +18,7 @@ export default async (req, res) => {
     }
     //access가 false가 아니라면 user api받아오깅
     try {
-      const apiRes = await fetch(`${API_URL}/api/users/activate/<slug:uidb64>/<slug:token>/`, {
+      const apiRes = await fetch(`${API_URL}`, { 
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -32,12 +32,12 @@ export default async (req, res) => {
           user: data.user //보내주는 data구조 확인필요
         });
       } else {
-        return res.status(apiRes.atatus).json({
+        return res.status(apiRes.status).json({
           error: data.error
         });
       }
     } catch(err) {
-      return res.status(apiRes.atatus).json({
+      return res.status(500).json({
         error: '유저 정보를 불러오는 동안 문제가 발생했습니다.'
       });
     }

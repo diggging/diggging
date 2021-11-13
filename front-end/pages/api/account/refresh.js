@@ -6,7 +6,7 @@ export default async (req, res) => {
   if (req.method === 'GET') {
     const cookies = cookie.parse(req.headers.cookie ?? '');
     const refresh = cookies.refresh ?? false;
-    //cookie가 없을 때.
+    //cookie가 없을 때 false.
     if (refresh === false) {
       return res.status(401).json({
         error: 'User unauthorized to make this request'
@@ -35,14 +35,14 @@ export default async (req, res) => {
               httpOnly: true,
               secure: process.env.NODE_ENV !== 'development',
               maxAge: 60 * 30,
-              sameSite: 'stric',
+              sameSite: 'strict',
               path: '/api/',
             }
           ),
           cookie.serialize(
             'refresh', data.refresh, {
               httpOnly: true,
-              secure: process.env.NODE_ENV !== 'deveopment',
+              secure: process.env.NODE_ENV !== 'development',
               maxAge: 60 * 60 * 24,
               sameSite: 'strict',
               path: '/api/'

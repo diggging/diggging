@@ -19,7 +19,7 @@ export default async (req, res) => {
     });
 
     try {
-      const apiRes = await fetch(`${API_URL}/api/users/verify api주세요`, {
+      const apiRes = await fetch(`${API_URL}/token/`, { //api필요
         method: 'POST',
         headers: {
           'Accept': 'application/json',
