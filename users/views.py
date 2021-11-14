@@ -65,6 +65,7 @@ from rest_framework.decorators import (
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
@@ -234,10 +235,24 @@ def log_in(request):
 """
 
 # 로그아웃
-@login_required
+class LogoutView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        try:
+            refresh_token = request.data["refresh_token"]
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+"""@login_required
 def log_out(request):
     logout(request)
-    return redirect("users:login")
+    return redirect("users:login")"""
 
 
 # 비밀번호를 모르겠을때, email을 작성하는 부분
