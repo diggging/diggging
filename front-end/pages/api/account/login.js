@@ -21,23 +21,24 @@ export default async (req, res) => {
       });
 
       const data = await apiRes.json();
-
+      console.log(data.token);
       if (apiRes.status === 200) {
         res.setHeader('Set-Cookie', [
-          //access token을 가져온다
-          cookie.serialize('access', data.access, {
+          //access token 쿠키에저장?
+          cookie.serialize('access', data.token, {
             httpOnly: true, //javascript로access할 수 없게 막음
             secure: process.env.NODE_ENV !== 'development', //false
             //true로 바꾸고싶으면 .env가서 development다른걸로 바꾸기 ex) 'production'
-            maxAge: 60 * 30, //언제 expire될지:60초(1분)*30 = 30분
+            maxAge: 60 * 30 * 24, //언제 expire될지:60초(1분)*30 = 30분
             sameSite: 'strict',
             path: '/api/',
           }),
+          //refresh token가져온다
           cookie.serialize('refresh', data.refresh, {
             httpOnly: true, //javascript로access할 수 없게 막음
             secure: process.env.NODE_ENV !== 'development', //false
             //true로 바꾸고싶으면 .env가서 development다른걸로 바꾸기 ex) 'production'
-            maxAge: 60 * 60 * 24, //하루(24시간)
+            maxAge: 60 * 60 * 48, //하루(24시간)
             sameSite: 'strict',
             path: '/api/',
           }),
@@ -48,7 +49,7 @@ export default async (req, res) => {
         });
       } else {
         return res.status(apiRes.status).json({
-          error: 'Authetication failed',
+          error: 'Authentication failed',
         });
       }
     } catch (err) {

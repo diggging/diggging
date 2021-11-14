@@ -13,7 +13,7 @@ urlpatterns = [
 
     # post detail crud
     path("create/", views.PostCreateView.as_view(), name="post_create"),
-    path("<int:pk>/detail", views.PostDetailGetView.as_view(), name="post_detail"),
+    path("<int:pk>/detail", views.PostDetailView.as_view(), name="post_detail"),
     #path("<int:pk>/update", views.PostDetailUpdateView.as_view(), name="post_update"),
     #path("<int:pk>/delete", views.PostDetailDeleteView.as_view(), name="post_delete"),
     

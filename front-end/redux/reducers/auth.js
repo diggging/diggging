@@ -54,7 +54,7 @@ const authReducer = (state = initialState, action) => {
     case LOGOUT_SUCCESS:
       return {
         ...state,
-        isAuthenticated: false,
+        isAuthenticated: false, //logout일땐 더이상 authenticated하지 않게.
         user: null,
       };
     case LOGOUT_FAIL:
@@ -64,7 +64,7 @@ const authReducer = (state = initialState, action) => {
     case LOAD_USER_SUCCESS:
       return {
         ...state,
-        user: payload.user,
+        user: payload.user, //data에서 user정보추출. 확인필요
       };
     case LOAD_USER_FAIL:
       return {

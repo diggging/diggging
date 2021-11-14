@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from posts.models import Post
+from questions.serializers import AnswerSerializer, QuestionPostSerializer
 from users.models import User
 from comments.models import Comment
 from rest_framework.fields import CurrentUserDefault
@@ -27,6 +28,8 @@ class CommentSerializer(serializers.ModelSerializer):
         response = super().to_representation(instance)
         response['user'] = UserSerializer(instance.user, read_only=True).data
         response['post'] = PostSerializer(instance.post, read_only=True).data
+        response['question'] = QuestionPostSerializer(instance.question, read_only=True).data 
+        response['answer'] = AnswerSerializer(instance.answer, read_only=True).data
         return response
 
 

@@ -1,12 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
+import Main from "../pages/main";
+import axios from "axios";
+import Layout from '../hocs/Layout';
+
 
 function index() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [list, setList] = useState([]);
+
+  // const fetchPost = () => {
+  //   index.getInitialProps = async () => {
+  //     const {data : post} = await axios.get(``);
+  //     setList(post)
+  //     return { post }
+  //   };
+  // };
+
+  // useEffect(() => {
+  //   fetchPost();
+  // }, []);
+
   return (
-    <div>
-      <NavBar isLoggedIn={isLoggedIn} />
-    </div>
+    <Layout>
+      <Main />
+    </Layout>
   );
 }
 

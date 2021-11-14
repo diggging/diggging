@@ -7,6 +7,7 @@ import "../public/static/fonts/font.css";
 
 import { Provider } from "react-redux";
 import { useStore } from "../redux/store.js";
+import Head from 'next/head';
 
 const GlobalStyles = createGlobalStyle`
   ${reset};
@@ -41,6 +42,10 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Provider store={store}>
+        <Head>
+          <title>Diggging</title>
+          <meta name='viewport' content='width=device-width, initial-scale=1' />
+        </Head>
         <GlobalStyles />
         <ThemeProvider theme={colors}>
           <Component {...pageProps} />;

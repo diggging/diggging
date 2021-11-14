@@ -8,6 +8,7 @@ import {lighten, darken} from 'polished';
 import styled from 'styled-components';
 import axios from 'axios';
 import Head from 'next/head';
+import Layout from '../hocs/Layout';
 
 const BackgroundColor = styled.div`
   width: 100%;
@@ -117,8 +118,8 @@ function signup() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const register_success = useSelector((state) => state.auth.register_success);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const register_success = useSelector((state) => state.auth.register_success);//가입성공여부
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated); //로그인 여부
   //reducer의 loading state가져오기(auth라는 이름으로 combine되어있음)
   const loading = useSelector((state) => state.auth.loading);
 
@@ -164,7 +165,7 @@ function signup() {
       dispatch(register(username, user_nickname, email, password1, password2));
     }
 
-    if (typeof window !== 'undefined' && isAuthenticated){
+    if (typeof window !== 'undefined' && isAuthenticated){//로그인 되어있으면 메인으로 가짐.
       router.push('/main')};
 
     if (register_success) {
@@ -174,10 +175,10 @@ function signup() {
 
 
   //email 인증했는지 검증 필요
-  const onCheckEmail = (e) => {
-    e.preventDefault();
-    console.log('이메일 인증')
-  }
+  // const onCheckEmail = (e) => {
+  //   e.preventDefault();
+  //   console.log('이메일 인증')
+  // }
 
   //   return axios
   //     .post('api자리', {
@@ -203,13 +204,11 @@ function signup() {
 
   return (
     <>
-      <Head>
-        <title>회원가입</title>
-        <meta
-          name="viewport"
-          content="initial-scale=1.0, width=device-width"
-        ></meta>
-      </Head>
+      <Layout
+        title='Diggging| 회원가입'
+        content='개발자들을 위한 커뮤니티 디깅 회원가입 페이지'  
+      >
+      </Layout>
       <BackgroundColor>
         <SignupBox>
           <Logo>
@@ -256,7 +255,7 @@ function signup() {
               value={email}
               required
             />
-            <EmailBtn onClick={onCheckEmail}>인증</EmailBtn>
+            <EmailBtn>인증</EmailBtn>
             <SignupInput
               type="password"
               name="password1"
