@@ -9,6 +9,7 @@ app_name = "users"
 urlpatterns = [
     path("api/Signup/", views.Registration.as_view(), name="Signup"),
     path("api/Login/", views.Login.as_view(), name="Login"),
+    path("api/userinfo/", views.LoadUserView.as_view(), name="userinfo"),
     # path("login", obtain_auth_token, name="login"),
     # url(r'^signup/$', views.signup, name='signup'),
     path("activate/<slug:uidb64>/<slug:token>/", views.activate, name="activate"),
