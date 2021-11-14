@@ -18,7 +18,7 @@ export default async (req, res) => {
     }
     //access가 false가 아니라면 user api받아오깅
     try {
-      const apiRes = await fetch(`${API_URL}`, { 
+      const apiRes = await fetch(`${API_URL}api/users/`, { 
         method: 'GET',
         headers: {
           'Accept': 'application/json',

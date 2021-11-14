@@ -16,7 +16,7 @@ export default async (req, res) => {
     const body = JSON.stringify({refresh});
     
     try {
-      const apiRes = await fetch(`${API_URL}/user/token refresh api주세요`, {
+      const apiRes = await fetch(`${API_URL}/api/token/refresh`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',

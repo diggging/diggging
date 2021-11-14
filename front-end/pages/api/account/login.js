@@ -33,15 +33,15 @@ export default async (req, res) => {
             sameSite: 'strict',
             path: '/api/',
           }),
-          // //refresh token가져온다
-          // cookie.serialize('refresh', data.refresh, {
-          //   httpOnly: true, //javascript로access할 수 없게 막음
-          //   secure: process.env.NODE_ENV !== 'development', //false
-          //   //true로 바꾸고싶으면 .env가서 development다른걸로 바꾸기 ex) 'production'
-          //   maxAge: 60 * 60 * 48, //하루(24시간)
-          //   sameSite: 'strict',
-          //   path: '/api/',
-          // }),
+          //refresh token가져온다
+          cookie.serialize('refresh', data.refresh, {
+            httpOnly: true, //javascript로access할 수 없게 막음
+            secure: process.env.NODE_ENV !== 'development', //false
+            //true로 바꾸고싶으면 .env가서 development다른걸로 바꾸기 ex) 'production'
+            maxAge: 60 * 60 * 48, //하루(24시간)
+            sameSite: 'strict',
+            path: '/api/',
+          }),
         ]);
 
         return res.status(200).json({

@@ -11,15 +11,15 @@ export default async (req, res) => {
         sameSite: 'strict',
         path: '/api/',
       }),
-      // cookie.serialize('refresh','', {
-      //   httpOnly: true, //javascript로access할 수 없게 막음
-      //   secure: process.env.NODE_ENV !== 'development', //false
-      //   //true로 바꾸고싶으면 .env가서 development다른걸로 바꾸기 ex) 'production'
-      //   expires: new Date(0), //하루(24시간)
-      //   sameSite: 'strict',
-      //   path: '/api/',
-      // }
-    // )
+      cookie.serialize('refresh','', {
+        httpOnly: true, //javascript로access할 수 없게 막음
+        secure: process.env.NODE_ENV !== 'development', //false
+        //true로 바꾸고싶으면 .env가서 development다른걸로 바꾸기 ex) 'production'
+        expires: new Date(0), //하루(24시간)
+        sameSite: 'strict',
+        path: '/api/',
+      }
+    )
   ]);
     return res.status(200).json({
       success: 'Successfully logged out'
