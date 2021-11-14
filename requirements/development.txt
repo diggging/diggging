@@ -37,3 +37,6 @@ rjsmin==1.1.0
 django-rest-auth==0.9.5
 PyJWT==1.7.1
 djangorestframework-jwt==1.11.0
+django-taggit==1.5.1
+django-taggit-serializer==0.1.7
+

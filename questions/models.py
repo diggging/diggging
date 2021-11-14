@@ -2,6 +2,7 @@ from django.db import models
 from core import models as core_models
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.conf import settings
+from taggit.managers import TaggableManager
 
 # Create your models here.
 class QuestionPost(core_models.TimeStampModel):
@@ -38,6 +39,9 @@ class QuestionPost(core_models.TimeStampModel):
     )
 
     is_selected = models.BooleanField(default=False)
+
+    # taggit 기능 추가
+    question_tags = TaggableManager(blank = True)
 
     # objects = models.Manager()  # 손씨한테 물어봐야함
 
@@ -184,11 +188,11 @@ class QuestionPost(core_models.TimeStampModel):
     # code = RichTextUploadingField(verbose_name="코드", blank=True, config_name="default")
     # sand_point = models.IntegerField(default=0)
 
-    def count_likes_user(self):
-        return self.likes_user.count()
+    # def count_likes_user(self):
+    #     return self.likes_user.count()
 
-    def count_scarps_user(self):
-        return self.scarps_user.count()
+    # def count_scarps_user(self):
+    #     return self.scarps_user.count()
 
 
 # sand_point_count.short_description = "current sand point"

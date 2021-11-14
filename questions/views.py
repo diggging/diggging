@@ -2,6 +2,7 @@ import json
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+from comments.serializers import CommentSerializer
 from questions.serializers import QuestionPostSerializer
 from users.models import User
 # from .forms import AnswerPostForm, QuestionPostForm
@@ -16,36 +17,68 @@ from django.views.decorators.http import require_POST
 from django.core import serializers
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
 from .permissions import IsOwnerOrReadOnly
 from rest_framework import viewsets, permissions, status, generics, mixins
+from comments.models import Comment
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.decorators import permission_classes
 
 # Create your views here.
+class QuestionCommentCreateView(generics.ListCreateAPIView):
+    serializer_class = CommentSerializer
 
+    def get_queryset(self, request):
+        post_details = QuestionPost.objects.get(pk=request.id)
+        return post_details.question_comments.all().order_by("-created")
+
+class QuestionCommentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = CommentSerializer
+
+
+# @permission_classes([AllowAny])
 class QuestionCreateView(generics.ListCreateAPIView):
-    queryset = QuestionPost.objects.all()
-    serializer_class = QuestionPostSerializer
-    pagination_class = None 
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data, context={'request': self.request})
+    serializer_class = QuestionPostSerializer
+    queryset = QuestionPost.objects.all()
+
+
+    def create(self, request, *args, **kwrags):
+        serializer = self.serializer_class(data=request.data, context={'request': request})
         if serializer.is_valid():
             instance = serializer.save()
-        
-        me = request.user
 
-        # 포스팅 시에 sand 추가해주기
-        new_sand = Sand.objects.create(user=me, amount = 100, reason="삽질 기록 작성")
+        new_sand = Sand.objects.create(user=request.user, amount=100, reason="삽질 기록 작성")
 
         return Response(serializer.data)
+
+    
+    # queryset = QuestionPost.objects.all()
+    # serializer_class = QuestionPostSerializer
+    # pagination_class = None 
+
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.serializer_class(data=request.data, context={'request': self.request})
+    #     if serializer.is_valid():
+    #         instance = serializer.save()
+        
+    #     me = request.user
+
+    #     # 포스팅 시에 sand 추가해주기
+    #     new_sand = Sand.objects.create(user=me, amount = 100, reason="삽질 기록 작성")
+
+    #     return Response(serializer.data)
 
 class QuestionDetailGetView(generics.RetrieveUpdateDestroyAPIView):
     # comment 보내주기
     authentication_classes = [BasicAuthentication, SessionAuthentication]
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
-    queryset = QuestionPost.objects.all()
+    # queryset = QuestionPost.objects.all()
     # TODO: fix needed.
     serializer_class = QuestionPostSerializer
+
+    def get_queryset(self):
+        return QuestionPost.objects.get(pk=self.request.id)
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object() # 해당 오브젝트 가져옴. (pk 영향X)

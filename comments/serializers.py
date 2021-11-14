@@ -27,9 +27,9 @@ class CommentSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response['user'] = UserSerializer(instance.user, read_only=True).data
-        response['post'] = PostSerializer(instance.post, read_only=True).data
-        response['question'] = QuestionPostSerializer(instance.question, read_only=True).data 
-        response['answer'] = AnswerSerializer(instance.answer, read_only=True).data
+        # response['post'] = PostSerializer(instance.post, read_only=True).data
+        # response['question'] = QuestionPostSerializer(instance.question, read_only=True).data 
+        # response['answer'] = AnswerSerializer(instance.answer, read_only=True).data
         return response
 
 

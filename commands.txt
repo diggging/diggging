@@ -5,3 +5,6 @@ python manage.py migrate --settings=shoveling.settings.local
 
 pip install django-rest-auth (rest_auth 모듈, 이후 settings.py의 INSTALLED_APPS 에 'rest_auth'라고 추가 필요.)
 pip install djangorestframework-jwt (rest_framework_jwt 모듈 이용을 위함)
+
+pip install django-taggit (해시태그 구현을 위함) 
+pip install django-taggit-serializer (taggit 전용 serializer)
