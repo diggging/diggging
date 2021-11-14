@@ -46,10 +46,11 @@ export const load_user = () => async dispatch => {
     });
   }
 };
-
+//verify는 유저정보를 불러오기 위함인듯
+//check_auth_status -> verify api -> load_user()실행 -> api/account/user
 export const check_auth_status = () => async dispatch => {
   try {
-    const res = await fetch('/api/account/verify', {
+    const res = await fetch('/api/account/verify', { //method get에서 post로 바꿨음 
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -118,7 +119,7 @@ export const register =
       const res = await fetch('/api/account/register', {
         method: 'POST',
         headers: {
-          Accept: 'application/json',
+          'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
         body: body,
@@ -167,7 +168,7 @@ export const login = (username, password) => async (dispatch) => {
     const res = await fetch('/api/account/login', {
       method: 'POST',
       headers: {
-        Accept: 'application/json',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
       body: body,
