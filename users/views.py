@@ -58,6 +58,13 @@ from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
 from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView
 from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC
+from rest_framework.decorators import (
+    api_view,
+    permission_classes,
+    authentication_classes,
+)
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
@@ -74,13 +81,30 @@ class Registration(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
+        current_site = get_current_site(request)
         if not serializer.is_valid(raise_exception=True):
             return Response({"message": "이미 존재함"}, status=status.HTTP_409_CONFLICT)
 
         serializer.is_valid(raise_exception=True)
         user = serializer.save(request)
         user.is_active = False
+
         user.save()
+        to_email = user.email
+        message = render_to_string(
+            "users/user_activate_email.html",
+            {
+                "user": user,
+                "domain": current_site.domain,
+                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                "token": account_activation_token.make_token(user),
+            },
+        )
+        # sending mail to future user
+        mail_subject = "Activate your blog account."
+        to_email = serializer.cleaned_data.get("email")
+        email = EmailMessage(mail_subject, message, to=[to_email])
+        email.send()
         # request 필요 -> 오류 발생
         return Response(
             {
@@ -145,6 +169,7 @@ def activate(request, uidb64, token):
 
 # 로그인
 @permission_classes([AllowAny])
+@authentication_classes((JSONWebTokenAuthentication,))
 class Login(generics.GenericAPIView):
     serializer_class = LoginSerializer
 
@@ -167,7 +192,7 @@ class Login(generics.GenericAPIView):
                 "user": UserSerializer(
                     user, context=self.get_serializer_context()
                 ).data,
-                "token": user["token"],
+                "accese": user["token"],
             }
         )
 
@@ -377,8 +402,12 @@ def my_page(request, pk):
 
     # 질문 모음
     my_questions = QuestionPost.objects.filter(user=host)
-    questions_language_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="language")
-    questions_framework_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
+    questions_language_folder = QuestionFolder.objects.filter(
+        folder_user=host, folder_kind="language"
+    )
+    questions_framework_folder = QuestionFolder.objects.filter(
+        folder_user=host, folder_kind="framework"
+    )
 
     # 최근에 남긴 질문
     my_recent_questions = QuestionPost.objects.filter(user=host).order_by("-created")
@@ -434,8 +463,12 @@ def my_posts(request, host_id):
 
     # 질문 모음
     my_questions = QuestionPost.objects.filter(user=host)
-    questions_language_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="language")
-    questions_framework_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
+    questions_language_folder = QuestionFolder.objects.filter(
+        folder_user=host, folder_kind="language"
+    )
+    questions_framework_folder = QuestionFolder.objects.filter(
+        folder_user=host, folder_kind="framework"
+    )
 
     # 최근에 남긴 질문
     my_recent_questions = QuestionPost.objects.filter(user=host).order_by("-created")
@@ -483,8 +516,12 @@ def my_questions(request, host_id):
 
     # 질문 모음
     my_questions = QuestionPost.objects.filter(user=host)
-    questions_language_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="language")
-    questions_framework_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
+    questions_language_folder = QuestionFolder.objects.filter(
+        folder_user=host, folder_kind="language"
+    )
+    questions_framework_folder = QuestionFolder.objects.filter(
+        folder_user=host, folder_kind="framework"
+    )
 
     # 최근에 남긴 질문
     my_recent_questions = QuestionPost.objects.filter(user=host).order_by("-created")
@@ -530,8 +567,12 @@ def my_answers(request, host_id):
 
     # 질문 모음
     my_questions = QuestionPost.objects.filter(user=host)
-    questions_language_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="language")
-    questions_framework_folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
+    questions_language_folder = QuestionFolder.objects.filter(
+        folder_user=host, folder_kind="language"
+    )
+    questions_framework_folder = QuestionFolder.objects.filter(
+        folder_user=host, folder_kind="framework"
+    )
 
     # 최근에 남긴 질문
     my_recent_questions = QuestionPost.objects.filter(user=host).order_by("-created")

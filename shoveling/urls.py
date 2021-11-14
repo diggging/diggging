@@ -21,8 +21,16 @@ from django.conf.urls import include
 from posts import views as posts_views
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
+from rest_framework_jwt.views import (
+    obtain_jwt_token,
+    verify_jwt_token,
+    refresh_jwt_token,
+)
 
 urlpatterns = [
+    path("api/token/", obtain_jwt_token),
+    path("api/token/verify/", verify_jwt_token),
+    path("api/token/refresh/", refresh_jwt_token),
     path("ckeditor/", include("ckeditor_uploader.urls")),
     path("digg_admin_ging/", admin.site.urls),
     path("posts/", include("posts.urls", namespace="posts")),

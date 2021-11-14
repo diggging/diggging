@@ -69,8 +69,8 @@ INSTALLED_APPS = [
     # rest_auth
     "rest_framework.authtoken",
     "rest_auth.registration",
-    #cors
-    'corsheaders',
+    # cors
+    "corsheaders",
 ]
 REST_AUTH_REGISTER_SERIALIZERS = {
     "REGISTER_SERIALIZER": "thenameofyourapp.serializers.CustomRegisterSerializer",
@@ -79,6 +79,9 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
     "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_jwt.authentication.JSONWebTokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
@@ -99,11 +102,11 @@ JWT_AUTH = {
     "JWT_VERIFY": True,
     "JWT_VERIFY_EXPIRATION": True,
     "JWT_LEEWAY": 0,
-    "JWT_EXPIRATION_DELTA": timedelta(days=30),
+    "JWT_EXPIRATION_DELTA": timedelta(days=7),
     "JWT_AUDIENCE": None,
     "JWT_ISSUER": None,
-    "JWT_ALLOW_REFRESH": False,
-    "JWT_REFRESH_EXPIRATION_DELTA": timedelta(days=30),
+    "JWT_ALLOW_REFRESH": True,
+    "JWT_REFRESH_EXPIRATION_DELTA": timedelta(days=28),
     "JWT_AUTH_HEADER_PREFIX": "JWT",
     "JWT_AUTH_COOKIE": None,
 }
@@ -151,8 +154,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    #cors
-    'corsheaders.middleware.CorsMiddleware',
+    # cors
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "shoveling.urls"
@@ -278,10 +281,9 @@ EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "/"
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "Diggging"
 
-#cors
+# cors
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = [
-       'http://127.0.0.1:8000',
-       'http://127.0.0.1:3000',
+    "http://127.0.0.1:8000",
+    "http://127.0.0.1:3000",
 ]
-
