@@ -168,7 +168,7 @@ def activate(request, uidb64, token):
 
 
 # 로그인
-@permission_classes([AllowAny])
+"""@permission_classes([AllowAny])
 @authentication_classes((JSONWebTokenAuthentication,))
 class Login(generics.GenericAPIView):
     serializer_class = LoginSerializer
@@ -196,7 +196,7 @@ class Login(generics.GenericAPIView):
             }
         )
 
-
+"""
 # 유저정보 api
 class LoadUserView(APIView):
     def get(self, request, format=None):
