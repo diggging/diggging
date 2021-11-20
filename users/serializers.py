@@ -32,12 +32,12 @@ class RegisterSerializer(RegisterSerializer):
     email = serializers.EmailField()
     password1 = serializers.CharField(style={"input_type": "password"}, write_only=True)
     password2 = serializers.CharField(style={"input_type": "password"}, write_only=True)
-    #login_method = serializers.ChoiceField(choices=["email", "github"])
+    # login_method = serializers.ChoiceField(choices=["email", "github"])
 
     def get_cleaned_data(self):
         data_dict = super().get_cleaned_data()  # username, password, email이 디폴트
         data_dict["user_nickname"] = self.validated_data.get("user_nickname", "")
-        #data_dict["login_method"] = self.validated_data.get("login_method", "")
+        # data_dict["login_method"] = self.validated_data.get("login_method", "")
 
         return data_dict
 
@@ -92,3 +92,10 @@ class LoginSerializer(serializers.Serializer):
         except User.DoesNotExist:
             raise serializers.ValidationError("User 가 존재하지않습니다.")
         return {"username": user.username, "token": jwt_token}
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    model = User
+
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(require=True)
