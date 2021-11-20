@@ -1,6 +1,6 @@
 import router, {useRouter} from 'next/router';
 import { useSelector } from 'react-redux';
-import Layout from '../hocs/Layout';
+import Layout from '../../hocs/Layout';
 
 function mypage() {
   const router = useRouter();

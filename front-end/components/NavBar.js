@@ -3,13 +3,14 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import NavSearch from '../public/static/images/Search';
 import Alarm from '../public/static/images/Alarm';
-import Directory from '../public/static/images/Directory';
+// import Directory from '../public/static/images/Directory';
 import ToggleBtn from '../public/static/images/ToggleBtn';
 import SvgDiggging from '../public/static/images/Diggging';
-import img from '../public/static/images/profile_img.jpg';
+// import img from '../public/static/images/profile_img.jpg'; //기본 프로필이미지 넣어주기
 import {useSelector, useDispatch} from 'react-redux';
-import {logout} from '../redux/actions/auth';
-
+import { logout } from '../redux/actions/auth'
+import Router from "next/router";
+import { useRouter } from 'next/router'
 
 const Nav = styled.nav`
   z-index: 1000;
@@ -74,6 +75,7 @@ const ToggleContainer = styled.button`
   justify-content: center;
   cursor: pointer;
   color: #9faeb6;
+  position: relative;
 
   & svg {
     margin-left: 10px;
@@ -95,28 +97,44 @@ const UserImg = styled.div`
 const DropBox = styled.div`
   background-color: white;
   box-shadow: 0.25rem 0.25rem 0.25rem rgba(0, 0, 0, 0.05);
-  width: 11.875rem;
+  width: 10rem;
   padding: 0 1.5rem;
+  position: absolute;
+  top: 68px;
+  right: 60px;
 `;
 
 const DropList = styled.ul`
   list-style: none;
   line-height: 2rem;
   font-family: 'Pretendard-Regular';
-  color: '#B6B6B6';
+`;
 
+const DropListItem = styled.li`
+  color: #B6B6B6;
+
+  &:hover {
+    color: #343434;
+    font-family: 'Pretendard-Medium';
+  }
+`;
+const LogoutButton = styled(DropList)`
+  cursor: pointer;
 `;
 
 function navBar() {
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
-
+  const router = useRouter();
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   
-  const logoutHandler = () => {
+  const [open, setOpen] = useState(false);
+  
+  const logoutHandler = async () => {
     if (dispatch && dispatch !== null && dispatch !== undefined)
-        dispatch(logout());
+    await dispatch(logout());
+    router.push("/loginPage");
   };
+
   return (
     <div>
       <Nav>
@@ -158,24 +176,25 @@ function navBar() {
                   <Alarm />
                 </NavItem>
               </Link>
-              <Link href="/" passHref>
+              {/* <Link href="/" passHref>
                 <NavItem>
                   <Directory />
                 </NavItem>
-              </Link>
+              </Link> */}
               <NavItem>
                 <ToggleContainer onClick={() => {setOpen(!open)}}>
                   <UserImg />
                   <ToggleBtn />
                 </ToggleContainer>
+                {open ? (
                 <DropBox>
                   <DropList>
-                    <li>새 글 작성</li>
-                    <li>내 디렉토리</li>
-                    <li>계정설정</li>
-                    <li><a href="/" onclick={logoutHandler}>로그아웃</a></li>
+                    <DropListItem><Link href="/postCreate">새 글 작성</Link></DropListItem>
+                    <DropListItem><Link href="accountSetting">계정설정</Link></DropListItem>
+                    <DropListItem><LogoutButton onClick={logoutHandler}>로그아웃</LogoutButton></DropListItem>
                   </DropList>
                 </DropBox>
+                ) : null}
               </NavItem>
             </>
           ) : (

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
-import { register } from '../redux/actions/auth';
+import { register } from '../../redux/actions/auth';
 import Loader from 'react-loader-spinner';
 import {lighten, darken} from 'polished';
 import Link from 'next/link';
 import styled from 'styled-components';
-import Layout from '../hocs/Layout';
+import Layout from '../../hocs/Layout';
 
 const BackgroundColor = styled.div`
   width: 100%;
@@ -292,7 +292,7 @@ function signup() {
           </form>
           <LinkBox>
           <Link href="/loginPage" passHref><LinkBtn>로그인</LinkBtn></Link>
-          | <Link href="/findPassword" passHref><LinkBtn>비밀번호 찾기</LinkBtn></Link>
+          | <Link href="/user/findPassword" passHref><LinkBtn>비밀번호 찾기</LinkBtn></Link>
           </LinkBox>
           {/* <Button>네이버 로그인</Button>
           <Button>깃헙 로그인</Button> */}

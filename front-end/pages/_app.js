@@ -33,6 +33,11 @@ const GlobalStyles = createGlobalStyle`
   input::-ms-input-placeholder { color: #999893; }
   input::-webkit-input-placeholder { color: #999893; } 
   input::-moz-placeholder { color: #999893; }
+
+  button {
+    border: none;
+    background-color: none;
+  }
 `;
 
 const colors = {
