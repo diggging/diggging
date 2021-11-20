@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
-import { register } from '../../redux/actions/auth';
+import { register } from '../redux/actions/auth';
 import Loader from 'react-loader-spinner';
 import {lighten, darken} from 'polished';
 import Link from 'next/link';
 import styled from 'styled-components';
-import Layout from '../../hocs/Layout';
+import Layout from '../hocs/Layout';
 
 const BackgroundColor = styled.div`
   width: 100%;
@@ -53,7 +53,7 @@ const VerifyMessage = styled.p`
   margin-left: 0.25rem;
 `;
 
-const SignupInput = styled.input`
+const UserInput = styled.input`
   background-color: #f7f7f7;
   padding: 16px 14px;
   width: 380px;
@@ -155,7 +155,7 @@ function signup() {
         if (e.target.value.length < 4) {
           setUsernameMessage("아이디를 4자 이상 입력해주세요.")
         } else {
-          setUsernameMessage("올바른 이름 형식입니다. 😏")
+          setUsernameMessage("올바른 아이디 형식입니다 😏")
         }
         break;
       case "user_nickname":
@@ -235,7 +235,7 @@ function signup() {
             매일매일 성장하세요
           </GuideMessage>
           <form onSubmit={onSubmit}>
-            <SignupInput
+            <UserInput
               type="text"
               name="username"
               placeholder="사용할 아이디"
@@ -244,7 +244,7 @@ function signup() {
               required
             />
             <VerifyMessage>{usernameMessage}</VerifyMessage>
-            <SignupInput
+            <UserInput
               name="user_nickname"
               value={user_nickname}
               onChange={onInput}
@@ -253,7 +253,7 @@ function signup() {
               required
             />
             <VerifyMessage>{userNicknameMessage}</VerifyMessage>
-            <SignupInput
+            <UserInput
               type="email"
               name="email"
               placeholder="이메일"
@@ -262,7 +262,7 @@ function signup() {
               required
             />
             <VerifyMessage>{emailMessage}</VerifyMessage>
-            <SignupInput
+            <UserInput
               type="password"
               name="password1"
               placeholder="비밀번호"
@@ -272,7 +272,7 @@ function signup() {
               required
             />
             <VerifyMessage>{passwordMessage}</VerifyMessage>
-            <SignupInput
+            <UserInput
               type="password"
               name="password2"
               placeholder="비밀번호확인"
@@ -284,7 +284,7 @@ function signup() {
             <VerifyMessage>{passwordConfirmMessage}</VerifyMessage>
             {loading ? (
               <div>
-                <Loader type="Oval" color="#00bfff" width={50} height={50} />
+                <Loader type="Oval" color="#ffd358" width={30} height={30} />
               </div>
             ) : (
               <SignupBtn type="submit">회원가입하기</SignupBtn>
@@ -301,6 +301,6 @@ function signup() {
     </>
   );
 }
-
+export {UserInput, LinkBtn, LinkBox, VerifyMessage};
 export default signup;
 

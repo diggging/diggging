@@ -48,11 +48,11 @@ export default async (req, res) => {
         ]);
         
         return res.status(200).json({
-          success: 'Logged in successfully',
+          success: '로그인 되었습니다',
         });
       } else {
         return res.status(apiRes.status).json({
-          error: 'Authentication failed',
+          error: '아이디와 비밀번호를 다시확인해주세요',
         });
       }
     } catch (err) {

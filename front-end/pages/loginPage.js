@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from 'react-loader-spinner';
 import Layout from '../hocs/Layout'; 
+import { UserInput, LinkBtn, LinkBox, VerifyMessage } from './signup';
 
 const BackgroundColor = styled.div`
   width: 100%;
@@ -78,12 +79,6 @@ const LoginBtn = styled.button`
   }
 `;
 
-const LinkBtn = styled.a`
-  color: #c4c4c4;
-  font-size: 14px;
-  text-decoration: none;
-`;
-
 const Button = styled.button`
   padding: 12px 20px;
   border-radius: 20px;
@@ -103,8 +98,12 @@ function loginPage() {
     username: '',
     password: '',
   });
-  const [errMessage, setErrMessage] = useState('');
-
+  const [error, setError] = useState({
+    usernameError: '',
+    passwordError: '',
+    loginError: ''
+  });
+  const {usernameError, passwordError, loginError} = error;
   const { username, password } = inputs;
 
   useEffect(() => {
@@ -113,11 +112,39 @@ function loginPage() {
     }
   }, [dispatch]);
 
-  const onChange = (e) => {
+  const onInput = (e) => {
     setInputs({
       ...inputs,
       [e.target.name]: e.target.value,
     });
+    switch (e.target.name) {
+      case "username":
+        if (e.target.value.length < 4) {
+          setError({
+            ...error,
+            usernameError: "아이디를 4자 이상 입력해주세요."
+          })
+        } else {
+            setError({
+              ...error,
+              usernameError: "올바른 아이디 형식입니다. 😏"
+            })
+          }
+        break;
+      case "password":
+        if (e.target.value.length < 8) {
+          setError({
+            ...error,
+            passwordError: "비밀번호를 8자 이상 입력하세요."
+          })
+         } else {
+            setError({
+              ...error,
+              passwordError: "올바른 비밀버호 형식입니다😏"
+            })
+          }
+        break;
+    }
   };
 
   const onSubmit = (e) => {
@@ -125,16 +152,25 @@ function loginPage() {
 
     if (dispatch && dispatch !== null && dispatch !== undefined) {
       dispatch(login(username, password));
+      if (isAuthenticated === false) {
+        setError({
+          ...error,
+          loginError: '아이디와 비밀번호를 확인해주세요.'
+        })
+      }
     }
     //입력 값 맞는지 체크 후 api 요청
     //아이디-비밀번호 일치하지 않으면 에러메시지
-
     //하나라도 입력 안한 것 있으면 에러메시지
     if (username === '' || password === '') {
-      setErrMessage('아이디와 비밀번호를 확인해주세요.');
-      return;
-    }
-  };
+      setError(
+        {
+          ...error,
+          loginError: '아이디와 비밀번호 모두 입력해주세요.'
+        })
+        return;
+    };
+  }
 
   //router가 있는지, authenticated한지 확인하고
   if (typeof window !== 'undefined' && isAuthenticated) {
@@ -167,36 +203,38 @@ function loginPage() {
             실력있는 개발자들에게 질문하고 매일매일 성장하세요
           </GuideMessage>
           <form onSubmit={(e) => onSubmit(e)}>
-            <LoginInput
+            <UserInput
               type="text"
               placeholder="아이디"
               name="username"
               value={username}
-              onChange={(e) => onChange(e)}
+              onChange={(e) => onInput(e)}
               required
             />
-            <LoginInput
+            <VerifyMessage>{usernameError}</VerifyMessage>
+            <UserInput
               type="password"
               placeholder="비밀번호"
               name="password"
               value={password}
-              onChange={(e) => onChange(e)}
+              onChange={(e) => onInput(e)}
               minLength="8"
               required
             />
-            <span>{errMessage}</span>
+            <VerifyMessage>{passwordError}</VerifyMessage>
             <LoginBtn type="submit">로그인</LoginBtn>
+            <VerifyMessage>{loginError}</VerifyMessage>
             {loading ? (
               <div>
-                <Loader type="Oval" color="#00bfff" width={50} height={50} />
+                <Loader type="Oval" color="#ffd664" width={30} height={30} />
               </div>
             ) : null}
           </form>
-          <Link href="/signup">회원가입하기</Link> |
-          <Link href="/reset-password">비밀번호 찾기</Link>
-          <Button>네이버 로그인</Button>
-          <Button>깃헙 로그인</Button>
-        </LoginBox>
+          <LinkBox>
+            <Link href="/signup" passHref><LinkBtn>회원가입하기 | </LinkBtn></Link>
+            <Link href="/reset-password" passHref><LinkBtn> 비밀번호 찾기</LinkBtn></Link>
+          </LinkBox>
+        </LoginBox> 
       </BackgroundColor>
     </Layout>
   );
