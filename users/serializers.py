@@ -1,3 +1,4 @@
+from django.db.models.fields import EmailField
 from rest_framework import fields, serializers
 from rest_framework.exceptions import ValidationError
 
@@ -8,6 +9,12 @@ from django.contrib.auth import get_user_model
 from rest_auth.registration.serializers import RegisterSerializer
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth import authenticate
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.encoding import smart_str, force_str, DjangoUnicodeDecodeError
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+
+from django.contrib.sites.shortcuts import get_current_site
+from django.urls import reverse
 
 JWT_PAYLOAD_HANDLER = api_settings.JWT_PAYLOAD_HANDLER
 JWT_ENCODE_HANDLER = api_settings.JWT_ENCODE_HANDLER
@@ -32,12 +39,12 @@ class RegisterSerializer(RegisterSerializer):
     email = serializers.EmailField()
     password1 = serializers.CharField(style={"input_type": "password"}, write_only=True)
     password2 = serializers.CharField(style={"input_type": "password"}, write_only=True)
-    #login_method = serializers.ChoiceField(choices=["email", "github"])
+    # login_method = serializers.ChoiceField(choices=["email", "github"])
 
     def get_cleaned_data(self):
         data_dict = super().get_cleaned_data()  # username, password, email이 디폴트
         data_dict["user_nickname"] = self.validated_data.get("user_nickname", "")
-        #data_dict["login_method"] = self.validated_data.get("login_method", "")
+        # data_dict["login_method"] = self.validated_data.get("login_method", "")
 
         return data_dict
 

@@ -7,3 +7,5 @@ pip install django-rest-auth (rest_auth 모듈, 이후 settings.py의 INSTALLED_
 pip install djangorestframework-jwt (rest_framework_jwt 모듈 이용을 위함)
 
 pip install djangorestframework-simplejwt (refresh 토큰 뽑으려면 해야함 )
+
+pip install django-rest-passwordreset (비밀번호 변경할때 사용함 ㅋ)
