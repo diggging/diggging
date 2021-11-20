@@ -44,7 +44,6 @@ from rest_framework import generics, permissions
 from .serializers import (
     UserSerializer,
     RegisterSerializer,
-    ChangePasswordSerializer,
 )
 from rest_framework.response import Response
 from django.contrib.auth import login
@@ -72,6 +71,8 @@ from rest_framework.decorators import (
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
@@ -226,11 +227,17 @@ class LogoutView(APIView):
 
 
 # 비밀번호를 모르겠을때, email을 작성하는 부분
-class password_reset(APIView):
+
+"""class Password_reset(APIView):
     # email 받으면
-    def post(self, request):
-        email = request.POST.get("email")
+    serializer_class = changePasswordsendEmailSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
         username = request.POST.get("username")
+        email = serializer.get("email")
+        print(email)
         # email 이 존재하는 이메일인지 확인
         if User.objects.filter(email=email, username=username).exists():
             # 있으면 메일 보내기
@@ -256,12 +263,6 @@ class password_reset(APIView):
                 "입력하신 이메일<span>로 인증 링크가 전송되었습니다.</span>"
                 "</div>"
             )
-        else:
-            # 없으면 없는 메일이라고 하고 다시 redirect
-            return redirect("users:password_reset")
-
-    def get(self, request):
-        return render(request, template_name="users/password_reset.html")
 
 
 class Password_reset_email(APIView):
@@ -315,9 +316,9 @@ class Password_reset_form(APIView):
             return Response(ctx)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-"""user = get_object_or_404(User, pk=pk)
+"""
+"""
+user = get_object_or_404(User, pk=pk)
         if request.method == "POST":
             new_password = request.POST.get("password1")
             password_confirm = request.POST.get("password2")

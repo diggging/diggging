@@ -1,3 +1,4 @@
+from django.db.models.fields import EmailField
 from rest_framework import fields, serializers
 from rest_framework.exceptions import ValidationError
 
@@ -8,6 +9,12 @@ from django.contrib.auth import get_user_model
 from rest_auth.registration.serializers import RegisterSerializer
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth import authenticate
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.encoding import smart_str, force_str, DjangoUnicodeDecodeError
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+
+from django.contrib.sites.shortcuts import get_current_site
+from django.urls import reverse
 
 JWT_PAYLOAD_HANDLER = api_settings.JWT_PAYLOAD_HANDLER
 JWT_ENCODE_HANDLER = api_settings.JWT_ENCODE_HANDLER
@@ -92,10 +99,3 @@ class LoginSerializer(serializers.Serializer):
         except User.DoesNotExist:
             raise serializers.ValidationError("User 가 존재하지않습니다.")
         return {"username": user.username, "token": jwt_token}
-
-
-class ChangePasswordSerializer(serializers.Serializer):
-    model = User
-
-    old_password = serializers.CharField(required=True)
-    new_password = serializers.CharField(require=True)

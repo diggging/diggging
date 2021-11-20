@@ -72,6 +72,8 @@ INSTALLED_APPS = [
     "rest_auth.registration",
     # cors
     "corsheaders",
+    # user_password
+    "django_rest_passwordreset",
 ]
 REST_AUTH_REGISTER_SERIALIZERS = {
     "REGISTER_SERIALIZER": "thenameofyourapp.serializers.CustomRegisterSerializer",
