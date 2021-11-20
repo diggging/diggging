@@ -8,6 +8,7 @@ export default async (req, res) => {
     const refresh = cookies.refresh ?? false;
     //cookie가 없을 때 false.
     if (refresh === false) {
+      console.log('쿠키가없다')
       return res.status(401).json({
         error: 'User unauthorized to make this request'
       });
@@ -16,7 +17,7 @@ export default async (req, res) => {
     const body = JSON.stringify({refresh});
     
     try {
-      const apiRes = await fetch(`${API_URL}/api/token/refresh`, {
+      const apiRes = await fetch(`${API_URL}/api/token/refresh/`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',

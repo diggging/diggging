@@ -1,5 +1,6 @@
 import cookie from 'cookie';
 import { API_URL } from '../../../config/index';
+import {request_refresh} from '../../../redux/actions/auth'
 
 export default async (req, res) => {
   if (req.method === 'POST') {
@@ -11,21 +12,23 @@ export default async (req, res) => {
     });
 
     try {
-      const apiRes = await fetch(`${API_URL}/users/api/Login/`, {
+      const apiRes = await fetch(`${API_URL}/api/token/`, {
         method: 'POST',
         headers: {
-          Accept: 'application/json',
+          'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
         body: body,
       });
 
       const data = await apiRes.json();
-      console.log(data.token);
       if (apiRes.status === 200) {
+        // let accessToken = data.token; // access token
+        // let refreshToken = request_refresh(accessToken);
+
         res.setHeader('Set-Cookie', [
           //access token 쿠키에저장?
-          cookie.serialize('access', data.token, {
+          cookie.serialize('access', data.access, {
             httpOnly: true, //javascript로access할 수 없게 막음
             secure: process.env.NODE_ENV !== 'development', //false
             //true로 바꾸고싶으면 .env가서 development다른걸로 바꾸기 ex) 'production'
@@ -33,7 +36,7 @@ export default async (req, res) => {
             sameSite: 'strict',
             path: '/api/',
           }),
-          //refresh token가져온다
+          
           cookie.serialize('refresh', data.refresh, {
             httpOnly: true, //javascript로access할 수 없게 막음
             secure: process.env.NODE_ENV !== 'development', //false
@@ -43,7 +46,7 @@ export default async (req, res) => {
             path: '/api/',
           }),
         ]);
-
+        
         return res.status(200).json({
           success: 'Logged in successfully',
         });

@@ -174,11 +174,10 @@ function signup() {
   }
 
 
-  //email 인증했는지 검증 필요
-  // const onCheckEmail = (e) => {
-  //   e.preventDefault();
-  //   console.log('이메일 인증')
-  // }
+  const onVerifyEmail = (e) => {
+    e.preventDefault();
+    return
+  }
 
   //   return axios
   //     .post('api자리', {
@@ -255,7 +254,6 @@ function signup() {
               value={email}
               required
             />
-            <EmailBtn>인증</EmailBtn>
             <SignupInput
               type="password"
               name="password1"

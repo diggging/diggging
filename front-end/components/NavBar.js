@@ -114,9 +114,8 @@ function navBar() {
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   
   const logoutHandler = () => {
-    if (dispatch && dispatch !== null && dispatch !== undefined) {
-      dispatch(logout());
-    }
+    if (dispatch && dispatch !== null && dispatch !== undefined)
+        dispatch(logout());
   };
   return (
     <div>
@@ -174,7 +173,7 @@ function navBar() {
                     <li>새 글 작성</li>
                     <li>내 디렉토리</li>
                     <li>계정설정</li>
-                    <li><a href="#!" onclick={logoutHandler}>로그아웃</a></li>
+                    <li><a href="/" onclick={logoutHandler}>로그아웃</a></li>
                   </DropList>
                 </DropBox>
               </NavItem>

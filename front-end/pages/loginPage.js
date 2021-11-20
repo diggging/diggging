@@ -139,7 +139,7 @@ function loginPage() {
   //router가 있는지, authenticated한지 확인하고
   if (typeof window !== 'undefined' && isAuthenticated) {
     //Redirect to main
-    router.push('/main');
+    router.push(`/`);
   }
 
   return (

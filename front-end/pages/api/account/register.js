@@ -16,7 +16,7 @@ export default async (req, res) => {
       const apiRes = await fetch(`${API_URL}/users/api/Signup/`, {
         method: 'POST',
         headers: {
-          Accept: 'application/json',
+          'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
         body: body,
