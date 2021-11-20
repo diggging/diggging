@@ -1,36 +1,70 @@
 from rest_framework import serializers
+from rest_framework.relations import PrimaryKeyRelatedField
 
 from posts.models import Post
-from questions.serializers import AnswerSerializer, QuestionPostSerializer
+# from questions.serializers import UserSerializer
 from users.models import User
+from questions.models import QuestionPost
 from comments.models import Comment
-from rest_framework.fields import CurrentUserDefault
+from rest_framework.fields import CurrentUserDefault, SerializerMethodField
+from comments.models import Comment
 
-class UserSerializer(serializers.ModelSerializer):
-    #user_profile_image = serializers.ImageField(use_url=True)
+class QuestionCommentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ["id","user_nickname","user_profile_image"]
+        model = Comment
+        fields = [
+            "id",
+            'user',
+            "question",
+            "text",
+            "created",
+            "updated",
+        ]
+        read_only_fields = ['user', 'created', 'updated']
 
-class PostSerializer(serializers.ModelSerializer):
+class AnswerCommentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Post
-        fields = ["id"]
+        model = Comment
+        fields = [
+            "id",
+            "user",
+            "answer",
+            "text",
+            "created",
+            "updated"
+        ]
+        read_only_fields = ["user", 'created', 'updated']
 
-class CommentSerializer(serializers.ModelSerializer):
-    #comments = CommentSerializer(read_only=True, many=True)
-    
+class CommentDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = "__all__"
+
+# class UserSerializer(serializers.ModelSerializer):
+#     #user_profile_image = serializers.ImageField(use_url=True)
+#     class Meta:
+#         model = User
+#         fields = ["id","user_nickname","user_profile_image"]
+
+# class PostSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Post
+#         fields = ["id"]
+
+# class CommentSerializer(serializers.ModelSerializer):
+#     #comments = CommentSerializer(read_only=True, many=True)
     
-    def to_representation(self, instance):
-        response = super().to_representation(instance)
-        response['user'] = UserSerializer(instance.user, read_only=True).data
-        # response['post'] = PostSerializer(instance.post, read_only=True).data
-        # response['question'] = QuestionPostSerializer(instance.question, read_only=True).data 
-        # response['answer'] = AnswerSerializer(instance.answer, read_only=True).data
-        return response
+#     class Meta:
+#         model = Comment
+#         fields = "__all__"
+    
+#     def to_representation(self, instance):
+#         response = super().to_representation(instance)
+#         response['user'] = UserSerializer(instance.user, read_only=True).data
+#         # response['post'] = PostSerializer(instance.post, read_only=True).data
+#         # response['question'] = QuestionPostSerializer(instance.question, read_only=True).data 
+#         # response['answer'] = AnswerSerializer(instance.answer, read_only=True).data
+#         return response
 
 
 # class PostDetailSerializer(serializers.ModelSerializer):
