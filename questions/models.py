@@ -37,14 +37,11 @@ class QuestionPost(core_models.TimeStampModel):
         blank=True,
         related_name="question_scarps_user",
     )
-
     # is_selected = models.BooleanField(default=False)
 
     # taggit 기능 추가
     question_tags = TaggableManager(blank = True)
-
     hits = models.PositiveIntegerField(verbose_name="조회수", default=0)
-
     answer_exist = models.BooleanField(verbose_name="답변존재여부", default=False)
 
     # def count_likes_user(self):

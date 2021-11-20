@@ -8,6 +8,7 @@ from questions.serializers import (
     AnswerCreateUpdateSerializer,
     AnswerDetailSerializer,
     QuestionDetailSerializer,
+    QuestionFolderSerializer,
     QuestionListSerializer,
     QuestionCreateUpdateSerializer,
     LikeSerializer,
@@ -78,54 +79,42 @@ class QuestionDeleteAPIView(generics.DestroyAPIView):
 #---------------------------- Question CRUD end -----------------------
 
 #---------------------------- Question List start ---------------------
-# class QuestionListAPIView(generics.ListAPIView):
-#     serializer_class = QuestionListSerializer
-
-#     def get_queryset(self):
-#         return super().get_queryset()
-
-# class QuestionListAPIView(generics.ListAPIView):
-#     serializer_class = QuestionListSerializer
-
-#     def get_queryset(self):
-#         big_criteria = self.request.query_params.get('big_criteria')
-#         small_criteria = self.request.query_params.get('small_criteria')
-
-
-
-class RecentQuestionListAPIView(generics.ListAPIView):
+class QuestionListAPIView(generics.ListAPIView):
     serializer_class = QuestionListSerializer
-    paginator = None
 
     def get_queryset(self):
-        queryset = QuestionPost.objects.order_by("-created")
-        return queryset
-class MyQuestionListAPIView(generics.ListAPIView):
-    serializer_class = QuestionListSerializer
-    paginator = None
+        big_criteria = self.request.query_params.get('big_criteria')
+        small_criteria = self.request.query_params.get('small_criteria')
 
-    def get_queryset(self, *args, **kwargs):
-        queryset = QuestionPost.objects.filter(user=self.request.user).order_by("-created")
-        return queryset 
-
-class QuestionPopularityListAPIView(generics.ListAPIView):
-    serializer_class = QuestionListSerializer
-    paginator = None
-
-    def get_queryset(self, *args, **kwargs):
-        queryset = QuestionPost.objects.order_by("-hits")
-        return queryset
+        if small_criteria == "all":
+            if big_criteria == "recent":
+                queryset = QuestionPost.objects.order_by("-created")
+                return queryset
+            elif big_criteria == "popular":
+                queryset = QuestionPost.objects.order_by("-hits")
+                return queryset
+            elif big_criteria == "mine":
+                queryset = QuestionPost.objects.filter(user=self.request.user).order_by("-created")
+                return queryset
+        elif small_criteria == "wait_answer":
+            queryset = QuestionPost.objects.filter(answer_exist = False).order_by("-created")
+        elif small_criteria == "answer_done":
+            queryset = QuestionPost.objects.filter(answer_exist=True).order_by("-created")
 
 # -------------------------- Question List end -------------------------------
 
 # -------------------------- Answer CRUD -------------------------------------
-class AnswerCreateAPIView(generics.CreateAPIView):
+class AnswerCreateAPIView(generics.ListCreateAPIView):
     queryset = Answer.objects.all()
     serializer_class = AnswerCreateUpdateSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        pk = self.request.query_params.get('question_id')
+        question = get_object_or_404(QuestionPost, pk=pk)
+        question.answer_exist = True
+        question.save()
+        serializer.save(user=self.request.user, question=question)
 
 class AnswerDetailAPIView(generics.RetrieveAPIView):
     queryset = Answer.objects.all()
@@ -168,7 +157,7 @@ class LikeUpDownAPIView(generics.RetrieveUpdateAPIView):
         serializer.save(helped_num=question_post.helped_num)
 # -------------------------------------------------------------------------------
 
-# ----------------------- 채택 view ----------------------------------------------
+# ----------------------- 답변 채택  ----------------------------------------------
 class AnswerSelectAPIView(generics.RetrieveUpdateAPIView):
     queryset = Answer.objects.all()
     serializer_class = AnswerSelectSerializer
@@ -184,6 +173,25 @@ class AnswerSelectAPIView(generics.RetrieveUpdateAPIView):
 
         answer.save()
         serializer.save(selection = answer.selection)
+
+# ---------------------------------------------------------------------------------
+
+# ------------------------ 스크랩 -------------------------------------------------
+class AddQuestiontoFolderAPIView(generics.RetrieveUpdateAPIView):
+    serializer_class = QuestionFolderSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        folder_owner = self.request.user
+        folders = QuestionFolder.objects.filter(folder_user = folder_owner)
+
+        return folders
+
+    def perform_update(self, serializer):
+        pk = self.request.query_params.get('question_id')
+        current_question = QuestionPost.objects.get(pk=pk)
+
+
 
 
 

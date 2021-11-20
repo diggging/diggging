@@ -37,7 +37,7 @@ class AnswerCreateUpdateSerializer(serializers.ModelSerializer):
             "question",
             "desc",
         ]
-        read_only_fields = ["user"]
+        read_only_fields = ["user", "question"]
 class AnswerDetailSerializer(serializers.ModelSerializer):
 
     answer_comments = AnswerCommentSerializer(many=True, read_only=True)
@@ -62,6 +62,7 @@ class AnswerDetailSerializer(serializers.ModelSerializer):
 
 # ------------- QuestionFolder serializer -------------------------------
 class QuestionFolderSerializer(serializers.ModelSerializer):
+    folder_name = serializers.StringRelatedField()
     class Meta:
         model = QuestionFolder
         fields = ["folder_name", "folder_user"]
@@ -110,6 +111,7 @@ class QuestionDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
             "created",
             "updated",
             "hits",
+            "answer_exist"
         ]
         read_only_fields = ["hits",]
     # def get_question_comments(self, obj):
@@ -126,6 +128,8 @@ class QuestionListSerializer(TaggitSerializer, serializers.ModelSerializer):
     # large_criteria = serializers.IntegerField(allow_null=True)
     # small_criteria = serializers.IntegerField(allow_null=True)
     question_tags = TagListSerializerField(allow_null=True)
+    comment_count = serializers.IntegerField(source='question_comments.count', read_only=True)
+    answer_count = serializers.IntegerField(source='answers.count', read_only=True)
     class Meta:
         model = QuestionPost
         fields = [
@@ -136,6 +140,10 @@ class QuestionListSerializer(TaggitSerializer, serializers.ModelSerializer):
             "scrap_num",
             "helped_num",
             "question_tags",
+            "created",
+            "updated",
+            "comment_count",
+            "answer_count",
             # "big_criteria",
             # "small_criteria",
         ]
