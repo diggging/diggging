@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { register } from '../redux/actions/auth';
 import Loader from 'react-loader-spinner';
 import {lighten, darken} from 'polished';
-
+import Link from 'next/link';
 import styled from 'styled-components';
-import axios from 'axios';
-import Head from 'next/head';
 import Layout from '../hocs/Layout';
 
 const BackgroundColor = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 200vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,6 +26,7 @@ const SignupBox = styled.div`
   height: auto;
   padding: 40px 50px;
   display: block;
+  color: #B6B6B6;
 `;
 
 const Logo = styled.a`
@@ -46,6 +45,14 @@ const GuideMessage = styled.p`
   margin-bottom: 30px;
 `;
 
+const VerifyMessage = styled.p`
+  color: #ffd358;
+  font-family: 'Pretendard-Medium';
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  margin-left: 0.25rem;
+`;
+
 const SignupInput = styled.input`
   background-color: #f7f7f7;
   padding: 16px 14px;
@@ -54,25 +61,7 @@ const SignupInput = styled.input`
   border: none;
   outline: none;
   margin-top: 14px;
-  color: #8d8c85;
-`;
-
-const EmailInput = styled(SignupInput)`
-  width: 80%;
-`;
-
-const EmailBtn = styled.button`
-  background-color: #3F3F3F;
-  border-radius: 4px;
-  border: none;
-  color: white;
-  font-family: "Pretendard-SemiBold";
-  padding: 12px 16px;
-  margin-left: 14px;
-
-  &:hover {
-    background-color: ${lighten(0.1, '#3F3F3F')};
-  }
+  color: #999893;
 `;
 
 const SignupBtn = styled.button`
@@ -94,8 +83,12 @@ const SignupBtn = styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: #ffd664;
+    background-color: lighten(#ffd358);
     box-shadow: 0, 4, 12, rgba(1, 1, 1, 8%);
+  }
+
+  &:active {
+    background-color: darken(#ffd358);
   }
 `;
 
@@ -114,6 +107,13 @@ const Button = styled.button`
   border: none;
 `;
 
+
+const LinkBox = styled.div`
+  color: #c4c4c4;
+  display: block;
+  text-align: right;
+`;
+
 function signup() {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -122,12 +122,15 @@ function signup() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated); //로그인 여부
   //reducer의 loading state가져오기(auth라는 이름으로 combine되어있음)
   const loading = useSelector((state) => state.auth.loading);
-
+  
+   //오류메시지 상태저장
+   const [usernameMessage, setUsernameMessage] = useState('')
+   const [userNicknameMessage, setUserNicknameMessage] = useState('')
+   const [emailMessage , setEmailMessage] = useState('')
+   const [passwordMessage, setPasswordMessage] = useState('')
+   const [passwordConfirmMessage, setPasswordConfirmMessage] = useState('')
+  
   //여러 개의 인풋 관리를 위해서 inputs state만들었음
-  const [passwordError, setPasswordError] = useState(false);
-  //이메일 인증 에러도 추가 필요
-  const [emailError, setEmailError] = useState(false);
-
   const [inputs, setInputs] = useState({
     username: '',
     user_nickname: '',
@@ -135,26 +138,57 @@ function signup() {
     password1: '',
     password2: '',
   });
+
   const [errors, setErrors] = useState(false);
   //비구조화할당으로 inputs에서 값 가져오기
+  
   const { username, user_nickname, email, password1, password2 } = inputs;
-
+  let emailCheck = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
   const onInput = (e) => {
     const { value, name } = e.target; //e.target에서 value와 name추출
     setInputs({
       ...inputs, //기존의 inputs 복사한 뒤
       [name]: value, //name에 해당하는 값을 key로하고 가져온 value를 설정
     });
-  };
-
-  const onReset = () => {
-    setInputs({
-      username: '',
-      user_nickname: '',
-      email: '',
-      password1: '',
-      password2: '',
-    });
+    switch (name) {
+      case "username":
+        if (e.target.value.length < 4) {
+          setUsernameMessage("아이디를 4자 이상 입력해주세요.")
+        } else {
+          setUsernameMessage("올바른 이름 형식입니다. 😏")
+        }
+        break;
+      case "user_nickname":
+        if (e.target.value.length < 2) {
+          setUserNicknameMessage("닉네임을 2자 이상 입력해주세요.")
+        } else {
+          setUserNicknameMessage("올바른 닉네임 형식입니다. 😏")
+        }
+        break;
+      case "email":
+        if (emailCheck.test(e.target.value)) {
+          setEmailMessage("올바른 이메일 형식입니다  😏");
+        } else {
+          setEmailMessage("올바른 이메일 형식을 입력해주세요.");
+        }
+        break;
+      case "password1":
+        if (e.target.value.length < 8) {
+          setPasswordMessage("비밀번호를 8자 이상 입력해주세요.")
+        } else {
+          setPasswordMessage("올바른 비밀번호 형식입니다. 😏")
+        }
+        break;
+      case "password2":
+        if (e.target.value == password1) {
+          setPasswordConfirmMessage("비밀번호가 일치합니다. 😊")
+        } else {
+          setPasswordConfirmMessage("비밀번호가 일치하지 않습니다.")
+        }
+        break;
+      default:
+        setPasswordConfirmMessage('message error')
+    }
   };
 
   const onSubmit = (e) => {
@@ -173,40 +207,11 @@ function signup() {
     }
   }
 
-
-  const onVerifyEmail = (e) => {
-    e.preventDefault();
-    return
-  }
-
-  //   return axios
-  //     .post('api자리', {
-  //       username: username,
-  //       user_nickname: user_nickname,
-  //       email: email,
-  //       password1: password1,
-  //       password2: password2,
-  //     })
-  //     .then((response) => {
-  //       if (response.status >= 200 && response.status <= 204) {
-  //         alert('회원가입 성공');
-  //         onReset();
-  //         this.props.history.push('/');
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       setErrors(true);
-  //       console.log('회원가입 실패');
-  //       console.log( error.response );
-  //     });
-  // };
-
   return (
     <>
       <Layout
         title='Diggging| 회원가입'
-        content='개발자들을 위한 커뮤니티 디깅 회원가입 페이지'  
-      >
+        content='개발자들을 위한 커뮤니티 디깅 회원가입 페이지'>
       </Layout>
       <BackgroundColor>
         <SignupBox>
@@ -238,6 +243,7 @@ function signup() {
               value={username}
               required
             />
+            <VerifyMessage>{usernameMessage}</VerifyMessage>
             <SignupInput
               name="user_nickname"
               value={user_nickname}
@@ -246,7 +252,8 @@ function signup() {
               type="text"
               required
             />
-            <EmailInput
+            <VerifyMessage>{userNicknameMessage}</VerifyMessage>
+            <SignupInput
               type="email"
               name="email"
               placeholder="이메일"
@@ -254,6 +261,7 @@ function signup() {
               value={email}
               required
             />
+            <VerifyMessage>{emailMessage}</VerifyMessage>
             <SignupInput
               type="password"
               name="password1"
@@ -263,9 +271,7 @@ function signup() {
               minLength="8"
               required
             />
-            {passwordError && (
-              <div style={{ color: 'red' }}>비밀번호가 일치하지 않습니다.</div>
-            )}
+            <VerifyMessage>{passwordMessage}</VerifyMessage>
             <SignupInput
               type="password"
               name="password2"
@@ -275,6 +281,7 @@ function signup() {
               minLength="8"
               required
             />
+            <VerifyMessage>{passwordConfirmMessage}</VerifyMessage>
             {loading ? (
               <div>
                 <Loader type="Oval" color="#00bfff" width={50} height={50} />
@@ -283,10 +290,12 @@ function signup() {
               <SignupBtn type="submit">회원가입하기</SignupBtn>
             )}
           </form>
-          <LinkBtn> 로그인 </LinkBtn> |{}
-          <LinkBtn>비밀번호 찾기</LinkBtn>
-          <Button>네이버 로그인</Button>
-          <Button>깃헙 로그인</Button>
+          <LinkBox>
+          <Link href="/loginPage" passHref><LinkBtn>로그인</LinkBtn></Link>
+          | <Link href="/findPassword" passHref><LinkBtn>비밀번호 찾기</LinkBtn></Link>
+          </LinkBox>
+          {/* <Button>네이버 로그인</Button>
+          <Button>깃헙 로그인</Button> */}
         </SignupBox>
       </BackgroundColor>
     </>
@@ -294,3 +303,4 @@ function signup() {
 }
 
 export default signup;
+

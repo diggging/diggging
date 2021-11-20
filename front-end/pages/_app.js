@@ -25,6 +25,14 @@ const GlobalStyles = createGlobalStyle`
     text-decoration: none;
     color: inherit;
   }
+
+  input {
+    font-family: 'Pretendard-Regular', 'Arial', sans-serif;
+  }
+
+  input::-ms-input-placeholder { color: #999893; }
+  input::-webkit-input-placeholder { color: #999893; } 
+  input::-moz-placeholder { color: #999893; }
 `;
 
 const colors = {
