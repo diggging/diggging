@@ -7,13 +7,7 @@ class QuestionPostAdmin(admin.ModelAdmin):
     fields = (
         "user",
         "title",
-        "language",
-        "os",
-        "framework",
-        "error_message",
-        "image",
         "desc",
-        "code",
         "is_public",
         "is_friend",
         "question_folder",

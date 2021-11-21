@@ -1,7 +1,7 @@
 from rest_framework import fields, serializers
 from posts.models import Folder
 from questions.models import QuestionPost, Answer, QuestionFolder
-# from comments.serializers import CommentSerializer
+#from comments.serializers import CommentSerializer
 from users.models import User
 from comments.models import Comment
 from rest_framework.fields import CurrentUserDefault

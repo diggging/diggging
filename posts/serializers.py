@@ -3,6 +3,7 @@ from rest_framework import fields, serializers
 from rest_framework.relations import PrimaryKeyRelatedField
 
 from posts.models import Post
+from questions.models import QuestionPost
 from users.models import User
 from comments.models import Comment
 from posts.models import Folder
@@ -75,4 +76,14 @@ class PostDetailSerializer(serializers.ModelSerializer):
         #self.fields['folder'].queryset = serializers.Field(Folder.objects.filter(folder_user=user))
         self.fields['folder'] = serializers.ManyRelatedField(child_relation=PrimaryKeyRelatedField(queryset= Folder.objects.filter(folder_user=user), required=False), required=False)#Folder.objects.filter(folder_user=user)
 
+class QuestionThumbnailSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = QuestionPost
+            fields = "__all__"
+        def to_representation(self, instance):
+            response = super().to_representation(instance)
+            response['user'] = UserSerializer(instance.user, read_only=True).data
+            return response
 
+class SearchSerializer(serializers.Serializer):
+    query = serializers.CharField(max_length=200)

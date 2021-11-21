@@ -13,7 +13,7 @@ from django.core.paginator import Paginator
 from questions.models import QuestionPost
 
 from rest_framework.views import APIView
-from posts.serializers import PostSerializer, UserSerializer, PostDetailSerializer
+from posts.serializers import PostSerializer, UserSerializer, PostDetailSerializer, QuestionThumbnailSerializer, SearchSerializer
 from rest_framework.response import Response
 from rest_framework import viewsets, permissions, status, generics, mixins
 from rest_framework.decorators import action
@@ -22,6 +22,10 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .permissions import IsOwnerOrReadOnly
 from django.db.models import Prefetch
+from rest_framework.decorators import ( api_view, permission_classes, authentication_classes, )
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
+import re
+from django.db.models import Q
 
 # class Main(APIView):
 #     def get(self, request, format=None, **kwargs):
@@ -533,8 +537,9 @@ def post_scrap(request, user_id, post_id):
     return HttpResponse(json.dumps(ctx), content_type="application/json")
 
 
+
 def search_quest(request):
-    questions = Question_post.objects.all()  ##질문만 받아오기
+    questions = QuestionPost.objects.all()  ##질문만 받아오기
     p = request.POST.get("p", "")
 
     if p:
@@ -620,3 +625,27 @@ def get_post(request, user_id, post_id):
 # 서비스 소개 페이지
 def service_view(request):
     return render(request, "posts/our_service.html")
+
+# =================================================================================================================================
+@permission_classes([AllowAny])
+class QuestionSearchView(APIView):
+    def get(self, request):
+        question_query = QuestionPost.objects.all()
+        serializer = QuestionThumbnailSerializer(question_query, many=True)
+        return Response(serializer.data)
+    def post(self, request):
+        query = request.data
+        serializer = SearchSerializer(query)
+        print(serializer.data)
+        return Response(serializer.data)
+        #return redirect("posts:search_quest_result", serializer.data['query'])
+
+
+@permission_classes([AllowAny])
+class QuestionSearchResultView(APIView):
+    def get(self, request, *args, **kwargs):
+        key_word = kwargs.get('query')
+        question_query = QuestionPost.objects.filter(Q(title__icontains=key_word)|Q(desc__icontains = key_word))
+        serializer = QuestionThumbnailSerializer(question_query, many=True)
+        return Response(serializer.data)
+
