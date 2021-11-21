@@ -11,6 +11,9 @@ import Layout from '../hocs/Layout';
 const BackgroundColor = styled.div`
   width: 100%;
   height: 200vh;
+  position: absolute;
+  top:0;
+  left:0;
   display: flex;
   align-items: center;
   justify-content: center;
