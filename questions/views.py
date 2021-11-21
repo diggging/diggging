@@ -177,19 +177,19 @@ class AnswerSelectAPIView(generics.RetrieveUpdateAPIView):
 # ---------------------------------------------------------------------------------
 
 # ------------------------ 스크랩 -------------------------------------------------
-class AddQuestiontoFolderAPIView(generics.RetrieveUpdateAPIView):
-    serializer_class = QuestionFolderSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+# class AddQuestiontoFolderAPIView(generics.RetrieveUpdateAPIView):
+#     serializer_class = QuestionFolderSerializer
+#     permission_classes = [IsAuthenticatedOrReadOnly]
 
-    def get_queryset(self):
-        folder_owner = self.request.user
-        folders = QuestionFolder.objects.filter(folder_user = folder_owner)
+#     def get_queryset(self):
+#         folder_owner = self.request.user
+#         folders = QuestionFolder.objects.filter(folder_user = folder_owner)
 
-        return folders
+#         return folders
 
-    def perform_update(self, serializer):
-        pk = self.request.query_params.get('question_id')
-        current_question = QuestionPost.objects.get(pk=pk)
+#     def perform_update(self, serializer):
+#         pk = self.request.query_params.get('question_id')
+#         current_question = QuestionPost.objects.get(pk=pk)
 
 
 
