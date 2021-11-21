@@ -8,25 +8,26 @@ class QuestionPostAdmin(admin.ModelAdmin):
         "user",
         "title",
         "desc",
-        "is_public",
-        "is_friend",
+        "code",
+        # "is_public",
+        # "is_friend",
         "question_folder",
         "scrap_num",
         "helped_num",
-        "is_selected",
+        # "is_selected",
     )
     list_display = [
         "pk",
         "title",
         "desc",
-        "is_public",
-        "is_friend",
+        # "is_public",
+        # "is_friend",
         "get_folders",
         "scrap_num",
         "helped_num",
         # "sand_point_count",
     ]
-    list_filter = ("is_public",)
+    # list_filter = ("is_public",)
 
     def short_content(self, Post):
         return Post.content[:20]

@@ -2,7 +2,18 @@ import json
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from questions.serializers import QuestionPostSerializer
+from django.views.generic import GenericViewError
+from rest_framework.views import APIView
+from questions.serializers import (
+    AnswerCreateUpdateSerializer,
+    AnswerDetailSerializer,
+    QuestionDetailSerializer,
+    QuestionFolderSerializer,
+    QuestionListSerializer,
+    QuestionCreateUpdateSerializer,
+    LikeSerializer,
+    AnswerSelectSerializer,
+)
 from users.models import User
 # from .forms import AnswerPostForm, QuestionPostForm
 from django.shortcuts import get_object_or_404, render, redirect
@@ -16,52 +27,265 @@ from django.views.decorators.http import require_POST
 from django.core import serializers
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from .permissions import IsOwnerOrReadOnly
-from rest_framework import viewsets, permissions, status, generics, mixins
+from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
+from .permissions import IsNotOwnerOrReadOnly, IsOwnerOrReadOnly, IsQuestionOwnerOrReadOnly
+from rest_framework import viewsets, status, generics, mixins
+from rest_framework.permissions import (
+    AllowAny,
+    IsAuthenticated,
+    IsAdminUser,
+    IsAuthenticatedOrReadOnly,
+)
+from comments.models import Comment
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.decorators import permission_classes
 
 # Create your views here.
 
-class QuestionCreateView(generics.ListCreateAPIView):
+# ----------------- Question CRUD start ---------------------------------
+class QuestionCreateAPIView(generics.CreateAPIView):
     queryset = QuestionPost.objects.all()
-    serializer_class = QuestionPostSerializer
-    pagination_class = None 
+    serializer_class = QuestionCreateUpdateSerializer
+    permission_classes = [IsAuthenticated] # allow only authenticated user
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data, context={'request': self.request})
-        if serializer.is_valid():
-            instance = serializer.save()
-        
-        me = request.user
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user) # set user field
 
-        # 포스팅 시에 sand 추가해주기
-        new_sand = Sand.objects.create(user=me, amount = 100, reason="삽질 기록 작성")
-
-        return Response(serializer.data)
-
-class QuestionDetailGetView(generics.RetrieveUpdateDestroyAPIView):
-    # comment 보내주기
-    authentication_classes = [BasicAuthentication, SessionAuthentication]
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+class QuestionDetailAPIView(generics.RetrieveAPIView):
     queryset = QuestionPost.objects.all()
-    # TODO: fix needed.
-    serializer_class = QuestionPostSerializer
+    serializer_class = QuestionDetailSerializer
 
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object() # 해당 오브젝트 가져옴. (pk 영향X)
-        
+    def get(self, request, *args, **kwargs):
+        instance = self.get_object()
+        print(instance.hits)
+        instance.hits += 1
         instance.save()
 
-        serializer = self.serializer_class(instance, data = request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
+        return self.retrieve(request, *args, **kwargs)
 
-        return Response(serializer.data)
+# use RetrieveUpdateAPIView to prefill form
+class QuestionUpdateAPIView(generics.RetrieveUpdateAPIView):
+    queryset = QuestionPost.objects.all()
+    serializer_class = QuestionCreateUpdateSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
+    # def perform_update(self, serializer):
+    #     serializer.save(user=self.request.user) # update user
+class QuestionDeleteAPIView(generics.DestroyAPIView):
+    queryset = QuestionPost.objects.all()
+    serializer_class = QuestionDetailSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
+#---------------------------- Question CRUD end -----------------------
+
+#---------------------------- Question List start ---------------------
+class QuestionListAPIView(generics.ListAPIView):
+    serializer_class = QuestionListSerializer
+
+    def get_queryset(self):
+        big_criteria = self.request.query_params.get('big_criteria')
+        small_criteria = self.request.query_params.get('small_criteria')
+
+        if small_criteria == "all":
+            if big_criteria == "recent":
+                queryset = QuestionPost.objects.order_by("-created")
+                return queryset
+            elif big_criteria == "popular":
+                queryset = QuestionPost.objects.order_by("-hits")
+                return queryset
+            elif big_criteria == "mine":
+                queryset = QuestionPost.objects.filter(user=self.request.user).order_by("-created")
+                return queryset
+        elif small_criteria == "wait_answer":
+            queryset = QuestionPost.objects.filter(answer_exist = False).order_by("-created")
+        elif small_criteria == "answer_done":
+            queryset = QuestionPost.objects.filter(answer_exist=True).order_by("-created")
+
+# -------------------------- Question List end -------------------------------
+
+# -------------------------- Answer CRUD -------------------------------------
+class AnswerCreateAPIView(generics.ListCreateAPIView):
+    queryset = Answer.objects.all()
+    serializer_class = AnswerCreateUpdateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        pk = self.request.query_params.get('question_id')
+        question = get_object_or_404(QuestionPost, pk=pk)
+        question.answer_exist = True
+        question.save()
+        serializer.save(user=self.request.user, question=question)
+
+class AnswerDetailAPIView(generics.RetrieveAPIView):
+    queryset = Answer.objects.all()
+    serializer_class = AnswerDetailSerializer
+
+class AnswerUpdateAPIView(generics.RetrieveUpdateAPIView):
+    queryset = Answer.objects.all()
+    serializer_class = AnswerCreateUpdateSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
+class AnswerDeleteAPIView(generics.RetrieveDestroyAPIView):
+    queryset = Answer.objects.all()
+    serializer_class = AnswerDetailSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
+# -----------------------------------------------------------------------------
+
+# -------------------- Like +1, -1 -------------------------------------------
+class LikeUpDownAPIView(generics.RetrieveUpdateAPIView):
+    queryset = QuestionPost.objects.all()
+    serializer_class = LikeSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsNotOwnerOrReadOnly]
+
+    def perform_update(self, serializer, *args, **kwargs):
+        question_post = get_object_or_404(QuestionPost, pk=self.kwargs['pk'])
+        like_user = self.request.user
+        # owner = instance.user
+        if question_post.likes_user.filter(id=like_user.id).exists():
+            question_post.helped_num -= 1
+            if question_post.helped_num < 0:
+                question_post.helped_num = 0
+            question_post.likes_user.remove(self.request.user)
+        else:
+            question_post.helped_num += 1
+            if question_post.helped_num < 0:
+                question_post.helped_num = 0
+            question_post.likes_user.add(self.request.user)
+
+        question_post.save()
+        serializer.save(helped_num=question_post.helped_num)
+# -------------------------------------------------------------------------------
+
+# ----------------------- 답변 채택  ----------------------------------------------
+class AnswerSelectAPIView(generics.RetrieveUpdateAPIView):
+    queryset = Answer.objects.all()
+    serializer_class = AnswerSelectSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsQuestionOwnerOrReadOnly]
+
+    def perform_update(self, serializer, *args, **kwargs):
+        answer = get_object_or_404(Answer, pk=self.kwargs['pk'])
+
+        if answer.selection == True:
+            answer.selection = False
+        else:
+            answer.selection = True
+
+        answer.save()
+        serializer.save(selection = answer.selection)
+
+# ---------------------------------------------------------------------------------
+
+# ------------------------ 스크랩 -------------------------------------------------
+# class AddQuestiontoFolderAPIView(generics.RetrieveUpdateAPIView):
+#     serializer_class = QuestionFolderSerializer
+#     permission_classes = [IsAuthenticatedOrReadOnly]
+
+#     def get_queryset(self):
+#         folder_owner = self.request.user
+#         folders = QuestionFolder.objects.filter(folder_user = folder_owner)
+
+#         return folders
+
+#     def perform_update(self, serializer):
+#         pk = self.request.query_params.get('question_id')
+#         current_question = QuestionPost.objects.get(pk=pk)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# class QuestionCommentCreateView(generics.ListCreateAPIView):
+#     serializer_class = CommentSerializer
+
+#     def get_queryset(self, request):
+#         post_details = QuestionPost.objects.get(pk=request.id)
+#         return post_details.question_comments.all().order_by("-created")
+
+# class QuestionCommentDetailView(generics.RetrieveUpdateDestroyAPIView):
+#     serializer_class = CommentSerializer
+# class QuestionCreateView(generics.ListCreateAPIView):
+
+#     serializer_class = QuestionPostSerializer
+
+#     def get_queryset(self):
+#         return QuestionPost.objects.all()
+
+#     def create(self, request, *args, **kwrags):
+#         serializer = self.serializer_class(data=request.data, context={'request': request})
+#         if serializer.is_valid():
+#             instance = serializer.save()
+
+#         new_sand = Sand.objects.create(user=request.user, amount=100, reason="삽질 기록 작성")
+
+#         return Response(serializer.data)
+
     
-    def delete(self, request, *args, **kwargs):
-        instance = self.get_object()
+    # queryset = QuestionPost.objects.all()
+    # serializer_class = QuestionPostSerializer
+    # pagination_class = None 
 
-        return Response(status = status.HTTP_200_OK)
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.serializer_class(data=request.data, context={'request': self.request})
+    #     if serializer.is_valid():
+    #         instance = serializer.save()
+        
+    #     me = request.user
+
+    #     # 포스팅 시에 sand 추가해주기
+    #     new_sand = Sand.objects.create(user=me, amount = 100, reason="삽질 기록 작성")
+
+    #     return Response(serializer.data)
+
+# class QuestionDetailGetView(generics.RetrieveUpdateDestroyAPIView):
+#     # comment 보내주기
+#     authentication_classes = [BasicAuthentication, SessionAuthentication]
+#     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+#     # queryset = QuestionPost.objects.all()
+#     # TODO: fix needed.
+#     serializer_class = QuestionPostSerializer
+
+#     def get_queryset(self):
+#         #TODO: self.request.id 
+#         return QuestionPost.objects.get(pk=self.request.id)
+
+#     def update(self, request, *args, **kwargs):
+#         instance = self.get_object() # 해당 오브젝트 가져옴. (pk 영향X)
+        
+#         instance.save()
+
+#         serializer = self.serializer_class(instance, data = request.data, partial=True)
+#         if serializer.is_valid():
+#             serializer.save()
+
+#         return Response(serializer.data)
+    
+#     def delete(self, request, *args, **kwargs):
+#         instance = self.get_object()
+
+#         return Response(status = status.HTTP_200_OK)
 
 # refactoring 전
 # @login_required

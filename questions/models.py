@@ -2,6 +2,7 @@ from django.db import models
 from core import models as core_models
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.conf import settings
+from taggit.managers import TaggableManager
 
 # Create your models here.
 class QuestionPost(core_models.TimeStampModel):
@@ -10,7 +11,7 @@ class QuestionPost(core_models.TimeStampModel):
     )
     title = models.CharField(verbose_name="제목", max_length=200)
     desc = models.TextField(verbose_name="설명", blank=False)
-    code = models.TextField(verbose_name="코드", blank=True)
+    # code = models.TextField(verbose_name="코드", blank=True)
 
     question_folder = models.ManyToManyField(
         "QuestionFolder",
@@ -18,11 +19,11 @@ class QuestionPost(core_models.TimeStampModel):
         blank=True,
     )
 
-    is_public = models.BooleanField(
-        verbose_name="전체공개", default=True
-    )  # 해당코드 false로 변경시 비공개
+    # is_public = models.BooleanField(
+    #     verbose_name="전체공개", default=True
+    # )  # 해당코드 false로 변경시 비공개
 
-    is_friend = models.BooleanField(verbose_name="이웃공개", default=False)  # 나를 팔로잉 하는 사람.
+    # is_friend = models.BooleanField(verbose_name="이웃공개", default=False)  # 나를 팔로잉 하는 사람.
 
     scrap_num = models.IntegerField(default=0)
     helped_num = models.IntegerField(default=0)
@@ -36,8 +37,18 @@ class QuestionPost(core_models.TimeStampModel):
         blank=True,
         related_name="question_scarps_user",
     )
+    # is_selected = models.BooleanField(default=False)
 
-    is_selected = models.BooleanField(default=False)
+    # taggit 기능 추가
+    question_tags = TaggableManager(blank = True)
+    hits = models.PositiveIntegerField(verbose_name="조회수", default=0)
+    answer_exist = models.BooleanField(verbose_name="답변존재여부", default=False)
+
+    # def count_likes_user(self):
+    #     return self.likes_user.count()
+
+    # def count_scarps_user(self):
+    #     return self.scarps_user.count()
 
     # objects = models.Manager()  # 손씨한테 물어봐야함
 
@@ -184,12 +195,6 @@ class QuestionPost(core_models.TimeStampModel):
     # code = RichTextUploadingField(verbose_name="코드", blank=True, config_name="default")
     # sand_point = models.IntegerField(default=0)
 
-    def count_likes_user(self):
-        return self.likes_user.count()
-
-    def count_scarps_user(self):
-        return self.scarps_user.count()
-
 
 # sand_point_count.short_description = "current sand point"
 
@@ -215,7 +220,7 @@ class Answer(core_models.TimeStampModel):
     # desc = RichTextUploadingField(verbose_name="설명", blank=False, config_name="default")
     # code = RichTextUploadingField(verbose_name="코드", blank=True, config_name="default")
     desc = models.TextField(verbose_name="설명", blank=False)
-    code = models.TextField(verbose_name="코드", blank=True)
+    # code = models.TextField(verbose_name="코드", blank=True)
 
     # objects = models.Manager()
 

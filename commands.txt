@@ -9,3 +9,6 @@ pip install djangorestframework-jwt (rest_framework_jwt 모듈 이용을 위함)
 pip install djangorestframework-simplejwt (refresh 토큰 뽑으려면 해야함 )
 
 pip install django-rest-passwordreset (비밀번호 변경할때 사용함 ㅋ)
+
+pip install django-taggit (해시태그 구현을 위함) 
+pip install django-taggit-serializer (taggit 전용 serializer)

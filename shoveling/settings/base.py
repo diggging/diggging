@@ -74,6 +74,10 @@ INSTALLED_APPS = [
     "corsheaders",
     # user_password
     "django_rest_passwordreset",
+    # django taggit
+    'taggit',
+    # django taggit serializer
+    'taggit_serializer',
 ]
 REST_AUTH_REGISTER_SERIALIZERS = {
     "REGISTER_SERIALIZER": "thenameofyourapp.serializers.CustomRegisterSerializer",
@@ -87,9 +91,11 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.TokenAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
+        'rest_framework.authentication.SessionAuthentication',
     ],
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated",
+        #"rest_framework.permissions.IsAuthenticated",
+        "rest_framework.permissions.IsAdminUser",
     ],
 }
 JWT_AUTH = {
@@ -291,3 +297,10 @@ CORS_ORIGIN_WHITELIST = [
     "http://127.0.0.1:8000",
     "http://127.0.0.1:3000",
 ]
+
+# django taggit settings
+TAGGIT_CASE_INSENSITIVE = True # make django taggit to be Case insensitive
+
+# taggit hashtag setings
+TAGGIT_TAGS_FROM_STRING = 'shoveling.utils.comma_splitter'
+TAGGIT_STRING_FROM_TAGS = 'shoveling.utils.comma_joiner'

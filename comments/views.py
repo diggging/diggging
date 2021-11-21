@@ -1,25 +1,110 @@
-#from django.shortcuts import render
+# new view
 from .models import Comment
-from posts.models import Post
-from users.models import User
-from comments import serializers
-from django.core import serializers
-from django.http.response import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from questions.models import QuestionPost, Answer
-from users.models import Alarm
+from questions.models import QuestionPost
+from comments.serializers import CommentDetailSerializer, QuestionCommentSerializer, AnswerCommentSerializer
+from questions.permissions import IsOwnerOrReadOnly
+from rest_framework.permissions import(
+    AllowAny,
+    IsAuthenticated,
+    IsAdminUser,
+    IsAuthenticatedOrReadOnly
+)
+from rest_framework import generics
 
-import json
+# ------------- Question comment create, update -----------------------
+class QuestionCommentCreateAPIView(generics.CreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = QuestionCommentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class QuestionCommentUpdateAPIView(generics.RetrieveUpdateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = QuestionCommentSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
+# ---------------------------------------------------------------------
+
+# ------------- Answer comment create, update -----------------------
+class AnswerCommentCreateAPIView(generics.CreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = AnswerCommentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        user = self.request.user
+
+class AnswerCommentUpdateAPIView(generics.RetrieveUpdateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = AnswerCommentSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
+# ---------------------------------------------------------------------
+
+# ------------- comment general delete --------------------------------
+class CommentDeleteAPIView(generics.RetrieveDestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentDetailSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
+# --------------------------------------------------------------------
+
+# class CommentListAPIView(generics.ListAPIView):
+#     serializer_class = CommentSerializer
+#     paginator = None
+
+#     def get_queryset(self):
+#         queryset = Comment.objects.order_by("-created")
+#         return queryset
 
 
-from rest_framework.views import APIView
-from comments.serializers import PostSerializer, UserSerializer, CommentSerializer
-from rest_framework.response import Response
-from rest_framework import viewsets, permissions, status, generics, mixins
-from rest_framework.decorators import action
-from rest_framework.renderers import JSONRenderer
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#from django.shortcuts import render
+# from .models import Comment
+# from posts.models import Post
+# from users.models import User
+# from comments import serializers
+# from django.core import serializers
+# from django.http.response import JsonResponse
+# from django.views.decorators.csrf import csrf_exempt
+# from questions.models import QuestionPost, Answer
+# from users.models import Alarm
+
+# import json
+
+
+# from rest_framework.views import APIView
+# from rest_framework.response import Response
+# from rest_framework import viewsets, permissions, status, generics, mixins
+# from rest_framework.decorators import action
+# from rest_framework.renderers import JSONRenderer
+# from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+# from rest_framework.permissions import IsAuthenticatedOrReadOnly
+# from comments.serializers import CommentSerializer
+
 #from .permissions import IsOwnerOrReadOnly
 # Create your views here.
 # Comment section
@@ -52,23 +137,23 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 #         "user": data,
 #     })
 
-class CommentCreateView(generics.ListCreateAPIView):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
+# class CommentCreateView(generics.ListCreateAPIView):
+#     queryset = Comment.objects.all()
+#     serializer_class = CommentSerializer
 
 
-    # def create(self, request, *args, **kwargs):
-    #     serializer = self.serializer_class(data=request.data)
-    #     if serializer.is_valid():
-    #         instance = serializer.save()
+#     # def create(self, request, *args, **kwargs):
+#     #     serializer = self.serializer_class(data=request.data)
+#     #     if serializer.is_valid():
+#     #         instance = serializer.save()
 
-class CommentGetView(generics.RetrieveUpdateDestroyAPIView):
-    #comment 보내주기
-    #authentication_classes = [BasicAuthentication, SessionAuthentication]
-    #permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly] # 로그인한, 쓴사람만 수정 가능
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
-    pagination_class=None
+# class CommentGetView(generics.RetrieveUpdateDestroyAPIView):
+#     #comment 보내주기
+#     #authentication_classes = [BasicAuthentication, SessionAuthentication]
+#     #permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly] # 로그인한, 쓴사람만 수정 가능
+#     queryset = Comment.objects.all()
+#     serializer_class = CommentSerializer
+#     pagination_class=None
 
 # delete comment
 # @csrf_exempt
