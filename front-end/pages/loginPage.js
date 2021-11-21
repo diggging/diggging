@@ -232,7 +232,7 @@ function loginPage() {
           </form>
           <LinkBox>
             <Link href="/signup" passHref><LinkBtn>회원가입하기 | </LinkBtn></Link>
-            <Link href="/findPassword" passHref><LinkBtn> 비밀번호 찾기</LinkBtn></Link>
+            <Link href="/user/findPassword" passHref><LinkBtn> 비밀번호 찾기</LinkBtn></Link>
           </LinkBox>
         </LoginBox> 
       </BackgroundColor>
