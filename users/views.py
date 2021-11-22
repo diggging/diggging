@@ -22,7 +22,7 @@ from django.contrib.auth.hashers import check_password
 # 이메일 인증 관련 import
 import logging
 from django.http import HttpResponse
-from django.db.models import Sum
+from django.db.models import Sum, query
 
 # SMTP 관련 인증
 from django.contrib.sites.shortcuts import get_current_site
@@ -44,6 +44,7 @@ from rest_framework import generics, permissions
 from .serializers import (
     UserSerializer,
     RegisterSerializer,
+    AlarmSerailzer,
 )
 from rest_framework.response import Response
 from django.contrib.auth import login
@@ -90,6 +91,7 @@ class Registration(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         current_site = get_current_site(request)
+
         if not serializer.is_valid(raise_exception=True):
             return Response({"message": "이미 존재함"}, status=status.HTTP_409_CONFLICT)
 
@@ -846,20 +848,16 @@ def change_img(request, pk):
 
 
 # ________________________________________________ alarm ________________________________________________
-@csrf_exempt
-def alarm(request, pk):
-    me = User.objects.get(id=pk)  # 누구의 alarm인지
-    my_alarm = Alarm.objects.filter(user=me)  # 주인의 alarm 모두 가져오기
-    my_alarm = my_alarm.order_by("-id")
-    not_check_alarm = my_alarm.filter(is_checked=False)  # 그중 False인애들 가져와서
-    for alarm in not_check_alarm:
-        alarm.is_checked = True
-        alarm.save()
+# @csrf_exempt
+class AlarmAPI(APIView):
+    def get(self, request, *args, **kwargs):
+        me = User.objects.get(id=kwargs.get("pk"))  # 누구의 alarm인지
+        my_alarm = Alarm.objects.filter(user=me)  # 주인의 alarm 모두 가져오기
+        serializer = AlarmSerailzer(my_alarm, many=True)
+        # not_check_alarm = serializer.filter(is_checked=False)  # 그중 False인애들 가져와서
+        data = serializer.data
+        for alarm in my_alarm:
+            alarm.is_checked = True
+            alarm.save()
 
-    data = serializers.serialize("json", my_alarm)
-
-    return JsonResponse(
-        {
-            "data": data,
-        }
-    )
+        return Response(data)

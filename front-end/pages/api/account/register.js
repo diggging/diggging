@@ -31,11 +31,17 @@ export default async (req, res) => {
           error: data.error,
         });
       }
-    } catch (err) {
+    } catch (error) {
       console.log( error.response.request._response );
-      return res.status(500).json({
-        error: '회원가입 도중 문제가 발생했습니다.',
-      });
+      console.log("에러야 나와랴ㅏ");
+      if(apiRes.status === 500){
+        return res.status(500).json({
+          error: '회원가입 도중 문제가 발생했습니다.',
+        });
+      }else if(apiRes.status === 409){
+        return res.status(409).json({error: '중복된 이메일입니다.'});
+      }
+      
     }
   } else {
     res.setHeader('Allow', ['POST']);

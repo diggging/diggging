@@ -173,12 +173,6 @@ function signup() {
     }
   }
 
-
-  const onVerifyEmail = (e) => {
-    e.preventDefault();
-    return
-  }
-
   //   return axios
   //     .post('api자리', {
   //       username: username,
