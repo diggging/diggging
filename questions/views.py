@@ -21,7 +21,7 @@ from .models import QuestionPost, Answer, QuestionFolder
 from users.models import Sand, Alarm
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse  # , JsonResponse
-from django.db.models import Sum
+from django.db.models import Sum, query
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.core import serializers
@@ -86,20 +86,51 @@ class QuestionListAPIView(generics.ListAPIView):
         big_criteria = self.request.query_params.get('big_criteria')
         small_criteria = self.request.query_params.get('small_criteria')
 
-        if small_criteria == "all":
-            if big_criteria == "recent":
-                queryset = QuestionPost.objects.order_by("-created")
+        if big_criteria == "recent":
+            queryset = QuestionPost.objects.order_by("-created")
+            if small_criteria == "all":
                 return queryset
-            elif big_criteria == "popular":
-                queryset = QuestionPost.objects.order_by("-hits")
+            elif small_criteria == "wait_answer":
+                new_queryset = queryset.filter(answer_exist = False)
+                return new_queryset
+            elif small_criteria == "answer_done":
+                new_queryset = queryset.filter(answer_exist=True)
+                return new_queryset
+        elif big_criteria == "popular":
+            queryset = QuestionPost.objects.order_by("-hits")
+            if small_criteria == "all":
                 return queryset
-            elif big_criteria == "mine":
-                queryset = QuestionPost.objects.filter(user=self.request.user).order_by("-created")
+            elif small_criteria == "wait_answer":
+                new_queryset = queryset.filter(answer_exist = False)
+                return new_queryset
+            elif small_criteria == "answer_done":
+                new_queryset = queryset.filter(answer_exist=True)
+                return new_queryset
+        elif big_criteria == "mine":
+            queryset = QuestionPost.objects.filter(user=self.request.user).order_by("-created")
+            if small_criteria == "all":
                 return queryset
-        elif small_criteria == "wait_answer":
-            queryset = QuestionPost.objects.filter(answer_exist = False).order_by("-created")
-        elif small_criteria == "answer_done":
-            queryset = QuestionPost.objects.filter(answer_exist=True).order_by("-created")
+            elif small_criteria == "wait_answer":
+                new_queryset = queryset.filter(answer_exist=False)
+                return new_queryset
+            elif small_criteria == "answer_done":
+                new_queryset = queryset.filter(answer_exist=True)
+                return new_queryset
+        
+        # if small_criteria == "all":
+        #     if big_criteria == "recent":
+        #         queryset = QuestionPost.objects.order_by("-created")
+        #         return queryset
+        #     elif big_criteria == "popular":
+        #         queryset = QuestionPost.objects.order_by("-hits")
+        #         return queryset
+        #     elif big_criteria == "mine":
+        #         queryset = QuestionPost.objects.filter(user=self.request.user).order_by("-created")
+        #         return queryset
+        # elif small_criteria == "wait_answer":
+        #     queryset = QuestionPost.objects.filter(answer_exist = False).order_by("-created")
+        # elif small_criteria == "answer_done":
+        #     queryset = QuestionPost.objects.filter(answer_exist=True).order_by("-created")
 
 # -------------------------- Question List end -------------------------------
 
