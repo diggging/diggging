@@ -20,7 +20,7 @@ class QuestionCommentSerializer(serializers.ModelSerializer):
             "created",
             "updated",
         ]
-        read_only_fields = ['user', 'created', 'updated']
+        read_only_fields = ['user', 'question', 'created', 'updated']
 
 class AnswerCommentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -33,7 +33,7 @@ class AnswerCommentSerializer(serializers.ModelSerializer):
             "created",
             "updated"
         ]
-        read_only_fields = ["user", 'created', 'updated']
+        read_only_fields = ["user", "answer", 'created', 'updated']
 
 class CommentDetailSerializer(serializers.ModelSerializer):
     class Meta:

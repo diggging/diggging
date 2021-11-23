@@ -34,7 +34,7 @@ class AnswerCommentCreateAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        user = self.request.user
+        serializer.save(user=self.request.user)
 
 class AnswerCommentUpdateAPIView(generics.RetrieveUpdateAPIView):
     queryset = Comment.objects.all()
