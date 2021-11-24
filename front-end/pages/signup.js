@@ -7,6 +7,8 @@ import {lighten, darken} from 'polished';
 import Link from 'next/link';
 import styled from 'styled-components';
 import Layout from '../hocs/Layout';
+import { Alert } from '../components/Alert';
+import { alertService } from '../components/alert.service';
 
 const BackgroundColor = styled.div`
   width: 100%;
@@ -194,12 +196,24 @@ function signup() {
     }
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     //새로고침방지
     e.preventDefault();
 
     if (dispatch && dispatch !== null && dispatch !== undefined) {
-      dispatch(register(username, user_nickname, email, password1, password2));
+      dispatch(register(username, user_nickname, email, password1, password2))
+      .then((res) => {
+        console.log(JSON.parse(res.status));
+      })
+      .catch((err) =>{
+        if (password1 !== password2) {
+          alertService.error('비밀번호가 일치하지 않습니다. 다시 입력해주세요😅')
+        } else {
+          alertService.error('사용중인 아이디 혹은 이메일입니다 😅');
+          console.log(err);
+        }
+        }
+      )
     }
 
     if (typeof window !== 'undefined' && isAuthenticated){//로그인 되어있으면 메인으로 가짐.
@@ -217,6 +231,7 @@ function signup() {
         content='개발자들을 위한 커뮤니티 디깅 회원가입 페이지'>
       </Layout>
       <BackgroundColor>
+        <Alert />
         <SignupBox>
           <Logo>
             <svg
@@ -294,6 +309,7 @@ function signup() {
             )}
           </form>
           <LinkBox>
+          {register}
           <Link href="/loginPage" passHref><LinkBtn>로그인</LinkBtn></Link>
           | <Link href="/user/findPassword" passHref><LinkBtn>비밀번호 찾기</LinkBtn></Link>
           </LinkBox>

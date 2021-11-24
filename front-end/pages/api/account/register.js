@@ -42,3 +42,4 @@ export default async (req, res) => {
     return res.status(405).json({ error: `Method ${req.method} not allowed` });
   }
 };
+

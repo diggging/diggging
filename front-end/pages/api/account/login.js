@@ -46,21 +46,26 @@ export default async (req, res) => {
             path: '/api/',
           }),
         ]);
-        
-        return res.status(200).json({
-          success: '로그인 되었습니다',
-        });
+        alert('로그인되었습니다.');
+
+        // return res.status(200).json({
+        //   success: '로그인 되었습니다',
+        // });
       } else {
-        return res.status(apiRes.status).json({
-          error: '아이디와 비밀번호를 다시확인해주세요',
-        });
+        alert('아이디와 비밀번호를 다시 확인해주세요.')
+
+        // return res.status(apiRes.status).json({
+        //   error: '아이디와 비밀번호를 다시확인해주세요',
+        // });
       }
     } catch (err) {
-      return res.status(500).json({
-        error: '로그인 도중 문제가 발생했습니다.',
-      });
+      alert('로그인 도중 문제가 발생했습니다.')
+      // return res.status(500).json({
+      //   error: '로그인 도중 문제가 발생했습니다.',
+      // });
     }
   } else {
+    alert('허용되지 않는 접근입니다.')
     res.setHeader('Allow', ['POST']);
     return res.status(405).json({ error: `Method ${req.method} not allowed` });
   }

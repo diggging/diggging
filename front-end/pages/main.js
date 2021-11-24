@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import styled from 'styled-components';
 import Link from "next/link";
+import NavBar from "../components/NavBar";
 
 const Container = styled.div`
   margin-top: 300px;
@@ -29,7 +30,9 @@ function main() {
 
     return (
         <div>
+          <NavBar />
           <Container>
+
           {list.map((item) => (
               // <Link href={`/view/${item.id}`}>
               //   <div>
