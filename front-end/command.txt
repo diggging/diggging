@@ -8,10 +8,13 @@ yarn add styled-components
 
 yarn add react-loader-spinner
 -> 로딩중 돌아가는 것 뜨게하는 컴포넌트
-yarn add cookie
+yarn add cookie -> authentication 유지에 필요
 
 .env파일 -> front-end폴더 바로 아래에 만들고
 NODE_ENV = 'development'
 NEXT_PUBLIC_API_URL = 'http://localhost:8000'
 
 python manage.py runserver --settings=shoveling.settings.local
+
+yarn add rxjs
+(Alert창 구현에 필요)

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-
+import styled from 'styled-components';
 import { alertService, AlertType } from './alert.service';
 
 export { Alert };
@@ -115,12 +115,34 @@ function Alert({ id, fade }) {
     return (
         <div>
             {alerts.map((alert, index) =>
-                <div key={index} className={cssClasses(alert)}>
-                    <a className="close" onClick={() => removeAlert(alert)}>&times;</a>
-                    <span dangerouslySetInnerHTML={{ __html: alert.message }}></span>
-                </div>
+                <AlertBody key={index} className={cssClasses(alert)}>
+                    <AlertMessage dangerouslySetInnerHTML={{ __html: alert.message }}></AlertMessage>
+                    <AlertClose className="close" onClick={() => removeAlert(alert)}>&times;</AlertClose>
+                </AlertBody>
             )}
         </div>
     );
 }
 
+const AlertBody = styled.div`
+  position: absolute;
+  top: 5rem;
+  margin: auto auto;
+  padding: 1rem;
+  border-radius: 1.25rem;
+  background-color: white;
+  box-shadow: 0.625rem 0.625rem 2.5rem 0 rgba(0, 0, 0, 0.1);
+`;
+
+const AlertClose = styled.a`
+  margin-left: 1rem;
+  font-family: 'Pretendard-SemiBold';
+  font-size: 1.25rem;
+  color: #343434;
+`;
+
+const AlertMessage = styled.span`
+  font-family: 'Pretendard-SemiBold';
+  font-size: 1rem;
+  color: #343434;
+`;

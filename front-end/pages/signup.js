@@ -12,7 +12,7 @@ import { alertService } from '../components/alert.service';
 
 const BackgroundColor = styled.div`
   width: 100%;
-  height: 200vh;
+  height: 100%;
   position: absolute;
   top:0;
   left:0;
@@ -24,6 +24,7 @@ const BackgroundColor = styled.div`
 `;
 
 const SignupBox = styled.div`
+  position: relative;
   background-color: white;
   box-shadow: 10px 10px 35px 0 rgb(1 1 1 / 10%);
   border-radius: 20px;
@@ -227,12 +228,12 @@ function signup() {
   return (
     <>
       <Layout
-        title='Diggging| 회원가입'
+        title='Diggging | 회원가입'
         content='개발자들을 위한 커뮤니티 디깅 회원가입 페이지'>
       </Layout>
       <BackgroundColor>
-        <Alert />
         <SignupBox>
+          <Alert fade={false}/>
           <Logo>
             <svg
               width="131"
