@@ -1,12 +1,15 @@
 import React from "react";
-import {Layout} from "../hocs/Layout"
+import Layout from "../hocs/Layout"
+import NavBar from "../components/NavBar";
+import ListCard from "../components/search/ListCard"
 
 function search() {
 
   return (
   <div>
     <Layout />
-    검색하는페이지
+    <NavBar />
+    <ListCard />
   </div>
     );
 }
