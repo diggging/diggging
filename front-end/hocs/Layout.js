@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { check_auth_status } from '../redux/actions/auth';
 import Head from 'next/head';
-import Navbar from '../components/NavBar';
 import styled from 'styled-components';
 
 const Layout = ({title, content, children}) => {
@@ -29,7 +28,6 @@ const Layout = ({title, content, children}) => {
         <meta name='description' content={content} />
       </Head>
       <BackgroundColor />
-      <Navbar />
       <div>{children}</div>
     </>
   );
