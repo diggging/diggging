@@ -14,7 +14,8 @@ export default async (req, res) => {
     // console.log(`${cookies} 이건 cookies`);
     //access 토큰가져오기
     const refresh = cookies.refresh ?? false; //undefined면 refresh가 false가 됨
-    console.log(`${refresh} 이거 refresh 11`)
+    console.log(`${refresh} 이거 refresh `)
+    
     if (refresh === false) {
       return res.status(403).json({
         error: 'User forbidden from making the request'

@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
-import { login, reset_register_success } from '../redux/actions/auth';
+import { login, reset_register_success, reset_bad_request } from '../redux/actions/auth';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from 'react-loader-spinner';
 import Layout from '../hocs/Layout'; 
 import { UserInput, LinkBtn, LinkBox, VerifyMessage } from './signup';
+import { Alert } from '../components/Alert';
 import { alertService } from '../components/alert.service';
 
 const BackgroundColor = styled.div`
   width: 100%;
   height: 100vh;
+  position: absolute;
+  top:0;
+  left:0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -94,6 +98,7 @@ function loginPage() {
   const router = useRouter();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const loading = useSelector((state) => state.auth.loading);
+  const bad_request = useSelector((state) => state.auth.bad_request);
 
   const [inputs, setInputs] = useState({
     username: '',
@@ -110,10 +115,15 @@ function loginPage() {
   useEffect(() => {
     if (dispatch && dispatch !== null && dispatch !== undefined) {
       dispatch(reset_register_success());
+      dispatch(reset_bad_request());
     }
   }, [dispatch]);
 
   const onInput = (e) => {
+    if (e.key === 'Enter') {
+      onSubmit();
+    }
+    
     setInputs({
       ...inputs,
       [e.target.name]: e.target.value,
@@ -141,7 +151,7 @@ function loginPage() {
          } else {
             setError({
               ...error,
-              passwordError: "올바른 비밀버호 형식입니다😏"
+              passwordError: "올바른 비밀번호 형식입니다😏"
             })
           }
         break;
@@ -150,6 +160,29 @@ function loginPage() {
 
   const onSubmit = (e) => {
     e.preventDefault();
+
+    if (dispatch && dispatch !== null && dispatch !== undefined) {
+      dispatch(login(username, password));
+       //router가 있는지, authenticated한지 확인하고
+      if (typeof window !== 'undefined' && isAuthenticated === true) {
+        alertService.warn('로그인되었습니다🙂');
+        //Redirect to main
+        router.push(`/`);
+      }
+    };
+    //아이디-비밀번호 일치하지 않으면 에러메시지
+    if (typeof window !== 'undefined' && bad_request === true) {
+      setError({
+        ...error,
+        loginError: '아이디와 비밀번호를 확인해주세요.'
+      })
+      alertService.warn('아이디와 비밀번호를 확인해주세요.🙂');
+    } else if (typeof window !== 'undefined' && isAuthenticated === false && loading == false) {
+      setError({
+        ...error,
+        loginError: '서버에 오류가 생겼습니다🙁'
+      })
+    }
     //하나라도 입력 안한 것 있으면 에러메시지
     if (username === '' || password === '') {
       setError(
@@ -159,40 +192,19 @@ function loginPage() {
         })
         return;
     }
-
-    if (dispatch && dispatch !== null && dispatch !== undefined) {
-      dispatch(login(username, password))
-      //아이디-비밀번호 일치하지 않으면 에러메시지
-      if (typeof window !== 'undefined' && isAuthenticated === false && loading === false) {
-        setError({
-          ...error,
-          loginError: '아이디와 비밀번호를 확인해주세요.'
-        })
-        alertService.warn('아이디와 비밀번호를 다시 확인해주세요😅');
-      }
-    };
     
-     //router가 있는지, authenticated한지 확인하고
-    if (typeof window !== 'undefined' && isAuthenticated) {
-      alertService.warn('로그인되었습니다🙂');
-      //Redirect to main
-      router.push(`/`);
-    }
   }
 
-  //router가 있는지, authenticated한지 확인하고
-  if (typeof window !== 'undefined' && isAuthenticated) {
-    //Redirect to main
-    router.push(`/`);
-  }
+ 
 
   return (
     <Layout
-      title='Diggging|로그인'
+      title='Diggging | 로그인'
       content='개발자들을 위한 커뮤니티 디깅 로그인 페이지'  
     >
       <BackgroundColor>
         <LoginBox>
+        <Alert />
           <Logo>
             <svg
               width="131"

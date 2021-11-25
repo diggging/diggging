@@ -1,5 +1,6 @@
 import { API_URL } from '../../../config/index';
 
+var apiRes;
 export default async (req, res) => {
   if (req.method === 'POST') {
     const { username, user_nickname, email, password1, password2 } = req.body;
@@ -13,7 +14,7 @@ export default async (req, res) => {
     });
 
     try {
-      const apiRes = await fetch(`${API_URL}/users/api/Signup/`, {
+      var apiRes = await fetch(`${API_URL}/users/api/Signup/`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -24,7 +25,7 @@ export default async (req, res) => {
 
       const data = await apiRes.json();
 
-      if (apiRes.status === 201) {
+      if (apiRes.ok || apiRes === 201 || apiRes === 200) {
         return res.status(201).json({ success: data.success });
       } else {
         return res.status(apiRes.status).json({
@@ -32,7 +33,7 @@ export default async (req, res) => {
         });
       }
     } catch (err) {
-      console.log( error.response.request._response );
+      // console.log(err.response.request._response);
       return res.status(500).json({
         error: '회원가입 도중 문제가 발생했습니다.',
       });

@@ -15,6 +15,8 @@ import {
   REFRESH_FAIL,
   SET_AUTH_LOADING,
   REMOVE_AUTH_LOADING,
+  BAD_REQUEST,
+  RESET_BAD_REQUEST,
 } from './types';
 
 
@@ -129,6 +131,10 @@ export const register =
         dispatch({
           type: REGISTER_SUCCESS,
         });
+      } else if (res.status === 400) {
+        dispatch({
+          type: BAD_REQUEST
+        });
       } else {
         dispatch({
           type: REGISTER_FAIL,
@@ -151,7 +157,11 @@ export const reset_register_success = () => (dispatch) => {
   });
 };
 
-
+export const reset_bad_request = () => (dispatch) => {
+  dispatch({
+    type: RESET_BAD_REQUEST,
+  });
+}
 //login하는 액션
 export const login = (username, password) => async (dispatch) => {
   //username과 password를 받아와서
@@ -179,6 +189,10 @@ export const login = (username, password) => async (dispatch) => {
         type: LOGIN_SUCCESS,
       });
       dispatch(load_user());
+    } else if (res.status === 401 || res.status === 403 || res.status === 400) {
+      dispatch({
+        type: BAD_REQUEST,
+      });
     } else {
       dispatch({
         type: LOGIN_FAIL,

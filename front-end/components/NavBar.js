@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import NavSearch from '../public/static/images/Search';
@@ -10,7 +10,8 @@ import SvgDiggging from '../public/static/images/Diggging';
 import {useSelector, useDispatch} from 'react-redux';
 import { logout } from '../redux/actions/auth'
 import Router from "next/router";
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
+import { check_auth_status } from '../redux/actions/auth';
 
 const Nav = styled.nav`
   z-index: 1000;
@@ -128,7 +129,12 @@ function navBar() {
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   
   const [open, setOpen] = useState(false);
-  
+  //token 확인(refresh, verify)
+  useEffect(()=>{
+    if (dispatch && dispatch !== null && dispatch !== undefined)
+        dispatch(check_auth_status());
+  }, [dispatch])
+
   const logoutHandler = async () => {
     if (dispatch && dispatch !== null && dispatch !== undefined)
     await dispatch(logout());
