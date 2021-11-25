@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import { register } from '../redux/actions/auth';
+import { apiRes } from './api/account/register';
+import { alertService } from '../components/alert.service';
+import { Alert } from '../components/Alert';
 import Loader from 'react-loader-spinner';
-import {lighten, darken} from 'polished';
+import { lighten, darken } from 'polished';
 import Link from 'next/link';
 import styled from 'styled-components';
 import Layout from '../hocs/Layout';
-import { Alert } from '../components/Alert';
-import { alertService } from '../components/alert.service';
+
 
 const BackgroundColor = styled.div`
   width: 100%;
@@ -128,6 +130,7 @@ function signup() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated); //로그인 여부
   //reducer의 loading state가져오기(auth라는 이름으로 combine되어있음)
   const loading = useSelector((state) => state.auth.loading);
+
   
    //오류메시지 상태저장
    const [usernameMessage, setUsernameMessage] = useState('')
@@ -200,30 +203,32 @@ function signup() {
   const onSubmit = async (e) => {
     //새로고침방지
     e.preventDefault();
-    
-    if (typeof window !== 'undefined' && isAuthenticated) {//로그인 되어있으면 메인으로 가짐.
+
+    if (typeof window !== 'undefined' && isAuthenticated) { //로그인 되어있으면 메인으로 가짐.
       router.push('/main')};
 
     if (dispatch && dispatch !== null && dispatch !== undefined) {
-      try {
-        dispatch(register(username, user_nickname, email, password1, password2));
-      } catch (err) {
+      dispatch(register(username, user_nickname, email, password1, password2))
+      .then((res) => {
+        if (register_success) {
+          alertService.warn('성공적으로 회원가입 되었습니다😊')
+          router.push('/loginPage');
+        }
+      })
+      .catch((err) => {
         if (password1 !== password2) {
-          alertService.error('비밀번호가 일치하지 않습니다. 다시 입력해주세요😅')
-          // throw new Error('비밀번호 불일치')
+          alertService.error('비밀번호가 일치하지 않습니다. 다시 입력해주세요😅');
+          //이미 사용중인 이메일또는 아이디입니다...는 어케해..
         } else {
           alertService.error(err);
-          console.log(err);
-          alertService.error('사용중인 아이디 혹은 이메일입니다 😅');
-          // throw new Error('입력값 문제')
-          //server error추가도 필요함.(response가 undefined인 문제때문에 해결되고 나서 할ㅇ ㅖ정)
+          alertService.error('회원가입 도중 서버에 문제가 생겼습니다🙁');
         }
-      }
+      });
     }
-
-    if (register_success) {
-      router.push('/loginPage');
-    }
+  //   if (register_success) {
+  //     alertService.warn('성공적으로 회원가입 되었습니다😊')
+  //     router.push('/loginPage');
+  //   }
   }
 
   return (
@@ -232,8 +237,8 @@ function signup() {
         title='Diggging | 회원가입'
         content='개발자들을 위한 커뮤니티 디깅 회원가입 페이지' />
       <BackgroundColor>
+        <Alert />
         <SignupBox>
-          <Alert fade={false}/>
           <Logo>
             <svg
               width="131"

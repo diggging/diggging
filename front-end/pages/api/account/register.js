@@ -1,5 +1,6 @@
 import { API_URL } from '../../../config/index';
 
+var apiRes;
 export default async (req, res) => {
   if (req.method === 'POST') {
     const { username, user_nickname, email, password1, password2 } = req.body;
@@ -13,7 +14,7 @@ export default async (req, res) => {
     });
 
     try {
-      const apiRes = await fetch(`${API_URL}/users/api/Signup/`, {
+      var apiRes = await fetch(`${API_URL}/users/api/Signup/`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -24,7 +25,7 @@ export default async (req, res) => {
 
       const data = await apiRes.json();
 
-      if (apiRes.ok) {
+      if (apiRes.ok || apiRes === 201 || apiRes === 200) {
         return res.status(201).json({ success: data.success });
       } else {
         return res.status(apiRes.status).json({
@@ -42,4 +43,3 @@ export default async (req, res) => {
     return res.status(405).json({ error: `Method ${req.method} not allowed` });
   }
 };
-
