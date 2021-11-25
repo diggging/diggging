@@ -5,11 +5,7 @@ import Head from 'next/head';
 import styled from 'styled-components';
 
 const Layout = ({title, content, children}) => {
-  const dispatch = useDispatch();
-  useEffect(()=>{
-    if (dispatch && dispatch !== null && dispatch !== undefined)
-        dispatch(check_auth_status());
-  }, [dispatch])
+  
 
   const BackgroundColor = styled.div`
     background-color: #FAFAFF;
