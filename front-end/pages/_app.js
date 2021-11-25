@@ -61,7 +61,7 @@ function MyApp({ Component, pageProps }) {
         </Head>
         <GlobalStyles />
         <ThemeProvider theme={colors}>
-          <Component {...pageProps} />;
+          <Component {...pageProps} />
         </ThemeProvider>
       </Provider>
     </>
