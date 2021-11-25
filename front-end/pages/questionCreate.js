@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import TextEditor from '../components/TextEditor';
+import Layout from '../hocs/Layout'; 
+
 
 const MainContainer = styled.div`
   margin-top: 9.0625rem;
@@ -15,7 +17,7 @@ const Container = styled.div`
   align-items: center;
   background: #FFFFFF;
   box-sizing: border-box;
-  box-shadow: 0.75rem 0.75rem 3.75rem 0.5rem rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0.75rem 0.75rem 3.75rem 0.5rem rgba(0, 0, 0, 0.2); */
   width: 59.375rem;
   margin: auto;
   padding: 2.625rem;
@@ -28,16 +30,8 @@ const FormContainer = styled.div`
   align-items: center;
 `;
 
-const ThumbnailArea = styled.input`
-  width: 51.0625rem;
-  height: 25rem;
-  background-color: #F5F5F7;
-  border: none;
-  cursor: pointer;
-  /* display: none; */
-`;
 
-const PostTitle = styled.input`
+const QuestionTitle = styled.input`
   width: 51.0625rem;
   height: 4.375rem;
   margin-top: 1.5rem;
@@ -49,7 +43,7 @@ const PostTitle = styled.input`
   }
 `;
 
-const PostFolder = styled.select`
+const QuestionFolder = styled.select`
   width: 51.0625rem;
   height: 4.375rem;
   margin-top: 1.5rem;
@@ -59,19 +53,6 @@ const PostFolder = styled.select`
   &:focus {
     outline: 0;
   }
-`;
-
-const RadioContainer = styled.div`
-  width: 51.0625rem;
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  margin-top: 1.5rem;
-`;
-
-const RadioBtn = styled.input`
-  margin-right: 0.75rem;
-  margin-left: 0.75rem;
 `;
 
 const BtnContainer = styled.div`
@@ -91,14 +72,11 @@ const Btn = styled.button`
   cursor: pointer;
 `;
 
-function postCreate() {
+function questionCreate() {
   const [thumbNail, setThumbNail] = useState(null);
   const [title, setTitle] = useState('');
   const [folder, setFolder] = useState([]);
   const [text, setText] = useState('');
-  const [select, setSelect] = useState('전체공개');
-
-  const [testDate, setTestData] = useState([]);
   
   const onChangeTitle = (e) => {
     setTitle(e.target.value);
@@ -108,25 +86,7 @@ function postCreate() {
     setFolder(e.target.value);
   }
 
-  const handleThumbNailChange = (e) => {
-    setThumbNail(e.target.files[0]);
-    formData.append("", setThumbNail, setThumbNail.name);
-  };
-
-  const handleSelect = (e) => {
-    setSelect(e.target.value);
-  }
-  //폴더 정보
-  const Test = async () => {
-    await axios.get('http://127.0.0.1:8000/posts/create/')
-    .then((res) => setTestData(res.data));
-  }
-
-  useEffect(() => {
-    Test();
-  }, []);
-
-  const handlePostCreate = async () => {
+  const handleCreate = async () => {
     const formData = new FormData();
     formData.append("", thumbNail);
     // formData.append("", setTitle, setTitle.name);
@@ -150,25 +110,21 @@ function postCreate() {
       console.log(e);
     }
   }
-  console.log(setTitle)
+  
   return (
       <div>
+        <Layout />
         <MainContainer>
           <Container>
             <FormContainer>
-              <ThumbnailArea type="file" accept="image/*" placeholder="🎨 썸네일 이미지를 등록해보세요" onChange={handleThumbNailChange}/>
-              <PostTitle onChange={onChangeTitle} placeholder="제목을 입력하세요."/>
-              <PostFolder onChangeFolder={onChangeFolder}>
+              {/* <ThumbnailArea type="file" accept="image/*" placeholder="🎨 썸네일 이미지를 등록해보세요" onChange={handleThumbNailChange}/> */}
+              <QuestionTitle onChange={onChangeTitle} placeholder="제목을 입력하세요."/>
+              <QuestionFolder onChangeFolder={onChangeFolder}>
                 <option disabled selected>🗂 게시글을 담을 폴더를 선택하세요!</option>
-              </PostFolder>
+              </QuestionFolder>
               <TextEditor setText={setText}/>
-              <RadioContainer>
-                <RadioBtn id="전체 공개" value="전체 공개" type="radio" checked={select === "전체 공개"} onChange={handleSelect}/>전체 공개
-                <RadioBtn id="이웃 공개" value="이웃 공개" type="radio" checked={select === "이웃 공개"} onChange={handleSelect}/>이웃 공개
-                <RadioBtn id="비공개" value="비공개" type="radio" checked={select === "비공개"} onChange={handleSelect}/>비공개
-              </RadioContainer>
               <BtnContainer>
-                <Btn onClick={handlePostCreate}>작성하기</Btn>
+                <Btn onClick={handleCreate}>작성하기</Btn>
                 <Btn >나가기</Btn>
               </BtnContainer>
             </FormContainer>
@@ -178,4 +134,4 @@ function postCreate() {
   );
 }
 
-export default postCreate;
+export default questionCreate;
