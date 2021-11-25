@@ -14,6 +14,8 @@ import {
   REFRESH_FAIL,
   SET_AUTH_LOADING,
   REMOVE_AUTH_LOADING,
+  BAD_REQUEST,
+  RESET_BAD_REQUEST,
 } from '../actions/types';
 
 const initialState = {
@@ -21,6 +23,7 @@ const initialState = {
   isAuthenticated: false,
   loading: false,
   register_success: false,
+  bad_request: false,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -35,7 +38,18 @@ const authReducer = (state = initialState, action) => {
     case REGISTER_FAIL:
       return {
         ...state,
+        bad_request: false,
       };
+    case BAD_REQUEST:
+      return {
+        ...state,
+        bad_request: true,
+      }
+    case RESET_BAD_REQUEST :
+      return {
+        ...state,
+        bad_requeest: false,
+      }
     case RESET_REGISTER_SUCCESS:
       return {
         ...state,
