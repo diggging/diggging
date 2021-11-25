@@ -108,12 +108,12 @@ function questionCreate() {
     // formData.append("", setFolder, setFolder.name);
     // formData.append("", setText, setText.name);
     try {
-      await axios.post('http://127.0.0.1:8000/posts/create/', {
+      await axios.post('http://127.0.0.1:8000/questions/create/', {
         user : 1,
-        image: formData,
         title : title,
-        folder : '폴더',
-        desc : "테스트",
+        desc: text,
+        question_folder : 'test',
+        question_tags: hash,
       })
       .then(response => {
         console.log(response);

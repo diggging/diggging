@@ -19,6 +19,7 @@ const GlobalStyles = createGlobalStyle`
   body {
     font-family: 'Pretendard-Regular', 'Arial', sans-serif;
     line-height: 1.5;
+    background-color: #FAFAFF;
   }
   /* 태그 설정 */
   a {

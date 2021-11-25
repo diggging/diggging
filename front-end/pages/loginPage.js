@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Loader from 'react-loader-spinner';
 import Layout from '../hocs/Layout'; 
 import { UserInput, LinkBtn, LinkBox, VerifyMessage } from './signup';
+import { alertService } from '../components/alert.service';
 
 const BackgroundColor = styled.div`
   width: 100%;
@@ -149,18 +150,6 @@ function loginPage() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-
-    if (dispatch && dispatch !== null && dispatch !== undefined) {
-      dispatch(login(username, password));
-      if (isAuthenticated === false) {
-        setError({
-          ...error,
-          loginError: '아이디와 비밀번호를 확인해주세요.'
-        })
-      }
-    }
-    //입력 값 맞는지 체크 후 api 요청
-    //아이디-비밀번호 일치하지 않으면 에러메시지
     //하나라도 입력 안한 것 있으면 에러메시지
     if (username === '' || password === '') {
       setError(
@@ -169,7 +158,26 @@ function loginPage() {
           loginError: '아이디와 비밀번호 모두 입력해주세요.'
         })
         return;
+    }
+
+    if (dispatch && dispatch !== null && dispatch !== undefined) {
+      dispatch(login(username, password))
+      //아이디-비밀번호 일치하지 않으면 에러메시지
+      if (typeof window !== 'undefined' && isAuthenticated === false && loading === false) {
+        setError({
+          ...error,
+          loginError: '아이디와 비밀번호를 확인해주세요.'
+        })
+        alertService.warn('아이디와 비밀번호를 다시 확인해주세요😅');
+      }
     };
+    
+     //router가 있는지, authenticated한지 확인하고
+    if (typeof window !== 'undefined' && isAuthenticated) {
+      alertService.warn('로그인되었습니다🙂');
+      //Redirect to main
+      router.push(`/`);
+    }
   }
 
   //router가 있는지, authenticated한지 확인하고
