@@ -15,10 +15,10 @@ const Container = styled.div`
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  background: #FFFFFF;
+  background-color: #FAFAFF;
   box-sizing: border-box;
   /* box-shadow: 0.75rem 0.75rem 3.75rem 0.5rem rgba(0, 0, 0, 0.2); */
-  width: 59.375rem;
+  width: 100%;
   margin: auto;
   padding: 2.625rem;
 `;
@@ -55,6 +55,18 @@ const QuestionFolder = styled.select`
   }
 `;
 
+const QuestionHash = styled.input`
+  width: 51.0625rem;
+  height: 4.375rem;
+  margin-top: 1.5rem;
+  background-color: #F5F5F7;
+  border: none;
+
+  &:focus {
+    outline: 0;
+  }
+`;
+
 const BtnContainer = styled.div`
   width: 21.875rem;
   display: flex;
@@ -66,7 +78,9 @@ const BtnContainer = styled.div`
 const Btn = styled.button`
   width: 8.75rem;
   height: 3rem;
-  border: 0.1875rem solid #FFFFFF;
+  background-color: #FFFFFF;
+  /* border: 3px solid #FFFFFF; */
+  /* border: none; */
   box-sizing: border-box;
   border-radius: 1.5625rem;
   cursor: pointer;
@@ -77,6 +91,7 @@ function questionCreate() {
   const [title, setTitle] = useState('');
   const [folder, setFolder] = useState([]);
   const [text, setText] = useState('');
+  const [hash, setHash] = useState('');
   
   const onChangeTitle = (e) => {
     setTitle(e.target.value);
@@ -110,6 +125,10 @@ function questionCreate() {
       console.log(e);
     }
   }
+
+  const onChangeHash = (e) => {
+    setHash(e.target.value);
+  }
   
   return (
       <div>
@@ -123,6 +142,7 @@ function questionCreate() {
                 <option disabled selected>🗂 게시글을 담을 폴더를 선택하세요!</option>
               </QuestionFolder>
               <TextEditor setText={setText}/>
+              <QuestionHash onClick={onChangeHash} placeholder="#해시태그를 #입력해보세요"/>
               <BtnContainer>
                 <Btn onClick={handleCreate}>작성하기</Btn>
                 <Btn >나가기</Btn>
