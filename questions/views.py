@@ -144,6 +144,10 @@ class AnswerCreateAPIView(generics.ListCreateAPIView):
         pk = self.request.query_params.get('question_id')
         question = get_object_or_404(QuestionPost, pk=pk)
         question.answer_exist = True
+        new_alarm = Alarm.objects.create(
+                user=self.request.user,
+                reason="내가 남긴 질문" + question.title + "에 답변이 달렸어요.",
+            )
         question.save()
         serializer.save(user=self.request.user, question=question)
 
@@ -180,9 +184,11 @@ class LikeUpDownAPIView(generics.RetrieveUpdateAPIView):
             question_post.likes_user.remove(self.request.user)
         else:
             question_post.helped_num += 1
+            new_alarm = Alarm.objects.create(user=question_post.user, reason="내가 남긴 질문 \""+ question_post.title + "\" 이 " + self.request.user.user_nickname + "님께 도움이 되었어요.")
             if question_post.helped_num < 0:
                 question_post.helped_num = 0
             question_post.likes_user.add(self.request.user)
+
 
         question_post.save()
         serializer.save(helped_num=question_post.helped_num)
@@ -202,6 +208,7 @@ class AnswerSelectAPIView(generics.RetrieveUpdateAPIView):
         else:
             answer.selection = True
 
+        new_alarm = Alarm.objects.create(user=answer.user, reason="질문 " + answer.question.title + " 에 남긴 답변이 채택되었어요." )
         answer.save()
         serializer.save(selection = answer.selection)
 
