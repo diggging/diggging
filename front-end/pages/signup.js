@@ -200,25 +200,26 @@ function signup() {
   const onSubmit = async (e) => {
     //새로고침방지
     e.preventDefault();
+    
+    if (typeof window !== 'undefined' && isAuthenticated) {//로그인 되어있으면 메인으로 가짐.
+      router.push('/main')};
 
     if (dispatch && dispatch !== null && dispatch !== undefined) {
-      dispatch(register(username, user_nickname, email, password1, password2))
-      .then((res) => {
-        console.log(JSON.parse(res.status));
-      })
-      .catch((err) =>{
+      try {
+        dispatch(register(username, user_nickname, email, password1, password2));
+      } catch (err) {
         if (password1 !== password2) {
           alertService.error('비밀번호가 일치하지 않습니다. 다시 입력해주세요😅')
+          // throw new Error('비밀번호 불일치')
         } else {
-          alertService.error('사용중인 아이디 혹은 이메일입니다 😅');
+          alertService.error(err);
           console.log(err);
+          alertService.error('사용중인 아이디 혹은 이메일입니다 😅');
+          // throw new Error('입력값 문제')
+          //server error추가도 필요함.(response가 undefined인 문제때문에 해결되고 나서 할ㅇ ㅖ정)
         }
-        }
-      )
+      }
     }
-
-    if (typeof window !== 'undefined' && isAuthenticated){//로그인 되어있으면 메인으로 가짐.
-      router.push('/main')};
 
     if (register_success) {
       router.push('/loginPage');
@@ -229,8 +230,7 @@ function signup() {
     <>
       <Layout
         title='Diggging | 회원가입'
-        content='개발자들을 위한 커뮤니티 디깅 회원가입 페이지'>
-      </Layout>
+        content='개발자들을 위한 커뮤니티 디깅 회원가입 페이지' />
       <BackgroundColor>
         <SignupBox>
           <Alert fade={false}/>

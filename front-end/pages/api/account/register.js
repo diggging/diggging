@@ -24,7 +24,7 @@ export default async (req, res) => {
 
       const data = await apiRes.json();
 
-      if (apiRes.status === 201) {
+      if (apiRes.ok) {
         return res.status(201).json({ success: data.success });
       } else {
         return res.status(apiRes.status).json({
@@ -32,7 +32,7 @@ export default async (req, res) => {
         });
       }
     } catch (err) {
-      console.log( error.response.request._response );
+      // console.log(err.response.request._response);
       return res.status(500).json({
         error: '회원가입 도중 문제가 발생했습니다.',
       });
