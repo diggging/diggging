@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import TextEditor from '../components/TextEditor';
-import Layout from '../hocs/Layout'; 
+import { check_auth_status } from '../redux/actions/auth';
+import { useDispatch } from 'react-redux';
 
 
 const MainContainer = styled.div`
@@ -78,7 +79,7 @@ const BtnContainer = styled.div`
 const Btn = styled.button`
   width: 8.75rem;
   height: 3rem;
-  background-color: #FFFFFF;
+  background-color: #F5F5F7;
   /* border: 3px solid #FFFFFF; */
   /* border: none; */
   box-sizing: border-box;
@@ -87,6 +88,7 @@ const Btn = styled.button`
 `;
 
 function questionCreate() {
+  const dispatch = useDispatch();
   const [thumbNail, setThumbNail] = useState(null);
   const [title, setTitle] = useState('');
   const [folder, setFolder] = useState([]);
@@ -112,7 +114,7 @@ function questionCreate() {
         user : 1,
         title : title,
         desc: text,
-        question_folder : 'test',
+        question_folder : folder,
         question_tags: hash,
       })
       .then(response => {
@@ -129,10 +131,15 @@ function questionCreate() {
   const onChangeHash = (e) => {
     setHash(e.target.value);
   }
+
+  //token 확인(refresh, verify)
+  useEffect(()=>{
+    if (dispatch && dispatch !== null && dispatch !== undefined)
+        dispatch(check_auth_status());
+  }, [dispatch])
   
   return (
       <div>
-        <Layout />
         <MainContainer>
           <Container>
             <FormContainer>
@@ -142,7 +149,7 @@ function questionCreate() {
                 <option disabled selected>🗂 게시글을 담을 폴더를 선택하세요!</option>
               </QuestionFolder>
               <TextEditor setText={setText}/>
-              <QuestionHash onClick={onChangeHash} placeholder="#해시태그를 #입력해보세요"/>
+              <QuestionHash onChange={onChangeHash} placeholder="#해시태그를 #입력해보세요"/>
               <BtnContainer>
                 <Btn onClick={handleCreate}>작성하기</Btn>
                 <Btn >나가기</Btn>
