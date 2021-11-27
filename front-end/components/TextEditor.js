@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import styled from 'styled-components';
 import { EditorState } from 'draft-js';
-import dynamic from 'next/dynamic'
+import dynamic from 'next/dynamic';
 
 
 const MyBlock = styled.div`
@@ -16,7 +16,7 @@ const MyBlock = styled.div`
   .editor {
     height: 702px !important;
     border: 1px solid #f1f1f1 !important;
-    padding: 5px !important;
+    padding: 10px 20px !important;
     border-radius: 2px !important;
     background-color: #F5F5F7;
   }
@@ -38,6 +38,18 @@ const TestEditorForm = (props) => {
     props.setText(editorState.getCurrentContent().getPlainText())
   };
 
+  // image insert
+  const uploadCallback = (file) => {
+    const form = new FormData();
+    form.append('photo', file);
+    //user handle their own request error
+    const {result, error} = Api(form);
+    return new Promise((resolve, reject) => {
+        if (error) reject(error);
+        else  resolve({data: {link: result.url}});
+    });
+};
+
   return (
     <MyBlock>
       <Editor
@@ -54,6 +66,10 @@ const TestEditorForm = (props) => {
           textAlign: { inDropdown: true },
           link: { inDropdown: true },
           history: { inDropdown: false },
+          image: {
+            uploadCallback: uploadCallback,
+            alt: { present: true, mandatory: false },
+          },
         }} 
         placeholder="내용을 작성해주세요."
         // 한국어 설정

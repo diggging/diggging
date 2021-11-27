@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import TextEditor from '../components/TextEditor';
+// import Test from '../components/SummerNote';
 import { check_auth_status } from '../redux/actions/auth';
 import { useDispatch } from 'react-redux';
-
+import dynamic from 'next/dynamic';
 
 const MainContainer = styled.div`
   margin-top: 9.0625rem;
@@ -38,7 +39,10 @@ const QuestionTitle = styled.input`
   margin-top: 1.5rem;
   background-color: #F5F5F7;
   border: none;
-
+  border-radius: 0.3125rem;
+  padding: 0.625rem 1.25rem;
+  font-size: 1.25rem;
+  
   &:focus {
     outline: 0;
   }
@@ -50,7 +54,11 @@ const QuestionFolder = styled.select`
   margin-top: 1.5rem;
   background-color: #F5F5F7;
   border: none;
+  border-radius: 0.3125rem;
   cursor: pointer;
+  padding: 0.625rem 1.25rem;
+  font-size: 1.25rem;
+  
   &:focus {
     outline: 0;
   }
@@ -62,6 +70,9 @@ const QuestionHash = styled.input`
   margin-top: 1.5rem;
   background-color: #F5F5F7;
   border: none;
+  border-radius: 0.3125rem;
+  padding: 0.625rem 1.25rem;
+  font-size: 1.25rem;
 
   &:focus {
     outline: 0;
@@ -132,6 +143,10 @@ function questionCreate() {
     setHash(e.target.value);
   }
 
+  const Test = dynamic(() => import('../components/SummerNote'),
+  { ssr : false }
+  )
+
   //token 확인(refresh, verify)
   useEffect(()=>{
     if (dispatch && dispatch !== null && dispatch !== undefined)
@@ -146,9 +161,10 @@ function questionCreate() {
               {/* <ThumbnailArea type="file" accept="image/*" placeholder="🎨 썸네일 이미지를 등록해보세요" onChange={handleThumbNailChange}/> */}
               <QuestionTitle onChange={onChangeTitle} placeholder="제목을 입력하세요."/>
               <QuestionFolder onChangeFolder={onChangeFolder}>
-                <option disabled selected>🗂 게시글을 담을 폴더를 선택하세요!</option>
+                <option disabled selected >🗂 게시글을 담을 폴더를 선택하세요!</option>
               </QuestionFolder>
-              <TextEditor setText={setText}/>
+              {/* <TextEditor setText={setText}/> */}
+              <Test/>
               <QuestionHash onChange={onChangeHash} placeholder="#해시태그를 #입력해보세요"/>
               <BtnContainer>
                 <Btn onClick={handleCreate}>작성하기</Btn>
