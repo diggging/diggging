@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import TextEditor from '../components/TextEditor';
-import Layout from '../hocs/Layout'; 
-
+import { check_auth_status } from '../redux/actions/auth';
+import { useDispatch } from 'react-redux';
+import dynamic from 'next/dynamic';
 
 const MainContainer = styled.div`
   margin-top: 9.0625rem;
@@ -32,35 +32,46 @@ const FormContainer = styled.div`
 
 
 const QuestionTitle = styled.input`
-  width: 51.0625rem;
+  width: 51.375rem;
   height: 4.375rem;
   margin-top: 1.5rem;
   background-color: #F5F5F7;
   border: none;
-
+  border-radius: 0.3125rem;
+  padding: 0.625rem 1.25rem;
+  font-size: 1.25rem;
+  
   &:focus {
     outline: 0;
   }
 `;
 
 const QuestionFolder = styled.select`
-  width: 51.0625rem;
+  width: 51.375rem;
   height: 4.375rem;
   margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
   background-color: #F5F5F7;
   border: none;
+  border-radius: 0.3125rem;
   cursor: pointer;
+  padding: 0.625rem 1.25rem;
+  font-size: 1.25rem;
+  
   &:focus {
     outline: 0;
   }
 `;
 
 const QuestionHash = styled.input`
-  width: 51.0625rem;
+  width: 51.375rem;
   height: 4.375rem;
   margin-top: 1.5rem;
   background-color: #F5F5F7;
   border: none;
+  border-radius: 0.3125rem;
+  padding: 0.625rem 1.25rem;
+  font-size: 1.25rem;
 
   &:focus {
     outline: 0;
@@ -78,7 +89,7 @@ const BtnContainer = styled.div`
 const Btn = styled.button`
   width: 8.75rem;
   height: 3rem;
-  background-color: #FFFFFF;
+  background-color: #F5F5F7;
   /* border: 3px solid #FFFFFF; */
   /* border: none; */
   box-sizing: border-box;
@@ -87,6 +98,7 @@ const Btn = styled.button`
 `;
 
 function questionCreate() {
+  const dispatch = useDispatch();
   const [thumbNail, setThumbNail] = useState(null);
   const [title, setTitle] = useState('');
   const [folder, setFolder] = useState([]);
@@ -101,6 +113,10 @@ function questionCreate() {
     setFolder(e.target.value);
   }
 
+  const onChangeContent = (e) => {
+    setText(e);
+  }
+
   const handleCreate = async () => {
     const formData = new FormData();
     formData.append("", thumbNail);
@@ -112,7 +128,7 @@ function questionCreate() {
         user : 1,
         title : title,
         desc: text,
-        question_folder : 'test',
+        question_folder : folder,
         question_tags: hash,
       })
       .then(response => {
@@ -130,19 +146,28 @@ function questionCreate() {
     setHash(e.target.value);
   }
   
+  const Toast = dynamic(() => import('../components/ToastUi'),
+  { ssr : false }
+  )
+
+  //token 확인(refresh, verify)
+  useEffect(()=>{
+    if (dispatch && dispatch !== null && dispatch !== undefined)
+        dispatch(check_auth_status());
+  }, [dispatch])
+  
   return (
       <div>
-        <Layout />
         <MainContainer>
           <Container>
             <FormContainer>
               {/* <ThumbnailArea type="file" accept="image/*" placeholder="🎨 썸네일 이미지를 등록해보세요" onChange={handleThumbNailChange}/> */}
               <QuestionTitle onChange={onChangeTitle} placeholder="제목을 입력하세요."/>
               <QuestionFolder onChangeFolder={onChangeFolder}>
-                <option disabled selected>🗂 게시글을 담을 폴더를 선택하세요!</option>
+                <option disabled selected >🗂 게시글을 담을 폴더를 선택하세요!</option>
               </QuestionFolder>
-              <TextEditor setText={setText}/>
-              <QuestionHash onClick={onChangeHash} placeholder="#해시태그를 #입력해보세요"/>
+              <Toast setText={setText}/>
+              <QuestionHash onChange={onChangeHash} placeholder="#해시태그를 #입력해보세요"/>
               <BtnContainer>
                 <Btn onClick={handleCreate}>작성하기</Btn>
                 <Btn >나가기</Btn>

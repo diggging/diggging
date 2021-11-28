@@ -1,10 +1,13 @@
-module.exports = {
-  webpack(config) {
-    config.module.rules.push({
-      test: /\.svg$/,
-      use: ["@svgr/webpack"],
-    });
-    return config;
-  }
-};
+// const webpack = require('webpack')
 
+// module.exports = {
+//     webpack: (config, { dev }) => {
+//         config.plugins.push(
+//             new webpack.ProvidePlugin({
+//                 '$': 'jquery',
+//                 'jQuery': 'jquery',
+//             })
+//         )
+//         return config
+//     }
+// }
