@@ -2,7 +2,7 @@ from django.db.models.fields import EmailField
 from rest_framework import fields, serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import User
+from .models import User, Alarm
 from django.contrib.auth import authenticate
 from rest_framework_jwt.settings import api_settings
 from django.contrib.auth import get_user_model
@@ -99,3 +99,13 @@ class LoginSerializer(serializers.Serializer):
         except User.DoesNotExist:
             raise serializers.ValidationError("User 가 존재하지않습니다.")
         return {"username": user.username, "token": jwt_token}
+
+
+# path valuable
+class AlarmSerailzer(serializers.ModelSerializer):
+
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Alarm
+        fields = "__all__"
