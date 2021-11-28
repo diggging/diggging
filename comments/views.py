@@ -1,6 +1,6 @@
 # new view
 from .models import Comment
-from questions.models import QuestionPost
+from questions.models import QuestionPost, Answer
 from comments.serializers import CommentDetailSerializer, QuestionCommentSerializer, AnswerCommentSerializer
 from questions.permissions import IsOwnerOrReadOnly
 from rest_framework.permissions import(
@@ -10,6 +10,7 @@ from rest_framework.permissions import(
     IsAuthenticatedOrReadOnly
 )
 from rest_framework import generics
+from users.models import Alarm
 
 # ------------- Question comment create, update -----------------------
 class QuestionCommentCreateAPIView(generics.CreateAPIView):
@@ -18,7 +19,10 @@ class QuestionCommentCreateAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        pk = self.request.query_params.get('question_id')
+        question = QuestionPost.objects.get(pk=pk)
+        new_alarm = Alarm.objects.create(user=question.user, reason="내가 남긴 질문 \""+question.title+'\" 에 '+self.request.user.user_nickname+' 님이 댓글을 남겼어요.')
+        serializer.save(user=self.request.user, question=question)
 
 class QuestionCommentUpdateAPIView(generics.RetrieveUpdateAPIView):
     queryset = Comment.objects.all()
@@ -34,7 +38,10 @@ class AnswerCommentCreateAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        user = self.request.user
+        pk = self.request.query_params.get('answer_id')
+        answer = Answer.objects.get(pk=pk)
+        new_alarm = Alarm.objects.create(user=answer.user, reason="내가 남긴 답변 \""+answer.title+'\" 에 '+self.request.user.user_nickname+' 님이 댓글을 남겼어요.')
+        serializer.save(user=self.request.user, answer=answer)
 
 class AnswerCommentUpdateAPIView(generics.RetrieveUpdateAPIView):
     queryset = Comment.objects.all()
