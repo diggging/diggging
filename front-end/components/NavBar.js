@@ -173,7 +173,7 @@ function navBar() {
         <NavRight>
           <Link href="/search" passHref>
             <NavItem>
-              <NavSearch />
+              <NavSearch height="1.5rem" width="1.375rem"/>
             </NavItem>
           </Link>
           {isAuthenticated ? (

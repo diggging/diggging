@@ -3,10 +3,11 @@ import * as React from "react";
 function SvgSearch(props) {
   return (
     <svg
-      width={22}
-      height={23}
+      width={props.width}
+      height={props.height}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      margin-top={props.marginTop}
       {...props}
     >
       <path

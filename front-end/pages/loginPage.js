@@ -10,6 +10,7 @@ import { UserInput, LinkBtn, LinkBox, VerifyMessage } from './signup';
 import { Alert } from '../components/Alert';
 import { alertService } from '../components/alert.service';
 
+
 const BackgroundColor = styled.div`
   width: 100%;
   height: 100vh;
@@ -100,7 +101,6 @@ function loginPage() {
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   const loading = useSelector((state) => state.auth.loading);
   const bad_request = useSelector((state) => state.auth.bad_request);
-
 
   const [inputs, setInputs] = useState({
     username: '',

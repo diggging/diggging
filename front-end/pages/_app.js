@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Component } from "react";
 import { ThemeProvider } from "styled-components";
+import theme from "../components/common/theme";
 import { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
 import "../public/static/fonts/font.css";
@@ -38,17 +39,9 @@ const GlobalStyles = createGlobalStyle`
   button {
     border: none;
     background-color: none;
+    cursor: pointer;
   }
 `;
-
-const colors = {
-  darkBlue: "#00537A",
-  lightBlue: "#9FAEB6",
-  deepYellow: "#FFBA42",
-  yellow: "#FFD358",
-  lightYellow: "#FFE59C",
-  gray: "#C4C4C4",
-};
 
 function MyApp({ Component, pageProps }) {
   const store = useStore(pageProps.initialReduxState);
@@ -61,7 +54,7 @@ function MyApp({ Component, pageProps }) {
           <meta name='viewport' content='width=device-width, initial-scale=1' />
         </Head>
         <GlobalStyles />
-        <ThemeProvider theme={colors}>
+        <ThemeProvider theme={theme}>
           <Component {...pageProps} />
         </ThemeProvider>
       </Provider>
