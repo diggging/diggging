@@ -133,6 +133,8 @@ function signup() {
   const loading = useSelector((state) => state.auth.loading);
   const bad_request = useSelector((state) => state.auth.bad_request);
 
+  if (typeof window !== 'undefined' && isAuthenticated) { //로그인 되어있으면 메인으로 가짐.
+    router.push('/main')};
   
    //오류메시지 상태저장
    const [usernameMessage, setUsernameMessage] = useState('')
@@ -209,9 +211,6 @@ function signup() {
     //새로고침방지
     e.preventDefault();
 
-    if (typeof window !== 'undefined' && isAuthenticated) { //로그인 되어있으면 메인으로 가짐.
-      router.push('/main')};
-
     dispatch(register(username, user_nickname, email, password1, password2))
     .catch((err) => {
         alertService.warn(err);
@@ -230,6 +229,9 @@ function signup() {
         alertService.warn('이미 사용중인 아이디 혹은 이메일입니다😅')
       }
     }
+
+    if (typeof window !== 'undefined' && isAuthenticated) { //로그인 되어있으면 메인으로 가짐.
+      router.push('/main')};
   }
          
   return (

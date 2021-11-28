@@ -12,6 +12,7 @@ import { logout } from '../redux/actions/auth'
 import Router from "next/router";
 import { useRouter } from 'next/router';
 import { check_auth_status } from '../redux/actions/auth';
+import { load_user } from '../redux/actions/auth';
 
 const Nav = styled.nav`
   z-index: 1000;
@@ -131,8 +132,8 @@ function navBar() {
   const [open, setOpen] = useState(false);
   //token 확인(refresh, verify)
   useEffect(()=>{
-    if (dispatch && dispatch !== null && dispatch !== undefined)
-        dispatch(check_auth_status());
+    // dispatch(load_user());
+    dispatch(check_auth_status);
   }, [dispatch])
 
   const logoutHandler = async () => {
@@ -153,9 +154,9 @@ function navBar() {
           <Link href="/aboutus" passHref>
             <NavItem>디깅소개</NavItem>
           </Link>
-          <Link href="/main" passHref>
+          {/* <Link href="/main" passHref>
             <NavItem>메인</NavItem>
-          </Link>
+          </Link> */}
           {isAuthenticated ? (
             <>
               <Link href="/questions" passHref>
@@ -196,7 +197,7 @@ function navBar() {
                 <DropBox>
                   <DropList>
                     <DropListItem><Link href="/postCreate">새 글 작성</Link></DropListItem>
-                    <DropListItem><Link href="accountSetting">계정설정</Link></DropListItem>
+                    <DropListItem><Link href="/accountSetting">계정설정</Link></DropListItem>
                     <DropListItem><LogoutButton onClick={logoutHandler}>로그아웃</LogoutButton></DropListItem>
                   </DropList>
                 </DropBox>

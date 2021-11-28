@@ -1,4 +1,3 @@
-import axios from 'axios';
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
@@ -18,7 +17,6 @@ import {
   BAD_REQUEST,
   RESET_BAD_REQUEST,
 } from './types';
-
 
 //유저정보 불러오기
 export const load_user = () => async dispatch => {
@@ -182,12 +180,15 @@ export const login = (username, password) => async (dispatch) => {
         'Content-Type': 'application/json',
       },
       body: body,
-    });
+    })
+    console.log(`res ${res}`)
+    console.log(`res.status ${res.status}`)
 
-    if (res.status === 200) {
+    if (res.status == 200) {
       dispatch({
         type: LOGIN_SUCCESS,
       });
+
       dispatch(load_user());
     } else if (res.status === 401 || res.status === 403 || res.status === 400) {
       dispatch({

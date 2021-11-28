@@ -48,7 +48,7 @@ const authReducer = (state = initialState, action) => {
     case RESET_BAD_REQUEST :
       return {
         ...state,
-        bad_requeest: false,
+        bad_request: false,
       }
     case RESET_REGISTER_SUCCESS:
       return {

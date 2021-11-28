@@ -95,10 +95,12 @@ const Button = styled.button`
 
 function loginPage() {
   const dispatch = useDispatch();
+
   const router = useRouter();
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   const loading = useSelector((state) => state.auth.loading);
   const bad_request = useSelector((state) => state.auth.bad_request);
+
 
   const [inputs, setInputs] = useState({
     username: '',
@@ -158,16 +160,25 @@ function loginPage() {
     }
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
 
     if (dispatch && dispatch !== null && dispatch !== undefined) {
-      dispatch(login(username, password));
+      dispatch(await login(username, password))
+      // .then((res) => {
+        // if (res.status === 200) {
+        //   router.push(`/`);
+        // } else if (res.status === 400) {
+        //   alertService.warn('400error');
+        // } else if (res.status === 500) {
+        //   alertService.warn('500 error')
+        // } 
+      // })
        //router가 있는지, authenticated한지 확인하고
-      if (typeof window !== 'undefined' && isAuthenticated === true) {
+      if (typeof window !== 'undefined' && isAuthenticated === true && loading === false) {
         alertService.warn('로그인되었습니다🙂');
         //Redirect to main
-        router.push(`/`);
+        router.replace(`/`);
       }
     };
     //아이디-비밀번호 일치하지 않으면 에러메시지

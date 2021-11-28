@@ -4,10 +4,7 @@ import { check_auth_status } from '../redux/actions/auth';
 import Head from 'next/head';
 import styled from 'styled-components';
 
-const Layout = ({title, content, children}) => {
-  
-
-  const BackgroundColor = styled.div`
+const BackgroundColor = styled.div`
     background-color: #FAFAFF;
     width: 100%;
     height: 100%;
@@ -16,7 +13,9 @@ const Layout = ({title, content, children}) => {
     left: 0;
     z-index: -10;
   `;
-
+  
+const Layout = ({title, content, children}) => {
+  
   return (
     <>
       <Head>

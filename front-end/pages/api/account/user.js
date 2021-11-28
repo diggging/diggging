@@ -22,10 +22,10 @@ export default async (req, res) => {
     }
     //access가 false가 아니라면 user api받아오깅
     try {
-      const apiRes = await fetch(`${API_URL}/users/api/userinfo/`, { 
+      const apiRes = await fetch(`${API_URL}/users/api/userinfo`, { 
         method: 'GET',
         headers: {
-          Accept: 'application/json',
+          'Accept': 'application/json',
           'Authorization': `Bearer ${access}`
         }
       });
