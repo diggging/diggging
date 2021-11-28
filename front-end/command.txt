@@ -19,8 +19,6 @@ python manage.py runserver --settings=shoveling.settings.local
 yarn add rxjs
 (Alert창 구현에 필요)
 
-//summernote
-yarn add react-summernote
-yarn add bootstrap@3
-
-
+//toast ui
+npm install --save @toast-ui/react-editor
+npm install --save @toast-ui/editor

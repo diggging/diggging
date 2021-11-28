@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import TextEditor from '../components/TextEditor';
-// import Test from '../components/SummerNote';
 import { check_auth_status } from '../redux/actions/auth';
 import { useDispatch } from 'react-redux';
 import dynamic from 'next/dynamic';
@@ -34,7 +32,7 @@ const FormContainer = styled.div`
 
 
 const QuestionTitle = styled.input`
-  width: 51.0625rem;
+  width: 51.375rem;
   height: 4.375rem;
   margin-top: 1.5rem;
   background-color: #F5F5F7;
@@ -49,9 +47,10 @@ const QuestionTitle = styled.input`
 `;
 
 const QuestionFolder = styled.select`
-  width: 51.0625rem;
+  width: 51.375rem;
   height: 4.375rem;
   margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
   background-color: #F5F5F7;
   border: none;
   border-radius: 0.3125rem;
@@ -65,7 +64,7 @@ const QuestionFolder = styled.select`
 `;
 
 const QuestionHash = styled.input`
-  width: 51.0625rem;
+  width: 51.375rem;
   height: 4.375rem;
   margin-top: 1.5rem;
   background-color: #F5F5F7;
@@ -114,6 +113,10 @@ function questionCreate() {
     setFolder(e.target.value);
   }
 
+  const onChangeContent = (e) => {
+    setText(e);
+  }
+
   const handleCreate = async () => {
     const formData = new FormData();
     formData.append("", thumbNail);
@@ -142,8 +145,8 @@ function questionCreate() {
   const onChangeHash = (e) => {
     setHash(e.target.value);
   }
-
-  const Test = dynamic(() => import('../components/SummerNote'),
+  
+  const Toast = dynamic(() => import('../components/ToastUi'),
   { ssr : false }
   )
 
@@ -163,8 +166,7 @@ function questionCreate() {
               <QuestionFolder onChangeFolder={onChangeFolder}>
                 <option disabled selected >🗂 게시글을 담을 폴더를 선택하세요!</option>
               </QuestionFolder>
-              {/* <TextEditor setText={setText}/> */}
-              <Test/>
+              <Toast setText={setText}/>
               <QuestionHash onChange={onChangeHash} placeholder="#해시태그를 #입력해보세요"/>
               <BtnContainer>
                 <Btn onClick={handleCreate}>작성하기</Btn>
