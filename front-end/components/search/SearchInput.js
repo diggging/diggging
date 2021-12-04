@@ -1,19 +1,56 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
+import { API_URL } from '../../config';
 import SearchIcon from '../../public/static/images/Search';
 
-function SearchInput({handleSearchInput, handleSearchEnter}) {
+function SearchInput({setSearchData, setNoData, searchData}) {
+  console.log(searchData, 'searchData나와라');
+  const [searchInput, setSearchInput] = useState("");
+
+  const onInputChange = (e) => {
+    setSearchInput(e.target.value);
+    console.log(searchInput);
+  }
   
+  const getSearchData = async () => {
+    const apiRes = await axios.get(`${API_URL}/posts/search_quest_result/${searchInput}`)
+    return apiRes;
+  }
+
+  const onSubmitSearch = async (e) => {
+    e.preventDefault();
+      //get해오는api연결
+      try {
+        const apiRes = await getSearchData()
+        if (apiRes.status == 200) {
+          console.log(apiRes.data, 'apiRes.data')
+          const newData = [...apiRes.data];
+          console.log(newData)
+          await setSearchData(newData); //searchData로 담아주기
+          console.log(searchData, 'searchData');
+          setNoData(false);
+          return {searchData};
+        } else {
+          // setSearchData([])
+          setNoData(true);
+          return {searchData};
+        }
+      } catch (err) {
+        return {err}
+      }
+  }
 
   return (
-    <SearchInputBox>
-      <SearchIcon width="1.75rem" height="1.625rem" />
-      <StyledSearchInput 
-        type="text" 
-        placeHolder="검색어를 입력해주세요" 
-        onChange={handleSearchInput}
-        onKeyDown={handleSearchEnter}/>
-    </SearchInputBox>
+    <form onSubmit={(e) => onSubmitSearch(e)}>
+      <SearchInputBox>
+        <StyledSearchInput 
+          type="text" 
+          placeHolder="검색어를 입력해주세요" 
+          onChange={(e) => onInputChange(e)} />
+        <SearchIcon width="1.75rem" height="1.625rem" />
+      </SearchInputBox>
+    </form>
   )
 }
 
@@ -45,7 +82,7 @@ const StyledSearchInput = styled.input`
       return css`
         width: 100%;
         height: 4.5rem;
-        margin-left: 1.875rem;
+        margin-right: 1.875rem;
         border: none;
         
         font-size: 1.5rem;

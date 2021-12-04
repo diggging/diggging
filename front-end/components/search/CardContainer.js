@@ -6,8 +6,8 @@ import styled from 'styled-components';
 function CardContainer({searchData}) {
   return (
     <StyledCardContainer>
-        {searchData.map((searchData) => (
-        <ListCard key={searchData.id} searchData={searchData}/>
+        {searchData.map((data) => (
+        <ListCard key={data.id} searchData={searchData}/>
         )
         )}
       </StyledCardContainer>
