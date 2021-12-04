@@ -4,9 +4,8 @@ import styled from 'styled-components';
 import Link from 'next/link'
 import NavBar from "../components/NavBar";
 import Image from 'next/image';
-// import Recent from '../components/questions/Recent';
-// import Popular from '../components/questions/Popular';
-// import Mine from '../components/questions/Mine';
+import {useSelector, useDispatch} from 'react-redux';
+
 
 const ImageContainer = styled.div`
     position: relative;
@@ -56,7 +55,8 @@ const QuestionsContainer = styled.div`
 
 function main() {
   const [questions, setQuestions] = useState([]);
-  
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+
   const QuestionRecent = async () => {
     try {
       //test url
@@ -111,9 +111,18 @@ function main() {
           </ImageContainer>
           <Container>
             <TabContainer>
-              <Tab onClick={one}>최신 질문 순</Tab>
-              <Tab onClick={two}>인기 순</Tab>
-              <Tab onClick={three}>내가 남긴 질문</Tab>
+            {isAuthenticated ? (
+              <>
+                <Tab onClick={one}>최신 질문 순</Tab>
+                <Tab onClick={two}>인기 순</Tab>
+                <Tab onClick={three}>내가 남긴 질문</Tab>
+              </>
+            ) : (
+              <>
+                <Tab onClick={one}>최신 질문 순</Tab>
+                <Tab onClick={two}>인기 순</Tab>
+              </>
+            )}
             </TabContainer>
             <QuestionsContainer >
               <ul>
