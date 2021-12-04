@@ -22,3 +22,7 @@ yarn add rxjs
 //toast ui
 npm install --save @toast-ui/react-editor
 npm install --save @toast-ui/editor
+
+//image
+npm install --save next-images
+
