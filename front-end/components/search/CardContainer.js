@@ -1,12 +1,16 @@
-import React from 'react'
-import ListCard from './ListCard'
-import styled from 'styled-components'
+import React from 'react';
+import ListCard from './ListCard';
+import styled from 'styled-components';
 
-function CardContainer() {
+//데이터바인딩
+function CardContainer({searchData}) {
   return (
     <StyledCardContainer>
-      <ListCard />
-    </StyledCardContainer>
+        {searchData.map((searchData) => (
+        <ListCard key={searchData.id} searchData={searchData}/>
+        )
+        )}
+      </StyledCardContainer>
   )
 }
 

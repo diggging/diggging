@@ -2,11 +2,17 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import SearchIcon from '../../public/static/images/Search';
 
-function SearchInput({handleSearch}) {
+function SearchInput({handleSearchInput, handleSearchEnter}) {
+  
+
   return (
     <SearchInputBox>
-      <SearchIcon width="1.75rem" height="1.625rem" marginTop="2px"/>
-      <StyledSearchInput type="text" placeHolder="검색어를 입력해주세요" onKeyPress={handleSearch}/>
+      <SearchIcon width="1.75rem" height="1.625rem" />
+      <StyledSearchInput 
+        type="text" 
+        placeHolder="검색어를 입력해주세요" 
+        onChange={handleSearchInput}
+        onKeyDown={handleSearchEnter}/>
     </SearchInputBox>
   )
 }

@@ -130,12 +130,7 @@ function navBar() {
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   
   const [open, setOpen] = useState(false);
-  //token 확인(refresh, verify)
-  useEffect(()=>{
-    // dispatch(load_user());
-    dispatch(check_auth_status);
-  }, [dispatch])
-
+ 
   const logoutHandler = async () => {
     if (dispatch && dispatch !== null && dispatch !== undefined)
     await dispatch(logout());
