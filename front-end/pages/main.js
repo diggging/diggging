@@ -5,6 +5,7 @@ import Link from 'next/link'
 import NavBar from "../components/NavBar";
 import Image from 'next/image';
 import {useSelector, useDispatch} from 'react-redux';
+import QuestionList from '../components/QuestionList';
 
 
 const ImageContainer = styled.div`
@@ -124,15 +125,7 @@ function main() {
             )}
             </TabContainer>
             <QuestionsContainer >
-              <ul>
-                {questions.map(list => (
-                  <li key={list.id}>
-                    <Link href={`/questions/${list.id}`} passHref>
-                      {list.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+              <QuestionList questions={questions}/>
             </QuestionsContainer>
           </Container>
         </div>
