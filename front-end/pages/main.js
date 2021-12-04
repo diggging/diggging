@@ -6,6 +6,7 @@ import NavBar from "../components/NavBar";
 import Image from 'next/image';
 import {useSelector, useDispatch} from 'react-redux';
 import QuestionList from '../components/QuestionList';
+import Paging from '../components/Paging';
 
 
 const ImageContainer = styled.div`
@@ -126,6 +127,7 @@ function main() {
             </TabContainer>
             <QuestionsContainer >
               <QuestionList questions={questions}/>
+              <Paging></Paging>
             </QuestionsContainer>
           </Container>
         </div>
