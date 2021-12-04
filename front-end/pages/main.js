@@ -73,7 +73,6 @@ function main() {
       setQuestions([]);
       const res = await axios.get("https://jsonplaceholder.typicode.com/users")
       setQuestions(res.data)
-      console.log("성공")
     } catch(e) {
       console.log(e)
     }
@@ -128,7 +127,9 @@ function main() {
               <ul>
                 {questions.map(list => (
                   <li key={list.id}>
-                    {list.id} ({list.id})
+                    <Link href={`/questions/${list.id}`} passHref>
+                      {list.name}
+                    </Link>
                   </li>
                 ))}
               </ul>
