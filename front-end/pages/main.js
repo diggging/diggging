@@ -7,11 +7,15 @@ import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
 import QuestionList from "../components/QuestionList";
 import Paging from "../components/Paging";
+import Layout from '../hocs/Layout'; 
+
 
 const ImageContainer = styled.div`
   position: relative;
-  width: 100%;
+  /* width: 100%; */
   height: 31.9375rem;
+  display: flex;
+  justify-content: center;
 `;
 
 const Container = styled.div`
@@ -115,10 +119,10 @@ function main() {
   }, []);
 
   return (
-    <div>
+    <Layout>
       <NavBar />
       <ImageContainer>
-        <Image src="/../public/static/images/main.jpeg" layout="fill" />
+        <Image src="/../public/static/images/a.png" width={1440} height={511} />
       </ImageContainer>
       <Container>
         <TabContainer>
@@ -140,7 +144,7 @@ function main() {
           {/* <Paging handlePageChange={handlePageChange} page={page}/> */}
         </QuestionsContainer>
       </Container>
-    </div>
+    </Layout>
   );
 }
 

@@ -26,11 +26,11 @@ npm install --save @toast-ui/editor
 //image
 npm install --save next-images
 
-//mac prettier
-shift + option + f
-
 //css
 npm install @zeit/next-css
 
 //설치 해줄때 마다,,,,
 yarn add next react react-dom
+
+//mac prettier
+shift + option + f

@@ -10,7 +10,8 @@ function QuestionList() {
     try {
       //test url
       const res = await axios.get(
-        "https://jsonplaceholder.typicode.com/posts?_page=1&_limit=10"
+        // "http://127.0.0.1:8000/questions/question_list/?big_criteria=recent&page=2&small_criteria=all"
+        "https://jsonplaceholder.typicode.com/posts?_page=1&_limit=20"
       );
       setQuestions(res.data);
     } catch (e) {
