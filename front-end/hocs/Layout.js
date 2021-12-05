@@ -16,7 +16,6 @@ const BackgroundColor = styled.div`
   
 const Layout = ({title, content, children}) => {
   const dispatch = useDispatch();
-
    //token 확인(refresh, verify)
    useEffect(()=>{
     // dispatch(load_user());

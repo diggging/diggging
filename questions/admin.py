@@ -8,7 +8,7 @@ class QuestionPostAdmin(admin.ModelAdmin):
         "user",
         "title",
         "desc",
-        "code",
+        # "code",
         # "is_public",
         # "is_friend",
         "question_folder",
