@@ -85,7 +85,7 @@ class QuestionListAPIView(generics.ListAPIView):
     def get_queryset(self):
         big_criteria = self.request.query_params.get('big_criteria')
         small_criteria = self.request.query_params.get('small_criteria')
-
+        
         if big_criteria == "recent":
             queryset = QuestionPost.objects.order_by("-created")
             if small_criteria == "all":
@@ -117,6 +117,8 @@ class QuestionListAPIView(generics.ListAPIView):
                 new_queryset = queryset.filter(answer_exist=True)
                 return new_queryset
         
+        print(big_criteria)
+        print(small_criteria)
         # if small_criteria == "all":
         #     if big_criteria == "recent":
         #         queryset = QuestionPost.objects.order_by("-created")

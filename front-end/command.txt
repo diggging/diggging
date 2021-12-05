@@ -22,3 +22,15 @@ yarn add rxjs
 //toast ui
 npm install --save @toast-ui/react-editor
 npm install --save @toast-ui/editor
+
+//image
+npm install --save next-images
+
+//css
+npm install @zeit/next-css
+
+//설치 해줄때 마다,,,,
+yarn add next react react-dom
+
+//mac prettier
+shift + option + f
