@@ -8,6 +8,7 @@ from users.models import User
 from comments.models import Comment
 from posts.models import Folder
 from rest_framework.fields import CurrentUserDefault
+from taggit_serializer.serializers import TagListSerializerField, TaggitSerializer
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -77,13 +78,14 @@ class PostDetailSerializer(serializers.ModelSerializer):
         self.fields['folder'] = serializers.ManyRelatedField(child_relation=PrimaryKeyRelatedField(queryset= Folder.objects.filter(folder_user=user), required=False), required=False)#Folder.objects.filter(folder_user=user)
 
 class QuestionThumbnailSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = QuestionPost
-            fields = "__all__"
-        def to_representation(self, instance):
-            response = super().to_representation(instance)
-            response['user'] = UserSerializer(instance.user, read_only=True).data
-            return response
+    question_tags = TagListSerializerField(allow_null=True)
+    class Meta:
+        model = QuestionPost
+        fields = "__all__"
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['user'] = UserSerializer(instance.user, read_only=True).data
+        return response
 
 class SearchSerializer(serializers.Serializer):
     query = serializers.CharField(max_length=200)
