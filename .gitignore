@@ -428,3 +428,5 @@ dist
 yarn.lock
 
 node_modules/
+
+front-end/package-lock.json
