@@ -138,6 +138,7 @@ export const register =
           type: REGISTER_FAIL,
         });
       }
+      return res.status;
     } catch (err) {
       dispatch({
         type: REGISTER_FAIL,
