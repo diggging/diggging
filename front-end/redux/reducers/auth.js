@@ -34,16 +34,19 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         register_success: true,
+        loading: false,
       };
     case REGISTER_FAIL:
       return {
         ...state,
         bad_request: false,
+        loading: false,
       };
     case BAD_REQUEST:
       return {
         ...state,
         bad_request: true,
+        loading: false,
       }
     case RESET_BAD_REQUEST :
       return {
@@ -59,36 +62,43 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         isAuthenticated: true,
+        loading: false,
       };
     case LOGIN_FAIL:
       return {
         ...state,
         isAuthenticated: false,
+        loading: false,
       };
     case LOGOUT_SUCCESS:
       return {
         ...state,
         isAuthenticated: false, //logout일땐 더이상 authenticated하지 않게.
         user: null,
+        loading: false,
       };
     case LOGOUT_FAIL:
       return {
         ...state,
+        loading: false,
       };
     case LOAD_USER_SUCCESS:
       return {
         ...state,
         user: payload.user,
+        loading: false,
       };
     case LOAD_USER_FAIL:
       return {
         ...state,
         user: null,
+        loading: false,
       };
     case AUTHENTICATED_SUCCESS:
       return {
         ...state,
         isAuthenticated: true,
+        loading: false,
       };
     case AUTHENTICATED_FAIL:
       return {

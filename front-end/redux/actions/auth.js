@@ -181,7 +181,6 @@ export const login = (username, password) => async (dispatch) => {
       },
       body: body,
     })
-    console.log(`res ${res}`)
     console.log(`res.status ${res.status}`)
 
     if (res.status == 200) {
@@ -189,17 +188,22 @@ export const login = (username, password) => async (dispatch) => {
         type: LOGIN_SUCCESS,
       });
       dispatch(load_user());
+    } else if (res.status === 401 || res.status === 403 || res.status === 400) {
+      dispatch({
+        type: BAD_REQUEST,
+      });
     } else {
       dispatch({
         type: LOGIN_FAIL,
       });
     }
+    return res.status
   } catch (err) {
     dispatch({
       type: LOGIN_FAIL,
     });
   }
-//로그인 성공/실패하고나면 로딩중 제거
+  //로그인 성공/실패하고나면 로딩중 제거
   dispatch({
     type: REMOVE_AUTH_LOADING,
   });

@@ -78,44 +78,43 @@ function loginPage() {
   }, [inputs, error]);
 
 
-  const onSubmit = useCallback (e => {
+  const onSubmitLogin = async (e) => {
     e.preventDefault();
-    
-    if (username === '' || password === '') { //하나라도 입력 안한 것 있으면 에러메시지
-      setError(
-        {
-          ...error,
-          loginError: '아이디와 비밀번호 모두 입력해주세요.'
-        })
-        return;
-    }
-
     if (dispatch && dispatch !== null && dispatch !== undefined) {
-      dispatch(login(username, password));
+      dispatch(login(username, password))
+      .then((res) => {
+        if (res === 200) {
+          alertService.warn('로그인 되었습니다🙂');
+          //Redirect to main
+          router.push(`/`);
+        } else if (res === 401 || res === 400) {
+          alertService.warn('아이디와 비밀번호를 확인해주세요.🙂');
+          setError({
+            ...error,
+            loginError : '아이디 혹은 비밀번호를 확인해주세요'
+          })
+        } else if (res === 500) {
+          alertService.warn('서버에 문제가 생겼습니다. 다시 시도해주세요🙁')
+          setError({
+            ...error,
+            loginError: '서버에 문제가 생겼습니다. 다시 시도해주세요'
+          })
+        } else if (res == 405) {
+          setError({
+            ...error,
+            loginError: '잘못된 접근입니다.'
+          })
+        } else {
+          setError({
+            ...error,
+            loginError: err
+          })
+        }
+      })
+      .catch((err) => console.log(err))
     }
-  }, [inputs, error]);
-
-
-
-  // router가 있는지, authenticated한지 확인하고
-  if (typeof window !== 'undefined' && isAuthenticated === true) {
-    alertService.warn('로그인되었습니다🙂');
-    //Redirect to main
-    router.push(`/`);
-  } else if (typeof window !== 'undefined' && bad_request === true) {
-    setError({
-      ...error,
-      loginError: '아이디와 비밀번호를 확인해주세요.'
-    })
-    alertService.warn('아이디와 비밀번호를 확인해주세요.🙂');
-  } 
-  // else if (typeof window !== 'undefined' && isAuthenticated === false && loading == false) {
-  //   setError({
-  //     ...error,
-  //     loginError: '서버에 오류가 생겼습니다🙁'
-  //   })
-  // }
-       
+  }
+  
  
   return (
     <Layout
@@ -142,7 +141,7 @@ function loginPage() {
           <GuideMessage>
             실력있는 개발자들에게 질문하고 매일매일 성장하세요
           </GuideMessage>
-          <form onSubmit={(e) => onSubmit(e)}>
+          <form onSubmit={(e) => onSubmitLogin(e)}>
             <UserInput
               type="text"
               placeholder="아이디"
@@ -164,12 +163,12 @@ function loginPage() {
             <VerifyMessage>{passwordError}</VerifyMessage>
             <LoginBtn type="submit">로그인</LoginBtn>
             <VerifyMessage>{loginError}</VerifyMessage>
+            </form>
             {loading ? (
               <div>
                 <Loader type="Oval" color="#ffd664" width={30} height={30} />
               </div>
             ) : null}
-          </form>
           <LinkBox>
             <Link href="/signup" passHref><LinkBtn>회원가입하기 | </LinkBtn></Link>
             <Link href="/user/findPassword" passHref><LinkBtn> 비밀번호 찾기</LinkBtn></Link>
