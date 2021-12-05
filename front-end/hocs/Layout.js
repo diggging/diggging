@@ -19,7 +19,7 @@ const Layout = ({title, content, children}) => {
    //token 확인(refresh, verify)
    useEffect(()=>{
     // dispatch(load_user());
-    dispatch(check_auth_status);
+    dispatch(check_auth_status());
   }, [dispatch])
 
   return (

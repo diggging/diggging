@@ -188,12 +188,7 @@ export const login = (username, password) => async (dispatch) => {
       dispatch({
         type: LOGIN_SUCCESS,
       });
-
       dispatch(load_user());
-    } else if (res.status === 401 || res.status === 403 || res.status === 400) {
-      dispatch({
-        type: BAD_REQUEST,
-      });
     } else {
       dispatch({
         type: LOGIN_FAIL,
