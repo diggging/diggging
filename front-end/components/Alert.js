@@ -126,12 +126,14 @@ function Alert({ id, fade }) {
 
 const AlertBody = styled.div`
   position: absolute;
-  top: 5rem;
-  margin: auto auto;
+  top: 3rem;
+  display: flex;
+  justify-content: center;
   padding: 1rem;
   border-radius: 1.25rem;
   background-color: white;
   box-shadow: 0.625rem 0.625rem 2.5rem 0 rgba(0, 0, 0, 0.1);
+  text-align: center;
 `;
 
 const AlertClose = styled.a`
@@ -141,7 +143,7 @@ const AlertClose = styled.a`
   color: #343434;
 `;
 
-const AlertMessage = styled.span`
+const AlertMessage = styled.p`
   font-family: 'Pretendard-SemiBold';
   font-size: 1rem;
   color: #343434;

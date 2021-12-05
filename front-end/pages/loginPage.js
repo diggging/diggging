@@ -86,24 +86,15 @@ function loginPage() {
         if (res === 200) {
           alertService.warn('로그인 되었습니다🙂');
           //Redirect to main
-          router.push(`/`);
-        } else if (res === 401 || res === 400) {
+          setTimeout(() => {
+            router.push(`/`);
+          }, 1000);
+        } else if (res === 401 || res === 400) { // 400일때 아이디비번확인 401일때 이멜인증해달라고 하기(시형이가 status 고쳐줘야함)
           alertService.warn('아이디와 비밀번호를 확인해주세요.🙂');
-          setError({
-            ...error,
-            loginError : '아이디 혹은 비밀번호를 확인해주세요'
-          })
         } else if (res === 500) {
           alertService.warn('서버에 문제가 생겼습니다. 다시 시도해주세요🙁')
-          setError({
-            ...error,
-            loginError: '서버에 문제가 생겼습니다. 다시 시도해주세요'
-          })
         } else if (res == 405) {
-          setError({
-            ...error,
-            loginError: '잘못된 접근입니다.'
-          })
+          alertService.warn('잘못된 접근입니다🙁')
         } else {
           setError({
             ...error,
@@ -171,7 +162,7 @@ function loginPage() {
             ) : null}
           <LinkBox>
             <Link href="/signup" passHref><LinkBtn>회원가입하기 | </LinkBtn></Link>
-            <Link href="/user/findPassword" passHref><LinkBtn> 비밀번호 찾기</LinkBtn></Link>
+            <Link href="/findPassword" passHref><LinkBtn> 비밀번호 찾기</LinkBtn></Link>
           </LinkBox>
         </LoginBox> 
       </BackgroundColor>

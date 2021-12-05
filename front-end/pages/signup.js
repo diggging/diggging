@@ -101,11 +101,13 @@ function signup() {
     dispatch(register(username, user_nickname, email, password1, password2))
     .then((res) => {
       if (res === 201 || res === 200) {
-        alertService.warn('성공적으로 회원가입 되었습니다😊')
-        router.push('/loginPage');
+        setTimeout(() => {
+          router.push('/loginPage');
+        }, 3000);
+        alertService.success(`회원가입 되었습니다. 전송된 메일로 인증을 완료해주세요 📧`)
       } else if (res === 400 || 401) {
         if (password1 !== password2) {
-          alertService.warn('비밀번호가 일치하지 않습니다. 다시 입력해주세요😅');
+          alertService.warn(`비밀번호가 일치하지 않습니다. 다시 입력해주세요😅`);
         } else {
           alertService.warn('이미 사용중인 아이디 혹은 이메일입니다😅')
         }
@@ -212,7 +214,7 @@ function signup() {
             <LinkBox>
             {register}
             <Link href="/loginPage" passHref><LinkBtn>로그인</LinkBtn></Link>
-            | <Link href="/user/findPassword" passHref><LinkBtn>비밀번호 찾기</LinkBtn></Link>
+            | <Link href="/findPassword" passHref><LinkBtn>비밀번호 찾기</LinkBtn></Link>
             </LinkBox>
             {/* <Button>네이버 로그인</Button>
             <Button>깃헙 로그인</Button> */}
