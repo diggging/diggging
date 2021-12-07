@@ -119,7 +119,7 @@ function questionCreate() {
 
   const getAccessToken = async () => {
     if (dispatch && dispatch !== null && dispatch !== undefined) {
-      dispatch(await check_auth_status())
+      dispatch(check_auth_status())
       .then((res) => res.json())
       .then((data) => {
         const accessToken = data.access;
@@ -138,8 +138,9 @@ function questionCreate() {
     // formData.append("", setTitle, setTitle.name);
     // formData.append("", setFolder, setFolder.name);
     // formData.append("", setText, setText.name);
-    const accessToken = getAccessToken();
-    console.log(accessToken); //promise객체가 출력된다..then에서 리턴하면 이렇게 된대
+    const accessToken = await getAccessToken(); //await로 promise가 아닌 aceessToken값 리턴하게
+    console.log(accessToken); //근데 왜 undefined가 뜰까? => getAccessToken()하기 전에 밑의 코드들이 실행되는 것 같다..
+
     try {
       await axios.post('http://127.0.0.1:8000/questions/create/', {
         headers: {
