@@ -1,8 +1,8 @@
 {% autoescape off %}
 
-Hi {{user.username}},
-
-Please click on the link to confirm your registration,
+{{user.username}}님 안녕하세요!
+Diggging에 오신 것을 환영합니다🎉
+아래 링크를 눌러 회원가입을 완료해주세요😉
 
 http://{{domain}}{% url 'users:activate' uidb64=uid token=token %}
 {% endautoescape %}

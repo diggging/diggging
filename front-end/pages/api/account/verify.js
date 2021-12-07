@@ -37,8 +37,10 @@ export default async (req, res) => {
       });
 
       if (apiRes.status === 200) {
-        res.status(200).json({ success: 'Authenticated successfully '});
-        return access;
+        return res.status(200).json({
+          success: 'Authenticated successfully',
+          access: access
+        });
       } else {
         return res.status(apiRes.status).json({
           error: 'Failed to authenticate'

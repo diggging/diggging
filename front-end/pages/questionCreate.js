@@ -117,19 +117,42 @@ function questionCreate() {
     setText(e);
   }
 
+  const getAccessToken = async () => {
+    if (dispatch && dispatch !== null && dispatch !== undefined) {
+      dispatch(await check_auth_status())
+      .then((res) => res.json())
+      .then((data) => {
+        const accessToken = data.access;
+        console.log(typeof accessToken); // 나중에 지우기
+        console.log(accessToken); // 나중에 지우기
+        return accessToken;
+      })
+      .catch((err) => console.log(err))
+      }
+  }
+
+
   const handleCreate = async () => {
     const formData = new FormData();
     formData.append("", thumbNail);
     // formData.append("", setTitle, setTitle.name);
     // formData.append("", setFolder, setFolder.name);
     // formData.append("", setText, setText.name);
+    const accessToken = getAccessToken();
+    console.log(accessToken); //promise객체가 출력된다..then에서 리턴하면 이렇게 된대
     try {
       await axios.post('http://127.0.0.1:8000/questions/create/', {
-        user : 1,
-        title : title,
-        desc: text,
-        question_folder : folder,
-        question_tags: hash,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer" + accessToken,
+        },
+        body: {
+          user : 1,
+          title : title,
+          desc: text,
+          question_folder : folder,
+          question_tags: hash,
+        }
       })
       .then(response => {
         console.log(response);
@@ -168,6 +191,7 @@ function questionCreate() {
               </QuestionFolder>
               <Toast setText={setText}/>
               <QuestionHash onChange={onChangeHash} placeholder="#해시태그를 #입력해보세요"/>
+
               <BtnContainer>
                 <Btn onClick={handleCreate}>작성하기</Btn>
                 <Btn >나가기</Btn>

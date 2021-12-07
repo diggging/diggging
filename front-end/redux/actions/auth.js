@@ -46,7 +46,7 @@ export const load_user = () => async dispatch => {
     });
   }
 };
-//verify는 유저정보를 불러오기 위함인듯
+//verify는 새로고침 되어도 로그인 유지되게 하기
 //check_auth_status -> verify api -> load_user()실행 -> api/account/user
 export const check_auth_status = () => async dispatch => {
   try {
@@ -61,6 +61,7 @@ export const check_auth_status = () => async dispatch => {
       dispatch({
         type: AUTHENTICATED_SUCCESS
       });
+      return res;
       dispatch(load_user());
     } else {
       dispatch({
