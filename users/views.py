@@ -1,4 +1,6 @@
 import os
+
+from rest_framework.serializers import Serializer
 import users
 import requests
 from django.contrib.auth import authenticate, login, logout
@@ -20,7 +22,7 @@ from django.contrib.auth.hashers import check_password
 # 이메일 인증 관련 import
 import logging
 from django.http import HttpResponse
-from django.db.models import Sum
+from django.db.models import Sum, query
 
 # SMTP 관련 인증
 from django.contrib.sites.shortcuts import get_current_site
@@ -39,7 +41,11 @@ from django.http.response import JsonResponse
 
 # api
 from rest_framework import generics, permissions
-from .serializers import UserSerializer, RegisterSerializer, LoginSerializer
+from .serializers import (
+    UserSerializer,
+    RegisterSerializer,
+    AlarmSerailzer,
+)
 from rest_framework.response import Response
 from django.contrib.auth import login
 from rest_framework import permissions
@@ -66,11 +72,13 @@ from rest_framework.decorators import (
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
 # 회원가입
-# 아래부분 도메인을 바꿔주면 됨. 이메일 연동
+# 아래 도메인은 이메일 인증 관련 도메인 바뀌면 my_site domain도 변경해주어야함.
 """my_site = Site.objects.get(pk=1)
 my_site.domain = "diggging.com"
 my_site.name = "digging_main"
@@ -83,6 +91,7 @@ class Registration(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         current_site = get_current_site(request)
+
         if not serializer.is_valid(raise_exception=True):
             return Response({"message": "이미 존재함"}, status=status.HTTP_409_CONFLICT)
 
@@ -168,37 +177,8 @@ def activate(request, uidb64, token):
         return HttpResponse("Activation link is invalid!")
 
 
-# 로그인
-"""@permission_classes([AllowAny])
-@authentication_classes((JSONWebTokenAuthentication,))
-class Login(generics.GenericAPIView):
-    serializer_class = LoginSerializer
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-
-        if not serializer.is_valid(raise_exception=True):
-            return Response(
-                {"message": "Request Body Error"}, status=status.HTTP_409_CONFLICT
-            )
-
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data
-        if user["username"] == "None":
-            return Response(
-                {"message": "username error"}, status=status.HTTP_401_UNAUTHORIZED
-            )
-        return Response(
-            {
-                "user": UserSerializer(
-                    user, context=self.get_serializer_context()
-                ).data,
-                "accese": user["token"],
-            }
-        )
-
-"""
 # 유저정보 api
+@permission_classes([AllowAny])
 class LoadUserView(APIView):
     def get(self, request, format=None):
         try:
@@ -249,18 +229,18 @@ class LogoutView(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-"""@login_required
-def log_out(request):
-    logout(request)
-    return redirect("users:login")"""
-
-
 # 비밀번호를 모르겠을때, email을 작성하는 부분
-def password_reset(request):
+
+"""class Password_reset(APIView):
     # email 받으면
-    if request.method == "POST":
-        email = request.POST.get("email")
+    serializer_class = changePasswordsendEmailSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
         username = request.POST.get("username")
+        email = serializer.get("email")
+        print(email)
         # email 이 존재하는 이메일인지 확인
         if User.objects.filter(email=email, username=username).exists():
             # 있으면 메일 보내기
@@ -286,71 +266,77 @@ def password_reset(request):
                 "입력하신 이메일<span>로 인증 링크가 전송되었습니다.</span>"
                 "</div>"
             )
+
+
+class Password_reset_email(APIView):
+    def post(request, uidb64, token):
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        # 잘 넘어오면
+        if user is not None and password_reset_token.check_token(user, token):
+            ctx = {
+                "user": user,
+            }
+            return redirect("users:password_reset_form", user.id)
         else:
-            # 없으면 없는 메일ㅇ이라고 하고 다시 redirect
-            return redirect("users:password_reset")
-    else:
-        return render(request, template_name="users/password_reset.html")
+            ctx = {"user": user}
+            return render(
+                request, template_name="password_email_fail.html", context=ctx
+            )
 
 
-# 이메일 인증
-class EmailView(APIView):
-    permission_classes = [AllowAny]
-
-    def get(self, *args, **kwargs):
-        self.object = confirmation = self.get_object()
-        confirmation.confirm(self.request)
-        return HttpResponse("/login/success/")
+class Password_reset_form(APIView):
+    serializer_class = ChangePasswordSerializer
+    model = User
+    permission_classes = IsAuthenticated
 
     def get_object(self, queryset=None):
-        key = self.kwargs["key"]
-        email_confirmation = EmailConfirmationHMAC.from_key(key)
-        if not email_confirmation:
-            if queryset is None:
-                queryset = self.get_queryset()
+        obj = self.request.user
+        return obj
 
-            try:
-                email_confirmation = queryset.get(key=key.lower())
-            except EmailConfirmation.DoesNotExist:
-                return HttpResponse("login/failure/")
-        return email_confirmation
+    def update(self, request, pk):
+        self.object = self.get_object()
+        serializer = self.get_serializer(data=request.data)
 
-    def get_queryset(self):
-        qs = EmailConfirmation.objects.all_vaild()
-        qs = qs.select_related("email_address__user")
-        return qs
+        if serializer.is_valid():
+            if not self.object.check_password(serializer.data.get("old_password")):
+                return Response(
+                    {"old_password": ["Wrong password"]},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            self.object.set_password(serializer.data.get("new_password"))
+            self.object.save()
 
+            ctx = {
+                "status": "success",
+                "code": status.HTTP_200_OK,
+                "message": "Password updated successfully",
+                "data": [],
+            }
+            return Response(ctx)
 
-def password_reset_email(request, uidb64, token):
-    try:
-        uid = force_text(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-    # 잘 넘어오면
-    if user is not None and password_reset_token.check_token(user, token):
-        ctx = {
-            "user": user,
-        }
-        return redirect("users:password_reset_form", user.id)
-    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+"""
+"""
+user = get_object_or_404(User, pk=pk)
+        if request.method == "POST":
+            new_password = request.POST.get("password1")
+            password_confirm = request.POST.get("password2")
+            if new_password == password_confirm and len(new_password) >= 8:
+                user.set_password(new_password)
+                user.save()
+                login(
+                    request, user, backend="django.contrib.auth.backends.ModelBackend"
+                )
+                return redirect("users:login")
         ctx = {"user": user}
-        return render(request, template_name="password_email_fail.html", context=ctx)
-
-
-def password_reset_form(request, pk):
-    user = get_object_or_404(User, pk=pk)
-    if request.method == "POST":
-        new_password = request.POST.get("password1")
-        password_confirm = request.POST.get("password2")
-        if new_password == password_confirm and len(new_password) >= 8:
-            user.set_password(new_password)
-            user.save()
-            login(request, user, backend="django.contrib.auth.backends.ModelBackend")
-            return redirect("users:login")
-    ctx = {"user": user}
-    return render(request, template_name="users/password_reset_form.html", context=ctx)
-
+        return render(
+            request, template_name="users/password_reset_form.html", context=ctx
+        )
+"""
 
 # _______________________________________________social login____________________________________________
 # github login
@@ -823,6 +809,7 @@ def change_nickname(request, pk):
     return redirect("users:account_detail", user.id)
 
 
+# 비밀번호 변경 함수
 def change_pw(request, pk):
     context = {}
     if request.method == "POST":
@@ -862,20 +849,16 @@ def change_img(request, pk):
 
 
 # ________________________________________________ alarm ________________________________________________
-@csrf_exempt
-def alarm(request, pk):
-    me = User.objects.get(id=pk)  # 누구의 alarm인지
-    my_alarm = Alarm.objects.filter(user=me)  # 주인의 alarm 모두 가져오기
-    my_alarm = my_alarm.order_by("-id")
-    not_check_alarm = my_alarm.filter(is_checked=False)  # 그중 False인애들 가져와서
-    for alarm in not_check_alarm:
-        alarm.is_checked = True
-        alarm.save()
+# @csrf_exempt
+class AlarmAPI(APIView):
+    def get(self, request, *args, **kwargs):
+        me = User.objects.get(id=kwargs.get("pk"))  # 누구의 alarm인지
+        my_alarm = Alarm.objects.filter(user=me)  # 주인의 alarm 모두 가져오기
+        serializer = AlarmSerailzer(my_alarm, many=True)
+        # not_check_alarm = serializer.filter(is_checked=False)  # 그중 False인애들 가져와서
+        data = serializer.data
+        for alarm in my_alarm:
+            alarm.is_checked = True
+            alarm.save()
 
-    data = serializers.serialize("json", my_alarm)
-
-    return JsonResponse(
-        {
-            "data": data,
-        }
-    )
+        return Response(data)
