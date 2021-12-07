@@ -5,7 +5,7 @@ import {API_URL} from '../../../config/index';
 export default async (req, res) => {
   if (req.method === 'GET') {
     const cookies = cookie.parse(req.headers.cookie ?? '');
-    const refresh = cookies.refresh ?? false;
+    const refresh = cookies.refresh ?? false; //cookie에있는 refresh token을 가져와서 새 토큰을 발급한다.
     //cookie가 없을 때 false.
     if (refresh === false) {
       console.log('쿠키가없다')
@@ -35,7 +35,7 @@ export default async (req, res) => {
             'access', data.access, {
               httpOnly: true,
               secure: process.env.NODE_ENV !== 'development',
-              maxAge: 60 * 30,
+              maxAge: 60 * 30, //30분
               sameSite: 'strict',
               path: '/api/',
             }
@@ -44,7 +44,7 @@ export default async (req, res) => {
             'refresh', data.refresh, {
               httpOnly: true,
               secure: process.env.NODE_ENV !== 'development',
-              maxAge: 60 * 60 * 24,
+              maxAge: 60 * 60 * 24, // 하루
               sameSite: 'strict',
               path: '/api/'
             }

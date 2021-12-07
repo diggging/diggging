@@ -13,17 +13,17 @@ export default async (req, res) => {
     const cookies = cookie.parse(req.headers.cookie ?? ''); //null이거나 undefined면 ''로.
     // console.log(`${cookies} 이건 cookies`);
     //access 토큰가져오기
-    const refresh = cookies.refresh ?? false; //undefined면 refresh가 false가 됨
-    console.log(`${refresh} 이거 refresh `)
+    const access = cookies.access ?? false; //undefined면 refresh가 false가 됨
+    console.log(`${access} 이거 access `)
     
-    if (refresh === false) {
+    if (access === false) {
       return res.status(403).json({
         error: 'User forbidden from making the request'
       });
     }
 
     const body = JSON.stringify({
-      token: refresh
+      token: access
   });
   console.log(`${body} 이거 body`);
     try {
@@ -37,7 +37,8 @@ export default async (req, res) => {
       });
 
       if (apiRes.status === 200) {
-        return res.status(200).json({ success: 'Authenticated successfully '});
+        res.status(200).json({ success: 'Authenticated successfully '});
+        return access;
       } else {
         return res.status(apiRes.status).json({
           error: 'Failed to authenticate'
