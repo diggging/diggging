@@ -10,6 +10,7 @@ function YellowTitle({ children, fontSize = "1rem", marginBottom = "0px" }) {
 export default YellowTitle;
 
 const StyledYellowTitle = styled.h2`
+  display: inline;
   font-family: 'Pretendard-Bold';
   color: #FFBA42;
   font-size: ${({ fontSize }) => fontSize};
