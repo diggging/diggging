@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from 'react-loader-spinner';
 import Layout from '../hocs/Layout'; 
-import { UserInput, LinkBtn, LinkBox, VerifyMessage } from './signup';
+import { Logo, UserInput, GuideMessage, LinkBtn, LinkBox, VerifyMessage, LoaderWrapper, FormBtn, BackgroundColor } from './signup';
 import { Alert } from '../components/Alert';
 import { alertService } from '../components/alert.service';
 
@@ -70,7 +70,7 @@ function loginPage() {
           } else {
             setError({
               ...error,
-              passwordError: "올바른 비밀번호 형식입니다😏"
+              passwordError: "올바른 비밀번호 형식입니다. 😏"
             })
           }
         break;
@@ -152,17 +152,16 @@ function loginPage() {
               required
             />
             <VerifyMessage>{passwordError}</VerifyMessage>
-            <LoginBtn type="submit">로그인</LoginBtn>
+            {loading ? (
+                <LoaderWrapper>
+                  <Loader type="Oval" color="#ffd664" width={32} height={32} />
+                </LoaderWrapper>
+              ) : <FormBtn type="submit">로그인</FormBtn>}
             <VerifyMessage>{loginError}</VerifyMessage>
             </form>
-            {loading ? (
-              <div>
-                <Loader type="Oval" color="#ffd664" width={30} height={30} />
-              </div>
-            ) : null}
           <LinkBox>
-            <Link href="/signup" passHref><LinkBtn>회원가입하기 | </LinkBtn></Link>
-            <Link href="/findPassword" passHref><LinkBtn> 비밀번호 찾기</LinkBtn></Link>
+              <Link href="/signup" passHref><LinkBtn>회원가입하기 | </LinkBtn></Link>
+              <Link href="/findPassword" passHref><LinkBtn> 비밀번호 찾기</LinkBtn></Link>
           </LinkBox>
         </LoginBox> 
       </BackgroundColor>
@@ -174,19 +173,6 @@ function loginPage() {
 export default loginPage;
 
 
-const BackgroundColor = styled.div`
-  width: 100%;
-  height: 100vh;
-  position: absolute;
-  top:0;
-  left:0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #ffd358;
-  color: grey;
-`;
-
 const LoginBox = styled.div`
   background-color: white;
   box-shadow: 10px 10px 35px 0 rgb(1 1 1 / 10%);
@@ -194,59 +180,8 @@ const LoginBox = styled.div`
   width: 480px;
   height: auto;
   padding: 40px 50px;
-  display: block;
 `;
 
-const Logo = styled.a`
-  border: none;
-  outline: none;
-  background-color: none;
-  text-align: center;
-  display: inherit;
-`;
-
-const GuideMessage = styled.p`
-  color: #848484;
-  font-size: 12px;
-  font-family: 'Pretendard-Regular';
-  text-align: center;
-  margin-bottom: 30px;
-`;
-
-const LoginInput = styled.input`
-  background-color: #f7f7f7;
-  padding: 16px 14px;
-  width: 380px;
-  border-radius: 8px;
-  border: none;
-  outline: none;
-  margin-top: 14px;
-  color: #8d8c85;
-`;
-
-const LoginBtn = styled.button`
-  background-color: #ffd358;
-  border-radius: 8px;
-  color: white;
-  box-shadow: none;
-  border: none;
-
-  padding: 14px;
-  margin-top: 22px;
-  margin-bottom: 28px;
-  width: 100%;
-
-  font-size: 20px;
-  text-align: center;
-  font-family: 'Pretendard-SemiBold';
-
-  cursor: pointer;
-
-  &:hover {
-    background-color: #ffd664;
-    box-shadow: 0, 4, 12, rgba(1, 1, 1, 8%);
-  }
-`;
 
 const Button = styled.button`
   padding: 12px 20px;

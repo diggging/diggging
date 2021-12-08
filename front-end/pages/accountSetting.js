@@ -17,10 +17,9 @@ function accountSetting() {
   const user = useSelector(state => state.auth.user);
   const {id, username, profile_img, profile_bio, user_nickname, email, login_method} = user.user;
 
-  // useEffect(()=>{
-  //   // dispatch(load_user());
-  //   dispatch(check_auth_status);
-  // }, [dispatch])
+  useEffect(()=>{
+    dispatch(load_user());
+  }, [dispatch])
 
 
   //1. profileImg변경하기
@@ -106,7 +105,10 @@ const UsernameText = styled.h2`
   border-bottom: solid 1px #e5e5e5;
 `;
 
-const ProfileBox = styled(FlexRow)`
+const ProfileBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: baseline;
   padding: ${({padding}) => padding} 0;
   border-bottom: solid 2px #e5e5e5;
   justify-content: space-between;

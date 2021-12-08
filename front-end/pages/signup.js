@@ -204,17 +204,17 @@ function signup() {
               />
               <VerifyMessage>{passwordConfirmMessage}</VerifyMessage>
               {loading ? (
-                <div>
+                <LoaderWrapper>
                   <Loader type="Oval" color="#ffd358" width={30} height={30} />
-                </div>
+                </LoaderWrapper>
               ) : (
-                <SignupBtn type="submit">회원가입하기</SignupBtn>
+                <FormBtn type="submit">회원가입하기</FormBtn>
               )}
             </form>
             <LinkBox>
             {register}
-            <Link href="/loginPage" passHref><LinkBtn>로그인</LinkBtn></Link>
-            | <Link href="/findPassword" passHref><LinkBtn>비밀번호 찾기</LinkBtn></Link>
+              <Link href="/loginPage" passHref><LinkBtn>로그인 </LinkBtn></Link>
+              | <Link href="/findPassword" passHref><LinkBtn>비밀번호 찾기</LinkBtn></Link>
             </LinkBox>
             {/* <Button>네이버 로그인</Button>
             <Button>깃헙 로그인</Button> */}
@@ -224,13 +224,22 @@ function signup() {
     </>
   );
 }
-export {UserInput, LinkBtn, LinkBox, VerifyMessage};
+export {Logo, BackgroundColor, GuideMessage, UserInput, LinkBtn, LinkBox, VerifyMessage, LoaderWrapper, FormBtn};
 export default signup;
 
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: auto auto;
+  color: #ffd664;
+  height: 102px;
+  padding: 35px;
+  width: 100%;
+`;
 
 const BackgroundColor = styled.div`
   width: 100%;
-  height: 100%;
+  height: 100vh;
   position: absolute;
   top:0;
   left:0;
@@ -249,7 +258,6 @@ const SignupBox = styled.div`
   width: 480px;
   height: auto;
   padding: 40px 50px;
-  display: block;
   color: #B6B6B6;
 `;
 
@@ -288,7 +296,7 @@ const UserInput = styled.input`
   color: #999893;
 `;
 
-const SignupBtn = styled.button`
+const FormBtn = styled.button`
   background-color: #ffd358;
   border-radius: 8px;
   color: white;
@@ -299,6 +307,7 @@ const SignupBtn = styled.button`
   margin-top: 22px;
   margin-bottom: 28px;
   width: 100%;
+  height: 50px;
 
   font-size: 20px;
   text-align: center;
@@ -307,12 +316,12 @@ const SignupBtn = styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: lighten(#ffd358);
+    background-color: ${lighten(0.03, '#ffd358')};
     box-shadow: 0, 4, 12, rgba(1, 1, 1, 8%);
   }
 
   &:active {
-    background-color: darken(#ffd358);
+    background-color: ${darken(0.03, '#ffd358')};
   }
 `;
 
@@ -334,6 +343,5 @@ const Button = styled.button`
 
 const LinkBox = styled.div`
   color: #c4c4c4;
-  display: block;
   text-align: right;
 `;

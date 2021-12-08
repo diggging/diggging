@@ -126,25 +126,35 @@ function Alert({ id, fade }) {
 
 const AlertBody = styled.div`
   position: absolute;
-  top: 3rem;
-  display: flex;
-  justify-content: center;
+  top: 1.87rem;
+  left: 50%;
+  transform: translate(-50%, 0); //중앙정렬
   padding: 1rem;
   border-radius: 1.25rem;
   background-color: white;
   box-shadow: 0.625rem 0.625rem 2.5rem 0 rgba(0, 0, 0, 0.1);
   text-align: center;
+  display: flex;
+  max-width: 100%;
+  justify-content: space-between;
 `;
 
 const AlertClose = styled.a`
   margin-left: 1rem;
   font-family: 'Pretendard-SemiBold';
   font-size: 1.25rem;
+  line-height: 1.25rem;
   color: #343434;
+  vertical-align: middle;
+  cursor: pointer;
 `;
 
 const AlertMessage = styled.p`
+  display: inline;
   font-family: 'Pretendard-SemiBold';
   font-size: 1rem;
+  line-height: 1.25rem;
   color: #343434;
+  vertical-align:middle;
+  width: 21rem;
 `;
