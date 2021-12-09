@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { check_auth_status } from '../redux/actions/auth';
@@ -165,12 +165,9 @@ function questionCreate() {
   useEffect(() => {
     getAccessToken();
   }, [])
+
   console.log(inputs);
   console.log(desc);
-
-  const test = (content) => {
-    setDesc(content)
-  }
 
   return (
       <div>
@@ -181,7 +178,7 @@ function questionCreate() {
               <QuestionFolder name="question_folder" value={question_folder} onChangeFolder={onChange}>
                 <option disabled selected >🗂 게시글을 담을 폴더를 선택하세요!</option>
               </QuestionFolder>
-              <Toast desc={desc} setDesc={setDesc}/>
+              <Toast setDesc={setDesc}/>
               
               <QuestionHash name="question_tags" value={question_tags} onChange={onChange} placeholder="#해시태그를 #입력해보세요"/>
 

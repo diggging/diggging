@@ -1,15 +1,16 @@
-import React, {useCallback} from 'react';
+import React, { useRef, useState } from 'react';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import { Editor } from '@toast-ui/react-editor';
 
 function ToastUi({setDesc}) {
-  const editorRef = React.createRef();
+  const editorRef = useRef();
 
-  const handleChange = () => {
-    console.log(editorRef.current.getInstance().getValue());
-    setDesc(editorRef.current.getInstance().getHTML());
+  function onChange() {
+    const editorData = editorRef.current.getInstance().getMarkdown();
+    console.log(editorData);
+    // setDesc(editorData);
+    // setDesc(forwardedRef.current.getInstance().getHTML());
   }
-
   return (
       <>
           <Editor
@@ -20,7 +21,8 @@ function ToastUi({setDesc}) {
               placeholder="내용을 입력해주세요."
               autofocus={false}
               ref={editorRef}
-              onChange={handleChange}
+              onChange={()=>onChange()}
+              language="ko"
           />
       </>
   )
