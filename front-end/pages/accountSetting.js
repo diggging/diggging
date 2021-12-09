@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { FormBox, PageTitle } from "./findPassword";
 import NavBar from '../components/NavBar';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Layout from "../hocs/Layout";
 import WhiteButton from "../components/common/WhiteButton";
 import FlexRow from "../components/common/FlexRow";
@@ -11,15 +11,20 @@ import YellowButton from "../components/common/YellowButton";
 import YellowTitle from "../components/common/YellowTitle";
 import ContentText from "../components/common/ContentText";
 import FlexColumn from "../components/common/FlexColumn";
+import {load_user} from "../redux/actions/auth";
+import Image from "next/image"
 
 
 function accountSetting() {
-  const user = useSelector(state => state.auth.user);
-  const {id, username, profile_img, profile_bio, user_nickname, email, login_method} = user.user;
+
+  const dispatch = useDispatch();
+  const userData = useSelector((state) => (state.auth.user));
+  console.log(userData);
+  const {id, username, profile_img, profile_bio, user_nickname, email, login_method} = userData.user;
 
   useEffect(()=>{
     dispatch(load_user());
-  }, [dispatch])
+  }, [])
 
 
   //1. profileImg변경하기
@@ -42,7 +47,7 @@ function accountSetting() {
         <ProfileTitle>{username}</ProfileTitle><ProfileTitle2>님의 프로필</ProfileTitle2>
         <ProfileBox padding="1.875rem">
           <FlexColumn>
-            <ProfileImgWrapper><img src={profile_img} alt="profileImage" /></ProfileImgWrapper>
+            <ProfileImgWrapper><Image src={profile_img} width={130} height={130} alt="profileImage" quality={100}/></ProfileImgWrapper>
             <WhiteButton paddingTop="0.625rem" paddingRight="2rem" fontSize="0.8125rem">프로필사진 변경</WhiteButton>
           </FlexColumn>
           {/* <ProfileBio>{profile_bio}</ProfileBio> */}

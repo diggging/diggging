@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
+import { lighten, darken } from 'polished';
 
 function YellowButton({ children, paddingTop, paddingRight }) {
   return (
@@ -20,5 +21,7 @@ const StyledYellowButton = styled.button`
   font-family: 'Pretendard-SemiBold';
   font-size: 1rem;
 
-  box-shadow: 0.25rem 0.25rem 0.5rem 0.25rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0.2rem 0.2rem 0.5rem 0.2rem rgba(0, 0, 0, 0.1);
+
+  
 `;

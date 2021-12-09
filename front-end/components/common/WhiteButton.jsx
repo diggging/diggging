@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
+import { lighten, darken } from 'polished';
 
 function WhiteButton({ paddingTop, paddingRight, fontSize, children }) {
   return (
@@ -30,4 +31,11 @@ const StyledButton = styled.button`
   font-family: 'Pretendard-SemiBold';
   font-size: ${({ fontSize }) => fontSize};
   box-shadow: 0 0.25rem 0.75rem 0 rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: ${lighten(0.02, '#FBFBFB')};
+  }
+  &:active {
+    background-color: ${darken(0.02, '#FBFBFB')};
+  }
 `;

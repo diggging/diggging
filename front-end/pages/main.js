@@ -8,14 +8,30 @@ import { useSelector, useDispatch } from "react-redux";
 import QuestionList from "../components/QuestionList";
 import Paging from "../components/Paging";
 import Layout from '../hocs/Layout'; 
+import SvgDigggingLogo from '../public/static/images/digggingLogo';
 
+const BannerBackground = styled.div`
+  width:100%;
+  height: 32.5rem;
+
+  background: linear-gradient(-10deg, #FBD362, #FABE56);
+`;
+
+const SubTitle = styled.h2`
+  color: white;
+  font-family: 'Pretendard-Bold';
+  font-size: 1.75rem;
+  display: inline-block;
+  background-color: #FFBA42;
+  margin-bottom: 1.2rem;
+
+`;
 
 const ImageContainer = styled.div`
   position: relative;
   /* width: 100%; */
-  height: 31.9375rem;
-  display: flex;
-  justify-content: center;
+  height: 33.125rem;
+  width: 100%;
 `;
 
 const Container = styled.div`
@@ -121,9 +137,14 @@ function main() {
   return (
     <Layout>
       <NavBar />
-      <ImageContainer>
-        <Image src="/../public/static/images/a.png" width={1440} height={511} />
-      </ImageContainer>
+      <BannerBackground>
+        <SubTitle>개발자들을 위한 커뮤니티,</SubTitle>
+        <SvgDigggingLogo />
+        <Image src="/../public/static/images/main_banner_icon.png" width={692} height={371} quality={96}/>
+        <ServiceIntro>
+          
+        </ServiceIntro>
+      </BannerBackground>
       <Container>
         <TabContainer>
           {isAuthenticated ? (
