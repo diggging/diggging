@@ -24,7 +24,14 @@ const SubTitle = styled.h2`
   display: inline-block;
   background-color: #FFBA42;
   margin-bottom: 1.2rem;
+`;
 
+const ServiceIntro = styled.p`
+  color: #343434;
+  font-family: 'Pretendard-Medium';
+  font-size: 1.5rem;
+  line-height: 2.125rem;
+  margin-top: 0.875rem;
 `;
 
 const ImageContainer = styled.div`
@@ -142,7 +149,9 @@ function main() {
         <SvgDigggingLogo />
         <Image src="/../public/static/images/main_banner_icon.png" width={692} height={371} quality={96}/>
         <ServiceIntro>
-          
+          질문하고 기록하는 습관은 누구든 성장하게 해줍니다<br />
+          개발도중 겪는 시행착오들을 디깅에 기록하고, 공유해보세요!<br />
+          실력있는 개발자들이 함께할 거에요.
         </ServiceIntro>
       </BannerBackground>
       <Container>
