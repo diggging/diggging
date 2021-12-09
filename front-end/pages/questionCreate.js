@@ -99,24 +99,25 @@ const Btn = styled.button`
 
 function questionCreate() {
   const dispatch = useDispatch();
-  const [thumbNail, setThumbNail] = useState(null);
-  const [title, setTitle] = useState('');
-  const [folder, setFolder] = useState([]);
-  const [text, setText] = useState('');
-  const [hash, setHash] = useState('');
+  const [inputs, setInput] = useState({
+    title: "",
+    desc: "",
+    question_folder: [],
+    question_tags: []
+  })
+
+  const {title, desc, question_folder, question_tags} = inputs;
   const [token, setToken] = useState('');
 
-  const onChangeTitle = (e) => {
-    setTitle(e.target.value);
-  }
+  const onChange = (e) => {
+    e.preventDefault();
+    const { value, name } = e.target;
+    setInput({
+      ...inputs,
+      [name]: value
+    });
+  };
 
-  const onChangeFolder = (e) => {
-    setFolder(e.target.value);
-  }
-
-  const onChangeContent = (e) => {
-    setText(e);
-  }
 
   const getAccessToken = async () => {
     if (dispatch && dispatch !== null && dispatch !== undefined) {
@@ -151,10 +152,6 @@ function questionCreate() {
     }
   }
 
-  const onChangeHash = (e) => {
-    setHash(e.target.value);
-  }
-  
   const Toast = dynamic(() => import('../components/ToastUi'),
   { ssr : false }
   )
@@ -168,18 +165,20 @@ function questionCreate() {
   useEffect(() => {
     getAccessToken();
   }, [])
-  
+  console.log(inputs);
+
   return (
       <div>
         <MainContainer>
           <Container>
             <FormContainer>
-              <QuestionTitle onChange={onChangeTitle} placeholder="제목을 입력하세요."/>
-              <QuestionFolder onChangeFolder={onChangeFolder}>
+              <QuestionTitle name="title" value={title} onChange={onChange} placeholder="제목을 입력하세요."/>
+              <QuestionFolder name="question_folder" value={question_folder} onChangeFolder={onChange}>
                 <option disabled selected >🗂 게시글을 담을 폴더를 선택하세요!</option>
               </QuestionFolder>
-              <Toast setText={setText}/>
-              <QuestionHash onChange={onChangeHash} placeholder="#해시태그를 #입력해보세요"/>
+              <Toast onChange={onChange}/>
+              
+              <QuestionHash name="question_tags" value={question_tags} onChange={onChange} placeholder="#해시태그를 #입력해보세요"/>
 
               <BtnContainer>
                 <Btn onClick={handleCreate}>작성하기</Btn>
