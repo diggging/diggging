@@ -99,18 +99,18 @@ const Btn = styled.button`
 
 function questionCreate() {
   const dispatch = useDispatch();
+  const [desc, setDesc] = useState('');
   const [inputs, setInput] = useState({
     title: "",
-    desc: "",
     question_folder: [],
     question_tags: []
   })
 
-  const {title, desc, question_folder, question_tags} = inputs;
+  const {title, question_folder, question_tags} = inputs;
   const [token, setToken] = useState('');
 
   const onChange = (e) => {
-    e.preventDefault();
+    
     const { value, name } = e.target;
     setInput({
       ...inputs,
@@ -166,6 +166,11 @@ function questionCreate() {
     getAccessToken();
   }, [])
   console.log(inputs);
+  console.log(desc);
+
+  const test = (content) => {
+    setDesc(content)
+  }
 
   return (
       <div>
@@ -176,7 +181,7 @@ function questionCreate() {
               <QuestionFolder name="question_folder" value={question_folder} onChangeFolder={onChange}>
                 <option disabled selected >🗂 게시글을 담을 폴더를 선택하세요!</option>
               </QuestionFolder>
-              <Toast onChange={onChange}/>
+              <Toast desc={desc} setDesc={setDesc}/>
               
               <QuestionHash name="question_tags" value={question_tags} onChange={onChange} placeholder="#해시태그를 #입력해보세요"/>
 

@@ -1,25 +1,26 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import { Editor } from '@toast-ui/react-editor';
 
-function ToastUi(props) {
+function ToastUi({setDesc}) {
   const editorRef = React.createRef();
 
   const handleChange = () => {
-    console.log(editorRef.current.getInstance().getHTML());
+    console.log(editorRef.current.getInstance().getValue());
+    setDesc(editorRef.current.getInstance().getHTML());
   }
 
   return (
       <>
           <Editor
               initialValue=""
-              // usageStatistics={false}
               previewStyle="vertical"
               height="702px"
               initialEditType="wysiwyg"
               placeholder="내용을 입력해주세요."
-              // ref={editorRef}
-              // onChange={props.onChange}
+              autofocus={false}
+              ref={editorRef}
+              onChange={handleChange}
           />
       </>
   )
