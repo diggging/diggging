@@ -132,17 +132,13 @@ function questionCreate() {
   
   const handleCreate = async () => { 
     try {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      axios.defaults.headers.common['Content-Type'] = "application/json";
       await axios.post('http://127.0.0.1:8000/questions/create/', {
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: {
-          "title" : "whdrnjs5",
-          "desc": "http://127.0.0.1:8000/",
-          "question_folder" : [3],
-          "question_tags": ["#test"],
-        }
+          "title": "whdrnjs3",
+          "desc": "whdrnjs3_for_api_schema2ㅁㄴㅇㅎㄹㄴㅁㅎ",
+          "question_folder": [],
+          "question_tags": ["#api"]
       })
       .then(response => {
         console.log(response);
