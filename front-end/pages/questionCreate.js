@@ -104,7 +104,8 @@ function questionCreate() {
   const [folder, setFolder] = useState([]);
   const [text, setText] = useState('');
   const [hash, setHash] = useState('');
-  
+  const [token, setToken] = useState('');
+
   const onChangeTitle = (e) => {
     setTitle(e.target.value);
   }
@@ -123,36 +124,24 @@ function questionCreate() {
       .then((res) => res.json())
       .then((data) => {
         const accessToken = data.access;
-        console.log(typeof accessToken); // 나중에 지우기
-        console.log(accessToken); // 나중에 지우기
-        return accessToken;
+        setToken(accessToken);
       })
       .catch((err) => console.log(err))
       }
   }
-
-
-  const handleCreate = async () => {
-    const formData = new FormData();
-    formData.append("", thumbNail);
-    // formData.append("", setTitle, setTitle.name);
-    // formData.append("", setFolder, setFolder.name);
-    // formData.append("", setText, setText.name);
-    const accessToken = await getAccessToken(); //await로 promise가 아닌 aceessToken값 리턴하게
-    console.log(accessToken); //근데 왜 undefined가 뜰까? => getAccessToken()하기 전에 밑의 코드들이 실행되는 것 같다..
-
+  
+  const handleCreate = async () => { 
     try {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
       await axios.post('http://127.0.0.1:8000/questions/create/', {
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer" + accessToken,
+          "Content-type": "application/json",
         },
         body: {
-          user : 1,
-          title : title,
-          desc: text,
-          question_folder : folder,
-          question_tags: hash,
+          "title" : "whdrnjs5",
+          "desc": "http://127.0.0.1:8000/",
+          "question_folder" : [3],
+          "question_tags": ["#test"],
         }
       })
       .then(response => {
@@ -179,13 +168,16 @@ function questionCreate() {
     if (dispatch && dispatch !== null && dispatch !== undefined)
         dispatch(check_auth_status());
   }, [dispatch])
+
+  useEffect(() => {
+    getAccessToken();
+  }, [])
   
   return (
       <div>
         <MainContainer>
           <Container>
             <FormContainer>
-              {/* <ThumbnailArea type="file" accept="image/*" placeholder="🎨 썸네일 이미지를 등록해보세요" onChange={handleThumbNailChange}/> */}
               <QuestionTitle onChange={onChangeTitle} placeholder="제목을 입력하세요."/>
               <QuestionFolder onChangeFolder={onChangeFolder}>
                 <option disabled selected >🗂 게시글을 담을 폴더를 선택하세요!</option>
