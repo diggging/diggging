@@ -5,7 +5,6 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 import { Editor } from "@toast-ui/react-editor";
 import { setDesc } from "../../modules/editor";
 import { useDispatch, useSelector } from "react-redux";
-import { check_auth_status } from "../../redux/actions/auth";
 
 const BtnContainer = styled.div`
   width: 21.875rem;
@@ -26,7 +25,7 @@ const Btn = styled.button`
   cursor: pointer;
 `;
 
-function ToastUi({ title, question_folder, question_tags, token }) {
+function ToastUi({ title, folder, tags, token }) {
   const dispatch = useDispatch();
   const editorRef = useRef();
   const content = useSelector((state) => state.test.desc);
@@ -44,8 +43,8 @@ function ToastUi({ title, question_folder, question_tags, token }) {
         .post("http://127.0.0.1:8000/questions/create/", {
           title: title,
           desc: content,
-          question_folder: question_folder,
-          question_tags: question_tags,
+          question_folder: folder,
+          question_tags: tags,
         })
         .then((response) => {
           console.log(response);
@@ -58,7 +57,7 @@ function ToastUi({ title, question_folder, question_tags, token }) {
       console.log(e);
     }
   };
-  // console.log(typeof(question_tags));
+  // console.log(tags);
   return (
     <>
       <Editor

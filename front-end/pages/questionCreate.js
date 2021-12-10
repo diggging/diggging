@@ -106,15 +106,15 @@ function questionCreate() {
 
   const onChangeTitle = useCallback((e) => {
     setTitle(e.target.value);
-  },[title]);
+  }, [title]);
 
   const onChangeFolder = useCallback((e) => {
-    setFolder(e.target.value);
-  },[folder]);
+    setFolder([e.target.value]);
+  }, [folder]);
 
   const onChangeTags = useCallback((e) => {
-    setTags(e.target.value);
-  },[tags]);
+    setTags(e.target.value.split(','));
+  }, [tags]);
 
   const onLoadUser = async () => {
     const response = dispatch(load_user());
@@ -153,7 +153,7 @@ function questionCreate() {
     onLoadUser();
   }, []);
 
-  console.log(user);
+  console.log(tags);
   return (
     <div>
       <MainContainer>
@@ -161,13 +161,11 @@ function questionCreate() {
           <FormContainer>
             <QuestionTitle
               name="title"
-              value={title}
               onChange={onChangeTitle}
               placeholder="제목을 입력하세요."
             />
             <QuestionFolder
               name="question_folder"
-              value={folder}
               onChange={onChangeFolder}
             >
               <option disabled defaultValue>
@@ -176,14 +174,13 @@ function questionCreate() {
             </QuestionFolder>
             <QuestionHash
               name="question_tags"
-              value={tags}
               onChange={onChangeTags}
               placeholder="#해시태그를 #입력해보세요"
             />
             <Toast
               title={title}
-              question_folder={folder}
-              question_tags={tags}
+              folder={folder}
+              tags={tags}
               token={token}
             />
           </FormContainer>
