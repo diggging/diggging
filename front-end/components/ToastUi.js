@@ -57,9 +57,7 @@ function ToastUi({ title, question_folder, question_tags, token }) {
       console.log(e);
     }
   };
-
-  //여기는 뜨는데
-  console.log(content);
+  
   return (
     <>
       <Editor

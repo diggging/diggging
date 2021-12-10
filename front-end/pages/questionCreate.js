@@ -119,6 +119,14 @@ function questionCreate() {
     });
   };
 
+  const onChangeArr = (e) => {
+    const { value, name } = e.target;
+    setInput({
+      ...inputs,
+      [name]: [value.split(",")],
+    }) 
+  }
+
   const onLoadUser = async () => {
     const response = dispatch(load_user());
     if (user) {
@@ -170,7 +178,7 @@ function questionCreate() {
             <QuestionFolder
               name="question_folder"
               value={question_folder}
-              onChange={onChange}
+              onChange={onChangeArr}
             >
               <option disabled defaultValue>
                 🗂 게시글을 담을 폴더를 선택하세요!
@@ -179,7 +187,7 @@ function questionCreate() {
             <QuestionHash
               name="question_tags"
               value={question_tags}
-              onChange={onChange}
+              onChange={onChangeArr}
               placeholder="#해시태그를 #입력해보세요"
             />
             <Toast
