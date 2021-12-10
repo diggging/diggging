@@ -3,9 +3,9 @@ import axios from "axios";
 import styled from "styled-components";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import { Editor } from "@toast-ui/react-editor";
-import { setDesc } from "../modules/editor";
+import { setDesc } from "../../modules/editor";
 import { useDispatch, useSelector } from "react-redux";
-import { check_auth_status } from "../redux/actions/auth";
+import { check_auth_status } from "../../redux/actions/auth";
 
 const BtnContainer = styled.div`
   width: 21.875rem;
@@ -31,10 +31,10 @@ function ToastUi({ title, question_folder, question_tags, token }) {
   const editorRef = useRef();
   const content = useSelector((state) => state.test.desc);
 
-  const onChange = useCallback(() => {
+  const onChange = () => {
     const editorData = editorRef.current.getInstance().getMarkdown();
     dispatch(setDesc(editorData));
-  }, [dispatch]);
+  };
 
   const handleCreate = async () => {
     try {
@@ -49,6 +49,7 @@ function ToastUi({ title, question_folder, question_tags, token }) {
         })
         .then((response) => {
           console.log(response);
+          router.push(`/`);
         })
         .catch((error) => {
           console.log(error);
@@ -57,11 +58,11 @@ function ToastUi({ title, question_folder, question_tags, token }) {
       console.log(e);
     }
   };
-  
+  // console.log(typeof(question_tags));
   return (
     <>
       <Editor
-        initialValue=""
+        initialValue={content}
         previewStyle="vertical"
         height="702px"
         initialEditType="wysiwyg"
@@ -70,6 +71,11 @@ function ToastUi({ title, question_folder, question_tags, token }) {
         ref={editorRef}
         onChange={() => onChange()}
         language="ko"
+        events={{
+          focus: () => {
+            console.log('⭐ focus');
+          },
+        }}
       />
       <BtnContainer>
         <Btn onClick={handleCreate}>작성하기</Btn>

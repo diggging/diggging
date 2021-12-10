@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { check_auth_status, load_user } from "../redux/actions/auth";
 import { useDispatch, useSelector } from "react-redux";
@@ -99,33 +99,22 @@ function questionCreate() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
 
-  //조회하면 왜 리셋되는거지
-  // const a = useSelector((state) => state.test.desc);
-
-  const [inputs, setInput] = useState({
-    title: "",
-    question_folder: [],
-    question_tags: [],
-  });
-
-  const { title, question_folder, question_tags } = inputs;
+  const [title, setTitle] = useState("");
+  const [folder, setFolder] = useState([]);
+  const [tags, setTags] = useState([]);
   const [token, setToken] = useState("");
 
-  const onChange = (e) => {
-    const { value, name } = e.target;
-    setInput({
-      ...inputs,
-      [name]: value,
-    });
-  };
+  const onChangeTitle = useCallback((e) => {
+    setTitle(e.target.value);
+  },[title]);
 
-  const onChangeArr = (e) => {
-    const { value, name } = e.target;
-    setInput({
-      ...inputs,
-      [name]: [value.split(",")],
-    }) 
-  }
+  const onChangeFolder = useCallback((e) => {
+    setFolder(e.target.value);
+  },[folder]);
+
+  const onChangeTags = useCallback((e) => {
+    setTags(e.target.value);
+  },[tags]);
 
   const onLoadUser = async () => {
     const response = dispatch(load_user());
@@ -151,7 +140,7 @@ function questionCreate() {
     }
   };
 
-  const Toast = dynamic(() => import("../components/ToastUi"), { ssr: false });
+  const Toast = dynamic(() => import("../components/questions/ToastUi"), { ssr: false });
 
   //token 확인(refresh, verify)
   useEffect(() => {
@@ -164,6 +153,7 @@ function questionCreate() {
     onLoadUser();
   }, []);
 
+  console.log(user);
   return (
     <div>
       <MainContainer>
@@ -172,13 +162,13 @@ function questionCreate() {
             <QuestionTitle
               name="title"
               value={title}
-              onChange={onChange}
+              onChange={onChangeTitle}
               placeholder="제목을 입력하세요."
             />
             <QuestionFolder
               name="question_folder"
-              value={question_folder}
-              onChange={onChangeArr}
+              value={folder}
+              onChange={onChangeFolder}
             >
               <option disabled defaultValue>
                 🗂 게시글을 담을 폴더를 선택하세요!
@@ -186,20 +176,16 @@ function questionCreate() {
             </QuestionFolder>
             <QuestionHash
               name="question_tags"
-              value={question_tags}
-              onChange={onChangeArr}
+              value={tags}
+              onChange={onChangeTags}
               placeholder="#해시태그를 #입력해보세요"
             />
             <Toast
               title={title}
-              question_folder={question_folder}
-              question_tags={question_tags}
+              question_folder={folder}
+              question_tags={tags}
               token={token}
             />
-            {/* <BtnContainer>
-              <Btn onClick={handleCreate}>작성하기</Btn>
-              <Btn>나가기</Btn>
-            </BtnContainer> */}
           </FormContainer>
         </Container>
       </MainContainer>

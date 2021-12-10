@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
-import Paging from "../components/Paging";
+import Paging from "../Paging";
 
 function QuestionList() {
   const [questions, setQuestions] = useState([]);

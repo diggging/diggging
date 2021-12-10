@@ -5,7 +5,7 @@ import Link from "next/link";
 import NavBar from "../components/NavBar";
 import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
-import QuestionList from "../components/QuestionList";
+import QuestionList from "../components/questions/QuestionList";
 import Paging from "../components/Paging";
 import Layout from '../hocs/Layout'; 
 
