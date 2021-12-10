@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import styled from 'styled-components';
-import axios from 'axios';
-import { check_auth_status } from '../redux/actions/auth';
-import { useDispatch } from 'react-redux';
-import dynamic from 'next/dynamic';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { check_auth_status, load_user } from "../redux/actions/auth";
+import { useDispatch, useSelector } from "react-redux";
+import dynamic from "next/dynamic";
 
 const MainContainer = styled.div`
   margin-top: 9.0625rem;
@@ -11,11 +10,11 @@ const MainContainer = styled.div`
 `;
 
 const Container = styled.div`
-  display:flex;
+  display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  background-color: #FAFAFF;
+  background-color: #fafaff;
   box-sizing: border-box;
   /* box-shadow: 0.75rem 0.75rem 3.75rem 0.5rem rgba(0, 0, 0, 0.2); */
   width: 100%;
@@ -30,17 +29,16 @@ const FormContainer = styled.div`
   align-items: center;
 `;
 
-
 const QuestionTitle = styled.input`
   width: 51.375rem;
   height: 4.375rem;
   margin-top: 1.5rem;
-  background-color: #F5F5F7;
+  background-color: #f5f5f7;
   border: none;
   border-radius: 0.3125rem;
   padding: 0.625rem 1.25rem;
   font-size: 1.25rem;
-  
+
   &:focus {
     outline: 0;
   }
@@ -51,13 +49,13 @@ const QuestionFolder = styled.select`
   height: 4.375rem;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
-  background-color: #F5F5F7;
+  background-color: #f5f5f7;
   border: none;
   border-radius: 0.3125rem;
   cursor: pointer;
   padding: 0.625rem 1.25rem;
   font-size: 1.25rem;
-  
+
   &:focus {
     outline: 0;
   }
@@ -66,8 +64,8 @@ const QuestionFolder = styled.select`
 const QuestionHash = styled.input`
   width: 51.375rem;
   height: 4.375rem;
-  margin-top: 1.5rem;
-  background-color: #F5F5F7;
+  margin-bottom: 1.5rem;
+  background-color: #f5f5f7;
   border: none;
   border-radius: 0.3125rem;
   padding: 0.625rem 1.25rem;
@@ -89,7 +87,7 @@ const BtnContainer = styled.div`
 const Btn = styled.button`
   width: 8.75rem;
   height: 3rem;
-  background-color: #F5F5F7;
+  background-color: #f5f5f7;
   /* border: 3px solid #FFFFFF; */
   /* border: none; */
   box-sizing: border-box;
@@ -99,98 +97,106 @@ const Btn = styled.button`
 
 function questionCreate() {
   const dispatch = useDispatch();
-  const [desc, setDesc] = useState('');
+  const user = useSelector((state) => state.auth.user);
+
+  //조회하면 왜 리셋되는거지
+  // const a = useSelector((state) => state.test.desc);
+
   const [inputs, setInput] = useState({
     title: "",
     question_folder: [],
-    question_tags: []
-  })
+    question_tags: [],
+  });
 
-  const {title, question_folder, question_tags} = inputs;
-  const [token, setToken] = useState('');
+  const { title, question_folder, question_tags } = inputs;
+  const [token, setToken] = useState("");
 
   const onChange = (e) => {
-    
     const { value, name } = e.target;
     setInput({
       ...inputs,
-      [name]: value
+      [name]: value,
     });
   };
 
+  const onLoadUser = async () => {
+    const response = dispatch(load_user());
+    if (user) {
+      const userData = user.user;
+      const { email, user_nickname, username } = userData;
+      console.log(user.user);
+      console.log(response, "response");
+    } else {
+      console.log("유저없엉");
+    }
+  };
 
   const getAccessToken = async () => {
     if (dispatch && dispatch !== null && dispatch !== undefined) {
       dispatch(check_auth_status())
-      .then((res) => res.json())
-      .then((data) => {
-        const accessToken = data.access;
-        setToken(accessToken);
-      })
-      .catch((err) => console.log(err))
-      }
-  }
-  
-  const handleCreate = async () => { 
-    try {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      axios.defaults.headers.common['Content-Type'] = "application/json";
-      await axios.post('http://127.0.0.1:8000/questions/create/', {
-          "title": "whdrnjs3",
-          "desc": "whdrnjs3_for_api_schema2ㅁㄴㅇㅎㄹㄴㅁㅎ",
-          "question_folder": [],
-          "question_tags": ["#api"]
-      })
-      .then(response => {
-        console.log(response);
-      })
-      .catch (error => {
-        console.log(error);
-      })
-    } catch (e) {
-      console.log(e);
+        .then((res) => res.json())
+        .then((data) => {
+          const accessToken = data.access;
+          setToken(accessToken);
+        })
+        .catch((err) => console.log(err));
     }
-  }
+  };
 
-  const Toast = dynamic(() => import('../components/ToastUi'),
-  { ssr : false }
-  )
+  const Toast = dynamic(() => import("../components/ToastUi"), { ssr: false });
 
   //token 확인(refresh, verify)
-  useEffect(()=>{
+  useEffect(() => {
     if (dispatch && dispatch !== null && dispatch !== undefined)
-        dispatch(check_auth_status());
-  }, [dispatch])
+      dispatch(check_auth_status());
+  }, [dispatch]);
 
   useEffect(() => {
     getAccessToken();
-  }, [])
-
-  console.log(inputs);
-  console.log(desc);
+    onLoadUser();
+  }, []);
 
   return (
-      <div>
-        <MainContainer>
-          <Container>
-            <FormContainer>
-              <QuestionTitle name="title" value={title} onChange={onChange} placeholder="제목을 입력하세요."/>
-              <QuestionFolder name="question_folder" value={question_folder} onChangeFolder={onChange}>
-                <option disabled selected >🗂 게시글을 담을 폴더를 선택하세요!</option>
-              </QuestionFolder>
-              <Toast setDesc={setDesc}/>
-              
-              <QuestionHash name="question_tags" value={question_tags} onChange={onChange} placeholder="#해시태그를 #입력해보세요"/>
-
-              <BtnContainer>
-                <Btn onClick={handleCreate}>작성하기</Btn>
-                <Btn >나가기</Btn>
-              </BtnContainer>
-            </FormContainer>
-          </Container>
-        </MainContainer>
-      </div>
+    <div>
+      <MainContainer>
+        <Container>
+          <FormContainer>
+            <QuestionTitle
+              name="title"
+              value={title}
+              onChange={onChange}
+              placeholder="제목을 입력하세요."
+            />
+            <QuestionFolder
+              name="question_folder"
+              value={question_folder}
+              onChange={onChange}
+            >
+              <option disabled defaultValue>
+                🗂 게시글을 담을 폴더를 선택하세요!
+              </option>
+            </QuestionFolder>
+            <QuestionHash
+              name="question_tags"
+              value={question_tags}
+              onChange={onChange}
+              placeholder="#해시태그를 #입력해보세요"
+            />
+            <Toast
+              title={title}
+              question_folder={question_folder}
+              question_tags={question_tags}
+              token={token}
+            />
+            {/* <BtnContainer>
+              <Btn onClick={handleCreate}>작성하기</Btn>
+              <Btn>나가기</Btn>
+            </BtnContainer> */}
+          </FormContainer>
+        </Container>
+      </MainContainer>
+    </div>
   );
 }
 
-export default questionCreate;
+export default React.memo(questionCreate);

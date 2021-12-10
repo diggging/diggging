@@ -15,3 +15,6 @@ export const SET_AUTH_LOADING = 'SET_AUTH_LOADING';
 export const REMOVE_AUTH_LOADING = 'REMOVE_AUTH_LOADING';
 export const BAD_REQUEST = 'BAD_REQUEST';
 export const RESET_BAD_REQUEST = 'RESET_BAD_REQUEST';
+
+//Editor Content
+export const CHANGE_CONTENT = 'CHANGE_CONTENT';

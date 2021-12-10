@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { check_auth_status } from '../redux/actions/auth';
+import {setDesc} from '../modules/editor';
 import Head from 'next/head';
 import styled from 'styled-components';
 
