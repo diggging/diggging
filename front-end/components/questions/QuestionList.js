@@ -6,6 +6,7 @@ import Paging from "../Paging";
 function QuestionList() {
   const [questions, setQuestions] = useState([]);
   const [page, setPage] = useState(1);
+
   const QuestionRecent = async () => {
     try {
       //test url
@@ -45,6 +46,7 @@ function QuestionList() {
         ))}
       </ul>
       <Paging handlePageChange={handlePageChange} page={page} />
+      {/* <Paging page={page} /> */}
     </div>
   );
 }

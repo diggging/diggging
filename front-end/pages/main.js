@@ -12,6 +12,7 @@ import Router from "next/router";
 
 function main() {
   const [questions, setQuestions] = useState([]);
+  const [open, setOpen] = useState(false);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   // const [page, setPage] = useState(1);
 
@@ -76,7 +77,7 @@ function main() {
   };
 
   useEffect(() => {
-    QuestionRecent();
+    // QuestionRecent();
   }, []);
 
   return (
@@ -108,10 +109,21 @@ function main() {
               <Tab onClick={two}>인기 순</Tab>
             </>
           )}
+          {/* <ToggleContainer onClick={() => {setOpen(!open)}}>
+            답변전체
+          </ToggleContainer>
+          {open ? (
+                <DropBox>
+                  <DropList>
+                    <DropListItem>답변 대기 중</DropListItem>
+                    <DropListItem>답변완료</DropListItem>
+                    <DropListItem>답변전체</DropListItem>
+                  </DropList>
+                </DropBox>
+          ) : null} */}
         </TabContainer>
         <QuestionsContainer>
           <QuestionList />
-          {/* <Paging handlePageChange={handlePageChange} page={page}/> */}
         </QuestionsContainer>
       </Container>
     </Layout>
@@ -139,6 +151,7 @@ const CreateBtn = styled.button`
   height: 50px;
   background: #FFFFFF;
   border-radius: 25px;
+  box-shadow: 4px 4px 8px rgba(170, 170, 170, 0.1);
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
@@ -155,7 +168,7 @@ const TabContainer = styled.div`
   height: 70px;
   border-top: 2px solid rgba(219, 214, 199, 0.4);
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   padding: 10px 20px;
   margin-top: 98px;
 `;
@@ -166,8 +179,9 @@ const Tab = styled.div`
   color: #898a90;
   cursor: pointer;
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
+  float: left;
   font-size: 20px;
   line-height: 28.96px;
   margin-right: 30px;
@@ -181,3 +195,50 @@ const QuestionsContainer = styled.div`
   width: 100%;
   height: 100%;
 `;
+
+// const ToggleContainer = styled.button`
+//   width: 132px;
+//   height: 40px;
+//   background: #FFFFFF;
+//   box-shadow: 4px 4px 8px rgba(170, 170, 170, 0.1);
+//   border-radius: 0.625rem;
+//   text-align: center;
+//   padding: 0.3125rem;
+//   border: none;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   cursor: pointer;
+//   color: #9faeb6;
+//   /* position: relative; */
+//   float: right;
+
+//   & svg {
+//     margin-left: 10px;
+//   }
+// `;
+
+// const DropBox = styled.div`
+//   background-color: white;
+//   box-shadow: 0.25rem 0.25rem 0.25rem rgba(0, 0, 0, 0.05);
+//   width: 10rem;
+//   padding: 0 1.5rem;
+//   position: absolute;
+//   left: 1136px;
+//   top: 671px;
+// `;
+
+// const DropList = styled.ul`
+//   list-style: none;
+//   line-height: 2rem;
+//   font-family: 'Pretendard-Regular';
+// `;
+
+// const DropListItem = styled.li`
+//   color: #B6B6B6;
+
+//   &:hover {
+//     color: #343434;
+//     font-family: 'Pretendard-Medium';
+//   }
+// `;

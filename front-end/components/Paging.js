@@ -10,9 +10,12 @@ function Paging({handlePageChange, page}) {
         itemsCountPerPage={10}
         totalItemsCount={450}
         pageRangeDisplayed={5}
-        prevPageText={"‹"}
-        nextPageText={"›"}
+        // prevPageText={"‹"}
+        // nextPageText={"›"}
         onChange={handlePageChange}
+        hideDisabled={true}
+        hideNavigation={true}
+        // hideFirstLastPages={true} 이거는 있어야 하지 않을까,,,
       />
     </div>
   );
