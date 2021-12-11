@@ -7,7 +7,8 @@ import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
 import QuestionList from "../components/questions/QuestionList";
 import Paging from "../components/Paging";
-import Layout from '../hocs/Layout'; 
+import Layout from "../hocs/Layout";
+import Router from "next/router";
 
 function main() {
   const [questions, setQuestions] = useState([]);
@@ -26,18 +27,23 @@ function main() {
   const QuestionRecent = async () => {
     try {
       //test url
-      const res = await axios.get("https://jsonplaceholder.typicode.com/posts?_page=1&_limit=10");
+      const res = await axios.get(
+        "https://jsonplaceholder.typicode.com/posts?_page=1&_limit=10"
+      );
       setQuestions(res.data);
     } catch (e) {
       console.log(e);
     }
   };
+
   //redux로 상태관리를 해줘야 할거 같다.
   const one = async () => {
     try {
       //test url
       setQuestions([]);
-      const res = await axios.get("https://jsonplaceholder.typicode.com/posts?_page=2&_limit=10");
+      const res = await axios.get(
+        "https://jsonplaceholder.typicode.com/posts?_page=2&_limit=10"
+      );
       setQuestions(res.data);
       console.log(res);
     } catch (e) {
@@ -60,7 +66,9 @@ function main() {
   const three = async () => {
     try {
       //test url
-      const res = await axios.get("https://jsonplaceholder.typicode.com/posts?_page=4&_limit=10");
+      const res = await axios.get(
+        "https://jsonplaceholder.typicode.com/posts?_page=4&_limit=10"
+      );
       setQuestions(res.data);
     } catch (e) {
       console.log(e);
@@ -78,6 +86,15 @@ function main() {
         <Image src="/../public/static/images/a.png" width={1440} height={511} />
       </ImageContainer>
       <Container>
+        {isAuthenticated ? (
+          <>
+            <Link href="/questionCreate" passHref>
+              <CreateBtn>
+                질문하기
+              </CreateBtn>
+            </Link>
+          </>
+        ) : null}
         <TabContainer>
           {isAuthenticated ? (
             <>
@@ -112,10 +129,25 @@ const ImageContainer = styled.div`
 `;
 
 const Container = styled.div`
-  width: 100%;
+  width: 1440px;
   height: 100vh;
-  /* margin-top: 511px; */
-  padding: 6.125rem 12.5rem;
+  margin: 0 auto;
+`;
+
+const CreateBtn = styled.button`
+  width: 150px;
+  height: 50px;
+  background: #FFFFFF;
+  border-radius: 25px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 32px;
+  letter-spacing: 0.01em;
+  color: #706969;
+  float: right;
+  margin: 24px 24px;
 `;
 
 const TabContainer = styled.div`
@@ -125,6 +157,7 @@ const TabContainer = styled.div`
   display: flex;
   align-items: center;
   padding: 10px 20px;
+  margin-top: 98px;
 `;
 
 const Tab = styled.div`

@@ -161,9 +161,6 @@ function navBar() {
           ) : (
             <></>
           )}
-          <Link href="/questionCreate" passHref>
-            <NavItem>기록하기</NavItem>
-          </Link>
         </NavLeft>
         <NavRight>
           <Link href="/search" passHref>
