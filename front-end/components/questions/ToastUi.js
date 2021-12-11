@@ -5,27 +5,11 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 import { Editor } from "@toast-ui/react-editor";
 import { setDesc } from "../../modules/editor";
 import { useDispatch, useSelector } from "react-redux";
-
-const BtnContainer = styled.div`
-  width: 21.875rem;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  margin-top: 1.5rem;
-`;
-
-const Btn = styled.button`
-  width: 8.75rem;
-  height: 3rem;
-  background-color: #f5f5f7;
-  /* border: 3px solid #FFFFFF; */
-  /* border: none; */
-  box-sizing: border-box;
-  border-radius: 1.5625rem;
-  cursor: pointer;
-`;
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 function ToastUi({ title, folder, tags, token }) {
+  const router = useRouter();
   const dispatch = useDispatch();
   const editorRef = useRef();
   const content = useSelector((state) => state.test.desc);
@@ -43,7 +27,7 @@ function ToastUi({ title, folder, tags, token }) {
         .post("http://127.0.0.1:8000/questions/create/", {
           title: title,
           desc: content,
-          question_folder: folder,
+          question_folder: [],
           question_tags: tags,
         })
         .then((response) => {
@@ -78,10 +62,31 @@ function ToastUi({ title, folder, tags, token }) {
       />
       <BtnContainer>
         <Btn onClick={handleCreate}>작성하기</Btn>
-        <Btn>나가기</Btn>
+        <Link href="/" passHref>
+          <Btn>나가기</Btn>
+        </Link>
       </BtnContainer>
     </>
   );
 }
 
 export default React.memo(ToastUi);
+
+const BtnContainer = styled.div`
+  width: 21.875rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 1.5rem;
+`;
+
+const Btn = styled.button`
+  width: 8.75rem;
+  height: 3rem;
+  background-color: #f5f5f7;
+  /* border: 3px solid #FFFFFF; */
+  /* border: none; */
+  box-sizing: border-box;
+  border-radius: 1.5625rem;
+  cursor: pointer;
+`;

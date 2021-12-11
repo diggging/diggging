@@ -9,53 +9,6 @@ import QuestionList from "../components/questions/QuestionList";
 import Paging from "../components/Paging";
 import Layout from '../hocs/Layout'; 
 
-
-const ImageContainer = styled.div`
-  position: relative;
-  /* width: 100%; */
-  height: 31.9375rem;
-  display: flex;
-  justify-content: center;
-`;
-
-const Container = styled.div`
-  width: 100%;
-  height: 100vh;
-  /* margin-top: 511px; */
-  padding: 6.125rem 12.5rem;
-`;
-
-const TabContainer = styled.div`
-  width: 100%;
-  height: 70px;
-  border-top: 2px solid rgba(219, 214, 199, 0.4);
-  display: flex;
-  align-items: center;
-  padding: 10px 20px;
-`;
-
-const Tab = styled.div`
-  width: 120px;
-  height: 53px;
-  color: #898a90;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 20px;
-  line-height: 28.96px;
-  margin-right: 30px;
-
-  &:hover {
-    color: black;
-  }
-`;
-
-const QuestionsContainer = styled.div`
-  width: 100%;
-  height: 100%;
-`;
-
 function main() {
   const [questions, setQuestions] = useState([]);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -149,3 +102,49 @@ function main() {
 }
 
 export default main;
+
+const ImageContainer = styled.div`
+  position: relative;
+  /* width: 100%; */
+  height: 31.9375rem;
+  display: flex;
+  justify-content: center;
+`;
+
+const Container = styled.div`
+  width: 100%;
+  height: 100vh;
+  /* margin-top: 511px; */
+  padding: 6.125rem 12.5rem;
+`;
+
+const TabContainer = styled.div`
+  width: 100%;
+  height: 70px;
+  border-top: 2px solid rgba(219, 214, 199, 0.4);
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+`;
+
+const Tab = styled.div`
+  width: 120px;
+  height: 53px;
+  color: #898a90;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  line-height: 28.96px;
+  margin-right: 30px;
+
+  &:hover {
+    color: black;
+  }
+`;
+
+const QuestionsContainer = styled.div`
+  width: 100%;
+  height: 100%;
+`;
