@@ -6,7 +6,6 @@ import { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
 import "../public/static/fonts/font.css";
 import "../public/static/css/Paging.css";
-
 import { Provider } from "react-redux";
 import { useStore } from "../redux/store.js";
 import Head from 'next/head';

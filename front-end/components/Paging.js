@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import Pagination from "react-js-pagination";
 
-function Paging({handlePageChange, page}) {
+function Paging({handlePageChange, page, count}) {
   
   return (
     <div>
       <Pagination
         activePage={page}
-        itemsCountPerPage={10}
-        totalItemsCount={450}
+        // itemsCountPerPage={10}
+        totalItemsCount={count}
         pageRangeDisplayed={5}
         // prevPageText={"‹"}
         // nextPageText={"›"}

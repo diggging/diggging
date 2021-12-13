@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, Children } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import Link from "next/link";
@@ -9,77 +9,34 @@ import QuestionList from "../components/questions/QuestionList";
 import Paging from "../components/Paging";
 import Layout from "../hocs/Layout";
 import Router from "next/router";
+import Recent from "./recent";
+import { useRouter } from "next/router";
 
-function main() {
+function main({children}) {
+  const router = useRouter();
   const [questions, setQuestions] = useState([]);
+  const [next, setNext] = useState(null);
+  const [count, setCount] = useState(0);
   const [open, setOpen] = useState(false);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  // const [page, setPage] = useState(1);
-
-  // const handlePageChange = (pageNumber) => {
-  //   axios
-  //     .get(
-  //       `https://jsonplaceholder.typicode.com/posts?_page=${pageNumber}&_limit=20`
-  //     )
-  //   setPage(pageNumber);
-  //   console.log(page);
-  // };
-
-  const QuestionRecent = async () => {
+  
+  const QuestionRequest = async () => {
     try {
-      //test url
       const res = await axios.get(
-        "https://jsonplaceholder.typicode.com/posts?_page=1&_limit=10"
+        "http://127.0.0.1:8000/questions/question_list/?big_criteria=recent&page=1&small_criteria=all"
       );
-      setQuestions(res.data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  //redux로 상태관리를 해줘야 할거 같다.
-  const one = async () => {
-    try {
-      //test url
-      setQuestions([]);
-      const res = await axios.get(
-        "https://jsonplaceholder.typicode.com/posts?_page=2&_limit=10"
-      );
-      setQuestions(res.data);
-      console.log(res);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const two = async () => {
-    try {
-      //test url
-      const res = await axios.get(
-        "https://jsonplaceholder.typicode.com/posts?_page=3&_limit=10"
-      );
-      setQuestions(res.data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const three = async () => {
-    try {
-      //test url
-      const res = await axios.get(
-        "https://jsonplaceholder.typicode.com/posts?_page=4&_limit=10"
-      );
-      setQuestions(res.data);
+      setQuestions(res.data.results);
+      setCount(res.data.count);
+      setNext(res.data.next);
     } catch (e) {
       console.log(e);
     }
   };
 
   useEffect(() => {
-    // QuestionRecent();
+    QuestionRequest();
   }, []);
-
+  
   return (
     <Layout>
       <NavBar />
@@ -90,23 +47,31 @@ function main() {
         {isAuthenticated ? (
           <>
             <Link href="/questionCreate" passHref>
-              <CreateBtn>
-                질문하기
-              </CreateBtn>
+              <CreateBtn>질문하기</CreateBtn>
             </Link>
           </>
         ) : null}
         <TabContainer>
           {isAuthenticated ? (
             <>
-              <Tab onClick={one}>최신 질문 순</Tab>
-              <Tab onClick={two}>인기 순</Tab>
-              <Tab onClick={three}>내가 남긴 질문</Tab>
+              <Link href="/recent">
+                <Tab>최신 질문 순</Tab>
+              </Link>
+              <Link href="/popular">
+                <Tab>인기 순</Tab>
+              </Link>
+              <Link href="/mine">
+                <Tab>내가 남긴 질문</Tab>
+              </Link>
             </>
           ) : (
             <>
-              <Tab onClick={one}>최신 질문 순</Tab>
-              <Tab onClick={two}>인기 순</Tab>
+              <Link href="/recent">
+                <Tab>최신 질문 순</Tab>
+              </Link>
+              <Link href="/popular">
+                <Tab>인기 순</Tab>
+              </Link>
             </>
           )}
           {/* <ToggleContainer onClick={() => {setOpen(!open)}}>
@@ -123,7 +88,15 @@ function main() {
           ) : null} */}
         </TabContainer>
         <QuestionsContainer>
-          <QuestionList />
+          {router.pathname == "/" ? (
+            <>
+              <QuestionList data={questions} count={count} next={next}/>
+            </>
+          ) : (
+            <>
+              {children}
+            </>
+          )}
         </QuestionsContainer>
       </Container>
     </Layout>
@@ -149,7 +122,7 @@ const Container = styled.div`
 const CreateBtn = styled.button`
   width: 150px;
   height: 50px;
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 25px;
   box-shadow: 4px 4px 8px rgba(170, 170, 170, 0.1);
   font-family: Roboto;

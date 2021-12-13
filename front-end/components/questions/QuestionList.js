@@ -1,39 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import Link from "next/link";
 import Paging from "../Paging";
 
-function QuestionList() {
+function QuestionList({ data, count }) {
   const [questions, setQuestions] = useState([]);
   const [page, setPage] = useState(1);
 
-  const QuestionRecent = async () => {
-    try {
-      //test url
-      const res = await axios.get(
-        // "http://127.0.0.1:8000/questions/question_list/?big_criteria=recent&page=2&small_criteria=all"
-        "https://jsonplaceholder.typicode.com/posts?_page=1&_limit=20"
-      );
-      setQuestions(res.data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
   const handlePageChange = (pageNumber) => {
     console.log(`active page is ${pageNumber}`);
     axios
       .get(
-        `https://jsonplaceholder.typicode.com/posts?_page=${pageNumber}&_limit=20`
+        `http://127.0.0.1:8000/questions/question_list/?big_criteria=recent&page=${pageNumber}&small_criteria=all`
       )
-      .then((res) => setQuestions(res.data));
-    setPage(pageNumber);
-    // console.log(pageNumber);
+      .then(res => {
+        setQuestions(res.data.results);
+        setPage(pageNumber);
+      })
   };
 
   useEffect(() => {
-    QuestionRecent();
-  }, []);
-
+    setQuestions(data);
+  }, [handlePageChange])
+  
+  console.log(questions);
   return (
     <div>
       <ul>
@@ -45,10 +35,9 @@ function QuestionList() {
           </li>
         ))}
       </ul>
-      <Paging handlePageChange={handlePageChange} page={page} />
-      {/* <Paging page={page} /> */}
+      <Paging handlePageChange={handlePageChange} page={page} count={count}/>
     </div>
   );
 }
 
-export default QuestionList;
+export default React.memo(QuestionList);
