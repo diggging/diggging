@@ -6,8 +6,8 @@ import Paging from "../components/Paging";
 
 function Recent() {
   const [data, setData] = useState([]);
-  // const [page, setPage] = useState(1);
-  // const [count, setCount] = useState(0);
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
 
   const QuestionRequest = async () => {
     try {
@@ -21,17 +21,17 @@ function Recent() {
     }
   };
 
-  // const handlePageChange = (pageNumber) => {
-  //   console.log(`active page is ${pageNumber}`);
-  //   axios
-  //     .get(
-  //       `http://127.0.0.1:8000/questions/question_list/?big_criteria=recent&page=${pageNumber}&small_criteria=all`
-  //     )
-  //     .then(res => {
-  //       setData(res.data.results);
-  //       setPage(pageNumber);
-  //     })
-  // };
+  const handlePageChange = (pageNumber) => {
+    console.log(`active page is ${pageNumber}`);
+    axios
+      .get(
+        `http://127.0.0.1:8000/questions/question_list/?big_criteria=recent&page=${pageNumber}&small_criteria=all`
+      )
+      .then(res => {
+        setData(res.data.results);
+        setPage(pageNumber);
+      })
+  };
 
   useEffect(() => {
     QuestionRequest();
@@ -39,7 +39,7 @@ function Recent() {
   
   return (
     <Main>
-        <QuestionList data={data}></QuestionList>
+        <QuestionList data={data} handlePageChange={handlePageChange} page={page} count={count}></QuestionList>
     </Main>
   );
 }
