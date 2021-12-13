@@ -1,46 +1,30 @@
-import React, {useState, useEffect} from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {setPopular} from '../modules/questions';
 import Main from './main';
 import QuestionList from '../components/questions/QuestionList';
-import Paging from "../components/Paging";
 
 function Popular() {
-  const [data, setData] = useState([]);
-  const [page, setPage] = useState(1);
-  const [count, setCount] = useState(0);
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.data.data);
+  const count = useSelector((state) => state.data.count);
+  const page = useSelector((state) => state.data.page);
 
-  const QuestionRequest = async () => {
-    try {
-      //test url
-      const res = await axios.get(
-        "http://127.0.0.1:8000/questions/question_list/?big_criteria=popular&page=1&small_criteria=all"
-      );
-      setData(res.data.results);
-      setCount(res.data.count);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const handlePageChange = (pageNumber) => {
-    console.log(`active page is ${pageNumber}`);
-    axios
-      .get(
-        `http://127.0.0.1:8000/questions/question_list/?big_criteria=popular&page=${pageNumber}&small_criteria=all`
-      )
-      .then(res => {
-        setData(res.data.results);
-        setPage(pageNumber);
-      })
+  console.log(data);
+  
+  const postPage = (page) => {
+    setPopular(page);
   };
 
   useEffect(() => {
-    QuestionRequest();
-  }, []);
+    if (dispatch && dispatch !== null && dispatch !== undefined) {
+      dispatch(setPopular(page));
+    }
+  }, [dispatch]);
 
   return (
     <Main>
-        <QuestionList data={data} handlePageChange={handlePageChange} page={page} count={count}></QuestionList>
+        <QuestionList data={data} handlePageChange={postPage} page={page} count={count}></QuestionList>
     </Main>
   );
 }

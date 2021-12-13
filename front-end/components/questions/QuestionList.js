@@ -1,35 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
 import Link from "next/link";
 import Paging from "../Paging";
-import {handlePageChange} from '../../modules/questions';
-
+import { setRecent } from '../../modules/questions';
 
 function QuestionList({ data, count }) {
   const dispatch = useDispatch();
-  // const page = useSelector((state) => state.handlePageChange.pageNumber);
-  // const testData = useSelector((state) => state.handlePageChange.data);
-  // console.log(page);
-  // console.log(testData); 
-  
-  // const handlePageChange = (pageNumber) => {
-  //   console.log(`active page is ${pageNumber}`);
-  //   axios
-  //     .get(
-  //       `http://127.0.0.1:8000/questions/question_list/?big_criteria=recent&page=${pageNumber}&small_criteria=all`
-  //     )
-  //     .then(res => {
-  //       // console.log(data);
-  //       setQuestions(res.data.results);
-  //       setPage(pageNumber);
-  //     })
-  // };
-  const [page, setPage] = useState(1);
+  const page = useSelector((state) => state.data.page);
 
   const postPage = (page) => {
-    dispatch(handlePageChange(page))
-    setPage(page);
+    dispatch(setRecent(page));
   };
 
   return (

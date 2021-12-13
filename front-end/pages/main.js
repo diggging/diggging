@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, Children } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import Link from "next/link";
@@ -11,32 +11,26 @@ import Layout from "../hocs/Layout";
 import Router from "next/router";
 import Recent from "./recent";
 import { useRouter } from "next/router";
-import {setMain} from '../modules/questions';
+import { setRecent, changePage } from "../modules/questions";
 
-function main({children}) {
+function main({ children }) {
   const router = useRouter();
 
   const dispatch = useDispatch();
   const data = useSelector((state) => state.data.data);
   const count = useSelector((state) => state.data.count);
+  const page = useSelector((state) => state.data.page);
+
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const [open, setOpen] = useState(false);
 
-  //url 파싱 정규식
-  function getURLParams(url) {
-    var result = {};
-    url.replace(/[?&]{1}([^=&#]+)=([^&#]*)/g, function(s, k, v) { result[k] = decodeURIComponent(v); });
-    return result
-  }
-  const API = "http://127.0.0.1:8000/questions/question_list/?big_criteria=recent&page=1&small_criteria=all";
-
   useEffect(() => {
     if (dispatch && dispatch !== null && dispatch !== undefined) {
-      dispatch(setMain());
+      dispatch(setRecent(page));
     }
   }, [dispatch]);
-  
+
   return (
     <Layout>
       <NavBar />
@@ -93,9 +87,7 @@ function main({children}) {
               <QuestionList data={data} count={count} />
             </>
           ) : (
-            <>
-              {children}
-            </>
+            <>{children}</>
           )}
         </QuestionsContainer>
       </Container>
