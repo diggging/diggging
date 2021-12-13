@@ -13,6 +13,7 @@ const colors = {
 const deviceSizes = {
   mobile: "414px",
   tablet: "768px",
+  laptop: "1152px"
 };
 
 const device = {

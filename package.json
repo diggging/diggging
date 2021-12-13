@@ -1,6 +1,21 @@
 {
   "dependencies": {
     "@ckeditor/ckeditor5-code-block": "^29.1.0",
-    "next": "^12.0.1"
+    "@toast-ui/editor": "^2.5.4",
+    "@toast-ui/react-editor": "^2.5.4",
+    "@zeit/next-css": "^1.0.1",
+    "axios": "^0.24.0",
+    "cookie": "^0.4.1",
+    "next": "^12.0.7",
+    "next-images": "^1.8.4",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-loader-spinner": "^4.0.0",
+    "react-redux": "^7.2.6",
+    "redux": "^4.1.2",
+    "redux-devtools-extension": "^2.13.9",
+    "redux-thunk": "^2.4.1",
+    "rxjs": "^7.4.0",
+    "styled-components": "^5.3.3"
   }
 }
