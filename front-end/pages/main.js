@@ -45,42 +45,42 @@ function main({ children }) {
             </Link>
           </>
         ) : null}
-        <TabContainer>
-          {isAuthenticated ? (
-            <>
-              <Link href="/recent">
-                <Tab>최신 질문 순</Tab>
-              </Link>
-              <Link href="/popular">
-                <Tab>인기 순</Tab>
-              </Link>
-              <Link href="/mine">
-                <Tab>내가 남긴 질문</Tab>
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link href="/recent">
-                <Tab>최신 질문 순</Tab>
-              </Link>
-              <Link href="/popular">
-                <Tab>인기 순</Tab>
-              </Link>
-            </>
-          )}
-          {/* <ToggleContainer onClick={() => {setOpen(!open)}}>
-            답변전체
-          </ToggleContainer>
-          {open ? (
-                <DropBox>
-                  <DropList>
-                    <DropListItem>답변 대기 중</DropListItem>
-                    <DropListItem>답변완료</DropListItem>
-                    <DropListItem>답변전체</DropListItem>
-                  </DropList>
-                </DropBox>
-          ) : null} */}
-        </TabContainer>
+          <TabContainer>
+            {isAuthenticated ? (
+              <div>
+                <Link href="/recent">
+                  <Tab>최신 질문 순</Tab>
+                </Link>
+                <Link href="/popular">
+                  <Tab>인기 순</Tab>
+                </Link>
+                <Link href="/mine">
+                  <Tab>내가 남긴 질문</Tab>
+                </Link>
+              </div>
+            ) : (
+              <div>
+                <Link href="/recent">
+                  <Tab>최신 질문 순</Tab>
+                </Link>
+                <Link href="/popular">
+                  <Tab>인기 순</Tab>
+                </Link>
+              </div>
+            )}
+            <ToggleContainer onClick={() => {setOpen(!open)}}>
+              답변 전체
+            </ToggleContainer>
+              {open ? (
+                    <DropBox>
+                      <DropList>
+                        <DropListItem>답변 대기 중</DropListItem>
+                        <DropListItem>답변 완료</DropListItem>
+                        <DropListItem>답변 전체</DropListItem>
+                      </DropList>
+                    </DropBox>
+              ) : null}
+          </TabContainer>
         <QuestionsContainer>
           {router.pathname == "/" ? (
             <>
@@ -106,7 +106,7 @@ const ImageContainer = styled.div`
 `;
 
 const Container = styled.div`
-  width: 1440px;
+  width: 1068px;
   height: 100vh;
   margin: 0 auto;
 `;
@@ -133,9 +133,12 @@ const TabContainer = styled.div`
   height: 70px;
   border-top: 2px solid rgba(219, 214, 199, 0.4);
   display: flex;
-  /* align-items: center; */
+  align-items: center;
+  justify-content: space-between;
   padding: 10px 20px;
   margin-top: 98px;
+  position: relative;
+
 `;
 
 const Tab = styled.div`
@@ -161,49 +164,55 @@ const QuestionsContainer = styled.div`
   height: 100%;
 `;
 
-// const ToggleContainer = styled.button`
-//   width: 132px;
-//   height: 40px;
-//   background: #FFFFFF;
-//   box-shadow: 4px 4px 8px rgba(170, 170, 170, 0.1);
-//   border-radius: 0.625rem;
-//   text-align: center;
-//   padding: 0.3125rem;
-//   border: none;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   cursor: pointer;
-//   color: #9faeb6;
-//   /* position: relative; */
-//   float: right;
+const ToggleContainer = styled.button`
+  background: white;
+  width: 8.25rem;
+  height: 2.5rem;
+  border-radius: 4px;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  justify-content: center;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-weight: 600;
+  color: rgb(73, 80, 87);
+  font-size: 0.875rem;
+  box-shadow: rgb(0 0 0 / 5%) 0px 0px 4px;
+  cursor: pointer;
 
-//   & svg {
-//     margin-left: 10px;
-//   }
-// `;
+  & svg {
+    margin-left: 10px;
+  }
+`;
 
-// const DropBox = styled.div`
-//   background-color: white;
-//   box-shadow: 0.25rem 0.25rem 0.25rem rgba(0, 0, 0, 0.05);
-//   width: 10rem;
-//   padding: 0 1.5rem;
-//   position: absolute;
-//   left: 1136px;
-//   top: 671px;
-// `;
+const DropBox = styled.div`
+  width: 8.25rem;
+  /* height: 8.1875rem; */
+  position: absolute;
+  right: 1.8%;
+  top: 100%;
+  z-index: 5;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+`;
 
-// const DropList = styled.ul`
-//   list-style: none;
-//   line-height: 2rem;
-//   font-family: 'Pretendard-Regular';
-// `;
+const DropList = styled.ul`
+  text-align: center;
+  list-style: none;
+  line-height: 2rem;
+  font-family: 'Pretendard-Regular';
+`;
 
-// const DropListItem = styled.li`
-//   color: #B6B6B6;
+const DropListItem = styled.li`
+  color: #B6B6B6;
+  padding: 5px 10px;
+  cursor: pointer;
 
-//   &:hover {
-//     color: #343434;
-//     font-family: 'Pretendard-Medium';
-//   }
-// `;
+  &:hover {
+    color: #343434;
+    font-family: 'Pretendard-Medium';
+  }
+`;
