@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Pagination from "react-js-pagination";
 
 function Paging({handlePageChange, page, count}) {

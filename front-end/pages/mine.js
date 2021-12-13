@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 import Main from './main';
 import QuestionList from '../components/questions/QuestionList';
+import Paging from "../components/Paging";
 
 function Mine() {
   const [data, setData] = useState([]);

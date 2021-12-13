@@ -15,15 +15,16 @@ function QuestionList({ data, count }) {
       )
       .then(res => {
         setQuestions(res.data.results);
+        console.log(questions);
         setPage(pageNumber);
+        console.log(pageNumber);
       })
   };
 
   useEffect(() => {
     setQuestions(data);
-  }, [handlePageChange])
-  
-  console.log(questions);
+  }, [])
+
   return (
     <div>
       <ul>

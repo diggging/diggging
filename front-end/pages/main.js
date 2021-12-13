@@ -19,7 +19,7 @@ function main({children}) {
   const [count, setCount] = useState(0);
   const [open, setOpen] = useState(false);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  
+
   const QuestionRequest = async () => {
     try {
       const res = await axios.get(
@@ -32,6 +32,15 @@ function main({children}) {
       console.log(e);
     }
   };
+
+  //url 파싱 정규식
+  function getURLParams(url) {
+    var result = {};
+    url.replace(/[?&]{1}([^=&#]+)=([^&#]*)/g, function(s, k, v) { result[k] = decodeURIComponent(v); });
+    return result
+  }
+  
+  const API = "http://127.0.0.1:8000/questions/question_list/?big_criteria=recent&page=1&small_criteria=all";
 
   useEffect(() => {
     QuestionRequest();
