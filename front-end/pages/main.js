@@ -11,27 +11,17 @@ import Layout from "../hocs/Layout";
 import Router from "next/router";
 import Recent from "./recent";
 import { useRouter } from "next/router";
+import {setMain} from '../modules/questions';
 
 function main({children}) {
   const router = useRouter();
-  const [questions, setQuestions] = useState([]);
-  const [next, setNext] = useState(null);
-  const [count, setCount] = useState(0);
-  const [open, setOpen] = useState(false);
+
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.data.data);
+  const count = useSelector((state) => state.data.count);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-  const QuestionRequest = async () => {
-    try {
-      const res = await axios.get(
-        "http://127.0.0.1:8000/questions/question_list/?big_criteria=recent&page=1&small_criteria=all"
-      );
-      setQuestions(res.data.results);
-      setCount(res.data.count);
-      setNext(res.data.next);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  const [open, setOpen] = useState(false);
 
   //url 파싱 정규식
   function getURLParams(url) {
@@ -39,12 +29,13 @@ function main({children}) {
     url.replace(/[?&]{1}([^=&#]+)=([^&#]*)/g, function(s, k, v) { result[k] = decodeURIComponent(v); });
     return result
   }
-  
   const API = "http://127.0.0.1:8000/questions/question_list/?big_criteria=recent&page=1&small_criteria=all";
 
   useEffect(() => {
-    QuestionRequest();
-  }, []);
+    if (dispatch && dispatch !== null && dispatch !== undefined) {
+      dispatch(setMain());
+    }
+  }, [dispatch]);
   
   return (
     <Layout>
@@ -99,7 +90,7 @@ function main({children}) {
         <QuestionsContainer>
           {router.pathname == "/" ? (
             <>
-              <QuestionList data={questions} count={count} next={next}/>
+              <QuestionList data={data} count={count} />
             </>
           ) : (
             <>
@@ -112,7 +103,7 @@ function main({children}) {
   );
 }
 
-export default main;
+export default React.memo(main);
 
 const ImageContainer = styled.div`
   position: relative;

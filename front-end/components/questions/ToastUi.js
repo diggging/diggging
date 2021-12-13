@@ -12,7 +12,7 @@ function ToastUi({ title, folder, tags, token }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const editorRef = useRef();
-  const content = useSelector((state) => state.test.desc);
+  const content = useSelector((state) => state.content.desc);
 
   const onChange = () => {
     const editorData = editorRef.current.getInstance().getMarkdown();

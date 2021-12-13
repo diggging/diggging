@@ -1,32 +1,41 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import Link from "next/link";
 import Paging from "../Paging";
+import {handlePageChange} from '../../modules/questions';
+
 
 function QuestionList({ data, count }) {
-  const [questions, setQuestions] = useState([]);
+  const dispatch = useDispatch();
+  // const page = useSelector((state) => state.handlePageChange.pageNumber);
+  // const testData = useSelector((state) => state.handlePageChange.data);
+  // console.log(page);
+  // console.log(testData); 
+  
+  // const handlePageChange = (pageNumber) => {
+  //   console.log(`active page is ${pageNumber}`);
+  //   axios
+  //     .get(
+  //       `http://127.0.0.1:8000/questions/question_list/?big_criteria=recent&page=${pageNumber}&small_criteria=all`
+  //     )
+  //     .then(res => {
+  //       // console.log(data);
+  //       setQuestions(res.data.results);
+  //       setPage(pageNumber);
+  //     })
+  // };
   const [page, setPage] = useState(1);
 
-  const handlePageChange = (pageNumber) => {
-    console.log(`active page is ${pageNumber}`);
-    axios
-      .get(
-        `http://127.0.0.1:8000/questions/question_list/?big_criteria=recent&page=${pageNumber}&small_criteria=all`
-      )
-      .then(res => {
-        setQuestions(res.data.results);
-        setPage(pageNumber);
-      })
+  const postPage = (page) => {
+    dispatch(handlePageChange(page))
+    setPage(page);
   };
-
-  useEffect(() => {
-    setQuestions(data);
-  }, [])
 
   return (
     <div>
       <ul>
-        {questions.map((list) => (
+        {data.map((list) => (
           <li key={list.id}>
             <Link href={`/questions/${list.id}`} passHref>
               {list.title}
@@ -34,7 +43,7 @@ function QuestionList({ data, count }) {
           </li>
         ))}
       </ul>
-      <Paging handlePageChange={handlePageChange} page={page} count={count}/>
+      <Paging handlePageChange={postPage} page={page} count={count}/>
     </div>
   );
 }

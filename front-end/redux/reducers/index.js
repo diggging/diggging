@@ -1,8 +1,12 @@
 import { combineReducers } from 'redux';
 import authReducer from './auth';
 import saveContent from '../../modules/editor';
+import getMain from '../../modules/questions';
+import handlePageChange from '../../modules/questions';
 
 export default combineReducers({
   auth: authReducer,
-  test: saveContent
+  content: saveContent,
+  data: getMain,
+  handlePageChange
 });
