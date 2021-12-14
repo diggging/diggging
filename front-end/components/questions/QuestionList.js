@@ -6,6 +6,63 @@ import Paging from "../Paging";
 import { setRecent, setPage } from "../../modules/questions";
 import Like from '../../public/static/images/Like';
 
+function QuestionList({ data, count }) {
+  const dispatch = useDispatch();
+  const page = useSelector((state) => state.data.page);
+  const smallCriteria = useSelector((state) => state.data.smallCriteria);
+
+  const postPage = (page) => {
+    dispatch(setPage(page));
+    dispatch(setRecent(page, smallCriteria));
+  };
+  console.log(data);
+  return (
+    <div>
+      <ul>
+        {data.map((list) => (
+          <Link href={`/questions/${list.id}`} passHref>
+            <ListContainer key={list.id}>
+              <FlexContainer>
+                <TitleHashContainer>
+                  <ListTitle>{list.title}</ListTitle>
+                  <ListHashContainer>
+                    {list.question_tags.map((hash) => (
+                      <ListHash>{hash}</ListHash>
+                    ))}
+                  </ListHashContainer>
+                </TitleHashContainer>
+
+                <ProfileContainer>
+                  <ProfileImg></ProfileImg>
+                  <ProfileName>{list.user.user_nickname}</ProfileName>
+                </ProfileContainer>
+              </FlexContainer>
+
+              <DescContainer>{list.desc.slice(0, 315)}</DescContainer>
+
+              <BottomContainer>
+                <Like />
+                <BottomText>
+                  {list.helped_num}
+                </BottomText>
+                <BottomText>
+                  답변
+                </BottomText>
+                <BottomText>
+                  {list.comment_count}
+                </BottomText>
+              </BottomContainer>
+
+            </ListContainer>
+          </Link>
+        ))}
+      </ul>
+      <Paging handlePageChange={postPage} page={page} count={count} />
+    </div>
+  );
+}
+
+export default React.memo(QuestionList);
 
 const ListContainer = styled.ul`
   width: 67rem;
@@ -115,61 +172,3 @@ const BottomText = styled.div`
   margin-left: 15px;
   color: #8C8D8D;
 `;
-
-function QuestionList({ data, count }) {
-  const dispatch = useDispatch();
-  const page = useSelector((state) => state.data.page);
-  const smallCriteria = useSelector((state) => state.data.smallCriteria);
-
-  const postPage = (page) => {
-    dispatch(setPage(page));
-    dispatch(setRecent(page, smallCriteria));
-  };
-  console.log(data);
-  return (
-    <div>
-      <ul>
-        {data.map((list) => (
-          <Link href={`/questions/${list.id}`} passHref>
-            <ListContainer key={list.id}>
-              <FlexContainer>
-                <TitleHashContainer>
-                  <ListTitle>{list.title}</ListTitle>
-                  <ListHashContainer>
-                    {list.question_tags.map((hash) => (
-                      <ListHash>{hash}</ListHash>
-                    ))}
-                  </ListHashContainer>
-                </TitleHashContainer>
-
-                <ProfileContainer>
-                  <ProfileImg></ProfileImg>
-                  <ProfileName>{list.user.user_nickname}</ProfileName>
-                </ProfileContainer>
-              </FlexContainer>
-
-              <DescContainer>{list.desc.slice(0, 315)}</DescContainer>
-
-              <BottomContainer>
-                <Like />
-                <BottomText>
-                  {list.helped_num}
-                </BottomText>
-                <BottomText>
-                  답변
-                </BottomText>
-                <BottomText>
-                  {list.comment_count}
-                </BottomText>
-              </BottomContainer>
-
-            </ListContainer>
-          </Link>
-        ))}
-      </ul>
-      <Paging handlePageChange={postPage} page={page} count={count} />
-    </div>
-  );
-}
-
-export default React.memo(QuestionList);
