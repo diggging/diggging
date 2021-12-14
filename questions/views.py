@@ -41,6 +41,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import permission_classes
 from rest_framework.pagination import PageNumberPagination
 # Create your views here.
+class ListPageNumberPagination(PageNumberPagination):
+    page_size = 5
 
 
 # -----------------Custom Pagenumbersize for Question List---------------------------------

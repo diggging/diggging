@@ -1,205 +1,129 @@
-import React, { useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import styled from "styled-components";
 import Link from "next/link";
 import NavBar from "../components/NavBar";
 import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
 import QuestionList from "../components/QuestionList";
-import Paging from "../components/Paging";
 import Layout from '../hocs/Layout'; 
 import SvgDigggingLogo from '../public/static/images/digggingLogo';
+import { useRouter } from "next/router";
+import { setRecent } from "../modules/questions";
 
-function main() {
-  const [questions, setQuestions] = useState([]);
+function main({ children }) {
+  const router = useRouter();
+
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.data.data);
+  const count = useSelector((state) => state.data.count);
+  const page = useSelector((state) => state.data.page);
+
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  // const [page, setPage] = useState(1);
 
-  // const handlePageChange = (pageNumber) => {
-  //   axios
-  //     .get(
-  //       `https://jsonplaceholder.typicode.com/posts?_page=${pageNumber}&_limit=20`
-  //     )
-  //   setPage(pageNumber);
-  //   console.log(page);
-  // };
-
-  const QuestionRecent = async () => {
-    try {
-      //test url
-      const res = await axios.get("https://jsonplaceholder.typicode.com/posts?_page=1&_limit=10");
-      setQuestions(res.data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  //redux로 상태관리를 해줘야 할거 같다.
-  const one = async () => {
-    try {
-      //test url
-      setQuestions([]);
-      const res = await axios.get("https://jsonplaceholder.typicode.com/posts?_page=2&_limit=10");
-      setQuestions(res.data);
-      console.log(res);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const two = async () => {
-    try {
-      //test url
-      const res = await axios.get(
-        "https://jsonplaceholder.typicode.com/posts?_page=3&_limit=10"
-      );
-      setQuestions(res.data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const three = async () => {
-    try {
-      //test url
-      const res = await axios.get("https://jsonplaceholder.typicode.com/posts?_page=4&_limit=10");
-      setQuestions(res.data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    QuestionRecent();
-  }, []);
+    if (dispatch && dispatch !== null && dispatch !== undefined) {
+      dispatch(setRecent(page, "all"));
+    }
+  }, [dispatch]);
+
+  const ToggleDispatch = (page, smallCriteria) => {
+    dispatch(setRecent(page, smallCriteria));
+  };
 
   return (
     <Layout>
       <NavBar />
-      {/* <BannerBackground> */}
-      <BannerBackground>
-        <Image src="/../public/static/images/main_banner_back.png" quality={100} layout="fill" objectFit="cover"/>
-        <SubTitle>개발자들을 위한 커뮤니티,</SubTitle>
-        <SvgDigggingLogo display='block'/>
-        <ServiceTitle>디깅에 기록하고, 질문하고, 공유하세요</ServiceTitle>
-        <ServiceIntro>
-          질문하고 기록하는 습관은 누구든 성장하게 해줍니다<br />
-          개발도중 겪는 시행착오들을 디깅에 기록하고, 공유해보세요!<br />
-          실력있는 개발자들이 함께할 거에요.
-        </ServiceIntro>
-      </BannerBackground>
-      {/* </BannerBackground> */}
       <Container>
-        <TabContainer>
-          {isAuthenticated ? (
+        {isAuthenticated ? (
+          <>
+            <Link href="/questionCreate" passHref>
+              <CreateBtn>질문하기</CreateBtn>
+            </Link>
+          </>
+        ) : null}
+          <TabContainer>
+            {isAuthenticated ? (
+              <div>
+                <Link href="/recent">
+                  <Tab>최신 질문 순</Tab>
+                </Link>
+                <Link href="/popular">
+                  <Tab>인기 순</Tab>
+                </Link>
+                <Link href="/mine">
+                  <Tab>내가 남긴 질문</Tab>
+                </Link>
+              </div>
+            ) : (
+              <div>
+                <Link href="/recent">
+                  <Tab>최신 질문 순</Tab>
+                </Link>
+                <Link href="/popular">
+                  <Tab>인기 순</Tab>
+                </Link>
+              </div>
+            )}
+            <ToggleContainer onClick={() => {setOpen(!open)}}>
+              답변 전체
+            </ToggleContainer>
+              {open ? (
+                    <DropBox>
+                      <DropList>
+                        <DropListItem onClick={()=> ToggleDispatch(1, "wait_answer")}>답변 대기 중</DropListItem>
+                        <DropListItem onClick={()=> ToggleDispatch(1, "answer_done")}>답변 완료</DropListItem>
+                        <DropListItem onClick={()=> ToggleDispatch(1, "all")}>답변 전체</DropListItem>
+                      </DropList>
+                    </DropBox>
+              ) : null}
+          </TabContainer>
+        <QuestionsContainer>
+          {router.pathname == "/" ? (
             <>
-              <Tab onClick={one}>최신 질문 순</Tab>
-              <Tab onClick={two}>인기 순</Tab>
-              <Tab onClick={three}>내가 남긴 질문</Tab>
+              <QuestionList data={data} count={count} />
             </>
           ) : (
-            <>
-              <Tab onClick={one}>최신 질문 순</Tab>
-              <Tab onClick={two}>인기 순</Tab>
-            </>
+            <>{children}</>
           )}
-        </TabContainer>
-        <QuestionsContainer>
-          <QuestionList />
-          {/* <Paging handlePageChange={handlePageChange} page={page}/> */}
         </QuestionsContainer>
       </Container>
     </Layout>
   );
 }
 
-export default main;
-
-const BannerBackground = styled.div`
-  width: 100%;
-  height: 32.5rem;
-  position: relative;
-  padding: 4rem 6rem;
-  & img {
-    z-index: -2;
-  }
-
-  @media ${({ theme: { device } }) => device.laptop} {
-    padding: 4rem 6rem;
-  }
-  @media ${({ theme: { device } }) => device.tablet} {
-    padding: 4rem 5rem;
-  }
-  @media ${({ theme: { device } }) => device.mobile} {
-    padding: 4rem 3rem;
-  }
-
-  
-`;
-
-
-const SubTitle = styled.h2`
-  margin-top: 2.5rem;
-  color: white;
-  font-family: 'Pretendard-Bold';
-  font-size: 1.75rem;
-  display: inline-block;
-  background-color: #FFBA42;
-  margin-bottom: 1rem;
-  padding: 0.1rem 0.6rem;
-  border-radius: 0.4rem;
-
-  @media ${({ theme: { device } }) => device.tablet} {
-    font-size: 1.5rem
-  }
-  @media ${({ theme: { device } }) => device.mobile} {
-    font-size: 1.3rem;
-  }
-`;
-
-const ServiceTitle = styled.h3`
-  color: #343434;
-  font-family: 'Pretendard-Bold';
-  font-size: 1.75rem;
-  letter-spacing: -4;
-  margin-top: 3rem;
-  @media ${({ theme: { device } }) => device.tablet} {
-    font-size: 1.5rem;
-    margin-top:2.3rem;
-  }
-  @media ${({ theme: { device } }) => device.mobile} {
-    font-size: 1.3rem;
-    margin-top: 1.6rem;
-  }
-`;
-
-const ServiceIntro = styled.p`
-  color: #343434;
-  font-family: 'Pretendard-Medium';
-  font-size: 1.5rem;
-  line-height: 2.2rem;
-  margin-top: 0.875rem;
-  @media ${({ theme: { device } }) => device.tablet} {
-    font-size: 1.2rem;
-  }
-  @media ${({ theme: { device } }) => device.mobile} {
-    font-size: 1.2rem;
-    margin-top: 0.2rem;
-    line-height: 1.8rem;
-  }
-`;
+export default React.memo(main);
 
 const ImageContainer = styled.div`
   position: relative;
   /* width: 100%; */
-  height: 33.125rem;
-  width: 100%;
+  height: 31.9375rem;
+  display: flex;
+  justify-content: center;
 `;
 
 const Container = styled.div`
-  width: 100%;
+  width: 1068px;
   height: 100vh;
-  /* margin-top: 511px; */
-  padding: 6.125rem 12.5rem;
+  margin: 0 auto;
+`;
+
+const CreateBtn = styled.button`
+  width: 150px;
+  height: 50px;
+  background: #ffffff;
+  border-radius: 25px;
+  box-shadow: 4px 4px 8px rgba(170, 170, 170, 0.1);
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 32px;
+  letter-spacing: 0.01em;
+  color: #706969;
+  float: right;
+  margin: 24px 24px;
 `;
 
 const TabContainer = styled.div`
@@ -208,7 +132,11 @@ const TabContainer = styled.div`
   border-top: 2px solid rgba(219, 214, 199, 0.4);
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 10px 20px;
+  margin-top: 98px;
+  position: relative;
+
 `;
 
 const Tab = styled.div`
@@ -217,8 +145,9 @@ const Tab = styled.div`
   color: #898a90;
   cursor: pointer;
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
+  float: left;
   font-size: 20px;
   line-height: 28.96px;
   margin-right: 30px;
@@ -230,5 +159,61 @@ const Tab = styled.div`
 
 const QuestionsContainer = styled.div`
   width: 100%;
-  height: 100%;
+  /* height: 100vh; */
+`;
+
+const ToggleContainer = styled.button`
+  background: white;
+  width: 8.25rem;
+  height: 2.5rem;
+  border-radius: 4px;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  justify-content: center;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-weight: 600;
+  color: rgb(73, 80, 87);
+  font-size: 0.875rem;
+  box-shadow: rgb(0 0 0 / 5%) 0px 0px 4px;
+  cursor: pointer;
+      <ImageContainer>
+        <Image src="/../public/static/images/a.png" width={1440} height={511} />
+      </ImageContainer>
+
+  & svg {
+    margin-left: 10px;
+  }
+`;
+
+const DropBox = styled.div`
+  width: 8.25rem;
+  /* height: 8.1875rem; */
+  position: absolute;
+  right: 1.8%;
+  top: 100%;
+  z-index: 5;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+`;
+
+const DropList = styled.ul`
+  text-align: center;
+  list-style: none;
+  line-height: 2rem;
+  font-family: 'Pretendard-Regular';
+`;
+
+const DropListItem = styled.li`
+  color: #B6B6B6;
+  padding: 5px 10px;
+  cursor: pointer;
+
+  &:hover {
+    color: #343434;
+    font-family: 'Pretendard-Medium';
+  }
 `;

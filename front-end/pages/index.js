@@ -1,12 +1,12 @@
 import React from "react";
 import Main from "../pages/main";
-import Layout from '../hocs/Layout';
+import Layout from "../hocs/Layout";
 
 function index() {
   return (
-    <Layout>
-      <Main />
-    </Layout>
+      <Layout>
+        <Main />
+      </Layout>
   );
 }
 

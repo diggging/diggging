@@ -13,6 +13,7 @@ import Router from "next/router";
 import { useRouter } from 'next/router';
 import { check_auth_status } from '../redux/actions/auth';
 import { load_user } from '../redux/actions/auth';
+import { changePage } from "../modules/questions";
 
 const Nav = styled.nav`
   z-index: 1000;
@@ -128,7 +129,6 @@ function navBar() {
   const dispatch = useDispatch();
   const router = useRouter();
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-  
   const [open, setOpen] = useState(false);
  
   const logoutHandler = async () => {
@@ -161,9 +161,6 @@ function navBar() {
           ) : (
             <></>
           )}
-          <Link href="/questionCreate" passHref>
-            <NavItem>기록하기</NavItem>
-          </Link>
         </NavLeft>
         <NavRight>
           <Link href="/search" passHref>
