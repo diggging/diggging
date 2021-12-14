@@ -16,6 +16,10 @@ const GlobalStyles = createGlobalStyle`
   *, *::before, *::after {
     box-sizing: border-box;
   }
+  
+  html {
+    scroll-behavior: smooth;
+  }
 
   body {
     font-family: 'Pretendard-Regular', 'Arial', sans-serif;
