@@ -10,8 +10,6 @@
     "svg": "svgr -d public/static/images public/static/images/svg"
   },
   "dependencies": {
-    "@draft-js-plugins/editor": "^4.1.0",
-    "@draft-js-plugins/image": "^4.1.2",
     "@svgr/cli": "^6.1.0",
     "@svgr/webpack": "^6.1.0",
     "@toast-ui/editor": "^3.1.1",
