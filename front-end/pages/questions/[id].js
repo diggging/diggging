@@ -17,6 +17,14 @@ const Question = () => {
   const [item, setItem] = useState([]);
   const [token, setToken] = useState("");
 
+  const {created} = item;
+  const createdAtDate = new Date(created);
+  const createdYear = createdAtDate.getFullYear();
+  const createdMonth = createdAtDate.getMonth() + 1;
+  const createdDate = createdAtDate.getDate();
+  const createdHour = createdAtDate.getHours();
+  const createdMinutes = createdAtDate.getMinutes();
+
   const handleData = () => {
     try {
        axios
@@ -29,8 +37,37 @@ const Question = () => {
     }
   };
 
+  //삭제하기
+  const deleteData = async (id) => {
+    try {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      axios.defaults.headers.common["Content-Type"] = "application/json";
+      await axios
+       .delete(`http://127.0.0.1:8000/questions/${id}/delete/`)
+       .then((response) => {
+        console.log(response);
+        router.push(`/`);
+       });
+   } catch (e) {
+     console.log(e);
+   }
+  }
+
+  const getAccessToken = async () => {
+    if (dispatch && dispatch !== null && dispatch !== undefined) {
+      dispatch(check_auth_status())
+        .then((res) => res.json())
+        .then((data) => {
+          const accessToken = data.access;
+          setToken(accessToken);
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
   //id값을 넣어줘야 데이터가 안사라짐
   useEffect(() => {
+    getAccessToken();
     if (id && id > 0) {
       handleData();
     }
@@ -39,10 +76,10 @@ const Question = () => {
   //token 확인(refresh, verify)
   useEffect(() => {
     if (dispatch && dispatch !== null && dispatch !== undefined)
-      // dispatch(check_auth_status());
+      dispatch(check_auth_status());
       dispatch(load_user());
   }, [dispatch]);
-
+  
   return (
     <Layout>
       <NavBar />
@@ -50,6 +87,7 @@ const Question = () => {
         <>
           <MainContainer>
             <Container>
+
               <HeadContainer>
                 <Title>{item.title}</Title>
                 {item.user?.id === user?.user?.id ? (
@@ -58,13 +96,16 @@ const Question = () => {
                       <Link href={`/questions/update/${item.id}`} passHref>
                         <Btn>수정하기</Btn>
                       </Link>
-                      <Btn>삭제하기</Btn>
+                      <Btn onClick={()=>deleteData(id)}>삭제하기</Btn>
                     </BtnContainer>
                   </>
                 ) : (
                   <></>
                 )}
-              </HeadContainer>
+              </HeadContainer>  
+              <Data>
+                {createdYear}년 {createdMonth}월 {createdDate}일 {createdHour}시 {createdMinutes}분
+              </Data>
             </Container>
           </MainContainer>
         </>
@@ -76,7 +117,7 @@ const Question = () => {
 export default Question;
 
 const MainContainer = styled.div`
-  margin-top: 200px;
+  margin-top: 12.5rem;
   margin-bottom: 4.375rem;
 `;
 
@@ -96,7 +137,7 @@ const Container = styled.div`
 `;
 
 const HeadContainer = styled.div`
-  width: 934px;
+  width: 58.375rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -114,25 +155,37 @@ const Title = styled.div`
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
-  font-size: 20px;
-  line-height: 48px;
+  font-size: 1.25rem;
+  line-height: 3rem;
   color: #212529;
 `;
 
 const Btn = styled.div`
   width: 100%;
-  height: 19px;
+  height: 1.1875rem;
   font-family: Noto Sans KR;
   font-style: normal;
   font-weight: 500;
-  font-size: 13px;
-  line-height: 19px;
+  font-size: 0.8125rem;
+  line-height: 1.1875rem;
   text-align: center;
   color: #5f5f5f;
   cursor: pointer;
-  margin-left: 13px;
+  margin-left: 0.8125rem;
 
   &:hover {
     color: #212529;
   }
+`;
+
+const Data = styled.div`
+  margin-top: 5px;
+  margin-right: auto;
+  height: 19px;
+  font-family: Noto Sans KR;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 17px;
+  color: #B8B7B4;
 `;
