@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {setPopular} from '../modules/questions';
+import {setPopular, setPage} from '../modules/questions';
 import Main from './main';
 import QuestionList from '../components/questions/QuestionList';
 
@@ -9,11 +9,11 @@ function Popular() {
   const data = useSelector((state) => state.data.data);
   const count = useSelector((state) => state.data.count);
   const page = useSelector((state) => state.data.page);
-
-  console.log(data);
+  const smallCriteria = useSelector((state) => state.data.smallCriteria);
   
   const postPage = (page) => {
-    setPopular(page);
+    dispatch(setPage(page));
+    dispatch(setPopular(page, smallCriteria))
   };
 
   useEffect(() => {

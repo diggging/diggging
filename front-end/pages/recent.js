@@ -2,17 +2,18 @@ import React, {useState, useEffect} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Main from './main';
 import QuestionList from '../components/questions/QuestionList';
-import {setRecent} from '../modules/questions';
+import {setRecent, setPage} from '../modules/questions';
 
 function Recent() {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.data.data);
   const count = useSelector((state) => state.data.count);
   const page = useSelector((state) => state.data.page);
-  console.log(data);
+  const smallCriteria = useSelector((state) => state.data.smallCriteria);
 
   const postPage = (page) => {
-    setRecent(page);
+    dispatch(setPage(page));
+    dispatch(setRecent(page, smallCriteria))
   };
   
   useEffect(() => {
