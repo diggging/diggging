@@ -1,17 +1,13 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import axios from "axios";
 import styled from "styled-components";
 import Link from "next/link";
 import NavBar from "../components/NavBar";
 import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
 import QuestionList from "../components/questions/QuestionList";
-import Paging from "../components/Paging";
 import Layout from "../hocs/Layout";
-import Router from "next/router";
-import Recent from "./recent";
 import { useRouter } from "next/router";
-import { setRecent, setRecentCriteria, setSmallCriteria } from "../modules/questions";
+import { setRecent } from "../modules/questions";
 
 function main({ children }) {
   const router = useRouter();
@@ -165,7 +161,7 @@ const Tab = styled.div`
 
 const QuestionsContainer = styled.div`
   width: 100%;
-  height: 100%;
+  /* height: 100vh; */
 `;
 
 const ToggleContainer = styled.button`
