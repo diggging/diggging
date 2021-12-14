@@ -11,7 +11,7 @@ import Layout from "../hocs/Layout";
 import Router from "next/router";
 import Recent from "./recent";
 import { useRouter } from "next/router";
-import { setRecent, setRecentCriteria } from "../modules/questions";
+import { setRecent, setRecentCriteria, setSmallCriteria } from "../modules/questions";
 
 function main({ children }) {
   const router = useRouter();
@@ -20,22 +20,20 @@ function main({ children }) {
   const data = useSelector((state) => state.data.data);
   const count = useSelector((state) => state.data.count);
   const page = useSelector((state) => state.data.page);
-  const test = useSelector((state) => state.data);
-  const smallCriteria = useSelector((state) => state.data.smallCriteria);
-  console.log(test);
+
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (dispatch && dispatch !== null && dispatch !== undefined) {
-      dispatch(setRecent(page));
+      dispatch(setRecent(page, "all"));
     }
   }, [dispatch]);
 
-  const ToggleDispatch = useCallback((page, smallCriteria) => {
-    dispatch(setRecentCriteria(page, smallCriteria));
-  },[dispatch]);
+  const ToggleDispatch = (page, smallCriteria) => {
+    dispatch(setRecent(page, smallCriteria));
+  };
 
   return (
     <Layout>

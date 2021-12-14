@@ -1,80 +1,10 @@
 /* action type */
 const SET_QUESTIONS = 'editor/MAIN_QUESTIONS';
-const CHANGE_SMALL_CRUTERIA = 'editor/CHANGE_SMALL_CRUTERIA';
-const SET_RECENT_CRETERIA = 'editor/SET_RECENT_CRETERIA';
+const CHANGE_PAGE = 'editor/CHANGE_PAGE';
 
 /* action func */
-/* tab fetch data */
-export const setRecent = (page) => async dispatch => {
-  try {
-    const res = await fetch(`http://127.0.0.1:8000/questions/question_list/?big_criteria=recent&page=${page}&small_criteria=all`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json'
-        }
-      })
-      const data = await res.json();
-      if (res.status === 200) {
-        // console.log(data);
-        dispatch({
-          type: SET_QUESTIONS,
-          data,
-          page,
-        })
-      }
-    } catch (e) {
-    console.log(e);
-  }
-}
-
-export const setPopular = (page) => async dispatch => {
-  try {
-    const res = await fetch(`http://127.0.0.1:8000/questions/question_list/?big_criteria=popular&page=${page}&small_criteria=all`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json'
-        }
-      })
-      const data = await res.json();
-      if (res.status === 200) {
-        dispatch({
-          type: SET_QUESTIONS,
-          data,
-          page,
-        })
-      }
-    } catch (e) {
-    console.log(e);
-  }
-}
-
-export const setMine = (page) => async dispatch => {
-  try {
-    const res = await fetch(`http://127.0.0.1:8000/questions/question_list/?big_criteria=mine&page=${page}&small_criteria=all`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json'
-        }
-      })
-      const data = await res.json();
-      if (res.status === 200) {
-        dispatch({
-          type: SET_QUESTIONS,
-          data,
-          page,
-        })
-      }
-    } catch (e) {
-    console.log(e);
-  }
-}
-
-/* toggle fetch data */
-
-export const setSmallCriteria = smallCriteria => ({ type: CHANGE_SMALL_CRUTERIA, smallCriteria });
-
-export const setRecentCriteria = (page, smallCriteria) => async dispatch => {
-  console.log(smallCriteria);
+/* fetch data */
+export const setRecent = (page, smallCriteria) => async dispatch => {
   try {
     const res = await fetch(`http://127.0.0.1:8000/questions/question_list/?big_criteria=recent&page=${page}&small_criteria=${smallCriteria}`, {
       method: 'GET',
@@ -86,7 +16,7 @@ export const setRecentCriteria = (page, smallCriteria) => async dispatch => {
       if (res.status === 200) {
         // console.log(data);
         dispatch({
-          type: SET_RECENT_CRETERIA,
+          type: SET_QUESTIONS,
           data,
           page,
           smallCriteria
@@ -96,6 +26,54 @@ export const setRecentCriteria = (page, smallCriteria) => async dispatch => {
     console.log(e);
   }
 }
+
+export const setPopular = (page, smallCriteria) => async dispatch => {
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/questions/question_list/?big_criteria=popular&page=${page}&small_criteria=${smallCriteria}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json'
+        }
+      })
+      const data = await res.json();
+      if (res.status === 200) {
+        dispatch({
+          type: SET_QUESTIONS,
+          data,
+          page,
+          smallCriteria
+        })
+      }
+    } catch (e) {
+    console.log(e);
+  }
+}
+
+export const setMine = (page, smallCriteria) => async dispatch => {
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/questions/question_list/?big_criteria=mine&page=${page}&small_criteria=${smallCriteria}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json'
+        }
+      })
+      const data = await res.json();
+      if (res.status === 200) {
+        dispatch({
+          type: SET_QUESTIONS,
+          data,
+          page,
+          smallCriteria
+        })
+      }
+    } catch (e) {
+    console.log(e);
+  }
+}
+
+/* toggle fetch data */
+
+export const setPage = page => ({ type: CHANGE_PAGE, page });
 
 /* initialState */
 const initialState = {
@@ -114,20 +92,12 @@ export default function getQuestion(state = initialState, action) {
         data: action.data.results,
         count: action.data.count,
         page: action.page,
-        smallCriteria: state.smallCriteria
-      }
-    case CHANGE_SMALL_CRUTERIA:
-      return {
-        ...state,
         smallCriteria: action.smallCriteria
       }
-    case SET_RECENT_CRETERIA:
+    case CHANGE_PAGE:
       return {
         ...state,
-        data: action.data.results,
-        count: action.data.count,
-        page: action.page,
-        smallCriteria: action.smallCriteria
+        page: action.page
       }
     default:
       return state;
