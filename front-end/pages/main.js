@@ -144,7 +144,9 @@ const SubTitle = styled.h2`
   font-size: 1.75rem;
   display: inline-block;
   background-color: #FFBA42;
-  margin-bottom: 1.2rem;
+  margin-bottom: 1rem;
+  padding: 0.1rem 0.6rem;
+  border-radius: 0.4rem;
 
   @media ${({ theme: { device } }) => device.tablet} {
     font-size: 1.5rem

@@ -101,10 +101,10 @@ function signup() {
     dispatch(register(username, user_nickname, email, password1, password2))
     .then((res) => {
       if (res === 201 || res === 200) {
+        alertService.success(`회원가입 되었습니다. 전송된 메일로 인증을 완료해주세요 📧`)
         setTimeout(() => {
           router.push('/loginPage');
         }, 3000);
-        alertService.success(`회원가입 되었습니다. 전송된 메일로 인증을 완료해주세요 📧`)
       } else if (res === 400 || 401) {
         if (password1 !== password2) {
           alertService.warn(`비밀번호가 일치하지 않습니다. 다시 입력해주세요😅`);

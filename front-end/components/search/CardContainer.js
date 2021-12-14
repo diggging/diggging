@@ -7,7 +7,7 @@ function CardContainer({searchData}) {
   return (
     <StyledCardContainer>
         {searchData.map((data) => (
-        <ListCard key={data.id} searchData={searchData}/>
+        <ListCard key={data.id} data={data}/>
         )
         )}
       </StyledCardContainer>
