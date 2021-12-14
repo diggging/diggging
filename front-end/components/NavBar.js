@@ -141,7 +141,7 @@ function navBar() {
     <div>
       <Nav>
         <NavLeft>
-          <Link href="/">
+          <Link href="/" passHref>
             <NavItem>
               <SvgDiggging />
             </NavItem>

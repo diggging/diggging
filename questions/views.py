@@ -39,8 +39,11 @@ from rest_framework.permissions import (
 from comments.models import Comment
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import permission_classes
+from rest_framework.pagination import PageNumberPagination
 
 # Create your views here.
+class ListPageNumberPagination(PageNumberPagination):
+    page_size = 5
 
 # ----------------- Question CRUD start ---------------------------------
 class QuestionCreateAPIView(generics.CreateAPIView):
@@ -81,7 +84,7 @@ class QuestionDeleteAPIView(generics.DestroyAPIView):
 #---------------------------- Question List start ---------------------
 class QuestionListAPIView(generics.ListAPIView):
     serializer_class = QuestionListSerializer
-
+    pagination_class = ListPageNumberPagination
     def get_queryset(self):
         big_criteria = self.request.query_params.get('big_criteria')
         small_criteria = self.request.query_params.get('small_criteria')
