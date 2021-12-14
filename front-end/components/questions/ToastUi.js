@@ -15,7 +15,7 @@ function ToastUi({ title, folder, tags, token }) {
   const content = useSelector((state) => state.content.desc);
 
   const onChange = () => {
-    const editorData = editorRef.current.getInstance().getMarkdown();
+    const editorData = editorRef.current.getInstance().getHTML();
     dispatch(setDesc(editorData));
   };
 

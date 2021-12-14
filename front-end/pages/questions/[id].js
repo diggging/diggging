@@ -7,6 +7,7 @@ import Link from "next/link";
 import axios from "axios";
 import Layout from "../../hocs/Layout";
 import NavBar from "../../components/NavBar";
+import dynamic from "next/dynamic";
 
 const Question = () => {
   const router = useRouter();
@@ -64,6 +65,7 @@ const Question = () => {
         .catch((err) => console.log(err));
     }
   };
+  const Viewer = dynamic(() => import("../../components/questions/View"), { ssr: false });
 
   //id값을 넣어줘야 데이터가 안사라짐
   useEffect(() => {
@@ -106,6 +108,10 @@ const Question = () => {
               <Data>
                 {createdYear}년 {createdMonth}월 {createdDate}일 {createdHour}시 {createdMinutes}분
               </Data>
+              <DescContainer>
+                <Viewer desc={item.desc}/>
+              </DescContainer>
+
             </Container>
           </MainContainer>
         </>
@@ -188,4 +194,13 @@ const Data = styled.div`
   font-size: 12px;
   line-height: 17px;
   color: #B8B7B4;
+`;
+
+const DescContainer = styled.div`
+  margin-top: 60px;
+  margin-bottom: 60px;
+`;
+
+const HashContainer = styled.div`
+  
 `;
