@@ -88,7 +88,7 @@ function loginPage() {
           //Redirect to main
           setTimeout(() => {
             router.push(`/`);
-          }, 1000);
+          }, 500);
         } else if (res === 401 || res === 400) { // 400일때 아이디비번확인 401일때 이멜인증해달라고 하기(시형이가 status 고쳐줘야함)
           alertService.warn('아이디와 비밀번호를 확인해주세요.🙂');
         } else if (res === 500) {

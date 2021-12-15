@@ -14,7 +14,6 @@ function search() {
   const [searchData, setSearchData] = useState([]);
   const [noData, setNoData] = useState(false);
 
- 
   return (
   <div>
     <Layout

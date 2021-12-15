@@ -3,16 +3,17 @@ import ListCard from './ListCard';
 import styled from 'styled-components';
 import { Router } from 'next/router';
 import Link from 'next/link';
+import { API_URL } from '../../config';
 
 //데이터바인딩
 function CardContainer({searchData}) {
-
-
   return (
     <StyledCardContainer>
         {searchData.map((data) => (
-          <Link href={`/questions/${data.id}`} >
-            <ListCard key={data.id} data={data} />
+          <Link key={data.id} href={`/questions/${data.id}`} >
+            <a>
+            <ListCard data={data} />
+            </a>
           </Link>
         )
         )}

@@ -6,7 +6,6 @@ import SearchIcon from '../../public/static/images/Search';
 import CloseIcon from '../../public/static/images/CloseIcon';
 
 function SearchInput({setSearchData, setNoData, searchData}) {
-  console.log(searchData, 'searchData나와라');
   const [searchInput, setSearchInput] = useState("");
 
   const onInputChange = (e) => {
@@ -15,6 +14,7 @@ function SearchInput({setSearchData, setNoData, searchData}) {
 
   const getSearchData = async () => {
     const trimmedInput = searchInput.trim();
+    axios.defaults.headers.common['authorization'] = ''; 
     if (trimmedInput == '') {
       const apiRes = await axios.get(`${API_URL}/posts/search_quest/`)
       return apiRes;
@@ -30,7 +30,6 @@ function SearchInput({setSearchData, setNoData, searchData}) {
       try {
         const apiRes = await getSearchData()
         if (apiRes.status == 200) {
-          console.log(apiRes.data, 'apiRes.data')
           const newData = [...apiRes.data];
           await setSearchData(newData); //searchData로 담아주기
           if (newData.length == 0) { //검색결과가 없을 때
@@ -40,7 +39,7 @@ function SearchInput({setSearchData, setNoData, searchData}) {
           }
           return {searchData};
         } else {
-          
+          console.log(apiRes)
         }
       } catch (err) {
         return {err}

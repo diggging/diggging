@@ -16,6 +16,7 @@ import { load_user } from '../redux/actions/auth';
 import { changePage } from "../modules/questions";
 
 const Nav = styled.nav`
+  min-width: 42.5rem;
   z-index: 1000;
   position: fixed;
   top: 0;
@@ -86,7 +87,6 @@ const ToggleContainer = styled.button`
 `;
 
 const UserImg = styled.div`
-  background-image: url(${Alarm});
   background-position: center;
   background-repeat: no-repeat;
   text-align: center;
