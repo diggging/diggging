@@ -28,13 +28,12 @@ const Question = () => {
 
   return (
     <Layout>
-      <NavBar>
+      <NavBar />
         <MainContainer>
           <Container>
             {item.id}
           </Container>
         </MainContainer>
-      </NavBar>
     </Layout>
   );
 };

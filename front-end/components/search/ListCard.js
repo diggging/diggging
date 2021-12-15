@@ -5,6 +5,7 @@ import FlexRow from '../common/FlexRow';
 import Image from 'next/image'
 import BookmarkIcon from '../../public/static/images/BookMarkIcon.js';
 import HeartIcon from '../../public/static/images/HeartIcon.js';
+import Link from 'next/link';
 
 
 function ListCard({data}) {
@@ -23,13 +24,9 @@ function ListCard({data}) {
       <CardHead>
           <FlexColumn>
             <PostTitle>{title}</PostTitle>
-            <FlexRow>
+            <TagWrapper>
               {question_tags.map((tag) => (<HashTag>{tag}</HashTag>))}
-              <HashTag>디깅</HashTag>
-              <HashTag>django</HashTag>
-              <HashTag>Python</HashTag>
-              <HashTag>RestURI</HashTag>
-            </FlexRow>
+            </TagWrapper>
           </FlexColumn>
           <ProfileBox>
             <ProfileImg src={user_profile_image} alt="profileImg" width={40} height={40} layout="fixed"/>
@@ -42,8 +39,9 @@ function ListCard({data}) {
       <CardFooter>
         <PostDateInfo>{createdYear}년 {createdMonth}월 {createdDate}일 {createdHour}시 {createdMinutes}분</PostDateInfo>
         <div>
-          <BookMarkBtn /><NumberData>{scrap_num}</NumberData>
+          {/* <BookMarkBtn /><NumberData>{scrap_num}</NumberData> */} 
           <HeartBtn /><NumberData>{helped_num}</NumberData>
+          <NumberData>{hits}</NumberData>
         </div>
       </CardFooter>
     </CardBox>
@@ -61,16 +59,16 @@ const CardHead = styled.div`
   margin-bottom: 1rem;
 `;
 
-const CardBox = styled.div`
+const CardBox = styled.button`
   min-width: 42.5rem;
   max-width: 67rem;
+  width: 100%;
   height: 16rem;
-  /* display: flex;
-  flex-direction: column; */
   padding: 1.75rem 1.865rem 1.125rem 1.875rem;
   margin: auto;
   margin-bottom: 2rem;
 
+  text-align: left;
   background-color: white;
   box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.04);
 `;
@@ -81,8 +79,30 @@ const PostTitle = styled.h2`
   color: #343434;
   font-size: 1.25rem;
   margin-bottom: 0.6rem;
+
+  min-width: 36.125rem;
+
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
 
+const TagWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  min-width: 36.125rem;
+
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`;
 
 const HashTag = styled.span`
   height: 1.125rem;
@@ -102,6 +122,7 @@ const ProfileBox = styled.div`
   flex-direction: column;
   justify-content: center;
   text-align: center;
+  margin-left: 1rem;
 `;
 
 const ProfileImg = styled(Image)`
@@ -122,12 +143,26 @@ const Username = styled.span`
   color: #343434;
   font-size: 0.875rem;
   text-align: center;
+
+  min-width: 
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
+
+
 
 const ContentWrapper = styled.div`
   width:100%;
   height: 6.75rem;
   
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 4; //4줄이면 자르기
+  -webkit-box-orient: vertical;
   text-overflow: ellipsis;
   overflow: hidden;
 `;

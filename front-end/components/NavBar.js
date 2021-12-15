@@ -188,7 +188,7 @@ function navBar() {
                 {open ? (
                 <DropBox>
                   <DropList>
-                    <DropListItem><Link href="/postCreate">새 글 작성</Link></DropListItem>
+                    <DropListItem><Link href="/questionCreate">새 글 작성</Link></DropListItem>
                     <DropListItem><Link href="/accountSetting">계정설정</Link></DropListItem>
                     <DropListItem><LogoutButton onClick={logoutHandler}>로그아웃</LogoutButton></DropListItem>
                   </DropList>

@@ -5,6 +5,7 @@ import ListCard from "../components/search/ListCard"
 import SearchInput from "../components/search/SearchInput";
 import SearchTab from "../components/search/SearchTab";
 import CardContainer from "../components/search/CardContainer";
+import NoResultMessage from "../components/search/NoResultMessage";
 import axios from 'axios';
 import styled from 'styled-components';
 
@@ -23,15 +24,10 @@ function search() {
       <NavBar />
       <SearchInput setSearchData={setSearchData} setNoData={setNoData} searchData={searchData}/>
       <SearchTab />
-      {/* {noData ? (<NoResultMessage />) : (<CardContainer searchData={searchData}/>)} */}
-      <CardContainer searchData={searchData} />
+      {noData ? (<NoResultMessage />) : (<CardContainer searchData={searchData}/>)}
     </Layout>
   </div>
     );
 }
 
 export default search;
-
-const NoResultMessage = styled.div`
-  //찾는 결과가 없다는 메시지 보여주기
-`;
