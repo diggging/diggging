@@ -21,8 +21,9 @@ const Question = () => {
   const [item, setItem] = useState([]);
   const [token, setToken] = useState("");
 
-  const { created } = item;
-  const createdAtDate = new Date(created);
+  const { updated } = item;
+  
+  const createdAtDate = new Date(updated);
   const createdYear = createdAtDate.getFullYear();
   const createdMonth = createdAtDate.getMonth() + 1;
   const createdDate = createdAtDate.getDate();
@@ -86,7 +87,7 @@ const Question = () => {
       dispatch(check_auth_status());
     dispatch(load_user());
   }, [dispatch]);
-  
+
   return (
     <>
       <Layout>
@@ -99,6 +100,7 @@ const Question = () => {
             </Head>
             <MainContainer>
               <Container>
+
                 <HeadContainer>
                   <Title>{item.title}</Title>
                   {item.user?.id === user?.user?.id ? (
@@ -151,7 +153,7 @@ const Question = () => {
                   ) : null}
                 </ProfileContainer>
                 <DetailLike token={token} id={id} />
-                <Comment comments={item.question_comments} id={id} token={token}/>
+                <Comment commentCount={item.comment_count} comments={item.question_comments} id={id} token={token}/>
               </Container>
             </MainContainer>
           </>

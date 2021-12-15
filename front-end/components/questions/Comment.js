@@ -4,9 +4,10 @@ import CommentList from "./CommentList";
 import axios from "axios";
 import TextareaAutosize from "react-autosize-textarea";
 
-function Comment({ comments, id, token }) {
+function Comment({ commentCount, comments, id, token }) {
   const [text, setText] = useState("");
-  
+  const [commentNum, setCommentNum] = useState(commentCount);
+
   const onChange = useCallback(
     (e) => {
       setText(e.target.value);
@@ -23,26 +24,22 @@ function Comment({ comments, id, token }) {
             text: text
         })
         .then((response) => {
-          console.log(response);
-          console.log("성공");
+          setText("");
+          setCommentNum(commentNum + 1);
         });
     } catch (e) {
       console.log(e);
     }
   };
 
-  const test = () => {
-      console.log("asdasd");
-  }
-
   return (
-    <FormContainer>
+    <FormContainer >
       <CommentContainer>
-        <CommentInput placeholder="댓글을 입력하세요" onChange={onChange} />
+        <CommentInput placeholder="댓글을 입력하세요" value={text} onChange={onChange} />
         <CommentSendBtn onClick={CreateComment} type="button">댓글 남기기</CommentSendBtn>
       </CommentContainer>
-      <CommentCount>댓글 {comments.length}개</CommentCount>
-      <CommentList />
+      <CommentCount>댓글 {commentNum}개</CommentCount>
+      <CommentList id={id} comments={comments}/>
     </FormContainer>
   );
 }
