@@ -151,7 +151,7 @@ const Question = () => {
                   ) : null}
                 </ProfileContainer>
                 <DetailLike token={token} id={id} />
-                <Comment comments={item.question_comments} id={id}/>
+                <Comment comments={item.question_comments} id={id} token={token}/>
               </Container>
             </MainContainer>
           </>
@@ -161,7 +161,7 @@ const Question = () => {
   );
 };
 
-export default Question;
+export default React.memo(Question);
 
 const MainContainer = styled.div`
   margin-top: 12.5rem;

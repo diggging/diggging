@@ -4,7 +4,7 @@ import CommentList from "./CommentList";
 import axios from "axios";
 import TextareaAutosize from "react-autosize-textarea";
 
-function Comment({ comments, id }) {
+function Comment({ comments, id, token }) {
   const [text, setText] = useState("");
   
   const onChange = useCallback(
@@ -14,7 +14,7 @@ function Comment({ comments, id }) {
     [text]
   );
 
-  const CreateComment = async (id) => {
+  const CreateComment = async () => {
     try {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       axios.defaults.headers.common["Content-Type"] = "application/json";
@@ -31,11 +31,15 @@ function Comment({ comments, id }) {
     }
   };
 
+  const test = () => {
+      console.log("asdasd");
+  }
+
   return (
     <FormContainer>
       <CommentContainer>
         <CommentInput placeholder="댓글을 입력하세요" onChange={onChange} />
-        <CommentSendBtn onClick={()=> CreateComment(id)}>댓글 남기기</CommentSendBtn>
+        <CommentSendBtn onClick={CreateComment} type="button">댓글 남기기</CommentSendBtn>
       </CommentContainer>
       <CommentCount>댓글 {comments.length}개</CommentCount>
       <CommentList />
