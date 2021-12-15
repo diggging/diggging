@@ -16,6 +16,12 @@ import json
 import sys
 from dotenv import load_dotenv, find_dotenv
 from datetime import timedelta
+from django.conf import settings
+
+settings.configure( # ...
+        ROOT_URLCONF=__name__,
+        # ... ),
+        )
 
 load_dotenv(find_dotenv())
 
@@ -23,7 +29,6 @@ load_dotenv(find_dotenv())
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 ROOT_DIR = os.path.dirname(BASE_DIR)
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -34,7 +39,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["13.124.23.247", "diggging.com"]
+ALLOWED_HOSTS = ["13.124.23.247", "diggging.com", "3.37.206.59"]
 
 # Application definition
 
@@ -46,6 +51,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "tagging.apps.TaggingConfig",
+    "rest_framework_simplejwt.token_blacklist",
     # t소셜로그인
     "django.contrib.sites",
     # apps
@@ -56,8 +62,8 @@ INSTALLED_APPS = [
     "questions",
     # Third party apps
     "six",
-    "ckeditor",
-    "ckeditor_uploader",
+    # "ckeditor",
+    # "ckeditor_uploader",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -120,40 +126,17 @@ JWT_AUTH = {
     "JWT_AUTH_HEADER_PREFIX": "JWT",
     "JWT_AUTH_COOKIE": None,
 }
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer', ),
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken', ),
+}
 
 REST_USE_JWT = True
 SASS_PROCESSOR_ENABLED = True
-
-CKEDITOR_UPLOAD_PATH = "uploads/"
-
-CKEDITOR_ALLOW_NONIMAGE_FILES = True
-
-CKEDITOR_CONFIGS = {
-    "default": {
-        "toolbar": "Default",
-        "toolbar_Default": [
-            ["Bold", "Font", "FontSize", "Bold", "Strike", "Underline"],
-            ["TextColor", "BGColor"],
-            [
-                "NumberedList",
-                "BulletedList",
-                "-",
-                "JustifyLeft",
-                "JustifyCenter",
-                "JustifyRight",
-                "JustifyBlock",
-            ],
-            {"name": "insert", "items": ["Image", "Table", "CodeSnippet"]},
-        ],
-        "extraPlugins": ",".join(
-            [
-                "codesnippet",
-                "autoembed",
-            ]
-        ),
-        "codeSnippet_theme": "monokai_sublime",
-    },
-}
 
 
 MIDDLEWARE = [
@@ -168,7 +151,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
 ]
 
-ROOT_URLCONF = "shoveling.urls"
+# ROOT_URLCONF = "shoveling.urls"
 
 TEMPLATES = [
     {
@@ -244,9 +227,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
-# STATICFILES_DIRS = [
-#    os.path.join(BASE_DIR, "static"),
-# ]
+#STATICFILES_DIRS = [
+#   os.path.join(BASE_DIR, "static")
+#   # BASE_DIR / 'static',
+#]
 
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",

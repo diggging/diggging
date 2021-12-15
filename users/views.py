@@ -78,10 +78,10 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
 # 회원가입
-"""my_site = Site.objects.get(pk=1)
-my_site.domain = "diggging.com"
+my_site = Site.objects.get(pk=1)
+my_site.domain = "3.37.206.59:8000"
 my_site.name = "digging_main"
-my_site.save()"""
+my_site.save()
 
 
 @permission_classes([AllowAny])
