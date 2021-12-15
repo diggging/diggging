@@ -15,7 +15,7 @@ function QuestionList({ data, count }) {
     dispatch(setPage(page));
     dispatch(setRecent(page, smallCriteria));
   };
-  console.log(data);
+  
   return (
     <div>
       <ul>

@@ -8,6 +8,7 @@ import axios from "axios";
 import Layout from "../../hocs/Layout";
 import NavBar from "../../components/NavBar";
 import dynamic from "next/dynamic";
+import DetailLike from "../../components/questions/DetailLike";
 
 const Question = () => {
   const router = useRouter();
@@ -81,7 +82,7 @@ const Question = () => {
       dispatch(check_auth_status());
     dispatch(load_user());
   }, [dispatch]);
-
+  
   return (
     <Layout>
       <NavBar />
@@ -140,6 +141,7 @@ const Question = () => {
                   </>
                 ) : null}
               </ProfileContainer>
+              <DetailLike token={token} id={id}/>
             </Container>
           </MainContainer>
         </>
