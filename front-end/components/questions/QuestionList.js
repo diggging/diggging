@@ -53,6 +53,7 @@ function QuestionList({ data, count }) {
                 </BottomText>
               </BottomContainer>
 
+              
             </ListContainer>
           </Link>
         ))}
@@ -112,6 +113,7 @@ const ListHash = styled.div`
   font-size: 0.625rem;
   line-height: 1rem;
   text-align: right;
+  color: #7A7A7A;
 `;
 
 const ProfileContainer = styled.div`
