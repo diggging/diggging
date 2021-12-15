@@ -4,11 +4,13 @@ import { check_auth_status, load_user } from "../../redux/actions/auth";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import Head from "next/head";
 import axios from "axios";
 import Layout from "../../hocs/Layout";
 import NavBar from "../../components/NavBar";
 import dynamic from "next/dynamic";
 import DetailLike from "../../components/questions/DetailLike";
+import Comment from "../../components/questions/Comment";
 
 const Question = () => {
   const router = useRouter();
@@ -27,11 +29,13 @@ const Question = () => {
   const createdHour = createdAtDate.getHours();
   const createdMinutes = createdAtDate.getMinutes();
 
-  const handleData = () => {
+  const handleData = async () => {
     try {
-      axios.get(`http://127.0.0.1:8000/questions/${id}/detail/`).then((res) => {
-        setItem(res.data);
-      });
+      await axios
+        .get(`http://127.0.0.1:8000/questions/${id}/detail/`)
+        .then((res) => {
+          setItem(res.data);
+        });
     } catch (e) {
       console.log(e);
     }
@@ -70,9 +74,9 @@ const Question = () => {
 
   //id값을 넣어줘야 데이터가 안사라짐
   useEffect(() => {
-    getAccessToken();
     if (id && id > 0) {
       handleData();
+      getAccessToken();
     }
   }, [id]);
 
@@ -82,74 +86,78 @@ const Question = () => {
       dispatch(check_auth_status());
     dispatch(load_user());
   }, [dispatch]);
-
+  
   return (
-    <Layout>
-      <NavBar />
-      {item ? (
-        <>
-          <MainContainer>
-            <Container>
-              <HeadContainer>
-                <Title>{item.title}</Title>
-                {item.user?.id === user?.user?.id ? (
-                  <>
-                    <BtnContainer>
-                      <Link
-                        href={`/questions/update/${item.id}`}
-                        passHref
-                      >
-                        <Btn>수정하기</Btn>
-                      </Link>
-                      <Btn onClick={() => deleteData(id)}>삭제하기</Btn>
-                    </BtnContainer>
-                  </>
-                ) : (
-                  <></>
-                )}
-              </HeadContainer>
-              <Data>
-                {createdYear}년 {createdMonth}월 {createdDate}일 {createdHour}시{" "}
-                {createdMinutes}분
-              </Data>
-
-              <DescContainer>
-                <Viewer desc={item.desc} />
-              </DescContainer>
-
-              <FlexContainer>
-                <HashContainer>
-                  {item.question_tags?.map((hash) => (
-                    <Hash>{hash}</Hash>
-                  ))}
-                </HashContainer>
-                <CommentBtn>댓글 접기</CommentBtn>
-              </FlexContainer>
-
-              <ProfileContainer>
-                <ProfileImg></ProfileImg>
-                <ProfileInfoContainer>
-                  {item.user?.user_nickname ? (
+    <>
+      <Layout>
+        <NavBar />
+        {item?.id ? (
+          <>
+            <Head>
+              <title>{item.title}</title>
+              <meta name="description" content="질문 디테일 페이지 입니다" />
+            </Head>
+            <MainContainer>
+              <Container>
+                <HeadContainer>
+                  <Title>{item.title}</Title>
+                  {item.user?.id === user?.user?.id ? (
                     <>
-                      <ProfileName>{item.user.user_nickname}</ProfileName>
-                      <ProfileLevel>LV.{item.user.user_level}</ProfileLevel>
+                      <BtnContainer>
+                        <Link href={`/questions/update/${item.id}`} passHref>
+                          <Btn>수정하기</Btn>
+                        </Link>
+                        <Btn onClick={() => deleteData(id)}>삭제하기</Btn>
+                      </BtnContainer>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                </HeadContainer>
+                <Data>
+                  {createdYear}년 {createdMonth}월 {createdDate}일 {createdHour}
+                  시 {createdMinutes}분
+                </Data>
+
+                <DescContainer>
+                  <Viewer desc={item.desc} />
+                </DescContainer>
+
+                <FlexContainer>
+                  <HashContainer>
+                    {item.question_tags?.map((hash) => (
+                      <Hash>{hash}</Hash>
+                    ))}
+                  </HashContainer>
+                  <CommentBtn>댓글 접기</CommentBtn>
+                </FlexContainer>
+
+                <ProfileContainer>
+                  <ProfileImg></ProfileImg>
+                  <ProfileInfoContainer>
+                    {item.user?.user_nickname ? (
+                      <>
+                        <ProfileName>{item.user.user_nickname}</ProfileName>
+                        <ProfileLevel>LV.{item.user.user_level}</ProfileLevel>
+                      </>
+                    ) : null}
+                  </ProfileInfoContainer>
+                  {item.user?.user_profile_content ? (
+                    <>
+                      <ProfileContent>
+                        {item.user.user_profile_content.slice(0, 250)}
+                      </ProfileContent>
                     </>
                   ) : null}
-                </ProfileInfoContainer>
-                {item.user?.user_profile_content ? (
-                  <>
-                    <ProfileContent>
-                      {item.user.user_profile_content.slice(0, 250)}
-                    </ProfileContent>
-                  </>
-                ) : null}
-              </ProfileContainer>
-              <DetailLike token={token} id={id} />
-            </Container>
-          </MainContainer>
-        </>
-      ) : null}
-    </Layout>
+                </ProfileContainer>
+                <DetailLike token={token} id={id} />
+                <Comment comments={item.question_comments} id={id}/>
+              </Container>
+            </MainContainer>
+          </>
+        ) : null}
+      </Layout>
+    </>
   );
 };
 
@@ -291,6 +299,7 @@ const ProfileContainer = styled.div`
   border-top: 1px solid #ececec;
   margin-top: 25px;
   padding: 30px 20px;
+  margin-bottom: 32px;
 `;
 
 const ProfileImg = styled.div`

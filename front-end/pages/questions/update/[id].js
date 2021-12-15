@@ -15,6 +15,7 @@ function update() {
   const [folder, setFolder] = useState([]);
   const [tags, setTags] = useState([]);
   const [token, setToken] = useState("");
+  const [desc, setDesc] = useState("");
 
   const onChangeTitle = useCallback(
     (e) => {
@@ -47,7 +48,9 @@ function update() {
       await axios
         .get(`http://127.0.0.1:8000/questions/${id}/detail/`)
         .then((res) => {
-          console.log(res);
+          setTitle(res.data.title);
+          setTags(res.data.question_tags);
+          setDesc(res.data.desc);
         });
     } catch (e) {
       console.log(e);
@@ -81,6 +84,7 @@ function update() {
               <FormContainer>
                 <QuestionTitle
                   name="title"
+                  value={title}
                   onChange={onChangeTitle}
                   placeholder="제목을 입력하세요."
                 />
@@ -94,13 +98,14 @@ function update() {
             </QuestionFolder> */}
                 <QuestionHash
                   name="question_tags"
+                  value={tags}
                   onChange={onChangeTags}
                   placeholder="#해시태그를 #입력해보세요"
                 />
                 <ToastUpdate
                   id={id}
                   title={title}
-                  folder={folder}
+                  desc={desc}
                   tags={tags}
                   token={token}
                 />

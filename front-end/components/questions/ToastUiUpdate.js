@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-function ToastUiUpdate({id, title, folder, tags, token }) {
+function ToastUiUpdate({id, title, desc, tags, token }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const editorRef = useRef();
@@ -17,7 +17,6 @@ function ToastUiUpdate({id, title, folder, tags, token }) {
   const onChange = () => {
     const editorData = editorRef.current.getInstance().getHTML();
     dispatch(setDesc(editorData));
-    setCurrentContent(editorData);
   };
 
   const handleUpdate = async () => {
@@ -25,7 +24,7 @@ function ToastUiUpdate({id, title, folder, tags, token }) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       axios.defaults.headers.common["Content-Type"] = "application/json";
       await axios
-        .post("http://127.0.0.1:8000/questions/create/", {
+        .put(`http://127.0.0.1:8000/questions/${id}/update/`, {
           title: title,
           desc: content,
           question_folder: [],
@@ -46,7 +45,7 @@ function ToastUiUpdate({id, title, folder, tags, token }) {
   return (
     <>
       <Editor
-        initialValue=""
+        initialValue={desc}
         previewStyle="vertical"
         height="702px"
         initialEditType="wysiwyg"
