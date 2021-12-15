@@ -14,6 +14,7 @@ import { useRouter } from 'next/router';
 import { check_auth_status } from '../redux/actions/auth';
 import { load_user } from '../redux/actions/auth';
 import { changePage } from "../modules/questions";
+import AlarmContainer from './AlarmContainer';
 
 const Nav = styled.nav`
   min-width: 42.5rem;
@@ -129,14 +130,33 @@ function navBar() {
   const dispatch = useDispatch();
   const router = useRouter();
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-  const [open, setOpen] = useState(false);
- 
+  const [open, setOpen] = useState({
+    alarmOpen: false,
+    profileOpen: false,
+  });
+  const [alarmData, setAlarmData] = useState([]);
+  
+  const {alarmOpen, profileOpen} = open;
+
   const logoutHandler = async () => {
     if (dispatch && dispatch !== null && dispatch !== undefined)
     await dispatch(logout());
     router.push("/loginPage");
   };
 
+
+  const getAlarmList = async() => {
+    try {
+      const apiRes = axios.get(``);
+      if (apiRes.status === 200) {
+        setAlarmData(apiRes.data);
+      } else {
+        setAlarmData([])
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
   return (
     <div>
       <Nav>
@@ -172,20 +192,21 @@ function navBar() {
             <>
               <Link href="/" passHref>
                 <NavItem>
-                  <Alarm />
+                  <Alarm onClick={() => {setOpen({...open, alarmOpen: !alarmOpen})}} />
                 </NavItem>
               </Link>
+              {alarmOpen && (<AlarmContainer />)}
               {/* <Link href="/" passHref>
                 <NavItem>
                   <Directory />
                 </NavItem>
               </Link> */}
               <NavItem>
-                <ToggleContainer onClick={() => {setOpen(!open)}}>
+                <ToggleContainer onClick={() => {setOpen({...open, profileOpen: !profileOpen})}}>
                   <UserImg />
                   <ToggleBtn />
                 </ToggleContainer>
-                {open ? (
+                {profileOpen && (
                 <DropBox>
                   <DropList>
                     <DropListItem><Link href="/questionCreate">새 글 작성</Link></DropListItem>
@@ -193,7 +214,7 @@ function navBar() {
                     <DropListItem><LogoutButton onClick={logoutHandler}>로그아웃</LogoutButton></DropListItem>
                   </DropList>
                 </DropBox>
-                ) : null}
+                )}
               </NavItem>
             </>
           ) : (
