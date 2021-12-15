@@ -34,3 +34,6 @@ yarn add next react react-dom
 
 //mac prettier
 shift + option + f
+
+//클립보드
+npm i react-copy-to-clipboard

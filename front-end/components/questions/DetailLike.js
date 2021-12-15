@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import styled from 'styled-components';
-import LikeDetail from '../../public/static/images/LikeDetail';
-import LinkDetail from '../../public/static/images/LinkDetail';
+import styled from "styled-components";
+import LikeDetail from "../../public/static/images/LikeDetail";
+import LinkDetail from "../../public/static/images/LinkDetail";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { useRouter } from "next/router";
 
 const Container = styled.div`
   position: absolute;
@@ -12,7 +14,7 @@ const Container = styled.div`
 const ElementContainer = styled.div`
   width: 145px;
   height: 93px;
-  background: #F5F5F5;
+  background: #f5f5f5;
   border-radius: 20px;
   display: flex;
   justify-content: center;
@@ -36,49 +38,86 @@ const FlexContainer = styled.div`
   font-size: 13px;
   line-height: 19px;
   text-align: center;
-  color: #5F5F5F;
+  color: #5f5f5f;
+`;
+
+const LinkClickAlarm = styled.div`
+  width: 145px;
+  height: 50px;
+  background: #f5f5f5;
+  border-radius: 20px;
+  font-family: Noto Sans KR;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 19px;
+  text-align: center;
+  color: #5f5f5f;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
 `;
 
 function DetailLike({ token, id }) {
-    const [like, setLike] = useState(0);
+  const router = useRouter();
+  const [like, setLike] = useState(0);
+  const [isClick, setIsClick] = useState(false);
 
-    const handleLike = async() => {
-      try {
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        axios.defaults.headers.common["Content-Type"] = "application/json";
-        await axios
-          .put(`http://127.0.0.1:8000/questions/${id}/like_create/`)
-          .then((response) => {
-            console.log(response.data.helped_num);
-            setLike(response.data.helped_num);
-          });
-      } catch (e) {
-        console.log(e);
-      }
+  const url =
+    typeof window !== "undefined" && window.location.origin
+      ? window.location.href
+      : "";
+
+  const handleLike = async () => {
+    try {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      axios.defaults.headers.common["Content-Type"] = "application/json";
+      await axios
+        .put(`http://127.0.0.1:8000/questions/${id}/like_create/`)
+        .then((response) => {
+          console.log(response.data.helped_num);
+          setLike(response.data.helped_num);
+        });
+    } catch (e) {
+      console.log(e);
     }
+  };
 
-    return (
-        <Container>
-          <ElementContainer>
-            
-            <FlexContainer>
-              <Element onClick={()=>handleLike()}>
-                <LikeDetail />
-              </Element>
-              {like}
-            </FlexContainer>
+  const handleLinkAlarm = () => {
+    if(isClick) {
+      setIsClick(false)
+    } else {
+      setIsClick(true)
+    }
+  }
 
-            <FlexContainer>
-              <Element>
-                <LinkDetail />
-              </Element>  
-              {"LINK"}
-            </FlexContainer>
+  return (
+    <Container>
+      <ElementContainer>
+        <FlexContainer>
+          <Element onClick={() => handleLike()}>
+            <LikeDetail />
+          </Element>
+          {like}
+        </FlexContainer>
 
-            
-          </ElementContainer>
-        </Container>
-    );
+        <FlexContainer>
+          <CopyToClipboard text={url}>
+            <Element onClick={()=>handleLinkAlarm()}>
+              <LinkDetail />
+            </Element>
+          </CopyToClipboard>
+          {"LINK"}
+        </FlexContainer>
+      </ElementContainer>
+      {isClick ? (
+        <>
+          <LinkClickAlarm>링크가 복사되었습니다.</LinkClickAlarm>
+        </>
+      ) : null}
+    </Container>
+  );
 }
 
 export default DetailLike;
