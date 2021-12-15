@@ -82,7 +82,7 @@ const Question = () => {
       dispatch(check_auth_status());
     dispatch(load_user());
   }, [dispatch]);
-  
+
   return (
     <Layout>
       <NavBar />
@@ -95,7 +95,10 @@ const Question = () => {
                 {item.user?.id === user?.user?.id ? (
                   <>
                     <BtnContainer>
-                      <Link href={`/questions/update/${item.id}`} passHref>
+                      <Link
+                        href={`/questions/update/${item.id}`}
+                        passHref
+                      >
                         <Btn>수정하기</Btn>
                       </Link>
                       <Btn onClick={() => deleteData(id)}>삭제하기</Btn>
@@ -141,7 +144,7 @@ const Question = () => {
                   </>
                 ) : null}
               </ProfileContainer>
-              <DetailLike token={token} id={id}/>
+              <DetailLike token={token} id={id} />
             </Container>
           </MainContainer>
         </>

@@ -6,6 +6,9 @@ import LinkDetail from "../../public/static/images/LinkDetail";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useRouter } from "next/router";
 
+import Link from "next/link";
+
+
 const Container = styled.div`
   position: absolute;
   right: 1.5rem;
@@ -59,17 +62,17 @@ const LinkClickAlarm = styled.div`
   margin-top: 10px;
 `;
 
-function DetailLike({ token, id }) {
+function DetailLike({ token, id, itemLike }) {
   const router = useRouter();
-  const [like, setLike] = useState(0);
+  const [like, setLike] = useState([]);
   const [isClick, setIsClick] = useState(false);
-
+  
   const url =
     typeof window !== "undefined" && window.location.origin
       ? window.location.href
       : "";
 
-  const handleLike = async () => {
+  const handleLike = async (id) => {
     try {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       axios.defaults.headers.common["Content-Type"] = "application/json";
@@ -84,6 +87,17 @@ function DetailLike({ token, id }) {
     }
   };
 
+  const handleData = () => {
+    try {
+      axios.get(`http://127.0.0.1:8000/questions/${id}/detail/`).then((res) => {
+      setLike(res.data.helped_num);
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+
   const handleLinkAlarm = () => {
     if(isClick) {
       setIsClick(false)
@@ -92,11 +106,15 @@ function DetailLike({ token, id }) {
     }
   }
 
+  useEffect(() => {
+    handleData();
+  }, [])
+
   return (
     <Container>
       <ElementContainer>
         <FlexContainer>
-          <Element onClick={() => handleLike()}>
+          <Element onClick={() => handleLike(id)}>
             <LikeDetail />
           </Element>
           {like}

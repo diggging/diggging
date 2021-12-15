@@ -17,10 +17,6 @@ function questionCreate() {
     setTitle(e.target.value);
   }, [title]);
 
-  const onChangeFolder = useCallback((e) => {
-    setFolder([e.target.value]);
-  }, [folder]);
-
   const onChangeTags = useCallback((e) => {
     setTags(e.target.value.split(','));
   }, [tags]);
@@ -49,7 +45,7 @@ function questionCreate() {
     }
   };
 
-  const Toast = dynamic(() => import("../components/questions/ToastUi"), { ssr: false });
+  const ToastCreate = dynamic(() => import("../components/questions/ToastUiCreate"), { ssr: false });
 
   //token 확인(refresh, verify)
   useEffect(() => {
@@ -62,7 +58,6 @@ function questionCreate() {
     onLoadUser();
   }, []);
 
-  console.log(tags);
   return (
     <div>
       <MainContainer>
@@ -86,7 +81,7 @@ function questionCreate() {
               onChange={onChangeTags}
               placeholder="#해시태그를 #입력해보세요"
             />
-            <Toast
+            <ToastCreate
               title={title}
               folder={folder}
               tags={tags}
