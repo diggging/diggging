@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import "@toast-ui/editor/dist/toastui-editor.css";
@@ -14,11 +14,14 @@ function ToastUi({ title, folder, tags, token }) {
   const editorRef = useRef();
   const content = useSelector((state) => state.content.desc);
 
+  const [currentContent, setCurrentContent] = useState("");
+
   const onChange = () => {
     const editorData = editorRef.current.getInstance().getHTML();
     dispatch(setDesc(editorData));
+    setCurrentContent(editorData)
   };
-
+  
   const handleCreate = async () => {
     try {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -45,7 +48,7 @@ function ToastUi({ title, folder, tags, token }) {
   return (
     <>
       <Editor
-        initialValue={content}
+        initialValue={currentContent}
         previewStyle="vertical"
         height="702px"
         initialEditType="wysiwyg"
