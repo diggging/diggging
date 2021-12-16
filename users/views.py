@@ -810,28 +810,32 @@ def change_nickname(request, pk):
 
 
 # 비밀번호 변경 함수
-def change_pw(request, pk):
-    context = {}
-    if request.method == "POST":
-        current_password = request.POST.get("origin_password")
-        user = get_object_or_404(User, pk=pk)
-        if check_password(current_password, user.password):
-            new_password = request.POST.get("password1")
-            password_confirm = request.POST.get("password2")
-            if new_password == password_confirm and len(new_password) >= 8:
-                user.set_password(new_password)
-                user.save()
-                # backend 인자 추가
-                login(
-                    request, user, backend="django.contrib.auth.backends.ModelBackend"
-                )
-                return redirect("users:login")
-            else:
-                context.update({"error": "새로운 비밀번호를 다시 확인해주세요."})
-    else:
-        context.update({"error": "현재 비밀번호가 일치하지 않습니다."})
+@permission_classes([IsAuthenticated])
+class Change_pw(APIView):
+    def post(request, pk):
+        context = {}
+        if request.method == "POST":
+            current_password = request.POST.get("origin_password")
+            user = get_object_or_404(User, pk=pk)
+            if check_password(current_password, user.password):
+                new_password = request.POST.get("password1")
+                password_confirm = request.POST.get("password2")
+                if new_password == password_confirm and len(new_password) >= 8:
+                    user.set_password(new_password)
+                    user.save()
+                    # backend 인자 추가
+                    login(
+                        request,
+                        user,
+                        backend="django.contrib.auth.backends.ModelBackend",
+                    )
+                    return redirect("users:login")
+                else:
+                    context.update({"error": "새로운 비밀번호를 다시 확인해주세요."})
+        else:
+            context.update({"error": "현재 비밀번호가 일치하지 않습니다."})
 
-    return redirect("users:login")
+        return redirect("users:login")
 
 
 def change_img(request, pk):
