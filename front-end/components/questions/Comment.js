@@ -40,7 +40,7 @@ function Comment({ commentCount, comments, id, token }) {
         <CommentSendBtn onClick={CreateComment} type="button">댓글 남기기</CommentSendBtn>
       </CommentContainer>
       <CommentCount>댓글 {commentNum}개</CommentCount>
-      <CommentList id={id} comments={comments} newComment={newComment}/>
+      <CommentList id={id} comments={comments} newComment={newComment} setCommentNum={setCommentNum} commentNum={commentNum}/>
     </FormContainer>
   );
 }

@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import SingleComment from "./SingleComment";
 
-function CommentList({ id, comments, newComment }) {
+function CommentList({ id, comments, newComment, setCommentNum, commentNum }) {
   const [comment, setComment] = useState(comments);
+
 
   useEffect(() => {
     setComment([...comment, newComment]);
   }, [newComment]);
-
-  console.log(comment);
 
   return (
     <>
@@ -18,6 +17,10 @@ function CommentList({ id, comments, newComment }) {
             <SingleComment
               key={item.id}
               data={item}
+              comment={comment}
+              setComment={setComment}
+              setCommentNum={setCommentNum}
+              commentNum={commentNum}
             ></SingleComment>
           ))}
       </ul>
