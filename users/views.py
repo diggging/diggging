@@ -47,6 +47,7 @@ from .serializers import (
     AlarmSerailzer,
     ChangePasswordSerializer,
     ChangedescSerializer,
+    ChangeimageSerializer,
 )
 from rest_framework.response import Response
 from django.contrib.auth import login
@@ -852,8 +853,11 @@ class ChangepasswordView(generics.UpdateAPIView):
 """
 
 
-def change_img(request, pk):
-    user = get_object_or_404(User, pk=pk)
+@permission_classes([IsAuthenticated])
+class ChangeImgView(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = ChangeimageSerializer
+    """user = get_object_or_404(User, pk=pk)
     if request.method == "POST":
         new_img = request.FILES.get("new_img", None)
         if new_img:
@@ -864,6 +868,7 @@ def change_img(request, pk):
             user.user_profile_image = new_img
             user.save()
     return redirect("users:account_detail", user.id)
+"""
 
 
 # ________________________________________________ alarm ________________________________________________

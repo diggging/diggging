@@ -154,12 +154,28 @@ class ChangedescSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            "profile_content",
+            "user_profile_content",
         ]
 
     def update(self, instance, validated_data):
         instance.profile_content = validated_data.get(
-            "profile_content", instance.profile_content
+            "user_profile_content", instance.user_profile_content
+        )
+        instance.save()
+
+        return instance
+
+
+class ChangeimageSerializer(serializers.ModelSerializer):
+    user_profile_image = serializers.ImageField()
+
+    class Meta:
+        model = User
+        fields = ["user_profile_image"]
+
+    def update(self, instance, validated_data):
+        instance.user_profile_image = validated_data.get(
+            "user_profile_image", instance.user_profile_image
         )
         instance.save()
 

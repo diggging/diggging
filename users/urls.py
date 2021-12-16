@@ -58,7 +58,7 @@ urlpatterns = [
         view=views.ChangepasswordView.as_view(),
         name="auth_change_password",
     ),
-    path("<int:pk>/change_img/", view=views.change_img, name="change_img"),
+    path("<int:pk>/change_img/", view=views.ChangeImgView.as_view(), name="change_img"),
     # github login
     path("login/github", views.github_login, name="github_login"),
     path("login/github/callback", views.github_callback, name="github_callback"),
