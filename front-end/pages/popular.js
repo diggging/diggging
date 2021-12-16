@@ -17,23 +17,11 @@ function Popular() {
     dispatch(setPopular(page, smallCriteria))
   };
 
-  console.log("인기");
-
   useEffect(() => {
-    if (bigCriteria === "recent") {
-      dispatch(setBigCriteria("popular"));
-      dispatch(setPopular(page, "all"));
-    } 
-
-    if (bigCriteria === "mine") {
-      dispatch(setBigCriteria("popular"));
-      dispatch(setPopular(page, "all"));
-    }
-
     dispatch(setBigCriteria("popular"));
+    console.log(bigCriteria);
     dispatch(setPopular(page, "all"));
-
-  }, [dispatch, bigCriteria]);
+  }, [dispatch]);
 
   return (
     <Main>

@@ -8,9 +8,10 @@ import QuestionList from "../components/questions/QuestionList";
 import Layout from "../hocs/Layout";
 import SvgDigggingLogo from "../public/static/images/digggingLogo";
 import { useRouter } from "next/router";
-import { setRecent, setBigCriteria } from "../modules/questions";
+import { setRecent, setBigCriteria, setData } from "../modules/questions";
 
 function main({ children }) {
+  const [open, setOpen] = useState(false);
   const router = useRouter();
 
   const dispatch = useDispatch();
@@ -19,21 +20,20 @@ function main({ children }) {
   const page = useSelector((state) => state.data.page);
   const bigCriteria = useSelector((state) => state.data.bigCriteria);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
-  const [open, setOpen] = useState(false);
-
   const test = useSelector((state) => state.data);
-  console.log("메인");
 
+  //메인,,,,
   useEffect(() => {
-    dispatch(setBigCriteria("recent"));
     dispatch(setRecent(page, "all"));
-  }, [dispatch, bigCriteria]);
+    dispatch(setBigCriteria("recent"));
+  }, [dispatch]);
 
+  //여기도 고쳐야함
   const ToggleDispatch = (page, smallCriteria) => {
     dispatch(setRecent(page, smallCriteria));
   };
 
+  console.log(test);
   return (
     <Layout>
       <NavBar />

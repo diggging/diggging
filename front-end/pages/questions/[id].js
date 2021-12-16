@@ -19,7 +19,7 @@ const Question = () => {
   //유저 정보
   const user = useSelector((state) => state.auth.user);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  
+
   const { id } = router.query;
   const [item, setItem] = useState([]);
   const [token, setToken] = useState("");
@@ -88,7 +88,7 @@ const Question = () => {
   useEffect(() => {
     if (dispatch && dispatch !== null && dispatch !== undefined)
       dispatch(check_auth_status());
-    dispatch(load_user());
+      dispatch(load_user());
   }, [dispatch]);
 
   console.log(item);

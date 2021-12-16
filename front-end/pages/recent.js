@@ -18,9 +18,9 @@ function Recent() {
   };
   
   useEffect(() => {
-    dispatch(setBigCriteria("recent"));
     dispatch(setRecent(page, "all"));
-  }, [dispatch, bigCriteria]);
+    dispatch(setBigCriteria("recent"));
+  }, [dispatch]);
   
   return (
     <Main>

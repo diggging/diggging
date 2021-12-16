@@ -8,6 +8,8 @@ const SET_MINE_QUESTIONS = "editor/SET_MINE_QUESTIONS";
 const CHANGE_PAGE = "editor/CHANGE_PAGE";
 const CHANGE_BIG_CRITERIA = "editor/CHANGE_BIG_CRITERIA";
 
+const CHANGE_DATA = "editor/CHANGE_DATA";
+
 /* action func */
 /* fetch data */
 export const setRecent = (page, smallCriteria) => async (dispatch) => {
@@ -23,9 +25,10 @@ export const setRecent = (page, smallCriteria) => async (dispatch) => {
     );
     const data = await res.json();
     if (res.status === 200) {
+      console.log(res.url);
       dispatch({
         type: SET_RECENT_QUESTIONS,
-        data: data,
+        data,
         page,
         smallCriteria,
       });
@@ -48,9 +51,10 @@ export const setPopular = (page, smallCriteria) => async (dispatch) => {
     );
     const data = await res.json();
     if (res.status === 200) {
+      console.log(res.url);
       dispatch({
         type: SET_POPULAR_QUESTIONS,
-        data: data,
+        data,
         page,
         smallCriteria,
       });
@@ -75,10 +79,10 @@ export const setMine = (page, smallCriteria, token) => async (dispatch) => {
     );
     const data = await res.json();
     if (res.status === 200) {
-      console.log("mine 성공");
+      console.log(res.url);
       dispatch({
         type: SET_MINE_QUESTIONS,
-        data: data,
+        data,
         page,
         smallCriteria,
       });
@@ -90,6 +94,8 @@ export const setMine = (page, smallCriteria, token) => async (dispatch) => {
 
 /* toggle fetch data */
 export const setPage = (page) => ({ type: CHANGE_PAGE, page });
+export const setData = (data) => ({ type: CHANGE_DATA, data });
+
 export const setBigCriteria = (bigCriteria) => ({
   type: CHANGE_BIG_CRITERIA,
   bigCriteria,
@@ -141,6 +147,11 @@ export default function getQuestion(state = initialState, action) {
         ...state,
         bigCriteria: action.bigCriteria,
       };
+    case CHANGE_DATA:
+      return {
+        ...state,
+        data: action.data
+      }
     default:
       return state;
   }

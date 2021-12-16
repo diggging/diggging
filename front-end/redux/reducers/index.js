@@ -4,11 +4,13 @@ import saveContent from '../../modules/editor';
 import getQuestion from '../../modules/questions';
 import setPage from '../../modules/questions';
 import setBigCriteria from '../../modules/questions';
+import setData from '../../modules/questions';
 
 export default combineReducers({
   auth: authReducer,
   content: saveContent,
   data: getQuestion,
   setPage,
-  setBigCriteria
+  setBigCriteria,
+  setData
 });

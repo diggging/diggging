@@ -34,23 +34,11 @@ function Mine() {
   };
 
   useEffect(() => {
-
-    getAccessToken();
-    console.log(token);
-
-    if (bigCriteria === "recent") {
-      dispatch(setBigCriteria("mine"));
-      dispatch(setMine(page, "all", token));
-    }
-    if (bigCriteria === "popular") {
-      dispatch(setBigCriteria("mine"));
-      dispatch(setMine(page, "all", token));
-    }
-
-    dispatch(setBigCriteria("mine"));
+    getAccessToken();  
     dispatch(setMine(page, "all", token));
-
-  }, [dispatch, token, bigCriteria]);
+    dispatch(setBigCriteria("mine"));
+  
+  }, [dispatch, token]);
 
   return (
     <Main>
