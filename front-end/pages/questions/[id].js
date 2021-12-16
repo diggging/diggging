@@ -11,12 +11,14 @@ import NavBar from "../../components/NavBar";
 import dynamic from "next/dynamic";
 import DetailLike from "../../components/questions/DetailLike";
 import Comment from "../../components/questions/Comment";
+import YellowButton from "../../components/common/YellowButton";
 
 const Question = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   //유저 정보
   const user = useSelector((state) => state.auth.user);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const { id } = router.query;
   const [item, setItem] = useState([]);
   const [token, setToken] = useState("");
@@ -100,7 +102,6 @@ const Question = () => {
             </Head>
             <MainContainer>
               <Container>
-
                 <HeadContainer>
                   <Title>{item.title}</Title>
                   {item.user?.id === user?.user?.id ? (
@@ -153,8 +154,22 @@ const Question = () => {
                   ) : null}
                 </ProfileContainer>
                 <DetailLike token={token} id={id} />
-                <Comment commentCount={item.comment_count} comments={item.question_comments} id={id} token={token}/>
+                <Comment
+                  commentCount={item.comment_count}
+                  comments={item.question_comments}
+                  id={id}
+                  token={token}
+                />
               </Container>
+
+              <AnswerContainer>
+                {isAuthenticated && item.user?.id !== user?.user?.id ? (
+                  <>
+                    {" "}
+                    <AnswerCreateBtn>답변남기기</AnswerCreateBtn>
+                  </>
+                ) : null}
+              </AnswerContainer>
             </MainContainer>
           </>
         ) : null}
@@ -349,4 +364,39 @@ const ProfileContent = styled.div`
   color: #8d8c85;
   display: flex;
   align-items: center;
+`;
+
+const AnswerContainer = styled.div`
+  width: 64rem;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.04);
+  border-radius: 2px;
+  margin: auto;
+  padding: 2.625rem;
+`;
+
+const AnswerCreateBtn = styled.div`
+  width: 132px;
+  height: 44px;
+  background: #ffd358;
+  box-shadow: 4px 4px 8px rgba(170, 170, 170, 0.1);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-family: Noto Sans KR;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 22px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #343434;
 `;
