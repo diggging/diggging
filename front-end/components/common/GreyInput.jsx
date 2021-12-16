@@ -7,7 +7,6 @@ const StyledGreyInput = styled.input`
   padding: 0.875rem 1rem;
   margin-right: ${({ marginRight }) => marginRight};
   margin-left: ${({ marginLeft }) => marginLeft};
-
   outline: none;
   border: none;
   font-family: 'Pretendard-Regular';
@@ -18,9 +17,9 @@ const StyledGreyInput = styled.input`
   border-radius: 0.5rem;
 `;
 
-function GreyInput({ width, height, marginRight, marginLeft }) {
+function GreyInput({ width, height, marginRight, marginLeft, type }) {
   return (
-    <StyledGreyInput width={width} height={height} marginRight={marginRight} marginLeft={marginLeft} type="text" />
+    <StyledGreyInput width={width} height={height} marginRight={marginRight} marginLeft={marginLeft} type={type} />
   ) /// 여기 children넣고 닫는태그넣어보자
 }
 export default GreyInput;

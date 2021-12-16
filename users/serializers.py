@@ -30,6 +30,8 @@ class UserSerializer(serializers.ModelSerializer):
             "user_nickname",
             "email",
             "login_method",
+            "user_profile_content",
+            "user_profile_image",
         ]
 
 

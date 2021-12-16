@@ -130,6 +130,7 @@ function navBar() {
   const dispatch = useDispatch();
   const router = useRouter();
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+  const user = useSelector(state => state.auth.user);
   const [open, setOpen] = useState({
     alarmOpen: false,
     profileOpen: false,
@@ -144,6 +145,12 @@ function navBar() {
     router.push("/loginPage");
   };
 
+  //계정설정 이동시 유저 데이터 넘겨주기
+  useEffect(() => {
+    if (dispatch && dispatch !== null && dispatch !== undefined) {
+      dispatch(load_user()); 
+    }
+  }, [])
 
   const getAlarmList = async() => {
     try {
@@ -208,9 +215,17 @@ function navBar() {
                 </ToggleContainer>
                 {profileOpen && (
                 <DropBox>
-                  <DropList>
+                  <DropList> 
                     <DropListItem><Link href="/questionCreate">새 글 작성</Link></DropListItem>
-                    <DropListItem><Link href="/accountSetting">계정설정</Link></DropListItem>
+                    <DropListItem><Link 
+                      href={{
+                        pathname: `/accountSetting`,
+                        query: {user: JSON.stringify(user)},
+                      }}
+                      as={`/accountSetting`}
+                      // href="/accountSetting"
+                      >계정설정</Link>
+                    </DropListItem>
                     <DropListItem><LogoutButton onClick={logoutHandler}>로그아웃</LogoutButton></DropListItem>
                   </DropList>
                 </DropBox>

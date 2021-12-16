@@ -22,6 +22,5 @@ const StyledYellowButton = styled.button`
   font-size: 1rem;
 
   box-shadow: 0.2rem 0.2rem 0.5rem 0.2rem rgba(0, 0, 0, 0.1);
-
-  
+  cursor: pointer;
 `;
