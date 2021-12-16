@@ -31,7 +31,7 @@ class User(AbstractUser):
     )
     # user_followed = models.ManyToManyField("self", symmetrical=False, blank=True, default=0)
     profile_content = models.CharField(
-        verbose_name="personal description", blank=True, max_length=50
+        verbose_name="personal_description", blank=True, max_length=50
     )
     user_profile_image = ResizedImageField(
         size=[50, 50],
