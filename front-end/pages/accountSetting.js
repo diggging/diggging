@@ -27,7 +27,7 @@ function accountSetting() {
   const {user} = router.query;
   const userData = JSON.parse(user);
   const userInfo = userData.user;
-  const {user_nickname, email, user_profile_image, user_profile_content} = userInfo;
+  const {user_nickname, email, id, user_profile_image, user_profile_content} = userInfo;
 
   const onClickLogout = async () => {
     await dispatch(logout());
@@ -50,7 +50,7 @@ function accountSetting() {
         <NicknameBox>
           <ProfileTitle>{user_nickname}</ProfileTitle><ProfileTitle2>님의 프로필</ProfileTitle2>
         </NicknameBox>
-        <ProfileInfoBox user_profile_image={user_profile_image} user_profile_content={user_profile_content} />
+        <ProfileInfoBox id={id} user_profile_image={user_profile_image} user_profile_content={user_profile_content} />
         <ProfileBox padding="2.125rem">
           <ProfileBioInput onKeyPress={preventSubmit} placeholder='자기소개를 입력하세요.'/>
           <YellowButton paddingRight="2.125rem" paddingTop="0.75rem">변경</YellowButton>
