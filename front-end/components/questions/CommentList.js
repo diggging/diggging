@@ -4,23 +4,23 @@ import styled from "styled-components";
 
 function CommentList({ id, comments, newComment }) {
   const [comment, setComment] = useState([]);
-  
+
   const updatedDate = (comments) => {
-    comments.map(list => {
-    const createdAtDate = new Date(list.created);
-  
-    list['createdYear'] = createdAtDate.getFullYear();
-    list['createdMonth'] = createdAtDate.getMonth() + 1;
-    list['createdDate'] = createdAtDate.getDate();
-    list['createdHour'] = createdAtDate.getHours();
-    list['createdMinutes'] = createdAtDate.getMinutes();
+    comments.map((list) => {
+      const createdAtDate = new Date(list.created);
+
+      list["createdYear"] = createdAtDate.getFullYear();
+      list["createdMonth"] = createdAtDate.getMonth() + 1;
+      list["createdDate"] = createdAtDate.getDate();
+      list["createdHour"] = createdAtDate.getHours();
+      list["createdMinutes"] = createdAtDate.getMinutes();
     });
-  }
-  
+  };
+  console.log(comment);
   useEffect(() => {
-    setComment([...comments, newComment]);
+    setComment(comments);
     updatedDate(comments);
-    comment.concat(newComment)
+    comment.concat(newComment);
   }, [comments, newComment]);
 
   return (
@@ -33,10 +33,20 @@ function CommentList({ id, comments, newComment }) {
                 <UserImg></UserImg>
 
                 <UserInfoContainer>
-                  {list.user}
-                  {list.createdYear}년 {list.createdMonth}월 {list.createdDate}일 {list.createdHour}
-                  시 {list.createdMinutes}분
-                  {list.text}
+
+                  <NameDateContainer>
+                    <UserNickName>{list.user.user_nickname}</UserNickName>
+                    <CommentDate>
+                      {list.createdYear}년 {list.createdMonth}월{" "}
+                      {list.createdDate}일 {list.createdHour}시{" "}
+                      {list.createdMinutes}분
+                    </CommentDate>
+                  </NameDateContainer>
+
+                  <CommentText>
+                    {list.text}
+                  </CommentText>
+
                 </UserInfoContainer>
 
               </Container>
@@ -54,13 +64,13 @@ const CommentContainer = styled.ul`
   height: 100%;
   margin-top: 23px;
   border-bottom: 1px solid #ececec;
-  /* display: flex;
-  align-items: center;
-  justify-content: space-around; */
 `;
 
 const Container = styled.div`
   margin-bottom: 23px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const UserImg = styled.div`
@@ -68,16 +78,47 @@ const UserImg = styled.div`
   height: 44px;
   background: #ffd358;
   border-radius: 50px;
+  margin-right: 20px;
 `;
 
 const UserInfoContainer = styled.div`
-  width: 58.375rem;
+  width: 934px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  flex-direction: column;
   margin: 0 auto;
 `;
 
-const NameDate = styled.div`
+const NameDateContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+`;
 
+const UserNickName = styled.div`
+  font-family: Noto Sans KR;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 20px;
+  color: #343434;
+  margin-right: 10px;
+`;
+
+const CommentDate = styled.div`
+  font-family: Noto Sans KR;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 17px;
+  color: #b8b7b4;
+`;
+
+const CommentText = styled.div`
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 22px;
+  color: #585858;
 `;
