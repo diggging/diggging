@@ -7,6 +7,7 @@ import { setDesc } from "../../modules/editor";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { API_URL } from "../../config";
 
 function ToastUiUpdate({id, title, desc, tags, token }) {
   const router = useRouter();
@@ -24,7 +25,7 @@ function ToastUiUpdate({id, title, desc, tags, token }) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       axios.defaults.headers.common["Content-Type"] = "application/json";
       await axios
-        .put(`http://127.0.0.1:8000/questions/${id}/update/`, {
+        .put(`${API_URL}/questions/${id}/update/`, {
           title: title,
           desc: content,
           question_folder: [],

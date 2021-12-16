@@ -5,8 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 
-
-
 function answerCreate() {
   const dispatch = useDispatch();
   const router = useRouter();

@@ -5,6 +5,7 @@ import { check_auth_status } from "../../../redux/actions/auth";
 import { useDispatch } from "react-redux";
 import dynamic from "next/dynamic";
 import axios from "axios";
+import {API_URL} from '../../../config/index';
 
 function update() {
   const router = useRouter();
@@ -46,7 +47,7 @@ function update() {
   const fetchData = async () => {
     try {
       await axios
-        .get(`http://127.0.0.1:8000/questions/${id}/detail/`)
+        .get(`${API_URL}/questions/${id}/detail/`)
         .then((res) => {
           setTitle(res.data.title);
           setTags(res.data.question_tags);

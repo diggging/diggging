@@ -5,9 +5,84 @@ import LikeDetail from "../../public/static/images/LikeDetail";
 import LinkDetail from "../../public/static/images/LinkDetail";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useRouter } from "next/router";
+import {API_URL} from '../../config/index';
 
-import Link from "next/link";
+function DetailLike({ token, id }) {
+  const router = useRouter();
+  const [like, setLike] = useState([]);
+  const [isClick, setIsClick] = useState(false);
+  
+  const url =
+    typeof window !== "undefined" && window.location.origin
+      ? window.location.href
+      : "";
 
+  const handleLike = async (id) => {
+    try {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      axios.defaults.headers.common["Content-Type"] = "application/json";
+      await axios
+        .put(`${API_URL}/questions/${id}/like_create/`)
+        .then((response) => {
+          setLike(response.data.helped_num);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleData = () => {
+    try {
+      axios.get(`${API_URL}/questions/${id}/detail/`).then((res) => {
+      setLike(res.data.helped_num);
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+
+  const handleLinkAlarm = () => {
+    if(isClick) {
+      setIsClick(false)
+    } else {
+      setIsClick(true)
+    }
+  }
+
+  useEffect(() => {
+    handleData();
+  }, [])
+
+  return (
+    <Container>
+      <ElementContainer>
+        <FlexContainer>
+          <Element onClick={() => handleLike(id)}>
+            <LikeDetail />
+          </Element>
+          {like}
+        </FlexContainer>
+
+        <FlexContainer>
+          <CopyToClipboard text={url}>
+            <Element onClick={()=>handleLinkAlarm()}>
+              <LinkDetail />
+            </Element>
+          </CopyToClipboard>
+          {"LINK"}
+        </FlexContainer>
+      </ElementContainer>
+      {isClick ? (
+        <>
+          <LinkClickAlarm>링크가 복사되었습니다.</LinkClickAlarm>
+        </>
+      ) : null}
+    </Container>
+  );
+}
+
+export default DetailLike;
 
 const Container = styled.div`
   position: absolute;
@@ -61,81 +136,3 @@ const LinkClickAlarm = styled.div`
   align-items: center;
   margin-top: 10px;
 `;
-
-function DetailLike({ token, id, itemLike }) {
-  const router = useRouter();
-  const [like, setLike] = useState([]);
-  const [isClick, setIsClick] = useState(false);
-  
-  const url =
-    typeof window !== "undefined" && window.location.origin
-      ? window.location.href
-      : "";
-
-  const handleLike = async (id) => {
-    try {
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      axios.defaults.headers.common["Content-Type"] = "application/json";
-      await axios
-        .put(`http://127.0.0.1:8000/questions/${id}/like_create/`)
-        .then((response) => {
-          console.log(response.data.helped_num);
-          setLike(response.data.helped_num);
-        });
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const handleData = () => {
-    try {
-      axios.get(`http://127.0.0.1:8000/questions/${id}/detail/`).then((res) => {
-      setLike(res.data.helped_num);
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-
-  const handleLinkAlarm = () => {
-    if(isClick) {
-      setIsClick(false)
-    } else {
-      setIsClick(true)
-    }
-  }
-
-  useEffect(() => {
-    handleData();
-  }, [])
-
-  return (
-    <Container>
-      <ElementContainer>
-        <FlexContainer>
-          <Element onClick={() => handleLike(id)}>
-            <LikeDetail />
-          </Element>
-          {like}
-        </FlexContainer>
-
-        <FlexContainer>
-          <CopyToClipboard text={url}>
-            <Element onClick={()=>handleLinkAlarm()}>
-              <LinkDetail />
-            </Element>
-          </CopyToClipboard>
-          {"LINK"}
-        </FlexContainer>
-      </ElementContainer>
-      {isClick ? (
-        <>
-          <LinkClickAlarm>링크가 복사되었습니다.</LinkClickAlarm>
-        </>
-      ) : null}
-    </Container>
-  );
-}
-
-export default DetailLike;

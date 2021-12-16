@@ -7,6 +7,7 @@ import { setRecent, setPage } from "../../modules/questions";
 import Like from '../../public/static/images/Like';
 
 function QuestionList({ data, count }) {
+  
   const dispatch = useDispatch();
   const page = useSelector((state) => state.data.page);
   const smallCriteria = useSelector((state) => state.data.smallCriteria);

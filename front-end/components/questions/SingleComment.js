@@ -4,6 +4,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { check_auth_status } from "../../redux/actions/auth";
 import TextareaAutosize from "react-autosize-textarea";
+import { API_URL } from "../../config";
 
 function SingleComment({
   data,
@@ -47,7 +48,7 @@ function SingleComment({
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       axios.defaults.headers.common["Content-Type"] = "application/json";
       await axios
-        .delete(`http://127.0.0.1:8000/comments/${id}/comment_delete/`)
+        .delete(`${API_URL}/comments/${id}/comment_delete/`)
         .then((response) => {
           setComment(comment.filter((comment) => comment.id !== data.id));
           setCommentNum(commentNum - 1);
@@ -61,7 +62,7 @@ function SingleComment({
     try {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       axios.defaults.headers.common["Content-Type"] = "application/json";
-      await axios.patch(`http://127.0.0.1:8000/comments/${id}/question_comment_update/`, {
+      await axios.patch(`${API_URL}/comments/${id}/question_comment_update/`, {
         text: text
       })
       .then((response) => {

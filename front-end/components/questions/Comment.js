@@ -3,6 +3,7 @@ import styled from "styled-components";
 import CommentList from "./CommentList";
 import axios from "axios";
 import TextareaAutosize from "react-autosize-textarea";
+import {API_URL} from '../../config/index';
 
 function Comment({ commentCount, comments, id, token }) {
   const [text, setText] = useState("");
@@ -21,7 +22,7 @@ function Comment({ commentCount, comments, id, token }) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       axios.defaults.headers.common["Content-Type"] = "application/json";
       await axios
-        .post(`http://127.0.0.1:8000/comments/question_comment_create/?question_id=${id}`, {
+        .post(`${API_URL}/comments/question_comment_create/?question_id=${id}`, {
             text: text
         })
         .then((response) => {

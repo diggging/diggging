@@ -7,6 +7,7 @@ import { setDesc } from "../../modules/editor";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import {API_URL} from '../../config/index';
 
 function ToastAnswerCreate({title, token, id}) {
     const router = useRouter();
@@ -27,7 +28,7 @@ function ToastAnswerCreate({title, token, id}) {
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         axios.defaults.headers.common["Content-Type"] = "application/json";
         await axios
-          .post(`http://127.0.0.1:8000/questions/answer_create/?question_id=${id}`, {
+          .post(`${API_URL}/questions/answer_create/?question_id=${id}`, {
             title: title,
             desc: content,
           })

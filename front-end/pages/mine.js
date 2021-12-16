@@ -1,31 +1,69 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import Main from './main';
-import QuestionList from '../components/questions/QuestionList';
-import {setMine, setPage} from '../modules/questions';
-
+import { check_auth_status } from "../redux/actions/auth";
+import Main from "./main";
+import QuestionList from "../components/questions/QuestionList";
+import { setMine, setPage, setBigCriteria } from "../modules/questions";
 
 function Mine() {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.data.data);
   const count = useSelector((state) => state.data.count);
   const page = useSelector((state) => state.data.page);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const smallCriteria = useSelector((state) => state.data.smallCriteria);
+  const bigCriteria = useSelector((state) => state.data.bigCriteria);
+
+  const [token, setToken] = useState("");
+
+  const getAccessToken = async () => {
+    if (dispatch && dispatch !== null && dispatch !== undefined) {
+      dispatch(check_auth_status())
+        .then((res) => res.json())
+        .then((data) => {
+          const accessToken = data.access;
+          setToken(accessToken);
+        })
+        .catch((err) => console.log(err));
+    }
+  };
 
   const postPage = (page) => {
     dispatch(setPage(page));
-    dispatch(setMine(page, smallCriteria))
+    dispatch(setMine(page, smallCriteria, token));
   };
 
   useEffect(() => {
-    if (dispatch && dispatch !== null && dispatch !== undefined) {
-      dispatch(setMine(page));
+
+    getAccessToken();
+    console.log(token);
+
+    if (bigCriteria === "recent") {
+      dispatch(setBigCriteria("mine"));
+      dispatch(setMine(page, "all", token));
     }
-  }, [dispatch]);
+    if (bigCriteria === "popular") {
+      dispatch(setBigCriteria("mine"));
+      dispatch(setMine(page, "all", token));
+    }
+
+    dispatch(setBigCriteria("mine"));
+    dispatch(setMine(page, "all", token));
+
+  }, [dispatch, token, bigCriteria]);
 
   return (
     <Main>
-        <QuestionList data={data} handlePageChange={postPage} page={page} count={count}></QuestionList>
+      {isAuthenticated ? (
+        <>
+          <QuestionList
+            data={data}
+            handlePageChange={postPage}
+            page={page}
+            count={count}
+          ></QuestionList>
+        </>
+      ) : null}
     </Main>
   );
 }

@@ -11,7 +11,7 @@ import NavBar from "../../components/NavBar";
 import dynamic from "next/dynamic";
 import DetailLike from "../../components/questions/DetailLike";
 import Comment from "../../components/questions/Comment";
-import YellowButton from "../../components/common/YellowButton";
+import { API_URL } from "../../config";
 
 const Question = () => {
   const router = useRouter();
@@ -19,6 +19,7 @@ const Question = () => {
   //유저 정보
   const user = useSelector((state) => state.auth.user);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  
   const { id } = router.query;
   const [item, setItem] = useState([]);
   const [token, setToken] = useState("");
@@ -35,7 +36,7 @@ const Question = () => {
   const handleData = async () => {
     try {
       await axios
-        .get(`http://127.0.0.1:8000/questions/${id}/detail/`)
+        .get(`${API_URL}/questions/${id}/detail/`)
         .then((res) => {
           setItem(res.data);
         });
@@ -50,7 +51,7 @@ const Question = () => {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       axios.defaults.headers.common["Content-Type"] = "application/json";
       await axios
-        .delete(`http://127.0.0.1:8000/questions/${id}/delete/`)
+        .delete(`${API_URL}/questions/${id}/delete/`)
         .then((response) => {
           console.log(response);
           router.push(`/`);
@@ -89,6 +90,8 @@ const Question = () => {
       dispatch(check_auth_status());
     dispatch(load_user());
   }, [dispatch]);
+
+  console.log(item);
 
   return (
     <>
@@ -154,15 +157,18 @@ const Question = () => {
                   ) : null}
                 </ProfileContainer>
                 <DetailLike token={token} id={id} />
+
                 <Comment
                   commentCount={item.comment_count}
                   comments={item.question_comments}
                   id={id}
                   token={token}
                 />
+
               </Container>
 
               <AnswerContainer>
+
                 {isAuthenticated && item.user?.id !== user?.user?.id ? (
                   <>
                     <Link href={`/answer/create/${item.id}`} passHref>
@@ -170,7 +176,10 @@ const Question = () => {
                     </Link>
                   </>
                 ) : null}
+
               </AnswerContainer>
+
+
             </MainContainer>
           </>
         ) : null}
@@ -375,7 +384,6 @@ const AnswerContainer = styled.div`
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.04);
   border-radius: 2px;
   margin: auto;
   padding: 2.625rem;

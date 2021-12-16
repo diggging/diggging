@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {setPopular, setPage} from '../modules/questions';
+import {setPopular, setPage, setBigCriteria} from '../modules/questions';
 import Main from './main';
 import QuestionList from '../components/questions/QuestionList';
 
@@ -10,17 +10,30 @@ function Popular() {
   const count = useSelector((state) => state.data.count);
   const page = useSelector((state) => state.data.page);
   const smallCriteria = useSelector((state) => state.data.smallCriteria);
-  
+  const bigCriteria = useSelector((state) => state.data.bigCriteria);
+
   const postPage = (page) => {
     dispatch(setPage(page));
     dispatch(setPopular(page, smallCriteria))
   };
 
+  console.log("인기");
+
   useEffect(() => {
-    if (dispatch && dispatch !== null && dispatch !== undefined) {
-      dispatch(setPopular(page));
+    if (bigCriteria === "recent") {
+      dispatch(setBigCriteria("popular"));
+      dispatch(setPopular(page, "all"));
+    } 
+
+    if (bigCriteria === "mine") {
+      dispatch(setBigCriteria("popular"));
+      dispatch(setPopular(page, "all"));
     }
-  }, [dispatch]);
+
+    dispatch(setBigCriteria("popular"));
+    dispatch(setPopular(page, "all"));
+
+  }, [dispatch, bigCriteria]);
 
   return (
     <Main>

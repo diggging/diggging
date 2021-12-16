@@ -5,10 +5,10 @@ import NavBar from "../components/NavBar";
 import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
 import QuestionList from "../components/questions/QuestionList";
-import Layout from '../hocs/Layout'; 
-import SvgDigggingLogo from '../public/static/images/digggingLogo';
+import Layout from "../hocs/Layout";
+import SvgDigggingLogo from "../public/static/images/digggingLogo";
 import { useRouter } from "next/router";
-import { setRecent } from "../modules/questions";
+import { setRecent, setBigCriteria } from "../modules/questions";
 
 function main({ children }) {
   const router = useRouter();
@@ -17,16 +17,18 @@ function main({ children }) {
   const data = useSelector((state) => state.data.data);
   const count = useSelector((state) => state.data.count);
   const page = useSelector((state) => state.data.page);
-
+  const bigCriteria = useSelector((state) => state.data.bigCriteria);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const [open, setOpen] = useState(false);
 
+  const test = useSelector((state) => state.data);
+  console.log("메인");
+
   useEffect(() => {
-    if (dispatch && dispatch !== null && dispatch !== undefined) {
-      dispatch(setRecent(page, "all"));
-    }
-  }, [dispatch]);
+    dispatch(setBigCriteria("recent"));
+    dispatch(setRecent(page, "all"));
+  }, [dispatch, bigCriteria]);
 
   const ToggleDispatch = (page, smallCriteria) => {
     dispatch(setRecent(page, smallCriteria));
@@ -36,13 +38,20 @@ function main({ children }) {
     <Layout>
       <NavBar />
       <BannerBackground>
-        <Image src="/../public/static/images/main_banner_back.png" quality={100} layout="fill" objectFit="cover"/>
+        <Image
+          src="/../public/static/images/main_banner_back.png"
+          quality={100}
+          layout="fill"
+          objectFit="cover"
+        />
         <SubTitle>개발자들을 위한 커뮤니티,</SubTitle>
-        <SvgDigggingLogo display='block'/>
+        <SvgDigggingLogo display="block" />
         <ServiceTitle>디깅에 기록하고, 질문하고, 공유하세요</ServiceTitle>
         <ServiceIntro>
-          질문하고 기록하는 습관은 누구든 성장하게 해줍니다<br />
-          개발도중 겪는 시행착오들을 디깅에 기록하고, 공유해보세요!<br />
+          질문하고 기록하는 습관은 누구든 성장하게 해줍니다
+          <br />
+          개발도중 겪는 시행착오들을 디깅에 기록하고, 공유해보세요!
+          <br />
           실력있는 개발자들이 함께할 거에요.
         </ServiceIntro>
       </BannerBackground>
@@ -54,42 +63,58 @@ function main({ children }) {
             </Link>
           </>
         ) : null}
-          <TabContainer>
-            {isAuthenticated ? (
-              <div>
-                <Link href="/recent">
-                  <Tab>최신 질문 순</Tab>
-                </Link>
-                <Link href="/popular">
-                  <Tab>인기 순</Tab>
-                </Link>
-                <Link href="/mine">
-                  <Tab>내가 남긴 질문</Tab>
-                </Link>
-              </div>
-            ) : (
-              <div>
-                <Link href="/recent">
-                  <Tab>최신 질문 순</Tab>
-                </Link>
-                <Link href="/popular">
-                  <Tab>인기 순</Tab>
-                </Link>
-              </div>
-            )}
-            <ToggleContainer onClick={() => {setOpen(!open)}}>
-              답변 전체
-            </ToggleContainer>
-              {open ? (
-                    <DropBox>
-                      <DropList>
-                        <DropListItem onClick={()=> ToggleDispatch(1, "wait_answer")}>답변 대기 중</DropListItem>
-                        <DropListItem onClick={()=> ToggleDispatch(1, "answer_done")}>답변 완료</DropListItem>
-                        <DropListItem onClick={()=> ToggleDispatch(1, "all")}>답변 전체</DropListItem>
-                      </DropList>
-                    </DropBox>
-              ) : null}
-          </TabContainer>
+        <TabContainer>
+          {isAuthenticated ? (
+            <div>
+              <Link href="/recent">
+                <Tab>최신 질문 순</Tab>
+              </Link>
+              <Link href="/popular">
+                <Tab>인기 순</Tab>
+              </Link>
+              <Link href="/mine">
+                <Tab>내가 남긴 질문</Tab>
+              </Link>
+            </div>
+          ) : (
+            <div>
+              <Link href="/recent">
+                <Tab>최신 질문 순</Tab>
+              </Link>
+              <Link href="/popular">
+                <Tab>인기 순</Tab>
+              </Link>
+            </div>
+          )}
+          <ToggleContainer
+            onClick={() => {
+              setOpen(!open);
+            }}
+          >
+            답변 전체
+          </ToggleContainer>
+          {open ? (
+            <DropBox>
+              <DropList>
+                <DropListItem
+                  onClick={() => ToggleDispatch(1, "wait_answer")}
+                >
+                  답변 대기 중
+                </DropListItem>
+                <DropListItem
+                  onClick={() => ToggleDispatch(1, "answer_done")}
+                >
+                  답변 완료
+                </DropListItem>
+                <DropListItem
+                  onClick={() => ToggleDispatch(1, "all")}
+                >
+                  답변 전체
+                </DropListItem>
+              </DropList>
+            </DropBox>
+          ) : null}
+        </TabContainer>
         <QuestionsContainer>
           {router.pathname == "/" ? (
             <>
@@ -104,8 +129,7 @@ function main({ children }) {
   );
 }
 
-export default React.memo(main);
-
+export default main;
 
 const BannerBackground = styled.div`
   width: 100%;
@@ -125,24 +149,21 @@ const BannerBackground = styled.div`
   @media ${({ theme: { device } }) => device.mobile} {
     padding: 4rem 3rem;
   }
-
-  
 `;
-
 
 const SubTitle = styled.h2`
   margin-top: 2.5rem;
   color: white;
-  font-family: 'Pretendard-Bold';
+  font-family: "Pretendard-Bold";
   font-size: 1.75rem;
   display: inline-block;
-  background-color: #FFBA42;
+  background-color: #ffba42;
   margin-bottom: 1rem;
   padding: 0.1rem 0.6rem;
   border-radius: 0.4rem;
 
   @media ${({ theme: { device } }) => device.tablet} {
-    font-size: 1.5rem
+    font-size: 1.5rem;
   }
   @media ${({ theme: { device } }) => device.mobile} {
     font-size: 1.3rem;
@@ -151,13 +172,13 @@ const SubTitle = styled.h2`
 
 const ServiceTitle = styled.h3`
   color: #343434;
-  font-family: 'Pretendard-Bold';
+  font-family: "Pretendard-Bold";
   font-size: 1.75rem;
   letter-spacing: -4;
   margin-top: 3rem;
   @media ${({ theme: { device } }) => device.tablet} {
     font-size: 1.5rem;
-    margin-top:2.3rem;
+    margin-top: 2.3rem;
   }
   @media ${({ theme: { device } }) => device.mobile} {
     font-size: 1.3rem;
@@ -167,7 +188,7 @@ const ServiceTitle = styled.h3`
 
 const ServiceIntro = styled.p`
   color: #343434;
-  font-family: 'Pretendard-Medium';
+  font-family: "Pretendard-Medium";
   font-size: 1.5rem;
   line-height: 2.2rem;
   margin-top: 0.875rem;
@@ -220,7 +241,6 @@ const TabContainer = styled.div`
   padding: 10px 20px;
   margin-top: 98px;
   position: relative;
-
 `;
 
 const Tab = styled.div`
@@ -279,7 +299,7 @@ const DropBox = styled.div`
   right: 1.8%;
   top: 100%;
   z-index: 5;
-  background: #FFFFFF;
+  background: #ffffff;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
 `;
@@ -288,16 +308,16 @@ const DropList = styled.ul`
   text-align: center;
   list-style: none;
   line-height: 2rem;
-  font-family: 'Pretendard-Regular';
+  font-family: "Pretendard-Regular";
 `;
 
 const DropListItem = styled.li`
-  color: #B6B6B6;
+  color: #b6b6b6;
   padding: 5px 10px;
   cursor: pointer;
 
   &:hover {
     color: #343434;
-    font-family: 'Pretendard-Medium';
+    font-family: "Pretendard-Medium";
   }
 `;

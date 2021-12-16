@@ -144,6 +144,7 @@ class QuestionListSerializer(TaggitSerializer, serializers.ModelSerializer):
             "updated",
             "comment_count",
             "answer_count",
+            "hits",
             # "big_criteria",
             # "small_criteria",
         ]
