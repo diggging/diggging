@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import CommentList from "./CommentList";
 import axios from "axios";
@@ -8,6 +8,7 @@ function Comment({ commentCount, comments, id, token }) {
   const [text, setText] = useState("");
   const [commentNum, setCommentNum] = useState(commentCount);
   const [newComment, setNewComment] = useState([]);
+  
   const onChange = useCallback(
     (e) => {
       setText(e.target.value);

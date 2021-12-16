@@ -1,13 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { check_auth_status, load_user } from "../../redux/actions/auth";
+import { check_auth_status } from "../../redux/actions/auth";
+import TextareaAutosize from "react-autosize-textarea";
 
-function SingleComment({ data, comment, setComment, setCommentNum, commentNum }) {
+function SingleComment({
+  data,
+  comment,
+  setComment,
+  setCommentNum,
+  commentNum,
+}) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const [token, setToken] = useState("");
+
+  const [isUpdated, setIsUpdated] = useState(false);
+  const [updateData, setUpdateData] = useState(data.text);
+  const [text, setText] = useState("");
 
   const { created } = data;
   const createdAtDate = new Date(created);
@@ -16,7 +27,21 @@ function SingleComment({ data, comment, setComment, setCommentNum, commentNum })
   const createdDate = createdAtDate.getDate();
   const createdHour = createdAtDate.getHours();
   const createdMinutes = createdAtDate.getMinutes();
+
+  const onChange = useCallback(
+    (e) => {
+      setText(e.target.value);
+    },
+    [text]
+  );
   
+
+
+  const onClickUpdate = () => {
+    setIsUpdated(true);
+    setText(updateData);
+  }
+
   const deleteComment = async (id) => {
     try {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -24,13 +49,35 @@ function SingleComment({ data, comment, setComment, setCommentNum, commentNum })
       await axios
         .delete(`http://127.0.0.1:8000/comments/${id}/comment_delete/`)
         .then((response) => {
-          setComment(comment.filter(comment => comment.id !== data.id))
-          setCommentNum(commentNum-1);
+          setComment(comment.filter((comment) => comment.id !== data.id));
+          setCommentNum(commentNum - 1);
         });
     } catch (e) {
       console.log(e);
     }
   };
+
+  const upDataComment = async (id) => {
+    try {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      axios.defaults.headers.common["Content-Type"] = "application/json";
+      await axios.patch(`http://127.0.0.1:8000/comments/${id}/question_comment_update/`, {
+        text: text
+      })
+      .then((response) => {
+        setIsUpdated(false);
+
+        comment.map((item) => {
+          if(item.id === data.id) {
+            setUpdateData(text)
+          }
+        })
+
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   const getAccessToken = async () => {
     if (dispatch && dispatch !== null && dispatch !== undefined) {
@@ -48,10 +95,8 @@ function SingleComment({ data, comment, setComment, setCommentNum, commentNum })
   useEffect(() => {
     if (dispatch && dispatch !== null && dispatch !== undefined)
       dispatch(check_auth_status());
-      getAccessToken();
+    getAccessToken();
   }, [dispatch]);
-
-  console.log(user)
 
   return (
     <>
@@ -60,31 +105,46 @@ function SingleComment({ data, comment, setComment, setCommentNum, commentNum })
           <>
             <CommentContainer>
               <Container>
-                <UserImg></UserImg>
-                <UserInfoContainer>
-                  <NameDateContainer>
-                    <FlexContainer>
-                      <UserNickName>{data.user.user_nickname}</UserNickName>
-                      <CommentDate>
-                        {createdYear}년 {createdMonth}월 {createdDate}일{" "}
-                        {createdHour}시 {createdMinutes}분{/* {list.created} */}
-                      </CommentDate>
-                    </FlexContainer>
-
-                    {data.user?.id === user?.user?.id ? (
-                      <>
+                {isUpdated ? (
+                  <>
+                    <CommentUpdateContainer>
+                      <CommentInput name="text" value={text} onChange={onChange}/>
+                      <CommentSendBtn type="button" onClick={() => upDataComment(data.id)}>댓글 남기기</CommentSendBtn>
+                    </CommentUpdateContainer>
+                  </>
+                ) : (
+                  <>
+                    <UserImg></UserImg>
+                    <UserInfoContainer>
+                      <NameDateContainer>
                         <FlexContainer>
-                          <BtnContainer>
-                            <Btn>수정하기</Btn>
-                            <Btn onClick={()=>deleteComment(data.id)}>삭제하기</Btn>
-                          </BtnContainer>
+                          <UserNickName>{data.user.user_nickname}</UserNickName>
+                          <CommentDate>
+                            {createdYear}년 {createdMonth}월 {createdDate}일{" "}
+                            {createdHour}시 {createdMinutes}분
+                          </CommentDate>
                         </FlexContainer>
-                      </>
-                    ) : null}
-                  </NameDateContainer>
 
-                  <CommentText>{data.text}</CommentText>
-                </UserInfoContainer>
+                        {data.user?.id === user?.user?.id ? (
+                          <>
+                            <FlexContainer>
+                              <BtnContainer>
+                                <Btn onClick={() => onClickUpdate()}>
+                                  수정하기
+                                </Btn>
+                                <Btn onClick={() => deleteComment(data.id)}>
+                                  삭제하기
+                                </Btn>
+                              </BtnContainer>
+                            </FlexContainer>
+                          </>
+                        ) : null}
+                      </NameDateContainer>
+
+                      <CommentText>{updateData}</CommentText>
+                    </UserInfoContainer>
+                  </>
+                )}
               </Container>
             </CommentContainer>
           </>
@@ -189,4 +249,42 @@ const FlexContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+const CommentUpdateContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+`;
+
+const CommentInput = styled(TextareaAutosize)`
+  resize: none;
+  width: 758px;
+  min-height: 6.125rem;
+  border: 1px solid #ececec;
+  box-sizing: border-box;
+  border-radius: 8px;
+  padding: 1rem 1rem 1.5rem;
+  font-family: Noto Sans KR;
+  font-size: 1rem;
+  color: rgb(33, 37, 41);
+  line-height: 1.75;
+  margin-right: 30px;
+  &:focus {
+    outline: 0;
+  }
+`;
+
+const CommentSendBtn = styled.button`
+  width: 114px;
+  height: 38px;
+  background: #ffd358;
+  box-shadow: 4px 4px 8px rgba(170, 170, 170, 0.1);
+  border-radius: 20px;
+  font-family: Noto Sans KR;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 13px;
+  line-height: 19px;
+  color: #343434;
 `;
