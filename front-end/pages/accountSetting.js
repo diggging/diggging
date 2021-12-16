@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from '../components/NavBar';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import Layout from "../hocs/Layout";
 import { load_user } from "../redux/actions/auth";
 import { useRouter } from "next/router";
-import ProfileInfoBox from "../components/users/ProfileInfoBox";
+import ProfileInfoBox from "../components/accountSetting/ProfileInfoBox";
 import FlexRow from "../components/common/FlexRow";
 import WhiteButton from "../components/common/WhiteButton";
 import GreyInput from "../components/common/GreyInput";
@@ -14,6 +14,8 @@ import YellowTitle from "../components/common/YellowTitle";
 import ContentText from "../components/common/ContentText";
 import FlexColumn from "../components/common/FlexColumn";
 import { FormBox, PageTitle } from "../pages/findPassword";
+import { Alert } from '../components/Alert';
+import { alertService } from '../components/alert.service';
 
 function accountSetting() {
   //1. profileImg변경하기
@@ -24,10 +26,42 @@ function accountSetting() {
   //5-1.기존 비밀번호 맞는지 확인하기
   //5-2 맞으면 입력된 값으로 수정하기
   const router = useRouter();
+  const dispatch = useDispatch();
   const {user} = router.query;
-  const userData = JSON.parse(user);
-  const userInfo = userData.user;
-  const {user_nickname, email, id, user_profile_image, user_profile_content} = userInfo;
+  
+
+  if (user === undefined) {
+    dispatch(load_user())
+    const userData = useSelector(state => state.auth.user);
+    try {
+      const userInfo = userData.user;
+      const {user_nickname, email, id, user_profile_image, user_profile_content} = userInfo;
+      const [userDataState, setUserDataState] = useState({
+        user_nickname,
+        email,
+        user_profile_image,
+        user_profile_content,
+      })
+      return [userDataState, setUserDataState];
+    } catch (err) {
+      alertService.warn('로그인 후 이용하세요')
+      setTimeout(() => {
+        router.push('/loginPage');
+      }, 300);
+    }
+  } else {
+    const userData = JSON.parse(user);
+    const userInfo = userData.user;
+    const {user_nickname, email, id, user_profile_image, user_profile_content} = userInfo;
+    const [userDataState, setUserDataState] = useState({
+      user_nickname,
+      email,
+      user_profile_image,
+      user_profile_content,
+    })
+    return [userDataState, setUserDataState];
+  }
+
 
   const onClickLogout = async () => {
     await dispatch(logout());
@@ -47,17 +81,18 @@ function accountSetting() {
       <NavBar />
       <FormBox>
         <PageTitle>계정 설정하기</PageTitle>
+        <Alert />
         <NicknameBox>
-          <ProfileTitle>{user_nickname}</ProfileTitle><ProfileTitle2>님의 프로필</ProfileTitle2>
+          {/* <ProfileTitle>{user_nickname}</ProfileTitle><ProfileTitle2>님의 프로필</ProfileTitle2> */}
         </NicknameBox>
-        <ProfileInfoBox id={id} user_profile_image={user_profile_image} user_profile_content={user_profile_content} />
+        <ProfileInfoBox userDataState={userDataState}/>
         <ProfileBox padding="2.125rem">
           <ProfileBioInput onKeyPress={preventSubmit} placeholder='자기소개를 입력하세요.'/>
           <YellowButton paddingRight="2.125rem" paddingTop="0.75rem">변경</YellowButton>
         </ProfileBox>
         <ProfileBox padding="2.375rem">
           <YellowTitle>이메일</YellowTitle>
-          <ContentText>{email}</ContentText>
+          {/* <ContentText>{email}</ContentText> */}
         </ProfileBox>
         <ProfileBox padding="2.625rem">
           <YellowTitle>닉네임 설정</YellowTitle>
@@ -117,7 +152,7 @@ const ProfileTitle2 = styled.span`
   margin-left:0.125rem;
 `;
 
-const ProfileBox = styled.section`
+const ProfileBox = styled.form`
   display: flex;
   flex-direction: row;
   padding: ${({padding}) => padding} 0;

@@ -9,7 +9,6 @@ import SvgDiggging from '../public/static/images/Diggging';
 // import img from '../public/static/images/profile_img.jpg'; //기본 프로필이미지 넣어주기
 import {useSelector, useDispatch} from 'react-redux';
 import { logout } from '../redux/actions/auth'
-import Router from "next/router";
 import { useRouter } from 'next/router';
 import { check_auth_status } from '../redux/actions/auth';
 import { load_user } from '../redux/actions/auth';

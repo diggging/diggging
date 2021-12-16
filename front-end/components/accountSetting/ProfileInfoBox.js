@@ -7,28 +7,50 @@ import YellowButton from '../common/YellowButton'
 import styled from 'styled-components';
 import Image from 'next/image'
 import { lighten, darken } from 'polished';
-
-function ProfileInfoBox ({user_profile_image, user_profile_content, id}) {
+import {API_URL} from '../../config/index'
+function ProfileInfoBox ({userDataState}) {
   const profileImgInput = useRef();
   const [updatedImg, setUpdatedImg] = useState(user_profile_image) //업로드 파일 이미지url
+
+  const [imgBase64, setImgBase64] = useState(user_profile_image); // 파일 base64
+  const [imgFile, setImgFile] = useState(user_profile_image);	//파일	
+  const {user_nickname, email, user_profile_image, user_profile_content} = userDataState;
+  const handleChangeFile = (e) => {
+    let reader = new FileReader();
+
+    reader.onloadend = () => {
+      // 2. 읽기가 완료되면 아래코드가 실행됩니다.
+      const base64 = reader.result;
+      if (base64) {
+        setImgBase64(base64.toString()); // 파일 base64 상태 업데이트
+      }
+    }
+
+    if (e.target.files[0]) {
+      reader.readAsDataURL(e.target.files[0]); // 1. 파일을 읽어 버퍼에 저장합니다.
+      setImgFile(e.target.files[0]); // 파일 상태 업데이트
+    }
+  }
+
 
   const onClickUploadFile = () => {
     profileImgInput.current.click();
   }
-
+  console.log(updatedImg)
   const onChangeImg = (e) => {
-    const imgToAdded = e.target.file;
+    const imgToAdded = e.target.files[0];
     const imgToAddedUrl = URL.createObjectURL(imgToAdded);
+    console.log(imgToAddedUrl);
     setUpdatedImg(imgToAddedUrl);
+    console.log(updatedImg)
   }
 
   const updateProfileImg = async () => {
+    const formData = new FormData();
+    formData.append('file', updatedImg);
+
     try {
-      const apiRes = await axios.put(`${API_URL}/${id}/change_img/`, {
-        body: {
-          "user_profile_image": updatedImg
-        }
-      });
+      const apiRes = await axios.put(`${API_URL}/${id}/change_img/`, FormData);
       if (apiRes.status === 200) {
         alertService.warn('성공적으로 변경되었습니다.')
       }
@@ -42,17 +64,21 @@ function ProfileInfoBox ({user_profile_image, user_profile_content, id}) {
       <ImageBox>
         <ProfileImgWrapper>
           <Image 
-          src={updatedImg}
+          src={imgBase64}
           width={120} 
           height={120} 
           alt="profileImage" 
-          quality={100}/>
+          quality={100}
+          objectFit="cover"
+          />
            <EditButton onClick={onClickUploadFile}/> 
           </ProfileImgWrapper>
           <YellowButton 
             paddingTop="0.625rem"
+            paddingRight="1.8rem"
             marginRight="0.5rem"
             fontSize="0.8125rem"
+            type="submit"
             onClick={updateProfileImg}>변경</YellowButton>
         <input
           type="file"
@@ -60,7 +86,7 @@ function ProfileInfoBox ({user_profile_image, user_profile_content, id}) {
           multiple
           ref={profileImgInput}
           style={{display: 'none'}} 
-          onChange={(e) => onChangeImg(e)}
+          onChange={(e) => handleChangeFile(e)}
         />
       </ImageBox>
       {user_profile_content ? (<ProfileBio>{user_profile_content}</ProfileBio>):(<ProfileBio>아직 자기소개가 없습니다.</ProfileBio>)}
