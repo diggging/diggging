@@ -24,7 +24,7 @@ const ProfileBioInput = styled.textarea`
 
 function BioUpdateBox({userData, token}) {
   const [bio, setBio] = useState("");
-  const {id} = userData;
+  const {id} = userData.user;
 
   const onChangeBio = (e) => {
     if (e.key === 'Enter') {

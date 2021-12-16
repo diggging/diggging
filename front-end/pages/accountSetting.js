@@ -15,9 +15,10 @@ import ContentText from "../components/common/ContentText";
 import FlexColumn from "../components/common/FlexColumn";
 import { FormBox, PageTitle } from "../pages/findPassword";
 import BioUpdateBox from "../components/accountSetting/BioUpdateBox";
+import NicknameUpdateBox from "../components/accountSetting/NicknameUpdateBox";
 
 function accountSetting() {
-  //1. profileImg변경하기
+  //1. profileImg변경하기 O
   //2. profileBio변경하기
   //3. email주소 보여주기
   //4. 닉네임 변경하기
@@ -50,12 +51,10 @@ function accountSetting() {
     }
   };
 
-  console.log(token, userData, 'token, user');
-
-  // const onClickLogout = async () => {
-  //   await dispatch(logout());
-  //   router.push('/');
-  // }
+  const onClickLogout = async () => {
+    await dispatch(logout());
+    router.push('/');
+  }
 
 
   return (
@@ -76,11 +75,7 @@ function accountSetting() {
           <YellowTitle>이메일</YellowTitle>
           {/* <ContentText>{email}</ContentText> */}
         </ProfileBox>
-        <ProfileBox padding="2.625rem">
-          <YellowTitle>닉네임 설정</YellowTitle>
-          <GreyInput width="25rem" height="3.125rem" marginLeft="3rem" marginRight="2.625rem" />
-          <YellowButton paddingRight="2.125rem" paddingTop="0.75rem">변경</YellowButton>
-        </ProfileBox>
+        <NicknameUpdateBox userData={userData} token={token} />
         <PasswordResetBox>
           <YellowTitle marginBottom="0.75rem">비밀번호 변경</YellowTitle>
           <PasswordMessage>새 비밀번호를 입력하시면 비밀번호가 변경됩니다.</PasswordMessage>
@@ -142,6 +137,7 @@ const ProfileBox = styled.form`
   justify-content: flex-start;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 `;
 
 const ProfileBioBox = styled(ProfileBox)`
