@@ -166,8 +166,9 @@ class ChangedescSerializer(serializers.ModelSerializer):
         return instance
 
 
-class ChangeimageSerializer(serializers.ModelSerializer):
+class ChangeimageSerializer(serializers.HyperlinkedModelSerializer):
     user_profile_image = serializers.ImageField()
+
 
     class Meta:
         model = User

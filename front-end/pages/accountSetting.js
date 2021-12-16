@@ -3,7 +3,7 @@ import NavBar from '../components/NavBar';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import Layout from "../hocs/Layout";
-import { load_user } from "../redux/actions/auth";
+import { load_user, check_auth_status } from "../redux/actions/auth";
 import { useRouter } from "next/router";
 import ProfileInfoBox from "../components/accountSetting/ProfileInfoBox";
 import FlexRow from "../components/common/FlexRow";
@@ -14,8 +14,7 @@ import YellowTitle from "../components/common/YellowTitle";
 import ContentText from "../components/common/ContentText";
 import FlexColumn from "../components/common/FlexColumn";
 import { FormBox, PageTitle } from "../pages/findPassword";
-import { Alert } from '../components/Alert';
-import { alertService } from '../components/alert.service';
+import BioUpdateBox from "../components/accountSetting/BioUpdateBox";
 
 function accountSetting() {
   //1. profileImg변경하기
@@ -36,9 +35,9 @@ function accountSetting() {
     if (dispatch && dispatch !== null && dispatch !== undefined)
       dispatch(check_auth_status());
       getAccessToken();
-  }, [dispatch]);
+  }, []);
 
-  
+
   const getAccessToken = async () => {
     if (dispatch && dispatch !== null && dispatch !== undefined) {
       dispatch(check_auth_status())
@@ -51,18 +50,14 @@ function accountSetting() {
     }
   };
 
-  
   console.log(token, userData, 'token, user');
 
-  const onClickLogout = async () => {
-    await dispatch(logout());
-    router.push('/');
-  }
-  const preventSubmit = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-    }
-  }
+  // const onClickLogout = async () => {
+  //   await dispatch(logout());
+  //   router.push('/');
+  // }
+
+
   return (
     <>
     <Layout
@@ -72,15 +67,11 @@ function accountSetting() {
       <NavBar />
       <FormBox>
         <PageTitle>계정 설정하기</PageTitle>
-        <Alert />
         <NicknameBox>
-          {/* <ProfileTitle>{user_nickname}</ProfileTitle><ProfileTitle2>님의 프로필</ProfileTitle2> */}
+          <ProfileTitle>{userData.user.user_nickname}</ProfileTitle><ProfileTitle2>님의 프로필</ProfileTitle2>
         </NicknameBox>
-        <ProfileInfoBox userData={userData}/>
-        <ProfileBox padding="2.125rem">
-          <ProfileBioInput onKeyPress={preventSubmit} placeholder='자기소개를 입력하세요.'/>
-          <YellowButton paddingRight="2.125rem" paddingTop="0.75rem">변경</YellowButton>
-        </ProfileBox>
+        <ProfileInfoBox userData={userData} token={token}/>
+        <BioUpdateBox userData={userData} token={token}/>
         <ProfileBox padding="2.375rem">
           <YellowTitle>이메일</YellowTitle>
           {/* <ContentText>{email}</ContentText> */}
@@ -105,7 +96,7 @@ function accountSetting() {
         <AccountBtnBox>
           {/* <WhiteButton paddingTop="0.625rem" paddingRight="2rem" fontSize="0.8125rem">회원탈퇴 😥</WhiteButton> */}
           <WhiteButton 
-            onClick={onClickLogout}
+            // onClick={onClickLogout}
             paddingTop="0.625rem" 
             paddingRight="2rem" 
             fontSize="0.8125rem"
@@ -118,7 +109,7 @@ function accountSetting() {
   );
 }
 
-export {ProfileBioBox};
+export {ProfileBioBox, ProfileBox};
 export default accountSetting;
 
 
@@ -155,22 +146,7 @@ const ProfileBox = styled.form`
 
 const ProfileBioBox = styled(ProfileBox)`
   justify-content: flex-start;
-`;
-
-const ProfileBioInput = styled.textarea`
-  width: 34.375rem;
-  height: 8.125rem;
-  margin-left: 0.375rem;
-  margin-right: 2.625rem;
-  outline: none;
-  border: none;
-  font-family: 'Pretendard-Regular';
-  font-size: 0.875rem;
-  color: #999893; 
-
-  background-color:#F5F5F7;
-  border-radius: 0.5rem;
-  padding: 0.875rem 1rem;
+  position: relative;
 `;
 
 const PasswordResetBox = styled.div`

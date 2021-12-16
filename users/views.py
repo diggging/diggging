@@ -83,10 +83,10 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
 # 회원가입
 # 아래 도메인은 이메일 인증 관련 도메인 바뀌면 my_site domain도 변경해주어야함.
-"""my_site = Site.objects.get(pk=1)
-my_site.domain = "diggging.com"
+my_site = Site.objects.get(pk=1)
+my_site.domain = "localhost:8000"
 my_site.name = "digging_main"
-my_site.save()"""
+my_site.save()
 
 
 class Registration(generics.GenericAPIView):

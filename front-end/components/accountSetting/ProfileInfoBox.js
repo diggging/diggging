@@ -7,27 +7,29 @@ import YellowButton from '../common/YellowButton'
 import styled from 'styled-components';
 import Image from 'next/image'
 import { lighten, darken } from 'polished';
-import {API_URL} from '../../config/index'
+import {API_URL} from '../../config/index';
 import { Alert } from '../Alert';
 import { alertService } from '../alert.service';
 import { useRouter } from 'next/router'
+import axios from 'axios'
 
-function ProfileInfoBox ({userData}) {
+function ProfileInfoBox ({userData, token}) {
   const router = useRouter();
-
-  if (userData) {
-    const {user_nickname, email, user_profile_image, user_profile_content} = userData;
-  } else {
-    alertService.warn('로그인 후 이용해주세요')  
-    router.push('/loginPage');
-  }
+  const {user_nickname, email, user_profile_image, user_profile_content} = userData.user;
   
+  useEffect(() => {
+    if (!(userData)) {
+      alertService.warn('로그인 후 이용해주세요')  
+      router.push('/loginPage')
+    }
+  }, [userData])
+
   console.log(userData, 'userData')
 
   const profileImgInput = useRef();
-  const [updatedImg, setUpdatedImg] = useState('') //업로드 파일 이미지url
-  const [imgBase64, setImgBase64] = useState(''); // 파일 base64
-  const [imgFile, setImgFile] = useState('');	//파일	
+  const [updatedImg, setUpdatedImg] = useState(user_profile_image) //업로드 파일 이미지url
+  const [imgBase64, setImgBase64] = useState(user_profile_image); // 파일 base64
+  const [imgFile, setImgFile] = useState(user_profile_image);	//파일	
   
   const handleChangeFile = (e) => {
     let reader = new FileReader();
@@ -51,6 +53,7 @@ function ProfileInfoBox ({userData}) {
     profileImgInput.current.click();
   }
   console.log(updatedImg)
+
   const onChangeImg = (e) => {
     const imgToAdded = e.target.files[0];
     const imgToAddedUrl = URL.createObjectURL(imgToAdded);
@@ -59,12 +62,16 @@ function ProfileInfoBox ({userData}) {
     console.log(updatedImg)
   }
 
-  const updateProfileImg = async () => {
-    const formData = new FormData();
-    formData.append('file', updatedImg);
+  const updateProfileImg = async (e) => {
+    e.preventDefault();
 
     try {
-      const apiRes = await axios.put(`${API_URL}/${id}/change_img/`, FormData);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      axios.defaults.headers.common["Content-Type"] = "application/json";
+      const apiRes = await axios.post(`${API_URL}/users/${id}/change_img/`, {
+        user_profile_image: imgBase64,
+      });
+
       if (apiRes.status === 200) {
         alertService.warn('성공적으로 변경되었습니다.')
       }
@@ -74,11 +81,12 @@ function ProfileInfoBox ({userData}) {
     }
   }
   return (
-    <ProfileBioBox padding="1.875rem">
+    <ProfileBioBox padding="1.875rem" onSubmit={(e) => updateProfileImg(e)}>
+      <Alert />
       <ImageBox>
         <ProfileImgWrapper>
           <Image 
-          src={imgBase64}
+          src={updatedImg}
           width={120} 
           height={120} 
           alt="profileImage" 
@@ -86,14 +94,14 @@ function ProfileInfoBox ({userData}) {
           objectFit="cover"
           />
            <EditButton onClick={onClickUploadFile}/> 
-          </ProfileImgWrapper>
-          <YellowButton 
-            paddingTop="0.625rem"
-            paddingRight="1.8rem"
-            marginRight="0.5rem"
-            fontSize="0.8125rem"
-            type="submit"
-            onClick={updateProfileImg}>변경</YellowButton>
+        </ProfileImgWrapper>
+        <YellowButton 
+          paddingTop="0.625rem"
+          paddingRight="1.8rem"
+          marginRight="0.5rem"
+          fontSize="0.8125rem"
+          type="submit"
+          >변경</YellowButton>
         <input
           type="file"
           accept="image/png, image/jpeg, image/jpg"
@@ -108,9 +116,10 @@ function ProfileInfoBox ({userData}) {
   )
 }
 
-export default ProfileInfoBox
+export default ProfileInfoBox;
 
 const ImageBox = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -157,3 +166,4 @@ const ProfileBio = styled.p`
   text-overflow: ellipsis;
   overflow: hidden;
 `;
+
