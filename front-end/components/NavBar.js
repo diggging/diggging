@@ -166,13 +166,13 @@ function navBar() {
               <SvgDiggging />
             </NavItem>
           </Link>
-          <Link href="/aboutus" passHref>
+          {/* <Link href="/aboutus" passHref>
             <NavItem>디깅소개</NavItem>
-          </Link>
+          </Link> */}
           {/* <Link href="/main" passHref>
             <NavItem>메인</NavItem>
           </Link> */}
-          {isAuthenticated ? (
+          {/* {isAuthenticated ? (
             <>
               <Link href="/questions" passHref>
                 <NavItem>질문광장</NavItem>
@@ -180,7 +180,7 @@ function navBar() {
             </>
           ) : (
             <></>
-          )}
+          )} */}
         </NavLeft>
         <NavRight>
           <Link href="/search" passHref>

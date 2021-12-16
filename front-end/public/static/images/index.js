@@ -1,6 +1,9 @@
 export { default as Alarm } from "./Alarm";
+export { default as AnswerIcon } from "./AnswerIcon";
+export { default as AnswerSelectedIcon } from "./AnswerSelectedIcon";
 export { default as BookMarkIcon } from "./BookMarkIcon";
 export { default as CloseIcon } from "./CloseIcon";
+export { default as CommentIcon } from "./CommentIcon";
 export { default as Diggging } from "./Diggging";
 export { default as DigggingLogo } from "./DigggingLogo";
 export { default as Directory } from "./Directory";
