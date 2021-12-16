@@ -1,69 +1,24 @@
-import React, { useState, useEffect, useCallback } from "react";
-import axios from "axios";
-import styled from "styled-components";
+import React, { useState, useEffect } from "react";
+import SingleComment from "./SingleComment";
 
 function CommentList({ id, comments, newComment }) {
-  const [comment, setComment] = useState([]);
-  const [createDate, setCreateDate] = useState([]);
-
-  //여기랑
-  const updatedDate = (comments) => {
-    comments.map((list) => {
-      const createdAtDate = new Date(list.created);
-      
-      list["createdYear"] = createdAtDate.getFullYear();
-      list["createdMonth"] = createdAtDate.getMonth() + 1;
-      list["createdDate"] = createdAtDate.getDate();
-      list["createdHour"] = createdAtDate.getHours();
-      list["createdMinutes"] = createdAtDate.getMinutes();
-    });
-  };
-  
-  //여기
-  useEffect(() => {
-    setComment([...comments, newComment]);
-    comment.concat(newComment);
-    updatedDate(comments);
-  }, [comments, newComment]);
+  const [comment, setComment] = useState(comments);
 
   useEffect(() => {
-    if(newComment && newComment.length >0) {
-      updatedDate(newComment);
-    }
-  }, [])
+    setComment([...comment, newComment]);
+  }, [newComment]);
+
+  console.log(comment);
 
   return (
     <>
       <ul>
         {comment &&
-          comment.map((list) => (
-            <CommentContainer key={list.id}>
-              {list.user?.id ? (
-                <>
-                  <Container>
-                    <UserImg></UserImg>
-
-                    <UserInfoContainer>
-                      {list.user?.id ? (
-                        <>
-                          <NameDateContainer>
-                            {/* <UserNickName>{list.user.user_nickname}</UserNickName> */}
-                            <CommentDate>
-                              {list.createdYear}년 {list.createdMonth}월{" "}
-                              {list.createdDate}일 {list.createdHour}시{" "}
-                              {list.createdMinutes}분
-                            </CommentDate>
-                          </NameDateContainer>
-                        </>
-                      ) : null}
-
-                      <CommentText>{list.text}</CommentText>
-                    </UserInfoContainer>
-                  </Container>
-                </>
-              ) : null}
-
-            </CommentContainer>
+          comment.map((item) => (
+            <SingleComment
+              key={item.id}
+              data={item}
+            ></SingleComment>
           ))}
       </ul>
     </>
@@ -71,68 +26,3 @@ function CommentList({ id, comments, newComment }) {
 }
 
 export default React.memo(CommentList);
-
-const CommentContainer = styled.ul`
-  width: 100%;
-  height: 100%;
-  margin-top: 23px;
-`;
-
-const Container = styled.div`
-  margin-bottom: 23px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid #ececec;
-  padding-bottom: 23px;
-`;
-
-const UserImg = styled.div`
-  width: 44px;
-  height: 44px;
-  background: #ffd358;
-  border-radius: 50px;
-  margin-right: 20px;
-`;
-
-const UserInfoContainer = styled.div`
-  width: 934px;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  margin: 0 auto;
-`;
-
-const NameDateContainer = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-`;
-
-const UserNickName = styled.div`
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 20px;
-  color: #343434;
-  margin-right: 10px;
-`;
-
-const CommentDate = styled.div`
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  line-height: 17px;
-  color: #b8b7b4;
-`;
-
-const CommentText = styled.div`
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 22px;
-  color: #585858;
-`;
