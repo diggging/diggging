@@ -15,6 +15,10 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
+from comments.serializers import (
+    QuestionCommentSerializer,
+    AnswerCommentSerializer,
+    )
 
 JWT_PAYLOAD_HANDLER = api_settings.JWT_PAYLOAD_HANDLER
 JWT_ENCODE_HANDLER = api_settings.JWT_ENCODE_HANDLER
@@ -105,7 +109,16 @@ class LoginSerializer(serializers.Serializer):
 class AlarmSerailzer(serializers.ModelSerializer):
 
     user = UserSerializer(read_only=True)
+    class Meta:
+        model = Alarm
+        fields = "__all__"
+
+class AlarmUpdateSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = Alarm
         fields = "__all__"
+        read_only_fields = ["user", "request_user_nickname",
+        "request_user_profile_image", "title", "desc", "alarm_kind",
+        "is_checked"]

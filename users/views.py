@@ -45,6 +45,7 @@ from .serializers import (
     UserSerializer,
     RegisterSerializer,
     AlarmSerailzer,
+    AlarmUpdateSerializer,
 )
 from rest_framework.response import Response
 from django.contrib.auth import login
@@ -857,8 +858,23 @@ class AlarmAPI(APIView):
         serializer = AlarmSerailzer(my_alarm, many=True)
         # not_check_alarm = serializer.filter(is_checked=False)  # 그중 False인애들 가져와서
         data = serializer.data
-        for alarm in my_alarm:
-            alarm.is_checked = True
-            alarm.save()
+        # for alarm in my_alarm:
+        #     alarm.is_checked = True
+        #     alarm.save()
 
         return Response(data)
+
+# Alarm 읽었다고 체크 할 수 있는 Alarm update
+class UpdateAlarmAPIView(generics.RetrieveUpdateAPIView):
+    queryset = Alarm.objects.all()
+    serializer_class = AlarmUpdateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_update(self, serializer, *args, **kwargs):
+        target_alarm = get_object_or_404(Alarm, pk=self.kwargs['pk'])
+
+        if target_alarm.is_checked == False:
+            target_alarm.is_checked = True
+
+        target_alarm.save()
+        serializer.save(is_checked = target_alarm.is_checked)

@@ -93,11 +93,27 @@ class Sand(core_model.TimeStampModel):
 
 class Alarm(core_model.TimeStampModel):
     user = models.ForeignKey(User, related_name="alarm", on_delete=models.CASCADE)
-    reason = models.TextField(verbose_name="reason", blank=True)
+    request_user_nickname = models.TextField(verbose_name="requset_user_nickname", blank=True)
+    request_user_profile_image = ResizedImageField(
+        size=[50, 50],
+        quality=75,
+        verbose_name="대표 사진",
+        upload_to="images/",
+        blank=True,
+        null=True,
+        default="../static/image/profile_img.jpg",
+    )
+    title = models.TextField(verbose_name="title", blank=True)
+    desc = models.TextField(verbose_name="desc", blank=True)
+    # question_id = models.IntegerField(verbose_name="question_id", blank=True)
+    alarm_kind = models.TextField(verbose_name="alarm_kind", blank=True)
     is_checked = models.BooleanField(verbose_name="확인 여부", default=False)
 
-    def __str__(self):
-        return self.reason
+    class Meta:
+        ordering = ("-created",)
+
+    # def __str__(self):
+    #     return self.reason
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
