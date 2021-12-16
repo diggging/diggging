@@ -49,12 +49,18 @@ urlpatterns = [
     path("<int:pk>/my_page/", view=views.my_page, name="my_page"),  # my page
     path("<int:host_pk>/follow", view=views.follow, name="follow"),
     path("<int:pk>/account_detail", view=views.account_detail, name="account_detail"),
-    path("<int:pk>/change_desc/", view=views.change_desc, name="change_desc"),
+    path("<int:pk>/change_desc/", view=views.ChangeDesc.as_view(), name="change_desc"),
     path(
-        "<int:pk>/change_nickname/", view=views.change_nickname, name="change_nickname"
+        "<int:pk>/change_nickname/",
+        view=views.ChangeNicknameApi.as_view(),
+        name="change_nickname",
     ),
-    path("<int:pk>/change_pw/", view=views.change_pw, name="change_pw"),
-    path("<int:pk>/change_img/", view=views.change_img, name="change_img"),
+    path(
+        "<int:pk>/change_pw/",
+        view=views.ChangepasswordView.as_view(),
+        name="auth_change_password",
+    ),
+    path("<int:pk>/change_img/", view=views.ChangeImgView.as_view(), name="change_img"),
     # github login
     path("login/github", views.github_login, name="github_login"),
     path("login/github/callback", views.github_callback, name="github_callback"),

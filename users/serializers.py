@@ -111,3 +111,88 @@ class AlarmSerailzer(serializers.ModelSerializer):
     class Meta:
         model = Alarm
         fields = "__all__"
+
+
+class ChangePasswordSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(style={"input_type": "password"}, write_only=True)
+    password2 = serializers.CharField(style={"input_type": "password"}, write_only=True)
+    old_password = serializers.CharField(
+        style={"input_type": "password"}, write_only=True
+    )
+
+    class Meta:
+        model = User
+        fields = ("old_password", "password", "password2")
+
+    def validate(self, attrs):
+        if attrs["password"] != attrs["password2"]:
+            raise serializers.ValidationError(
+                {"password": "Password fields didn't match."}
+            )
+
+        return attrs
+
+    def validate_old_password(self, value):
+        user = self.context["request"].user
+        if not user.check_password(value):
+            raise serializers.ValidationError(
+                {"old_password": "Old password is not correct"}
+            )
+        return value
+
+    def update(self, instance, validated_data):
+
+        instance.set_password(validated_data["password"])
+        instance.save()
+
+        return instance
+
+
+class ChangedescSerializer(serializers.ModelSerializer):
+    user_profile_content = serializers.CharField(max_length=50)
+
+    class Meta:
+        model = User
+        fields = [
+            "user_profile_content",
+        ]
+
+    def update(self, instance, validated_data):
+        instance.user_profile_content = validated_data.get(
+            "user_profile_content", instance.user_profile_content
+        )
+        instance.save()
+
+        return instance
+
+
+class ChangeimageSerializer(serializers.ModelSerializer):
+    user_profile_image = serializers.ImageField()
+
+    class Meta:
+        model = User
+        fields = ["user_profile_image"]
+
+    def update(self, instance, validated_data):
+        instance.user_profile_image = validated_data.get(
+            "user_profile_image", instance.user_profile_image
+        )
+        instance.save()
+
+        return instance
+
+
+class ChangeNicknameSerializer(serializers.ModelSerializer):
+    user_nickname = serializers.CharField()
+
+    class Meta:
+        model = User
+        fields = ["user_nickname"]
+
+    def update(self, instance, validated_data):
+        instance.user_nickname = validated_data.get(
+            "user_nickname", instance.user_nickname
+        )
+        instance.save()
+
+        return instance
