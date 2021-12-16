@@ -4,11 +4,13 @@ import styled from "styled-components";
 
 function CommentList({ id, comments, newComment }) {
   const [comment, setComment] = useState([]);
+  const [createDate, setCreateDate] = useState([]);
 
+  //여기랑
   const updatedDate = (comments) => {
     comments.map((list) => {
       const createdAtDate = new Date(list.created);
-
+      
       list["createdYear"] = createdAtDate.getFullYear();
       list["createdMonth"] = createdAtDate.getMonth() + 1;
       list["createdDate"] = createdAtDate.getDate();
@@ -16,14 +18,19 @@ function CommentList({ id, comments, newComment }) {
       list["createdMinutes"] = createdAtDate.getMinutes();
     });
   };
-
-  console.log(comments);
-
+  
+  //여기
   useEffect(() => {
     setComment([...comments, newComment]);
-    updatedDate(comments);
     comment.concat(newComment);
+    updatedDate(comments);
   }, [comments, newComment]);
+
+  useEffect(() => {
+    if(newComment && newComment.length >0) {
+      updatedDate(newComment);
+    }
+  }, [])
 
   return (
     <>
