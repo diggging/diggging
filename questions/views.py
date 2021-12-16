@@ -15,6 +15,7 @@ from questions.serializers import (
     AnswerSelectSerializer,
 )
 from users.models import User
+
 # from .forms import AnswerPostForm, QuestionPostForm
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import QuestionPost, Answer, QuestionFolder
@@ -28,7 +29,11 @@ from django.core import serializers
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
-from .permissions import IsNotOwnerOrReadOnly, IsOwnerOrReadOnly, IsQuestionOwnerOrReadOnly
+from .permissions import (
+    IsNotOwnerOrReadOnly,
+    IsOwnerOrReadOnly,
+    IsQuestionOwnerOrReadOnly,
+)
 from rest_framework import viewsets, status, generics, mixins
 from rest_framework.permissions import (
     AllowAny,
@@ -39,17 +44,22 @@ from rest_framework.permissions import (
 from comments.models import Comment
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import permission_classes
+from rest_framework.pagination import PageNumberPagination
 
 # Create your views here.
+class ListPageNumberPagination(PageNumberPagination):
+    page_size = 5
+
 
 # ----------------- Question CRUD start ---------------------------------
 class QuestionCreateAPIView(generics.CreateAPIView):
     queryset = QuestionPost.objects.all()
     serializer_class = QuestionCreateUpdateSerializer
-    permission_classes = [IsAuthenticated] # allow only authenticated user
+    permission_classes = [IsAuthenticated]  # allow only authenticated user
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user) # set user field
+        serializer.save(user=self.request.user)  # set user field
+
 
 class QuestionDetailAPIView(generics.RetrieveAPIView):
     queryset = QuestionPost.objects.all()
@@ -63,6 +73,7 @@ class QuestionDetailAPIView(generics.RetrieveAPIView):
 
         return self.retrieve(request, *args, **kwargs)
 
+
 # use RetrieveUpdateAPIView to prefill form
 class QuestionUpdateAPIView(generics.RetrieveUpdateAPIView):
     queryset = QuestionPost.objects.all()
@@ -71,27 +82,31 @@ class QuestionUpdateAPIView(generics.RetrieveUpdateAPIView):
 
     # def perform_update(self, serializer):
     #     serializer.save(user=self.request.user) # update user
+
+
 class QuestionDeleteAPIView(generics.DestroyAPIView):
     queryset = QuestionPost.objects.all()
     serializer_class = QuestionDetailSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
-#---------------------------- Question CRUD end -----------------------
 
-#---------------------------- Question List start ---------------------
+# ---------------------------- Question CRUD end -----------------------
+
+# ---------------------------- Question List start ---------------------
 class QuestionListAPIView(generics.ListAPIView):
     serializer_class = QuestionListSerializer
+    pagination_class = ListPageNumberPagination
 
     def get_queryset(self):
-        big_criteria = self.request.query_params.get('big_criteria')
-        small_criteria = self.request.query_params.get('small_criteria')
-        
+        big_criteria = self.request.query_params.get("big_criteria")
+        small_criteria = self.request.query_params.get("small_criteria")
+
         if big_criteria == "recent":
             queryset = QuestionPost.objects.order_by("-created")
             if small_criteria == "all":
                 return queryset
             elif small_criteria == "wait_answer":
-                new_queryset = queryset.filter(answer_exist = False)
+                new_queryset = queryset.filter(answer_exist=False)
                 return new_queryset
             elif small_criteria == "answer_done":
                 new_queryset = queryset.filter(answer_exist=True)
@@ -101,13 +116,15 @@ class QuestionListAPIView(generics.ListAPIView):
             if small_criteria == "all":
                 return queryset
             elif small_criteria == "wait_answer":
-                new_queryset = queryset.filter(answer_exist = False)
+                new_queryset = queryset.filter(answer_exist=False)
                 return new_queryset
             elif small_criteria == "answer_done":
                 new_queryset = queryset.filter(answer_exist=True)
                 return new_queryset
         elif big_criteria == "mine":
-            queryset = QuestionPost.objects.filter(user=self.request.user).order_by("-created")
+            queryset = QuestionPost.objects.filter(user=self.request.user).order_by(
+                "-created"
+            )
             if small_criteria == "all":
                 return queryset
             elif small_criteria == "wait_answer":
@@ -116,7 +133,7 @@ class QuestionListAPIView(generics.ListAPIView):
             elif small_criteria == "answer_done":
                 new_queryset = queryset.filter(answer_exist=True)
                 return new_queryset
-        
+
         print(big_criteria)
         print(small_criteria)
         # if small_criteria == "all":
@@ -134,6 +151,7 @@ class QuestionListAPIView(generics.ListAPIView):
         # elif small_criteria == "answer_done":
         #     queryset = QuestionPost.objects.filter(answer_exist=True).order_by("-created")
 
+
 # -------------------------- Question List end -------------------------------
 
 # -------------------------- Answer CRUD -------------------------------------
@@ -143,29 +161,33 @@ class AnswerCreateAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        pk = self.request.query_params.get('question_id')
+        pk = self.request.query_params.get("question_id")
         question = get_object_or_404(QuestionPost, pk=pk)
         question.answer_exist = True
         new_alarm = Alarm.objects.create(
-                user=self.request.user,
-                reason="내가 남긴 질문" + question.title + "에 답변이 달렸어요.",
-            )
+            user=self.request.user,
+            reason="내가 남긴 질문" + question.title + "에 답변이 달렸어요.",
+        )
         question.save()
         serializer.save(user=self.request.user, question=question)
+
 
 class AnswerDetailAPIView(generics.RetrieveAPIView):
     queryset = Answer.objects.all()
     serializer_class = AnswerDetailSerializer
+
 
 class AnswerUpdateAPIView(generics.RetrieveUpdateAPIView):
     queryset = Answer.objects.all()
     serializer_class = AnswerCreateUpdateSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
+
 class AnswerDeleteAPIView(generics.RetrieveDestroyAPIView):
     queryset = Answer.objects.all()
     serializer_class = AnswerDetailSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
 
 # -----------------------------------------------------------------------------
 
@@ -176,7 +198,7 @@ class LikeUpDownAPIView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly, IsNotOwnerOrReadOnly]
 
     def perform_update(self, serializer, *args, **kwargs):
-        question_post = get_object_or_404(QuestionPost, pk=self.kwargs['pk'])
+        question_post = get_object_or_404(QuestionPost, pk=self.kwargs["pk"])
         like_user = self.request.user
         # owner = instance.user
         if question_post.likes_user.filter(id=like_user.id).exists():
@@ -186,14 +208,22 @@ class LikeUpDownAPIView(generics.RetrieveUpdateAPIView):
             question_post.likes_user.remove(self.request.user)
         else:
             question_post.helped_num += 1
-            new_alarm = Alarm.objects.create(user=question_post.user, reason="내가 남긴 질문 \""+ question_post.title + "\" 이 " + self.request.user.user_nickname + "님께 도움이 되었어요.")
+            new_alarm = Alarm.objects.create(
+                user=question_post.user,
+                reason='내가 남긴 질문 "'
+                + question_post.title
+                + '" 이 '
+                + self.request.user.user_nickname
+                + "님께 도움이 되었어요.",
+            )
             if question_post.helped_num < 0:
                 question_post.helped_num = 0
             question_post.likes_user.add(self.request.user)
 
-
         question_post.save()
         serializer.save(helped_num=question_post.helped_num)
+
+
 # -------------------------------------------------------------------------------
 
 # ----------------------- 답변 채택  ----------------------------------------------
@@ -203,16 +233,19 @@ class AnswerSelectAPIView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly, IsQuestionOwnerOrReadOnly]
 
     def perform_update(self, serializer, *args, **kwargs):
-        answer = get_object_or_404(Answer, pk=self.kwargs['pk'])
+        answer = get_object_or_404(Answer, pk=self.kwargs["pk"])
 
         if answer.selection == True:
             answer.selection = False
         else:
             answer.selection = True
 
-        new_alarm = Alarm.objects.create(user=answer.user, reason="질문 " + answer.question.title + " 에 남긴 답변이 채택되었어요." )
+        new_alarm = Alarm.objects.create(
+            user=answer.user, reason="질문 " + answer.question.title + " 에 남긴 답변이 채택되었어요."
+        )
         answer.save()
-        serializer.save(selection = answer.selection)
+        serializer.save(selection=answer.selection)
+
 
 # ---------------------------------------------------------------------------------
 
@@ -230,31 +263,6 @@ class AnswerSelectAPIView(generics.RetrieveUpdateAPIView):
 #     def perform_update(self, serializer):
 #         pk = self.request.query_params.get('question_id')
 #         current_question = QuestionPost.objects.get(pk=pk)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # class QuestionCommentCreateView(generics.ListCreateAPIView):
@@ -282,22 +290,22 @@ class AnswerSelectAPIView(generics.RetrieveUpdateAPIView):
 
 #         return Response(serializer.data)
 
-    
-    # queryset = QuestionPost.objects.all()
-    # serializer_class = QuestionPostSerializer
-    # pagination_class = None 
 
-    # def create(self, request, *args, **kwargs):
-    #     serializer = self.serializer_class(data=request.data, context={'request': self.request})
-    #     if serializer.is_valid():
-    #         instance = serializer.save()
-        
-    #     me = request.user
+# queryset = QuestionPost.objects.all()
+# serializer_class = QuestionPostSerializer
+# pagination_class = None
 
-    #     # 포스팅 시에 sand 추가해주기
-    #     new_sand = Sand.objects.create(user=me, amount = 100, reason="삽질 기록 작성")
+# def create(self, request, *args, **kwargs):
+#     serializer = self.serializer_class(data=request.data, context={'request': self.request})
+#     if serializer.is_valid():
+#         instance = serializer.save()
 
-    #     return Response(serializer.data)
+#     me = request.user
+
+#     # 포스팅 시에 sand 추가해주기
+#     new_sand = Sand.objects.create(user=me, amount = 100, reason="삽질 기록 작성")
+
+#     return Response(serializer.data)
 
 # class QuestionDetailGetView(generics.RetrieveUpdateDestroyAPIView):
 #     # comment 보내주기
@@ -308,12 +316,12 @@ class AnswerSelectAPIView(generics.RetrieveUpdateAPIView):
 #     serializer_class = QuestionPostSerializer
 
 #     def get_queryset(self):
-#         #TODO: self.request.id 
+#         #TODO: self.request.id
 #         return QuestionPost.objects.get(pk=self.request.id)
 
 #     def update(self, request, *args, **kwargs):
 #         instance = self.get_object() # 해당 오브젝트 가져옴. (pk 영향X)
-        
+
 #         instance.save()
 
 #         serializer = self.serializer_class(instance, data = request.data, partial=True)
@@ -321,7 +329,7 @@ class AnswerSelectAPIView(generics.RetrieveUpdateAPIView):
 #             serializer.save()
 
 #         return Response(serializer.data)
-    
+
 #     def delete(self, request, *args, **kwargs):
 #         instance = self.get_object()
 
@@ -336,13 +344,13 @@ class AnswerSelectAPIView(generics.RetrieveUpdateAPIView):
 #     all_question_scrap = Question_post.objects.all().order_by("-scrap_num")
 #     # 모든 전체 질문에서 도움 순위대로 추천
 #     all_posts_helped = Question_post.objects.all().order_by("-helped_num")
-    
+
 #     not_selected_questions = Question_post.objects.filter(is_selected=False)
-    
+
 #     ##개수 제한
 #     if len(not_selected_questions) > 20:
 #         not_selected_questions = not_selected_questions[:20]
-        
+
 #     languages = [langs[0] for langs in Question_post.language_choices]
 #     search = request.POST.getlist("answers[]")
 #     str_search = "".join(search)
@@ -580,7 +588,7 @@ class AnswerSelectAPIView(generics.RetrieveUpdateAPIView):
 #     # post_answers: 질문 포스트에 해당 되는 답변들
 #     post_answers = post_details.answers.all().order_by("-created")
 #     answers = serializers.serialize('json', post_answers)
-    
+
 #     # question_comments 역참조
 #     comments = post_details.question_comments.all()
 #     # answer_comments = [answer.answer_comments for answer in post_answers]
@@ -842,10 +850,10 @@ class AnswerSelectAPIView(generics.RetrieveUpdateAPIView):
 #     folder = QuestionFolder.objects.get(pk=pk)
 #     posts = Question_post.objects.filter(question_folder=folder)
 
-#     user_list = [] 
-#     for post in posts: 
+#     user_list = []
+#     for post in posts:
 #         user_list.append(post.user.user_nickname)
-    
+
 #     data = posts.values()
 
 #     ctx = {
@@ -860,17 +868,17 @@ class AnswerSelectAPIView(generics.RetrieveUpdateAPIView):
 #     host = get_object_or_404(User, pk=pk)
 #     folder = QuestionFolder.objects.filter(folder_user=host, folder_kind="framework")
 #     data = folder.values()
-    
+
 #     return JsonResponse(list(data), safe=False)
 
 # @csrf_exempt
 # def questions_framework_post(request, pk):
 #     folder = QuestionFolder.objects.get(pk=pk)
 #     posts = Question_post.objects.filter(question_folder=folder)
-#     user_list = [] 
-#     for post in posts: 
+#     user_list = []
+#     for post in posts:
 #         user_list.append(post.user.user_nickname)
-    
+
 #     data = posts.values()
 
 #     ctx = {
@@ -883,4 +891,3 @@ class AnswerSelectAPIView(generics.RetrieveUpdateAPIView):
 # ------------------------- Question API Refactoring view --------------------------------------------------
 
 # ------------------------- Question Detail ----------------------------------------------------------------
-

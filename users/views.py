@@ -45,6 +45,7 @@ from .serializers import (
     UserSerializer,
     RegisterSerializer,
     AlarmSerailzer,
+    ChangePasswordSerializer,
 )
 from rest_framework.response import Response
 from django.contrib.auth import login
@@ -811,31 +812,40 @@ def change_nickname(request, pk):
 
 # 비밀번호 변경 함수
 @permission_classes([IsAuthenticated])
-class Change_pw(APIView):
-    def post(request, pk):
+class ChangepasswordView(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ChangePasswordSerializer
+    """def post(self, request, pk, *args, **kwargs):
         context = {}
-        if request.method == "POST":
-            current_password = request.POST.get("origin_password")
-            user = get_object_or_404(User, pk=pk)
-            if check_password(current_password, user.password):
-                new_password = request.POST.get("password1")
-                password_confirm = request.POST.get("password2")
-                if new_password == password_confirm and len(new_password) >= 8:
-                    user.set_password(new_password)
-                    user.save()
-                    # backend 인자 추가
-                    login(
-                        request,
-                        user,
-                        backend="django.contrib.auth.backends.ModelBackend",
-                    )
-                    return redirect("users:login")
-                else:
-                    context.update({"error": "새로운 비밀번호를 다시 확인해주세요."})
+        current_password = request.POST.get("origin_password")
+        user = get_object_or_404(User, pk=pk)
+        print(check_password(current_password, str(user.password)))
+        print(current_password, user.password)
+        if check_password(current_password, user.password):
+            new_password = request.POST.get("new_password")
+            password_confirm = request.POST.get("password_confirm")
+            if new_password == password_confirm and len(new_password) >= 8:
+                user.set_password(new_password)
+                user.save()
+                # backend 인자 추가
+                # login(
+                #   request,
+                #  user,
+                # backend="django.contrib.auth.backends.ModelBackend",
+                # )
+                return Response({"user": user.data}, status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    {"error": "새로운 비밀번호를 다시 확인해주세요."},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
         else:
-            context.update({"error": "현재 비밀번호가 일치하지 않습니다."})
-
-        return redirect("users:login")
+            return Response(
+                {"error": "현재 비밀번호가 일치하지 않습니다."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+"""
 
 
 def change_img(request, pk):
