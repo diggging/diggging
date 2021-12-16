@@ -149,7 +149,7 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 
 
 class ChangedescSerializer(serializers.ModelSerializer):
-    profile_content = serializers.CharField(max_length=50)
+    user_profile_content = serializers.CharField(max_length=50)
 
     class Meta:
         model = User
@@ -158,7 +158,7 @@ class ChangedescSerializer(serializers.ModelSerializer):
         ]
 
     def update(self, instance, validated_data):
-        instance.profile_content = validated_data.get(
+        instance.user_profile_content = validated_data.get(
             "user_profile_content", instance.user_profile_content
         )
         instance.save()
@@ -176,6 +176,22 @@ class ChangeimageSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.user_profile_image = validated_data.get(
             "user_profile_image", instance.user_profile_image
+        )
+        instance.save()
+
+        return instance
+
+
+class ChangeNicknameSerializer(serializers.ModelSerializer):
+    user_nickname = serializers.CharField()
+
+    class Meta:
+        model = User
+        fields = ["user_nickname"]
+
+    def update(self, instance, validated_data):
+        instance.user_nickname = validated_data.get(
+            "user_nickname", instance.user_nickname
         )
         instance.save()
 

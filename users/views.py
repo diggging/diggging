@@ -48,6 +48,7 @@ from .serializers import (
     ChangePasswordSerializer,
     ChangedescSerializer,
     ChangeimageSerializer,
+    ChangeNicknameSerializer,
 )
 from rest_framework.response import Response
 from django.contrib.auth import login
@@ -799,8 +800,14 @@ class ChangeDesc(generics.UpdateAPIView):
 """
 
 
-def change_nickname(request, pk):
-    context = {}
+@permission_classes([IsAuthenticated])
+class ChangeNicknameApi(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = ChangeNicknameSerializer
+    # if queryset.objects.filter(user_nickname=name):
+    # raise Exception("중복된 닉네임이 있습니다.")
+
+    """context = {}
     if request.method == "POST":
         new_nickname = request.POST.get("new_nickname")
         user = get_object_or_404(
@@ -814,6 +821,7 @@ def change_nickname(request, pk):
             user.save()
             return redirect("users:account_detail", user.id)
     return redirect("users:account_detail", user.id)
+"""
 
 
 # 비밀번호 변경 함수

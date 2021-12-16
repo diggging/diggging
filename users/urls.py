@@ -51,7 +51,9 @@ urlpatterns = [
     path("<int:pk>/account_detail", view=views.account_detail, name="account_detail"),
     path("<int:pk>/change_desc/", view=views.ChangeDesc.as_view(), name="change_desc"),
     path(
-        "<int:pk>/change_nickname/", view=views.change_nickname, name="change_nickname"
+        "<int:pk>/change_nickname/",
+        view=views.ChangeNicknameApi.as_view(),
+        name="change_nickname",
     ),
     path(
         "<int:pk>/change_pw/",
