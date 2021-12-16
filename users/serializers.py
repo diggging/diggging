@@ -144,3 +144,21 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+
+class ChangedescSerializer(serializers.ModelSerializer):
+    profile_content = serializers.CharField(max_length=50)
+
+    class Meta:
+        model = User
+        fields = [
+            "profile_content",
+        ]
+
+    def update(self, instance, validated_data):
+        instance.profile_content = validated_data.get(
+            "profile_content", instance.profile_content
+        )
+        instance.save()
+
+        return instance

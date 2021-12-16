@@ -49,7 +49,7 @@ urlpatterns = [
     path("<int:pk>/my_page/", view=views.my_page, name="my_page"),  # my page
     path("<int:host_pk>/follow", view=views.follow, name="follow"),
     path("<int:pk>/account_detail", view=views.account_detail, name="account_detail"),
-    path("<int:pk>/change_desc/", view=views.change_desc, name="change_desc"),
+    path("<int:pk>/change_desc/", view=views.ChangeDesc.as_view(), name="change_desc"),
     path(
         "<int:pk>/change_nickname/", view=views.change_nickname, name="change_nickname"
     ),

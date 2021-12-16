@@ -14,7 +14,7 @@ class CustomUserAdmin(admin.ModelAdmin):
         "last_login",
         "email",
         "user_nickname",
-        "user_profile_content",
+        "profile_content",
         "user_profile_image",
         "user_following",
         "login_method",

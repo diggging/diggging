@@ -46,6 +46,7 @@ from .serializers import (
     RegisterSerializer,
     AlarmSerailzer,
     ChangePasswordSerializer,
+    ChangedescSerializer,
 )
 from rest_framework.response import Response
 from django.contrib.auth import login
@@ -782,8 +783,11 @@ def account_detail(request, pk):
     return render(request, template_name="users/account_detail.html", context=ctx)
 
 
-def change_desc(request, pk):
-    context = {}
+@permission_classes([IsAuthenticated])
+class ChangeDesc(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = ChangedescSerializer
+    """context = {}
     user = get_object_or_404(User, pk=pk)
     if request.method == "POST":
         new_desc = request.POST.get("new_desc")
@@ -791,6 +795,7 @@ def change_desc(request, pk):
         user.save()
         return redirect("users:account_detail", user.id)
     return redirect("users:account_detail", user.id)
+"""
 
 
 def change_nickname(request, pk):
@@ -814,7 +819,6 @@ def change_nickname(request, pk):
 @permission_classes([IsAuthenticated])
 class ChangepasswordView(generics.UpdateAPIView):
     queryset = User.objects.all()
-    permission_classes = (IsAuthenticated,)
     serializer_class = ChangePasswordSerializer
     """def post(self, request, pk, *args, **kwargs):
         context = {}
