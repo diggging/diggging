@@ -16,9 +16,11 @@ function CommentList({ id, comments, newComment }) {
       list["createdMinutes"] = createdAtDate.getMinutes();
     });
   };
-  console.log(comment);
+
+  console.log(comments);
+
   useEffect(() => {
-    setComment(comments);
+    setComment([...comments, newComment]);
     updatedDate(comments);
     comment.concat(newComment);
   }, [comments, newComment]);
@@ -29,27 +31,31 @@ function CommentList({ id, comments, newComment }) {
         {comment &&
           comment.map((list) => (
             <CommentContainer key={list.id}>
-              <Container>
-                <UserImg></UserImg>
+              {list.user?.id ? (
+                <>
+                  <Container>
+                    <UserImg></UserImg>
 
-                <UserInfoContainer>
+                    <UserInfoContainer>
+                      {list.user?.id ? (
+                        <>
+                          <NameDateContainer>
+                            {/* <UserNickName>{list.user.user_nickname}</UserNickName> */}
+                            <CommentDate>
+                              {list.createdYear}년 {list.createdMonth}월{" "}
+                              {list.createdDate}일 {list.createdHour}시{" "}
+                              {list.createdMinutes}분
+                            </CommentDate>
+                          </NameDateContainer>
+                        </>
+                      ) : null}
 
-                  <NameDateContainer>
-                    <UserNickName>{list.user.user_nickname}</UserNickName>
-                    <CommentDate>
-                      {list.createdYear}년 {list.createdMonth}월{" "}
-                      {list.createdDate}일 {list.createdHour}시{" "}
-                      {list.createdMinutes}분
-                    </CommentDate>
-                  </NameDateContainer>
+                      <CommentText>{list.text}</CommentText>
+                    </UserInfoContainer>
+                  </Container>
+                </>
+              ) : null}
 
-                  <CommentText>
-                    {list.text}
-                  </CommentText>
-
-                </UserInfoContainer>
-
-              </Container>
             </CommentContainer>
           ))}
       </ul>
@@ -63,7 +69,6 @@ const CommentContainer = styled.ul`
   width: 100%;
   height: 100%;
   margin-top: 23px;
-  border-bottom: 1px solid #ececec;
 `;
 
 const Container = styled.div`
@@ -71,6 +76,8 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  border-bottom: 1px solid #ececec;
+  padding-bottom: 23px;
 `;
 
 const UserImg = styled.div`
