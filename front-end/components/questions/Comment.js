@@ -7,7 +7,7 @@ import TextareaAutosize from "react-autosize-textarea";
 function Comment({ commentCount, comments, id, token }) {
   const [text, setText] = useState("");
   const [commentNum, setCommentNum] = useState(commentCount);
-
+  const [newComment, setNewComment] = useState([]);
   const onChange = useCallback(
     (e) => {
       setText(e.target.value);
@@ -24,6 +24,7 @@ function Comment({ commentCount, comments, id, token }) {
             text: text
         })
         .then((response) => {
+          setNewComment(response.data);
           setText("");
           setCommentNum(commentNum + 1);
         });
@@ -39,7 +40,7 @@ function Comment({ commentCount, comments, id, token }) {
         <CommentSendBtn onClick={CreateComment} type="button">댓글 남기기</CommentSendBtn>
       </CommentContainer>
       <CommentCount>댓글 {commentNum}개</CommentCount>
-      <CommentList id={id} comments={comments}/>
+      <CommentList id={id} comments={comments} newComment={newComment}/>
     </FormContainer>
   );
 }

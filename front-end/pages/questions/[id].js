@@ -21,9 +21,9 @@ const Question = () => {
   const [item, setItem] = useState([]);
   const [token, setToken] = useState("");
 
-  const { updated } = item;
-  
-  const createdAtDate = new Date(updated);
+  const { created } = item;
+
+  const createdAtDate = new Date(created);
   const createdYear = createdAtDate.getFullYear();
   const createdMonth = createdAtDate.getMonth() + 1;
   const createdDate = createdAtDate.getDate();

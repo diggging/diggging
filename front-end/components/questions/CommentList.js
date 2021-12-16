@@ -2,13 +2,12 @@ import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import styled from "styled-components";
 
-function CommentList({ id, comments }) {
+function CommentList({ id, comments, newComment }) {
   const [comment, setComment] = useState([]);
-  const [updateDate, setUpdatedDate] = useState([]);
   
   const updatedDate = (comments) => {
     comments.map(list => {
-    const createdAtDate = new Date(list.updated);
+    const createdAtDate = new Date(list.created);
   
     list['createdYear'] = createdAtDate.getFullYear();
     list['createdMonth'] = createdAtDate.getMonth() + 1;
@@ -17,18 +16,12 @@ function CommentList({ id, comments }) {
     list['createdMinutes'] = createdAtDate.getMinutes();
     });
   }
-  // const createdAtDate = new Date(updated);
-
-  // const createdYear = createdAtDate.getFullYear();
-  // const createdMonth = createdAtDate.getMonth() + 1;
-  // const createdDate = createdAtDate.getDate();
-  // const createdHour = createdAtDate.getHours();
-  // const createdMinutes = createdAtDate.getMinutes();
   
   useEffect(() => {
-    setComment(comments);
+    setComment([...comments, newComment]);
     updatedDate(comments);
-  }, []);
+    comment.concat(newComment)
+  }, [comments, newComment]);
 
   return (
     <>
@@ -43,6 +36,7 @@ function CommentList({ id, comments }) {
                   {list.user}
                   {list.createdYear}년 {list.createdMonth}월 {list.createdDate}일 {list.createdHour}
                   시 {list.createdMinutes}분
+                  {list.text}
                 </UserInfoContainer>
 
               </Container>
