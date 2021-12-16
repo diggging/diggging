@@ -27,41 +27,32 @@ function accountSetting() {
   //5-2 맞으면 입력된 값으로 수정하기
   const router = useRouter();
   const dispatch = useDispatch();
-  const {user} = router.query;
+  //0. user정보 받아오기
+  const userData = useSelector((state) => state.auth.user);
+  const [token, setToken] = useState("");
   
+  //token 확인(refresh, verify)
+  useEffect(() => {
+    if (dispatch && dispatch !== null && dispatch !== undefined)
+      dispatch(check_auth_status());
+      getAccessToken();
+  }, [dispatch]);
 
-  if (user === undefined) {
-    dispatch(load_user())
-    const userData = useSelector(state => state.auth.user);
-    try {
-      const userInfo = userData.user;
-      const {user_nickname, email, id, user_profile_image, user_profile_content} = userInfo;
-      const [userDataState, setUserDataState] = useState({
-        user_nickname,
-        email,
-        user_profile_image,
-        user_profile_content,
-      })
-      return [userDataState, setUserDataState];
-    } catch (err) {
-      alertService.warn('로그인 후 이용하세요')
-      setTimeout(() => {
-        router.push('/loginPage');
-      }, 300);
+  
+  const getAccessToken = async () => {
+    if (dispatch && dispatch !== null && dispatch !== undefined) {
+      dispatch(check_auth_status())
+        .then((res) => res.json())
+        .then((data) => {
+          const accessToken = data.access;
+          setToken(accessToken);
+        })
+        .catch((err) => console.log(err));
     }
-  } else {
-    const userData = JSON.parse(user);
-    const userInfo = userData.user;
-    const {user_nickname, email, id, user_profile_image, user_profile_content} = userInfo;
-    const [userDataState, setUserDataState] = useState({
-      user_nickname,
-      email,
-      user_profile_image,
-      user_profile_content,
-    })
-    return [userDataState, setUserDataState];
-  }
+  };
 
+  
+  console.log(token, userData, 'token, user');
 
   const onClickLogout = async () => {
     await dispatch(logout());
@@ -85,7 +76,7 @@ function accountSetting() {
         <NicknameBox>
           {/* <ProfileTitle>{user_nickname}</ProfileTitle><ProfileTitle2>님의 프로필</ProfileTitle2> */}
         </NicknameBox>
-        <ProfileInfoBox userDataState={userDataState}/>
+        <ProfileInfoBox userData={userData}/>
         <ProfileBox padding="2.125rem">
           <ProfileBioInput onKeyPress={preventSubmit} placeholder='자기소개를 입력하세요.'/>
           <YellowButton paddingRight="2.125rem" paddingTop="0.75rem">변경</YellowButton>

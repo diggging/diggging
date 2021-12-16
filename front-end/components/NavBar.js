@@ -217,12 +217,12 @@ function navBar() {
                   <DropList> 
                     <DropListItem><Link href="/questionCreate">새 글 작성</Link></DropListItem>
                     <DropListItem><Link 
-                      href={{
-                        pathname: `/accountSetting`,
-                        query: {user: JSON.stringify(user)},
-                      }}
-                      as={`/accountSetting`}
-                      // href="/accountSetting"
+                      // href={{
+                      //   pathname: `/accountSetting`,
+                      //   query: {user: JSON.stringify(user)},
+                      // }}
+                      // as={`/accountSetting`}
+                      href="/accountSetting"
                       >계정설정</Link>
                     </DropListItem>
                     <DropListItem><LogoutButton onClick={logoutHandler}>로그아웃</LogoutButton></DropListItem>

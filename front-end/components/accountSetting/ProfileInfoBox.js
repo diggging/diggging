@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, {useRef, useState, useEffect} from 'react'
 import { ProfileBioBox } from '../../pages/accountSetting'
 
 import SvgEditIcon from '../../public/static/images/EditIcon'
@@ -8,13 +8,27 @@ import styled from 'styled-components';
 import Image from 'next/image'
 import { lighten, darken } from 'polished';
 import {API_URL} from '../../config/index'
-function ProfileInfoBox ({userDataState}) {
-  const profileImgInput = useRef();
-  const [updatedImg, setUpdatedImg] = useState(user_profile_image) //업로드 파일 이미지url
+import { Alert } from '../Alert';
+import { alertService } from '../alert.service';
+import { useRouter } from 'next/router'
 
-  const [imgBase64, setImgBase64] = useState(user_profile_image); // 파일 base64
-  const [imgFile, setImgFile] = useState(user_profile_image);	//파일	
-  const {user_nickname, email, user_profile_image, user_profile_content} = userDataState;
+function ProfileInfoBox ({userData}) {
+  const router = useRouter();
+
+  if (userData) {
+    const {user_nickname, email, user_profile_image, user_profile_content} = userData;
+  } else {
+    alertService.warn('로그인 후 이용해주세요')  
+    router.push('/loginPage');
+  }
+  
+  console.log(userData, 'userData')
+
+  const profileImgInput = useRef();
+  const [updatedImg, setUpdatedImg] = useState('') //업로드 파일 이미지url
+  const [imgBase64, setImgBase64] = useState(''); // 파일 base64
+  const [imgFile, setImgFile] = useState('');	//파일	
+  
   const handleChangeFile = (e) => {
     let reader = new FileReader();
 
