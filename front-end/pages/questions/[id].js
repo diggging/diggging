@@ -165,8 +165,9 @@ const Question = () => {
               <AnswerContainer>
                 {isAuthenticated && item.user?.id !== user?.user?.id ? (
                   <>
-                    {" "}
-                    <AnswerCreateBtn>답변남기기</AnswerCreateBtn>
+                    <Link href={`/answer/create/${item.id}`} passHref>
+                      <AnswerCreateBtn>답변남기기</AnswerCreateBtn>
+                    </Link>
                   </>
                 ) : null}
               </AnswerContainer>
