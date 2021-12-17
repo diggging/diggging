@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import styled from "styled-components";
 import Link from "next/link";
-import NavBar from "../components/NavBar";
+import NavBar from "../NavBar";
 import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
-import QuestionList from "../components/questions/QuestionList";
-import Layout from "../hocs/Layout";
-import SvgDigggingLogo from "../public/static/images/digggingLogo";
+import QuestionList from "../questions/QuestionList";
+import Layout from "../../hocs/Layout";
+import SvgDigggingLogo from "../../public/static/images/DigggingLogo";
 import { useRouter } from "next/router";
-import { setQuestion, clearBigCriteria, clearQuestion } from "../modules/questions";
-import recent from "./recent";
+import { setQuestion, clearBigCriteria, clearQuestion } from "../../modules/questions";
+import recent from "../../pages/recent";
 
-function main({ children }) {
+function Prevent({ children }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
@@ -20,12 +20,12 @@ function main({ children }) {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const test = useSelector((state) => state.questions);
 
-  useEffect(() => {
-    dispatch(setQuestion(1, "recent" ,"all"));
-    return () => {
-      dispatch(clearBigCriteria())
-    }
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(setQuestion(1, "recent" ,"all"));
+  //   return () => {
+  //     dispatch(clearBigCriteria())
+  //   }
+  // }, [dispatch]);
 
   //여기도 고쳐야함
   const ToggleDispatch = (page, smallCriteria) => {
@@ -115,20 +115,14 @@ function main({ children }) {
           ) : null}
         </TabContainer>
         <QuestionsContainer>
-          {router.pathname == "/" ? (
-            <>
-              <QuestionList data={data} count={count} />
-            </>
-          ) : (
             <>{children}</>
-          )}
         </QuestionsContainer>
       </Container>
     </Layout>
   );
 }
 
-export default main;
+export default Prevent;
 
 const BannerBackground = styled.div`
   width: 100%;

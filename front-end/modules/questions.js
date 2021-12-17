@@ -1,21 +1,26 @@
 import { API_URL } from "../config/index";
 
 /* action type */
-const SET_RECENT_QUESTIONS = "editor/SET_RECENT_QUESTIONS";
-const SET_POPULAR_QUESTIONS = "editor/SET_POPULAR_QUESTIONS";
-const SET_MINE_QUESTIONS = "editor/SET_MINE_QUESTIONS";
-
+const GET_QUESTIONS = "editor/GET_QUESTIONS";
+const GET_QUESTIONS_SUCCESS = "editor/GET_QUESTIONS_SUCCESS";
+const GET_QUESTIONS_FAIL = "editor/GET_QUESTIONS_FAIL";
+const GET_MINE_QUESTIONS = "editor/GET_QUESTIONS";
+const GET_MINE_QUESTIONS_SUCCESS = "editor/GET_QUESTIONS_SUCCESS";
+const GET_MINE_QUESTIONS_FAIL = "editor/GET_QUESTIONS_FAIL";
 const CHANGE_PAGE = "editor/CHANGE_PAGE";
-const CHANGE_BIG_CRITERIA = "editor/CHANGE_BIG_CRITERIA";
 
-const CHANGE_DATA = "editor/CHANGE_DATA";
+const CLEAR_QUESTION = "editor/CLEAR_QUESTION";
+const CLEAR_BIG_CRITERIA = "editor/CLEAR_BIG_CRITERIA";
+const SET_BIG_CRITERIA = "editor/SET_BIG_CRITERIA";
 
 /* action func */
 /* fetch data */
-export const setRecent = (page, smallCriteria) => async (dispatch) => {
+export const setQuestion = (page, bigCriteria, smallCriteria) => async (dispatch) => {
+  dispatch({type:GET_QUESTIONS});
+  console.log(`${bigCriteria} 요청중`);
   try {
     const res = await fetch(
-      `${API_URL}/questions/question_list/?big_criteria=recent&page=${page}&small_criteria=${smallCriteria}`,
+      `${API_URL}/questions/question_list/?big_criteria=${bigCriteria}&page=${page}&small_criteria=${smallCriteria}`,
       {
         method: "GET",
         headers: {
@@ -25,47 +30,24 @@ export const setRecent = (page, smallCriteria) => async (dispatch) => {
     );
     const data = await res.json();
     if (res.status === 200) {
-      console.log(res.url);
       dispatch({
-        type: SET_RECENT_QUESTIONS,
+        type: GET_QUESTIONS_SUCCESS,
         data,
         page,
+        bigCriteria,
         smallCriteria,
       });
     }
+    console.log(`${bigCriteria} 성공`);
   } catch (e) {
-    console.log(e);
-  }
-};
-
-export const setPopular = (page, smallCriteria) => async (dispatch) => {
-  try {
-    const res = await fetch(
-      `${API_URL}/questions/question_list/?big_criteria=popular&page=${page}&small_criteria=${smallCriteria}`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-        },
-      }
-    );
-    const data = await res.json();
-    if (res.status === 200) {
-      console.log(res.url);
-      dispatch({
-        type: SET_POPULAR_QUESTIONS,
-        data,
-        page,
-        smallCriteria,
-      });
-    }
-  } catch (e) {
-    console.log(e);
+    dispatch({type:GET_QUESTIONS_FAIL, error:e});
+    console.log(`${bigCriteria} 실패`);
   }
 };
 
 export const setMine = (page, smallCriteria, token) => async (dispatch) => {
-  console.log(token)
+  dispatch({type:GET_MINE_QUESTIONS});
+  console.log('mine 요청중');
   try {
     const res = await fetch(
       `${API_URL}/questions/question_list/?big_criteria=mine&page=${page}&small_criteria=${smallCriteria}`,
@@ -79,79 +61,145 @@ export const setMine = (page, smallCriteria, token) => async (dispatch) => {
     );
     const data = await res.json();
     if (res.status === 200) {
-      console.log(res.url);
       dispatch({
-        type: SET_MINE_QUESTIONS,
+        type: GET_MINE_QUESTIONS_SUCCESS,
         data,
         page,
         smallCriteria,
       });
+      console.log('mine 성공');
     }
   } catch (e) {
-    console.log(e);
+    dispatch({type:GET_MINE_QUESTIONS_FAIL});
+    console.log('mine 실패');
   }
 };
 
 /* toggle fetch data */
 export const setPage = (page) => ({ type: CHANGE_PAGE, page });
-export const setData = (data) => ({ type: CHANGE_DATA, data });
-
-export const setBigCriteria = (bigCriteria) => ({
-  type: CHANGE_BIG_CRITERIA,
-  bigCriteria,
-});
+export const clearQuestion = () => ({ type: CLEAR_QUESTION });
+export const clearBigCriteria = () => ({type: CLEAR_BIG_CRITERIA});
+export const setBigCriteria = (bigCriteria) => ({type: SET_BIG_CRITERIA});
 
 /* initialState */
 const initialState = {
   data: [],
   count: 0,
   page: 1,
+  bigCriteria: null,
   smallCriteria: "all",
-  bigCriteria: "recent",
+  loading: false,
+  error: null,
+
+  mine: {
+    data: [],
+    count: 0,
+    page: 1,
+    smallCriteria: "all",
+    loading: false,
+    error: null,
+  }
 };
 
 /* reducer */
 export default function getQuestion(state = initialState, action) {
   switch (action.type) {
-    case SET_RECENT_QUESTIONS:
+    case GET_QUESTIONS: 
+      return {
+        ...state,
+        data: [],
+        count: 0,
+        page: 1,
+        bigCriteria: null,
+        smallCriteria: "all",
+        loading: true,
+        error: null,
+      }
+    case GET_QUESTIONS_SUCCESS:
       return {
         ...state,
         data: action.data.results,
         count: action.data.count,
         page: action.page,
+        bigCriteria: action.bigCriteria,
         smallCriteria: action.smallCriteria,
-      };
-    case SET_POPULAR_QUESTIONS:
+        loading: true,
+        error: null
+      }
+    case GET_QUESTIONS_FAIL:
       return {
         ...state,
-        data: action.data.results,
-        count: action.data.count,
-        page: action.page,
-        smallCriteria: action.smallCriteria,
-      };
-    case SET_MINE_QUESTIONS:
+        data: [],
+        count: 0,
+        page: 1,
+        bigCriteria: null,
+        smallCriteria: "all",
+        loading: true,
+        error: action.error
+      }
+
+    case GET_MINE_QUESTIONS:
       return {
         ...state,
-        data: action.data.results,
-        count: action.data.count,
-        page: action.page,
-        smallCriteria: action.smallCriteria,
+        mine: {
+          data: [],
+          count: 0,
+          page: 1,
+          smallCriteria: "all",
+          loading: true,
+          error: null,
+        },
       };
+    case GET_MINE_QUESTIONS_SUCCESS:
+      return {
+        ...state,
+        mine: {
+          data: action.data.results,
+          count: action.data.count,
+          page: action.page,
+          smallCriteria: action.smallCriteria,
+          loading: true,
+          error: null,
+        }
+      }
+    case GET_MINE_QUESTIONS_FAIL:
+      return {
+        ...state,
+        mine: {
+          data: [],
+          count: 0,
+          page: 1,
+          smallCriteria: "all",
+          loading: true,
+          error: action.error,
+        }
+      }
     case CHANGE_PAGE:
       return {
         ...state,
         page: action.page,
       };
-    case CHANGE_BIG_CRITERIA:
+    case CLEAR_QUESTION:
       return {
         ...state,
-        bigCriteria: action.bigCriteria,
-      };
-    case CHANGE_DATA:
-      return {
-        ...state,
-        data: action.data
+        data: [],
+        count: 0,
+        page: 1,
+        bigCriteria: null,
+        smallCriteria: "all",
+        loading: false,
+        error: null,
       }
+    case CLEAR_BIG_CRITERIA:
+      return {
+        ...state,
+        bigCriteria: null
+      }
+    case SET_BIG_CRITERIA:
+      return {
+        ...state,
+        bigCriteria:action.bigCriteria
+      }  
     default:
       return state;
   }

@@ -3,18 +3,18 @@ import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import Paging from "../Paging";
-import { setRecent, setPage } from "../../modules/questions";
+import { setQuestion, setPage } from "../../modules/questions";
 import Like from '../../public/static/images/Like';
 
 function QuestionList({ data, count }) {
   
   const dispatch = useDispatch();
-  const page = useSelector((state) => state.data.page);
-  const smallCriteria = useSelector((state) => state.data.smallCriteria);
+  const { page, bigCriteria, smallCriteria, loading, error} = useSelector((state) => state.questions);
+
 
   const postPage = (page) => {
     dispatch(setPage(page));
-    dispatch(setRecent(page, smallCriteria));
+    dispatch(setQuestion(page, bigCriteria, smallCriteria));
   };
   
   return (

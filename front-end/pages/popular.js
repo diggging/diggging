@@ -1,32 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {setPopular, setPage, setBigCriteria} from '../modules/questions';
+import {setQuestion, setPage, clearBigCriteria, clearQuestion, setBigCriteria} from '../modules/questions';
 import Main from './main';
 import QuestionList from '../components/questions/QuestionList';
+import Prevent from '../components/questions/PreventRerender';
 
 function Popular() {
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.data.data);
-  const count = useSelector((state) => state.data.count);
-  const page = useSelector((state) => state.data.page);
-  const smallCriteria = useSelector((state) => state.data.smallCriteria);
-  const bigCriteria = useSelector((state) => state.data.bigCriteria);
+  const {data, count, page, bigCriteria, smallCriteria, loading, error} = useSelector((state) => state.questions);
 
   const postPage = (page) => {
     dispatch(setPage(page));
-    dispatch(setPopular(page, smallCriteria))
+    dispatch(setQuestion(page, bigCriteria, smallCriteria))
   };
 
   useEffect(() => {
-    dispatch(setBigCriteria("popular"));
-    console.log(bigCriteria);
-    dispatch(setPopular(page, "all"));
+    dispatch(setQuestion(1, "popular" ,"all"));
+    return () => {
+      // dispatch(clearBigCriteria())
+    }
   }, [dispatch]);
-
+  
   return (
-    <Main>
+    <Prevent>
         <QuestionList data={data} handlePageChange={postPage} page={page} count={count}></QuestionList>
-    </Main>
+    </Prevent>
   );
 }
 
