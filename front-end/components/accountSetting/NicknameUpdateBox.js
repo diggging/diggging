@@ -71,7 +71,7 @@ export default NicknameUpdateBox
 
 
 const ErrorMessage = styled.span`
-   font-family: 'Pretendard-Medium';
+  font-family: 'Pretendard-Medium';
   font-size: 0.75rem;
   color: #B6B6B6;
   margin-top: 0.2rem;

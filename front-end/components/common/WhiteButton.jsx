@@ -2,12 +2,13 @@ import React from 'react'
 import styled from 'styled-components';
 import { lighten, darken } from 'polished';
 
-function WhiteButton({ paddingTop, paddingRight, fontSize, children }) {
+function WhiteButton({ paddingTop, paddingRight, fontSize, children, type }) {
   return (
     <StyledButton
       paddingTop={paddingTop}
       paddingRight={paddingRight}
       fontSize={fontSize}
+      type={type}
     >{children}</StyledButton>
   )
 }

@@ -53,7 +53,8 @@ function accountSetting() {
     }
   };
 
-  const onClickLogout = async () => {
+  const onClickLogout = async (e) => {
+    e.preventDefault();
     await dispatch(logout());
     router.push('/');
   }
@@ -82,8 +83,8 @@ function accountSetting() {
         <PasswordSetBox userData={userData} token={token} />
         <AccountBtnBox>
           {/* <WhiteButton paddingTop="0.625rem" paddingRight="2rem" fontSize="0.8125rem">회원탈퇴 😥</WhiteButton> */}
-          <WhiteButton 
-            // onClick={onClickLogout}
+          <WhiteButton onSubmit={(e) => onClickLogout(e)}
+            type="submit"
             paddingTop="0.625rem" 
             paddingRight="2rem" 
             fontSize="0.8125rem"
@@ -138,7 +139,7 @@ const ProfileBioBox = styled(ProfileBox)`
   position: relative;
 `;
 
-const AccountBtnBox = styled.div`
+const AccountBtnBox = styled.form`
   display: flex;
   margin-top: 4rem;
   flex-direction: row;
