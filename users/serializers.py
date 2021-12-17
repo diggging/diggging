@@ -1,5 +1,5 @@
 from django.db.models.fields import EmailField
-from rest_framework import fields, serializers
+from rest_framework import fields, serializers, exceptions, status
 from rest_framework.exceptions import ValidationError
 
 from .models import User, Alarm
@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, force_str, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 
@@ -30,7 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
             "user_nickname",
             "email",
             "login_method",
-            "profile_content",
+            "user_profile_content",
             "user_profile_image",
         ]
 
@@ -78,31 +78,6 @@ class RegisterSerializer(RegisterSerializer):
         return user"""
 
 
-class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=30)
-    password = serializers.CharField(
-        style={"input_type": "password"}, max_length=128, write_only=True
-    )
-    token = serializers.CharField(max_length=255, read_only=True)
-
-    def validate(self, data):
-        username = data.get("username")
-        password = data.get("password", None)
-
-        user = authenticate(username=username, password=password)
-
-        if user is None:
-            return {"username": "None"}
-        try:
-            payload = JWT_PAYLOAD_HANDLER(user)
-            jwt_token = JWT_ENCODE_HANDLER(payload)
-            update_last_login(None, user)
-
-        except User.DoesNotExist:
-            raise serializers.ValidationError("User 가 존재하지않습니다.")
-        return {"username": user.username, "token": jwt_token}
-
-
 # path valuable
 class AlarmSerailzer(serializers.ModelSerializer):
 
@@ -141,9 +116,11 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         return value
 
     def update(self, instance, validated_data):
-
-        instance.set_password(validated_data["password"])
-        instance.save()
+        if len(validated_data["password"]) >= 8:
+            instance.set_password(validated_data["password"])
+            instance.save()
+        else:
+            raise serializers.ValidationError({"password": "8자리 이상 입력하세요."})
 
         return instance
 
@@ -166,8 +143,8 @@ class ChangedescSerializer(serializers.ModelSerializer):
         return instance
 
 
-class ChangeimageSerializer(serializers.ModelSerializer):
-    user_profile_image = serializers.ImageField()
+class ChangeimageSerializer(serializers.HyperlinkedModelSerializer):
+    user_profile_image = serializers.ImageField(use_url=True)
 
     class Meta:
         model = User
