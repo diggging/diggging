@@ -16,6 +16,7 @@ import FlexColumn from "../components/common/FlexColumn";
 import { FormBox, PageTitle } from "../pages/findPassword";
 import BioUpdateBox from "../components/accountSetting/BioUpdateBox";
 import NicknameUpdateBox from "../components/accountSetting/NicknameUpdateBox";
+import PasswordSetBox from "../components/accountSetting/PasswordSetBox";
 import { Alert } from "../components/Alert";
 
 function accountSetting() {
@@ -78,18 +79,7 @@ function accountSetting() {
           {/* <ContentText>{email}</ContentText> */}
         </ProfileBox>
         <NicknameUpdateBox userData={userData} token={token} />
-        <PasswordResetBox>
-          <YellowTitle marginBottom="0.75rem">비밀번호 변경</YellowTitle>
-          <PasswordMessage>새 비밀번호를 입력하시면 비밀번호가 변경됩니다.</PasswordMessage>
-          <PasswordInputBox>
-            <div>
-              <GreyInput width="12rem" height="3.125rem" marginRight="0.75rem" />
-              <GreyInput width="12rem" height="3.125rem" marginRight="0.75rem" />
-              <GreyInput width="12rem" height="3.125rem" marginRight="3.75rem" />
-            </div>
-            <YellowButton paddingRight="2.125rem" paddingTop="0.75rem">변경</YellowButton>
-          </PasswordInputBox>
-        </PasswordResetBox>
+        <PasswordSetBox userData={userData} token={token} />
         <AccountBtnBox>
           {/* <WhiteButton paddingTop="0.625rem" paddingRight="2rem" fontSize="0.8125rem">회원탈퇴 😥</WhiteButton> */}
           <WhiteButton 
@@ -145,24 +135,6 @@ const ProfileBox = styled.form`
 const ProfileBioBox = styled(ProfileBox)`
   justify-content: flex-start;
   position: relative;
-`;
-
-const PasswordResetBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 1.875rem 0;
-  border-bottom: solid 2px #e5e5e5;
-  justify-content: space-between;
-`;
-const PasswordInputBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-top: 2.125rem;
-`;
-
-const PasswordMessage = styled(ContentText)`
-  margin-bottom: 2.125rem;
 `;
 
 const AccountBtnBox = styled.div`

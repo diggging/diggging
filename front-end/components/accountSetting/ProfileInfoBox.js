@@ -16,13 +16,13 @@ function ProfileInfoBox ({userData, token}) {
   const router = useRouter();
   const dispatch = useDispatch();
   const {id, user_profile_image, user_profile_content} = userData.user;
-  
+
   useEffect(() => {
     if (!(userData)) {
       alertService.warn('로그인 후 이용해주세요')  
       router.push('/loginPage')
     }
-  }, [userData])
+  }, [])
 
   console.log(userData, 'userData')
 
@@ -30,12 +30,11 @@ function ProfileInfoBox ({userData, token}) {
   const [updatedImg, setUpdatedImg] = useState(user_profile_image) //업로드 파일 이미지url
   const [imgBase64, setImgBase64] = useState(user_profile_image.toString()); // 파일 base64 : 미리보기용
   const [imgFile, setImgFile] = useState(user_profile_image);	//파일 : axios 보내줄 것
-  
+
   const onClickUploadFile = () => {
     profileImgInput.current.click();
   }
   
-
   const handleChangeFile = async (e) => {
     let reader = new FileReader();
     reader.onloadend = async () => {
@@ -77,19 +76,6 @@ function ProfileInfoBox ({userData, token}) {
         alertService.warn('변경 중 문제가 발생했습니다.')
        }
       })
-
-      // await axios
-      //   .patch(`${API_URL}/users/${id}/change_img/`, formData)  
-      //   .then((response) => {
-      //     if (response.status === 200) {
-      //       alertService.warn('성공적으로 변경되었습니다.')
-      //       dispatch(load_user());
-      //       // axios.defaults.headers.common["Authorization"] = "";
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
     } catch (err) {
       console.log(err)
       alertService.warn(err)
@@ -105,6 +91,7 @@ function ProfileInfoBox ({userData, token}) {
           height={120} 
           alt="profileImage" 
           quality={100}
+          layout="fill"
           objectFit="cover"
           />
            <EditButton onClick={onClickUploadFile}/> 

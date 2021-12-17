@@ -17,9 +17,18 @@ const StyledGreyInput = styled.input`
   border-radius: 0.5rem;
 `;
 
-function GreyInput({ width, height, marginRight, marginLeft, type, onChange }) {
+function GreyInput({ width, height, marginRight, marginLeft, type, onChange, name, value, placeholder, required }) {
   return (
-    <StyledGreyInput width={width} height={height} marginRight={marginRight} marginLeft={marginLeft} type={type} onChange={onChange} />
+    <StyledGreyInput
+      width={width} height={height}
+      marginRight={marginRight} marginLeft={marginLeft}
+      type={type}
+      onChange={onChange}
+      name={name}
+      value={value}
+      placeholder={placeholder}
+      required={required}
+    />
   ) /// 여기 children넣고 닫는태그넣어보자
 }
 export default GreyInput;
