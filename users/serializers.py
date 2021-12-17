@@ -1,5 +1,5 @@
 from django.db.models.fields import EmailField
-from rest_framework import fields, serializers
+from rest_framework import fields, serializers, exceptions, status
 from rest_framework.exceptions import ValidationError
 
 from .models import User, Alarm
@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, force_str, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 
@@ -78,31 +78,6 @@ class RegisterSerializer(RegisterSerializer):
         return user"""
 
 
-class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=30)
-    password = serializers.CharField(
-        style={"input_type": "password"}, max_length=128, write_only=True
-    )
-    token = serializers.CharField(max_length=255, read_only=True)
-
-    def validate(self, data):
-        username = data.get("username")
-        password = data.get("password", None)
-
-        user = authenticate(username=username, password=password)
-
-        if user is None:
-            return {"username": "None"}
-        try:
-            payload = JWT_PAYLOAD_HANDLER(user)
-            jwt_token = JWT_ENCODE_HANDLER(payload)
-            update_last_login(None, user)
-
-        except User.DoesNotExist:
-            raise serializers.ValidationError("User 가 존재하지않습니다.")
-        return {"username": user.username, "token": jwt_token}
-
-
 # path valuable
 class AlarmSerailzer(serializers.ModelSerializer):
 
@@ -141,15 +116,17 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         return value
 
     def update(self, instance, validated_data):
-
-        instance.set_password(validated_data["password"])
-        instance.save()
+        if len(validated_data["password"]) >= 8:
+            instance.set_password(validated_data["password"])
+            instance.save()
+        else:
+            raise serializers.ValidationError({"password": "8자리 이상 입력하세요."})
 
         return instance
 
 
 class ChangedescSerializer(serializers.ModelSerializer):
-    user_profile_content = serializers.CharField(max_length=50)
+    user_profile_content = serializers.CharField(max_length=100)
 
     class Meta:
         model = User
@@ -158,16 +135,19 @@ class ChangedescSerializer(serializers.ModelSerializer):
         ]
 
     def update(self, instance, validated_data):
-        instance.user_profile_content = validated_data.get(
-            "user_profile_content", instance.user_profile_content
-        )
-        instance.save()
+        if len(validated_data["user_progile_content"]) <= 100:
+            instance.user_profile_content = validated_data.get(
+                "user_profile_content", instance.user_profile_content
+            )
+            instance.save()
+        else:
+            raise serializers.ValidationError({"desc": "100글자 이하로 입력하세요."})
 
         return instance
 
 
 class ChangeimageSerializer(serializers.HyperlinkedModelSerializer):
-    user_profile_image = serializers.ImageField()
+    user_profile_image = serializers.ImageField(use_url=True)
 
 
     class Meta:
@@ -191,9 +171,11 @@ class ChangeNicknameSerializer(serializers.ModelSerializer):
         fields = ["user_nickname"]
 
     def update(self, instance, validated_data):
-        instance.user_nickname = validated_data.get(
-            "user_nickname", instance.user_nickname
-        )
-        instance.save()
-
+        if len(validated_data["user_nickname"]) <= 7:
+            instance.user_nickname = validated_data.get(
+                "user_nickname", instance.user_nickname
+            )
+            instance.save()
+        else:
+            raise serializers.ValidationError({"nickname": "7글자 이하로 입력하세요."})
         return instance

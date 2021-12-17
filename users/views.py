@@ -77,7 +77,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+)
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
@@ -119,6 +121,7 @@ class Registration(generics.GenericAPIView):
         to_email = serializer.cleaned_data.get("email")
         email = EmailMessage(mail_subject, message, to=[to_email])
         email.send()
+
         # request 필요 -> 오류 발생
         return Response(
             {
@@ -786,7 +789,7 @@ def account_detail(request, pk):
 
 
 @permission_classes([IsAuthenticated])
-class ChangeDesc(generics.UpdateAPIView):
+class ChangeDesc(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = ChangedescSerializer
     """context = {}
@@ -801,7 +804,7 @@ class ChangeDesc(generics.UpdateAPIView):
 
 
 @permission_classes([IsAuthenticated])
-class ChangeNicknameApi(generics.UpdateAPIView):
+class ChangeNicknameApi(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = ChangeNicknameSerializer
     # if queryset.objects.filter(user_nickname=name):
@@ -826,7 +829,7 @@ class ChangeNicknameApi(generics.UpdateAPIView):
 
 # 비밀번호 변경 함수
 @permission_classes([IsAuthenticated])
-class ChangepasswordView(generics.UpdateAPIView):
+class ChangepasswordView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = ChangePasswordSerializer
     """def post(self, request, pk, *args, **kwargs):
@@ -862,9 +865,10 @@ class ChangepasswordView(generics.UpdateAPIView):
 
 
 @permission_classes([IsAuthenticated])
-class ChangeImgView(generics.UpdateAPIView):
+class ChangeImgView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = ChangeimageSerializer
+
     """user = get_object_or_404(User, pk=pk)
     if request.method == "POST":
         new_img = request.FILES.get("new_img", None)
