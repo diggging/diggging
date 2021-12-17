@@ -37,7 +37,6 @@ function PasswordSetBox({userData, token}) {
       ...pwInput,
       [name]: value,
     });
-    console.log(pwInput)
     switch (e.target.name) {
       case "newPW1":
         if (e.target.value.length < 8) {
@@ -83,14 +82,16 @@ function PasswordSetBox({userData, token}) {
       if (res.status === 200) {
         alertService.warn('성공적으로 변경되었습니다.')
         dispatch(load_user());
-      } else if (res.status === 400) {
+      }
+    }).catch((err) => {
+      if (err.response.status === 400) {
         if (newPW1 !== newPW2) {
           alertService.warn('두 비밀번호가 일치하지 않습니다.')
         } else {
           alertService.warn('이전 비밀번호를 확인해주세요')
         } 
       } else {
-        alertService.warn(res)
+        alertService.warn(err)
       }
     })
   }

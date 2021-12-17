@@ -8,12 +8,13 @@ import { alertService } from '../alert.service'
 import GreyInput from '../common/GreyInput'
 import YellowButton from '../common/YellowButton'
 import YellowTitle from '../common/YellowTitle'
-
+import styled from 'styled-components';
+import FlexColumn from '../common/FlexColumn'
 
 function NicknameUpdateBox({userData, token}) {
   const dispatch = useDispatch();
   const [nickname, setNickname] = useState('');
-
+  const [errorMessage, setErrorMessage] = useState('');
   const {id} = userData.user;
 
   const onChangeNickname = (e) => {
@@ -21,8 +22,9 @@ function NicknameUpdateBox({userData, token}) {
       e.preventDefault();
     } else {
       setNickname(e.target.value);
-      console.log(nickname)
-    
+      if (e.target.value.length > 7) {
+        setErrorMessage('닉네임은 7자까지 가능합니다.')
+      } 
     }
   }
 
@@ -40,23 +42,38 @@ function NicknameUpdateBox({userData, token}) {
         if (res.status === 200) {
           dispatch(load_user());
           alertService.warn('성공적으로 변경되었습니다.')
-        } else {
-        alertService.warn('변경 중 문제가 발생했습니다.')
-       }
-      })
+        }}).catch((err) => {
+          if (err.response.status == 400 || nickname.length > 7) {
+            alertService.warn('닉네임 길이는 7자 이하만 가능합니다')
+          } else {
+            alertService.warn(err);
+          }
+        })
     }
   return (
     <ProfileBox padding="2.625rem" onSubmit={(e) => onUpdateNickname(e)}>
       <YellowTitle>닉네임 설정</YellowTitle>
+      <FlexColumn>
       <GreyInput 
         placeholder="변경할 닉네임"
         value={nickname}
         onChange={(e)=>onChangeNickname(e)}
         width="25rem" height="3.125rem" 
-        marginLeft="3rem" marginRight="2.625rem" />
+        />
+        <ErrorMessage>{errorMessage}</ErrorMessage>
+      </FlexColumn>
       <YellowButton type="submit" paddingRight="2.125rem" paddingTop="0.75rem">변경</YellowButton>
     </ProfileBox>
   )
 }
 
 export default NicknameUpdateBox
+
+
+const ErrorMessage = styled.span`
+   font-family: 'Pretendard-Medium';
+  font-size: 0.75rem;
+  color: #B6B6B6;
+  margin-top: 0.2rem;
+  margin-left: 0.2rem;
+`;

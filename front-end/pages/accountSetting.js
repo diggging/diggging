@@ -127,9 +127,10 @@ const ProfileBox = styled.form`
   padding: ${({padding}) => padding} 0;
   border-bottom: solid 2px #e5e5e5;
   justify-content: flex-start;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
   position: relative;
+  
 `;
 
 const ProfileBioBox = styled(ProfileBox)`

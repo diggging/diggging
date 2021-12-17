@@ -53,9 +53,13 @@ function BioUpdateBox({userData, token}) {
         if (res.status === 200) {
           alertService.warn('성공적으로 변경되었습니다.')
           dispatch(load_user());
+        }
+      }).catch((err) => {
+        if (err.response.status === 400 || bio.length > 100) {
+          alertService.warn('자기소개는 100자까지 작성가능합니다.')
         } else {
-        alertService.warn('변경 중 문제가 발생했습니다.')
-       }
+          alertService.warn('자기소개 변경 중 문제가 발생했습니다.')
+         }
       })
     }
   return (

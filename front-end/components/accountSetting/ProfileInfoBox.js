@@ -72,13 +72,16 @@ function ProfileInfoBox ({userData, token}) {
         if (res.status === 200) {
           alertService.warn('성공적으로 변경되었습니다.')
           dispatch(load_user());
-        } else {
-        alertService.warn('변경 중 문제가 발생했습니다.')
-       }
+        } 
       })
     } catch (err) {
-      console.log(err)
-      alertService.warn(err)
+      if (err.response.status === 400) {
+        alertService.warn("파일을 다시 확인해주세요")
+      } else if (err.response.status === 500) {
+        alertService.warn('서버에 문제가 발생했습니다')
+      } else {
+        alertService.warn(err)
+      }
     }
   }
   return (
