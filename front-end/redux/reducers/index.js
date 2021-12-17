@@ -8,16 +8,15 @@ import setQuestion from '../../modules/questions';
 import setMine from '../../modules/questions';
 import clearBigCriteria from '../../modules/questions';
 import clearQuestion from '../../modules/questions';
-import setBigCriteria from '../../modules/questions';
+import setMinePage from '../../modules/questions';
 
 export default combineReducers({
   auth: authReducer,
   content: saveContent,
   questions: getQuestion,
   setPage,
+  setMinePage,
   setQuestion,
   setMine,
   clearBigCriteria,
-  clearQuestion,
-  setBigCriteria
 });

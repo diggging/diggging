@@ -1,20 +1,24 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import Paging from "../Paging";
-import { setQuestion, setPage } from "../../modules/questions";
+import { setQuestion, setPage, setMine } from "../../modules/questions";
 import Like from '../../public/static/images/Like';
 
 function QuestionList({ data, count }) {
   
   const dispatch = useDispatch();
-  const { page, bigCriteria, smallCriteria, loading, error} = useSelector((state) => state.questions);
-
+  const { page, bigCriteria, smallCriteria, loading, error, mineToken} = useSelector((state) => state.questions);
 
   const postPage = (page) => {
     dispatch(setPage(page));
-    dispatch(setQuestion(page, bigCriteria, smallCriteria));
+
+    if(bigCriteria !== undefined) {
+      dispatch(setQuestion(page, bigCriteria, smallCriteria));
+    } else if (bigCriteria === undefined) {
+      dispatch(setMine(page, smallCriteria, mineToken));
+    }
   };
   
   return (
@@ -53,8 +57,6 @@ function QuestionList({ data, count }) {
                   {list.comment_count}
                 </BottomText>
               </BottomContainer>
-
-              
             </ListContainer>
           </Link>
         ))}

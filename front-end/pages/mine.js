@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { check_auth_status } from "../redux/actions/auth";
-import Main from "./main";
 import QuestionList from "../components/questions/QuestionList";
-import { setMine, setPage } from "../modules/questions";
+import { setMine, setPage, setMinePage, setQuestion} from "../modules/questions";
+import Prevent from '../components/questions/PreventRerender';
 
 function Mine() {
   const dispatch = useDispatch();
-  const {data, count, page, smallCriteria, loading, error} = useSelector((state) => state.questions);
+  const {data, count, page, smallCriteria, loading, error, mineToken} = useSelector((state) => state.questions);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(""); 
 
+  const test = useSelector((state) => state.questions);
+  console.log(test);
+  
   const getAccessToken = async () => {
     if (dispatch && dispatch !== null && dispatch !== undefined) {
       dispatch(check_auth_status())
@@ -18,34 +21,30 @@ function Mine() {
         .then((data) => {
           const accessToken = data.access;
           setToken(accessToken);
+          return accessToken;
         })
         .catch((err) => console.log(err));
     }
-  };
-
-  const postPage = (page) => {
-    dispatch(setPage(page));
-    dispatch(setMine(page, smallCriteria, token));
-  };
-
+  };  
+  
   useEffect(() => {
     getAccessToken();  
     dispatch(setMine(1, "all", token));  
+    console.log("mine입니다");
   }, [dispatch, token]);
-
+  
   return (
-    <Main>
+    <Prevent>
       {isAuthenticated ? (
         <>
           <QuestionList
             data={data}
-            handlePageChange={postPage}
             page={page}
             count={count}
           ></QuestionList>
         </>
       ) : null}
-    </Main>
+    </Prevent>
   );
 }
 

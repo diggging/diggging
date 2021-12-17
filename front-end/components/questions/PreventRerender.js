@@ -13,26 +13,14 @@ import recent from "../../pages/recent";
 
 function Prevent({ children }) {
   const [open, setOpen] = useState(false);
-  const router = useRouter();
-
   const dispatch = useDispatch();
   const {data, count, page, bigCriteria, smallCriteria, loading, error} = useSelector((state) => state.questions);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const test = useSelector((state) => state.questions);
 
-  // useEffect(() => {
-  //   dispatch(setQuestion(1, "recent" ,"all"));
-  //   return () => {
-  //     dispatch(clearBigCriteria())
-  //   }
-  // }, [dispatch]);
-
-  //여기도 고쳐야함
   const ToggleDispatch = (page, smallCriteria) => {
     // dispatch(setRecent(page, smallCriteria));
   };
 
-  console.log(test);
   return (
     <Layout>
       <NavBar />

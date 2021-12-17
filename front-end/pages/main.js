@@ -8,23 +8,22 @@ import QuestionList from "../components/questions/QuestionList";
 import Layout from "../hocs/Layout";
 import SvgDigggingLogo from "../public/static/images/digggingLogo";
 import { useRouter } from "next/router";
-import { setQuestion, clearBigCriteria, clearQuestion } from "../modules/questions";
-import recent from "./recent";
+import {
+  setQuestion,
+  clearBigCriteria,
+} from "../modules/questions";
 
 function main({ children }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
   const dispatch = useDispatch();
-  const {data, count, page, bigCriteria, smallCriteria, loading, error} = useSelector((state) => state.questions);
+  const { data, count, page, bigCriteria, smallCriteria, loading, error } =
+    useSelector((state) => state.questions);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const test = useSelector((state) => state.questions);
 
   useEffect(() => {
-    dispatch(setQuestion(1, "recent" ,"all"));
-    return () => {
-      dispatch(clearBigCriteria())
-    }
+    dispatch(setQuestion(1, "recent", "all"));
   }, [dispatch]);
 
   //여기도 고쳐야함
@@ -32,7 +31,6 @@ function main({ children }) {
     // dispatch(setRecent(page, smallCriteria));
   };
 
-  console.log(test);
   return (
     <Layout>
       <NavBar />
@@ -95,19 +93,13 @@ function main({ children }) {
           {open ? (
             <DropBox>
               <DropList>
-                <DropListItem
-                  onClick={() => ToggleDispatch(1, "wait_answer")}
-                >
+                <DropListItem onClick={() => ToggleDispatch(1, "wait_answer")}>
                   답변 대기 중
                 </DropListItem>
-                <DropListItem
-                  onClick={() => ToggleDispatch(1, "answer_done")}
-                >
+                <DropListItem onClick={() => ToggleDispatch(1, "answer_done")}>
                   답변 완료
                 </DropListItem>
-                <DropListItem
-                  onClick={() => ToggleDispatch(1, "all")}
-                >
+                <DropListItem onClick={() => ToggleDispatch(1, "all")}>
                   답변 전체
                 </DropListItem>
               </DropList>
@@ -115,13 +107,7 @@ function main({ children }) {
           ) : null}
         </TabContainer>
         <QuestionsContainer>
-          {router.pathname == "/" ? (
-            <>
-              <QuestionList data={data} count={count} />
-            </>
-          ) : (
-            <>{children}</>
-          )}
+          <QuestionList data={data} count={count} />
         </QuestionsContainer>
       </Container>
     </Layout>

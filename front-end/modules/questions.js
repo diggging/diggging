@@ -8,10 +8,9 @@ const GET_MINE_QUESTIONS = "editor/GET_QUESTIONS";
 const GET_MINE_QUESTIONS_SUCCESS = "editor/GET_QUESTIONS_SUCCESS";
 const GET_MINE_QUESTIONS_FAIL = "editor/GET_QUESTIONS_FAIL";
 const CHANGE_PAGE = "editor/CHANGE_PAGE";
-
+const CHANGE_MINE_PAGE = "editor/CHANGE_MINE_PAGE";
 const CLEAR_QUESTION = "editor/CLEAR_QUESTION";
 const CLEAR_BIG_CRITERIA = "editor/CLEAR_BIG_CRITERIA";
-const SET_BIG_CRITERIA = "editor/SET_BIG_CRITERIA";
 
 /* action func */
 /* fetch data */
@@ -45,7 +44,7 @@ export const setQuestion = (page, bigCriteria, smallCriteria) => async (dispatch
   }
 };
 
-export const setMine = (page, smallCriteria, token) => async (dispatch) => {
+export const setMine = (page, smallCriteria, mineToken) => async (dispatch) => {
   dispatch({type:GET_MINE_QUESTIONS});
   console.log('mine 요청중');
   try {
@@ -55,7 +54,7 @@ export const setMine = (page, smallCriteria, token) => async (dispatch) => {
         method: "GET",
         headers: {
           Accept: "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${mineToken}`,
         },
       }
     );
@@ -63,9 +62,10 @@ export const setMine = (page, smallCriteria, token) => async (dispatch) => {
     if (res.status === 200) {
       dispatch({
         type: GET_MINE_QUESTIONS_SUCCESS,
-        data,
-        page,
-        smallCriteria,
+          data,
+          page,
+          smallCriteria,
+          mineToken,
       });
       console.log('mine 성공');
     }
@@ -77,9 +77,8 @@ export const setMine = (page, smallCriteria, token) => async (dispatch) => {
 
 /* toggle fetch data */
 export const setPage = (page) => ({ type: CHANGE_PAGE, page });
-export const clearQuestion = () => ({ type: CLEAR_QUESTION });
+export const setMinePage = (page, token) => ({type: CHANGE_MINE_PAGE, page, token});
 export const clearBigCriteria = () => ({type: CLEAR_BIG_CRITERIA});
-export const setBigCriteria = (bigCriteria) => ({type: SET_BIG_CRITERIA});
 
 /* initialState */
 const initialState = {
@@ -87,18 +86,10 @@ const initialState = {
   count: 0,
   page: 1,
   bigCriteria: null,
-  smallCriteria: "all",
+  smallCriteria: null,
   loading: false,
   error: null,
-
-  mine: {
-    data: [],
-    count: 0,
-    page: 1,
-    smallCriteria: "all",
-    loading: false,
-    error: null,
-  }
+  mineToken: null,
 };
 
 /* reducer */
@@ -114,6 +105,7 @@ export default function getQuestion(state = initialState, action) {
         smallCriteria: "all",
         loading: true,
         error: null,
+        mineToken: state.mineToken
       }
     case GET_QUESTIONS_SUCCESS:
       return {
@@ -124,7 +116,8 @@ export default function getQuestion(state = initialState, action) {
         bigCriteria: action.bigCriteria,
         smallCriteria: action.smallCriteria,
         loading: true,
-        error: null
+        error: null,
+        mineToken: action.mineToken
       }
     case GET_QUESTIONS_FAIL:
       return {
@@ -135,44 +128,49 @@ export default function getQuestion(state = initialState, action) {
         bigCriteria: null,
         smallCriteria: "all",
         loading: true,
-        error: action.error
+        error: action.error,
+        mineToken: state.mineToken
       }
 
     case GET_MINE_QUESTIONS:
       return {
         ...state,
         mine: {
+          ...state,
           data: [],
-          count: 0,
-          page: 1,
-          smallCriteria: "all",
+          count:0,
+          page:1,
+          bigCriteria: "mine",
+          smallCriteria: null,
           loading: true,
-          error: null,
-        },
+          error:null,
+          mineToken: state.mineToken,
+        }
       };
     case GET_MINE_QUESTIONS_SUCCESS:
       return {
         ...state,
-        mine: {
-          data: action.data.results,
-          count: action.data.count,
-          page: action.page,
-          smallCriteria: action.smallCriteria,
-          loading: true,
-          error: null,
-        }
+        data: mine.action.data.results,
+        count: action.data.count,
+        page: action.page,
+        bigCriteria: "mine",
+        smallCriteria: action.smallCriteria,
+        loading: true,
+        error:null,
+        mineToken: action.mineToken,
+        
       }
     case GET_MINE_QUESTIONS_FAIL:
       return {
         ...state,
-        mine: {
-          data: [],
-          count: 0,
-          page: 1,
-          smallCriteria: "all",
-          loading: true,
-          error: action.error,
-        }
+        data: [],
+        count:0,
+        page:1,
+        bigCriteria: null,
+        smallCriteria: null,
+        loading: true,
+        error:action.error,
+        mineToken: state.mineToken,
       }
     case CHANGE_PAGE:
       return {
@@ -195,10 +193,11 @@ export default function getQuestion(state = initialState, action) {
         ...state,
         bigCriteria: null
       }
-    case SET_BIG_CRITERIA:
+    case CHANGE_MINE_PAGE:
       return {
         ...state,
-        bigCriteria:action.bigCriteria
+        page: action.page,
+        token: action.token
       }  
     default:
       return state;
