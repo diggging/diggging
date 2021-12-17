@@ -21,8 +21,6 @@ function NicknameUpdateBox({userData, token}) {
   const onUpdateNickname = async (e) => {
     e.preventDefault();
     try {
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      axios.defaults.headers.common["Content-Type"] = "application/json";
       await axios
       .patch(`${API_URL}/users/${id}/change_nickname`, {
         user_nickname: nicknameState
@@ -42,7 +40,6 @@ function NicknameUpdateBox({userData, token}) {
 
   return (
     <ProfileBox padding="2.625rem" onSubmit={(e) => onUpdateNickname(e)}>
-      <Alert />
       <YellowTitle>닉네임 설정</YellowTitle>
       <GreyInput 
         value={nicknameState}

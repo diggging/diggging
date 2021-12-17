@@ -14,7 +14,6 @@ function SearchInput({setSearchData, setNoData, searchData}) {
 
   const getSearchData = async () => {
     const trimmedInput = searchInput.trim();
-    axios.defaults.headers.common['authorization'] = ''; 
     if (trimmedInput == '') {
       const apiRes = await axios.get(`${API_URL}/posts/search_quest/`)
       return apiRes;
@@ -27,6 +26,7 @@ function SearchInput({setSearchData, setNoData, searchData}) {
   const onSubmitSearch = async (e) => {
     e.preventDefault();
       //get해오는api연결
+      axios.defaults.headers.common["Authorization"] = "";
       try {
         const apiRes = await getSearchData()
         if (apiRes.status == 200) {

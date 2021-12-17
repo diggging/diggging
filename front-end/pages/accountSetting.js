@@ -16,6 +16,7 @@ import FlexColumn from "../components/common/FlexColumn";
 import { FormBox, PageTitle } from "../pages/findPassword";
 import BioUpdateBox from "../components/accountSetting/BioUpdateBox";
 import NicknameUpdateBox from "../components/accountSetting/NicknameUpdateBox";
+import { Alert } from "../components/Alert";
 
 function accountSetting() {
   //1. profileImg변경하기 O
@@ -64,6 +65,7 @@ function accountSetting() {
       content='개발자들을 위한 커뮤니티 디깅 계정설정 페이지'  
     >
       <NavBar />
+      <Alert />
       <FormBox>
         <PageTitle>계정 설정하기</PageTitle>
         <NicknameBox>
