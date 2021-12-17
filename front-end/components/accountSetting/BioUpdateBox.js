@@ -40,8 +40,6 @@ function BioUpdateBox({userData, token}) {
     }
   }
   
-  console.log(token, `token`);
-  console.log('안녕');
   const onUpdateBio = async (e) => {
     e.preventDefault();
       await axios.patch(`${API_URL}/users/${id}/change_desc/`, {
