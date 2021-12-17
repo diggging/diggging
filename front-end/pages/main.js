@@ -58,9 +58,9 @@ function main({ children }) {
             </Link>
           </>
         ) : null}
-        <TabContainer>
+        <TabItemContainer>
           {isAuthenticated ? (
-            <div>
+            <TabContainer>
               <Link href="/recent">
                 <Tab>최신 질문 순</Tab>
               </Link>
@@ -70,16 +70,16 @@ function main({ children }) {
               <Link href="/mine">
                 <Tab>내가 남긴 질문</Tab>
               </Link>
-            </div>
+            </TabContainer>
           ) : (
-            <div>
+            <TabContainer>
               <Link href="/recent">
                 <Tab>최신 질문 순</Tab>
               </Link>
               <Link href="/popular">
                 <Tab>인기 순</Tab>
               </Link>
-            </div>
+            </TabContainer>
           )}
           <ToggleContainer
             onClick={() => {
@@ -103,7 +103,7 @@ function main({ children }) {
               </DropList>
             </DropBox>
           ) : null}
-        </TabContainer>
+        </TabItemContainer>
         <QuestionsContainer>
           <QuestionList data={data} count={count} />
         </QuestionsContainer>
@@ -214,7 +214,7 @@ const CreateBtn = styled.button`
   margin: 24px 24px;
 `;
 
-const TabContainer = styled.div`
+const TabItemContainer = styled.div`
   width: 100%;
   height: 70px;
   border-top: 2px solid rgba(219, 214, 199, 0.4);
@@ -226,18 +226,23 @@ const TabContainer = styled.div`
   position: relative;
 `;
 
+const TabContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const Tab = styled.div`
-  width: 120px;
+  width: 130px;
   height: 53px;
   color: #898a90;
   cursor: pointer;
   display: flex;
-  /* justify-content: center; */
+  justify-content: center;
   align-items: center;
-  float: left;
   font-size: 20px;
   line-height: 28.96px;
-  margin-right: 30px;
+  /* margin-right: 30px; */
 
   &:hover {
     color: black;
