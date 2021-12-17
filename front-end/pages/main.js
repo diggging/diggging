@@ -10,12 +10,10 @@ import SvgDigggingLogo from "../public/static/images/digggingLogo";
 import { useRouter } from "next/router";
 import {
   setQuestion,
-  clearBigCriteria,
 } from "../modules/questions";
 
 function main({ children }) {
   const [open, setOpen] = useState(false);
-  const router = useRouter();
 
   const dispatch = useDispatch();
   const { data, count, page, bigCriteria, smallCriteria, loading, error } =
@@ -27,8 +25,8 @@ function main({ children }) {
   }, [dispatch]);
 
   //여기도 고쳐야함
-  const ToggleDispatch = (page, smallCriteria) => {
-    // dispatch(setRecent(page, smallCriteria));
+  const ToggleDispatch = (smallCriteria) => {
+    dispatch(setQuestion(1, "recent", smallCriteria));
   };
 
   return (
@@ -93,13 +91,13 @@ function main({ children }) {
           {open ? (
             <DropBox>
               <DropList>
-                <DropListItem onClick={() => ToggleDispatch(1, "wait_answer")}>
+                <DropListItem onClick={() => ToggleDispatch("wait_answer")}>
                   답변 대기 중
                 </DropListItem>
-                <DropListItem onClick={() => ToggleDispatch(1, "answer_done")}>
+                <DropListItem onClick={() => ToggleDispatch("answer_done")}>
                   답변 완료
                 </DropListItem>
-                <DropListItem onClick={() => ToggleDispatch(1, "all")}>
+                <DropListItem onClick={() => ToggleDispatch("all")}>
                   답변 전체
                 </DropListItem>
               </DropList>

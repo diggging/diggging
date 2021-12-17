@@ -8,17 +8,21 @@ import QuestionList from "../questions/QuestionList";
 import Layout from "../../hocs/Layout";
 import SvgDigggingLogo from "../../public/static/images/DigggingLogo";
 import { useRouter } from "next/router";
-import { setQuestion, clearBigCriteria, clearQuestion } from "../../modules/questions";
+import { setQuestion, setMine } from "../../modules/questions";
 import recent from "../../pages/recent";
 
 function Prevent({ children }) {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
-  const {data, count, page, bigCriteria, smallCriteria, loading, error} = useSelector((state) => state.questions);
+  const {data, count, page, bigCriteria, smallCriteria, loading, error, mineToken} = useSelector((state) => state.questions);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-  const ToggleDispatch = (page, smallCriteria) => {
-    // dispatch(setRecent(page, smallCriteria));
+  const ToggleDispatch = (bigCriteria, smallCriteria) => {
+    if (bigCriteria !== undefined) {
+      dispatch(setQuestion(1, bigCriteria, smallCriteria));
+    } else if (bigCriteria === undefined) {
+      dispatch(setMine(1, smallCriteria, mineToken));
+    }
   };
 
   return (
@@ -84,17 +88,17 @@ function Prevent({ children }) {
             <DropBox>
               <DropList>
                 <DropListItem
-                  onClick={() => ToggleDispatch(1, "wait_answer")}
+                  onClick={() => ToggleDispatch(bigCriteria, "wait_answer")}
                 >
                   답변 대기 중
                 </DropListItem>
                 <DropListItem
-                  onClick={() => ToggleDispatch(1, "answer_done")}
+                  onClick={() => ToggleDispatch(bigCriteria, "answer_done")}
                 >
                   답변 완료
                 </DropListItem>
                 <DropListItem
-                  onClick={() => ToggleDispatch(1, "all")}
+                  onClick={() => ToggleDispatch(bigCriteria, "all")}
                 >
                   답변 전체
                 </DropListItem>
