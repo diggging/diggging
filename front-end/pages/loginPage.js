@@ -89,12 +89,14 @@ function loginPage() {
           setTimeout(() => {
             router.push(`/`);
           }, 500);
-        } else if (res === 401 || res === 400) { // 400일때 아이디비번확인 401일때 이멜인증해달라고 하기(시형이가 status 고쳐줘야함)
+        } else if (res === 400) { // 400일때 아이디비번확인 401일때 이멜인증해달라고 하기(시형이가 status 고쳐줘야함)
           alertService.warn('아이디와 비밀번호를 확인해주세요.🙂');
         } else if (res === 500) {
           alertService.warn('서버에 문제가 생겼습니다. 다시 시도해주세요🙁')
-        } else if (res == 405) {
+        } else if (res === 405) {
           alertService.warn('잘못된 접근입니다🙁')
+        } else if (res === 401) {
+          alertService.success('📬이메일 인증을 완료해주세요')
         } else {
           setError({
             ...error,

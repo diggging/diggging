@@ -66,7 +66,6 @@ function PasswordSetBox({userData, token}) {
         break;
     }
   }
-
   const onUpdatePassword = async (e) => {
     e.preventDefault();
     await axios.patch(`${API_URL}/users/${id}/change_pw/`, {
@@ -140,7 +139,6 @@ function PasswordSetBox({userData, token}) {
     </PasswordResetBox>
   )
 }
-
 export default PasswordSetBox
 
 const PasswordResetBox = styled.form`
