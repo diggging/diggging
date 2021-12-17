@@ -126,7 +126,7 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 
 
 class ChangedescSerializer(serializers.ModelSerializer):
-    user_profile_content = serializers.CharField(max_length=50)
+    user_profile_content = serializers.CharField(max_length=100)
 
     class Meta:
         model = User
@@ -135,10 +135,13 @@ class ChangedescSerializer(serializers.ModelSerializer):
         ]
 
     def update(self, instance, validated_data):
-        instance.user_profile_content = validated_data.get(
-            "user_profile_content", instance.user_profile_content
-        )
-        instance.save()
+        if len(validated_data["user_progile_content"]) <= 100:
+            instance.user_profile_content = validated_data.get(
+                "user_profile_content", instance.user_profile_content
+            )
+            instance.save()
+        else:
+            raise serializers.ValidationError({"desc": "100글자 이하로 입력하세요."})
 
         return instance
 
@@ -167,9 +170,11 @@ class ChangeNicknameSerializer(serializers.ModelSerializer):
         fields = ["user_nickname"]
 
     def update(self, instance, validated_data):
-        instance.user_nickname = validated_data.get(
-            "user_nickname", instance.user_nickname
-        )
-        instance.save()
-
+        if len(validated_data["user_nickname"]) <= 7:
+            instance.user_nickname = validated_data.get(
+                "user_nickname", instance.user_nickname
+            )
+            instance.save()
+        else:
+            raise serializers.ValidationError({"nickname": "7글자 이하로 입력하세요."})
         return instance
