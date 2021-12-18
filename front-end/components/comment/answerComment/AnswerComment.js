@@ -1,15 +1,15 @@
 import React, { useState, useCallback } from "react";
 import styled from "styled-components";
-import CommentList from "../../comment/questionComment/CommentList";
+import AnswerCommentList from "./AnswerCommentList";
 import axios from "axios";
 import TextareaAutosize from "react-autosize-textarea";
 import { API_URL } from "../../../config";
 
-function Comment({ commentCount, comments, id, token }) {
+function AnswerComment({ commentCount, comments, id, token }) {
   const [text, setText] = useState("");
   const [commentNum, setCommentNum] = useState(commentCount);
   const [newComment, setNewComment] = useState([]);
-  
+
   const onChange = useCallback(
     (e) => {
       setText(e.target.value);
@@ -17,13 +17,13 @@ function Comment({ commentCount, comments, id, token }) {
     [text]
   );
 
-  const CreateComment = async () => {
+  const CreateAnswerComment = async () => {
     try {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       axios.defaults.headers.common["Content-Type"] = "application/json";
       await axios
-        .post(`${API_URL}/comments/question_comment_create/?question_id=${id}`, {
-            text: text
+        .post(`${API_URL}/comments/answer_comment_create/?answer_id=${id}`, {
+          text: text,
         })
         .then((response) => {
           setNewComment(response.data);
@@ -36,18 +36,30 @@ function Comment({ commentCount, comments, id, token }) {
   };
 
   return (
-    <FormContainer >
+    <FormContainer>
       <CommentContainer>
-        <CommentInput placeholder="댓글을 입력하세요" value={text} onChange={onChange} />
-        <CommentSendBtn onClick={CreateComment} type="button">댓글 남기기</CommentSendBtn>
+        <CommentInput
+          placeholder="댓글을 입력하세요"
+          value={text}
+          onChange={onChange}
+        />
+        <CommentSendBtn onClick={CreateAnswerComment} type="button">
+          댓글 남기기
+        </CommentSendBtn>
       </CommentContainer>
       <CommentCount>댓글 {commentNum}개</CommentCount>
-      <CommentList id={id} comments={comments} newComment={newComment} setCommentNum={setCommentNum} commentNum={commentNum}/>
+      <AnswerCommentList
+        id={id}
+        comments={comments}
+        newComment={newComment}
+        setCommentNum={setCommentNum}
+        commentNum={commentNum}
+      />
     </FormContainer>
   );
 }
 
-export default React.memo(Comment);
+export default React.memo(AnswerComment);
 
 const FormContainer = styled.form`
   width: 100%;

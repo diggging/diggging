@@ -8,6 +8,7 @@ import SelectedAnswer from "../../public/static/images/SelectedAnswer";
 import NotSelectedAnswer from "../../public/static/images/NotSelectedAnswer";
 import Selected from "./Selected";
 import { API_URL } from "../../config";
+import AnswerComment from "../comment/answerComment/AnswerComment";
 
 function AnswersList({ answer, user, token, questionId, questionUserId }) {
   const [answerToken, setAnswerToken] = useState(token);
@@ -133,6 +134,12 @@ function AnswersList({ answer, user, token, questionId, questionUserId }) {
             ) : null}
           </ProfileContainer>
 
+          <AnswerComment
+            commentCount={answer.answer_comment_count}
+            comments={answer.answer_comments}
+            id={answer.id}
+            token={token}
+          />
         </Container>
       </MainContainer>
     </>

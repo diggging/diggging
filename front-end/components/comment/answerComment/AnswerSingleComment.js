@@ -6,13 +6,14 @@ import { check_auth_status } from "../../../redux/actions/auth";
 import TextareaAutosize from "react-autosize-textarea";
 import { API_URL } from "../../../config";
 
-function SingleComment({
+function AnswerSingleComment({
   data,
   comment,
   setComment,
   setCommentNum,
   commentNum,
 }) {
+
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const [token, setToken] = useState("");
@@ -35,15 +36,13 @@ function SingleComment({
     },
     [text]
   );
-  
-
 
   const onClickUpdate = () => {
     setIsUpdated(true);
     setText(updateData);
   }
 
-  const deleteComment = async (id) => {
+  const deleteAnswerComment = async (id) => {
     try {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       axios.defaults.headers.common["Content-Type"] = "application/json";
@@ -58,16 +57,16 @@ function SingleComment({
     }
   };
 
-  const upDataComment = async (id) => {
+  const upDataAnswerComment = async (id) => {
     try {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       axios.defaults.headers.common["Content-Type"] = "application/json";
-      await axios.patch(`${API_URL}/comments/${id}/question_comment_update/`, {
+      await axios.put(`${API_URL}/comments/${id}/answer_comment_update`, {
         text: text
       })
       .then((response) => {
         setIsUpdated(false);
-
+        console.log(response)
         comment.map((item) => {
           if(item.id === data.id) {
             setUpdateData(text)
@@ -110,7 +109,7 @@ function SingleComment({
                   <>
                     <CommentUpdateContainer>
                       <CommentInput name="text" value={text} onChange={onChange}/>
-                      <CommentSendBtn type="button" onClick={() => upDataComment(data.id)}>댓글 남기기</CommentSendBtn>
+                      <CommentSendBtn type="button" onClick={() => upDataAnswerComment(data.id)}>댓글 남기기</CommentSendBtn>
                     </CommentUpdateContainer>
                   </>
                 ) : (
@@ -133,7 +132,7 @@ function SingleComment({
                                 <Btn onClick={() => onClickUpdate()}>
                                   수정하기
                                 </Btn>
-                                <Btn onClick={() => deleteComment(data.id)}>
+                                <Btn onClick={() => deleteAnswerComment(data.id)}>
                                   삭제하기
                                 </Btn>
                               </BtnContainer>
@@ -155,7 +154,7 @@ function SingleComment({
   );
 }
 
-export default React.memo(SingleComment);
+export default React.memo(AnswerSingleComment);
 
 const CommentContainer = styled.ul`
   width: 100%;
@@ -288,3 +287,4 @@ const CommentSendBtn = styled.button`
   line-height: 19px;
   color: #343434;
 `;
+
