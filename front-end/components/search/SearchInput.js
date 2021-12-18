@@ -5,7 +5,7 @@ import { API_URL } from '../../config';
 import SearchIcon from '../../public/static/images/Search';
 import CloseIcon from '../../public/static/images/CloseIcon';
 
-function SearchInput({setSearchData, setNoData, searchData}) {
+function SearchInput({setSearchData, setNoData, searchData, setLoading}) {
   const [searchInput, setSearchInput] = useState("");
 
   const onInputChange = (e) => {
@@ -13,12 +13,15 @@ function SearchInput({setSearchData, setNoData, searchData}) {
   }
 
   const getSearchData = async () => {
+    setLoading(true);
     const trimmedInput = searchInput.trim();
     if (trimmedInput == '') {
       const apiRes = await axios.get(`${API_URL}/posts/search_quest/`)
+      setLoading(false);
       return apiRes;
     } else {
       const apiRes = await axios.get(`${API_URL}/posts/search_quest_result/${trimmedInput}`)
+      setLoading(false);
       return apiRes;
     }
   }
