@@ -10,7 +10,8 @@ import Layout from "../../hocs/Layout";
 import NavBar from "../../components/NavBar";
 import dynamic from "next/dynamic";
 import DetailLike from "../../components/questions/DetailLike";
-import Comment from "../../components/questions/Comment";
+import Comment from "../../components/comment/questionComment/Comment";
+import Answers from "../../components/answer/Answers";
 import { API_URL } from "../../config";
 
 const Question = () => {
@@ -72,7 +73,7 @@ const Question = () => {
         .catch((err) => console.log(err));
     }
   };
-  const Viewer = dynamic(() => import("../../components/questions/View"), {
+  const Viewer = dynamic(() => import("../../components/questions/QuestionView"), {
     ssr: false,
   });
 
@@ -176,9 +177,8 @@ const Question = () => {
                     </Link>
                   </>
                 ) : null}
-
+                <Answers questionId={id} answers={item.answers} user={user} token={token} questionUserId={item.user.id}/>
               </AnswerContainer>
-
 
             </MainContainer>
           </>
@@ -217,6 +217,7 @@ const HeadContainer = styled.div`
   justify-content: space-between;
   margin: 0 auto;
   border-bottom: 1px solid #ececec;
+  margin-bottom: 0.3125rem;
 `;
 
 const BtnContainer = styled.div`
@@ -229,7 +230,7 @@ const Title = styled.div`
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
-  font-size: 1.25rem;
+  font-size: 1.75rem;
   line-height: 3rem;
   color: #212529;
 `;

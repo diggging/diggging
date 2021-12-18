@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { API_URL } from "../../config";
 
-function ToastUiUpdate({id, title, desc, tags, token }) {
+function ToastAnswerUpdate({id, title, desc, token, questionId }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const editorRef = useRef();
@@ -25,14 +25,12 @@ function ToastUiUpdate({id, title, desc, tags, token }) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       axios.defaults.headers.common["Content-Type"] = "application/json";
       await axios
-        .put(`${API_URL}/questions/${id}/update/`, {
+        .put(`${API_URL}/questions/${id}/answer_update/`, {
           title: title,
           desc: content,
-          question_folder: [],
-          question_tags: tags,
         })
         .then((response) => {
-          router.push(`/`);
+          router.push(`/questions/${questionId}`);
         })
         .catch((error) => {
           console.log(error);
@@ -62,7 +60,7 @@ function ToastUiUpdate({id, title, desc, tags, token }) {
       />
       <BtnContainer>
         <Btn onClick={handleUpdate}>수정하기</Btn>
-        <Link href={`/questions/${id}`} passHref>
+        <Link href={`/questions/${questionId}`} passHref>
           <Btn>나가기</Btn>
         </Link>
       </BtnContainer>
@@ -70,7 +68,7 @@ function ToastUiUpdate({id, title, desc, tags, token }) {
   );
 }
 
-export default React.memo(ToastUiUpdate);
+export default React.memo(ToastAnswerUpdate);
 
 const BtnContainer = styled.div`
   width: 21.875rem;

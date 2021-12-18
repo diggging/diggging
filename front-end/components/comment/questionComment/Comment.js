@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from "react";
 import styled from "styled-components";
-import CommentList from "./CommentList";
+import CommentList from "../../comment/questionComment/CommentList";
 import axios from "axios";
 import TextareaAutosize from "react-autosize-textarea";
-import {API_URL} from '../../config/index';
+import { API_URL } from "../../../config";
 
 function Comment({ commentCount, comments, id, token }) {
   const [text, setText] = useState("");

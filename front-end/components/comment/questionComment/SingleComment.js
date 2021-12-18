@@ -2,9 +2,9 @@ import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { check_auth_status } from "../../redux/actions/auth";
+import { check_auth_status } from "../../../redux/actions/auth";
 import TextareaAutosize from "react-autosize-textarea";
-import { API_URL } from "../../config";
+import { API_URL } from "../../../config";
 
 function SingleComment({
   data,
