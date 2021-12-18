@@ -30,7 +30,8 @@ const ProfileBioInput = styled.textarea`
 function BioUpdateBox({userData, token}) {
   const dispatch = useDispatch();
   const [bio, setBio] = useState("");
-  const {id} = userData.user;
+  const {id, user_profile_image} = userData.user;
+  const [imgBase64, setImgBase64] = useState(user_profile_image.toString()); // 파일 base64 : 미리보기용
 
   const onChangeBio = (e) => {
     if (e.key === 'Enter') {
@@ -42,6 +43,7 @@ function BioUpdateBox({userData, token}) {
   
   const onUpdateBio = async (e) => {
     e.preventDefault();
+    
       await axios.patch(`${API_URL}/users/${id}/change_desc/`, {
         user_profile_content: bio,
       }, {
