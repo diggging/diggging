@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import dynamic from "next/dynamic";
 import axios from "axios";
 import {API_URL} from '../../../config/index';
+import Loader from 'react-loader-spinner';
 
 function answerUpdate() {
     const router = useRouter();
@@ -52,7 +53,8 @@ function answerUpdate() {
 
   const ToastUpdate = dynamic(
     () => import("../../../components/answer/ToastAnswerUpdate"),
-    { ssr: false }
+    { ssr: false,
+      loading: () => <Loader type="ThreeDots" color="#FFE59C" width={100} height={100}/> }
   );
 
   //token 확인(refresh, verify)

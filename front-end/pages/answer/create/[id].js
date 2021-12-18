@@ -4,6 +4,7 @@ import { check_auth_status, load_user } from "../../../redux/actions/auth";
 import { useDispatch, useSelector } from "react-redux";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+import Loader from 'react-loader-spinner';
 
 function answerCreate() {
   const dispatch = useDispatch();
@@ -30,7 +31,7 @@ function answerCreate() {
     }
   };
 
-  const ToastCreate = dynamic(() => import("../../../components/answer/ToastAnswerCreate"), { ssr: false });
+  const ToastCreate = dynamic(() => import("../../../components/answer/ToastAnswerCreate"), { ssr: false, loading: () => <Loader type="ThreeDots" color="#FFE59C" width={100} height={100}/> });
 
   //token 확인(refresh, verify)
   useEffect(() => {

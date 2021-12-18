@@ -13,6 +13,8 @@ import DetailLike from "../../components/questions/DetailLike";
 import Comment from "../../components/comment/questionComment/Comment";
 import Answers from "../../components/answer/Answers";
 import { API_URL } from "../../config";
+import Loader from 'react-loader-spinner';
+
 
 const Question = () => {
   const [item, setItem] = useState([]);
@@ -80,6 +82,7 @@ const Question = () => {
     () => import("../../components/questions/QuestionView"),
     {
       ssr: false,
+      loading: () => <Loader type="ThreeDots" color="#FFE59C" width={100} height={100}/>
     }
   );
 
