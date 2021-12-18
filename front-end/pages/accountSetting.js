@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import NavBar from '../components/NavBar';
-import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
+import NavBar from "../components/NavBar";
+import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
 import Layout from "../hocs/Layout";
 import { load_user, check_auth_status } from "../redux/actions/auth";
 import { useRouter } from "next/router";
@@ -30,16 +30,8 @@ function accountSetting() {
   const router = useRouter();
   const dispatch = useDispatch();
   //0. user정보 받아오기
-  const userData = useSelector((state) => state.auth.user);
+  const user = useSelector((state) => state.auth.user);
   const [token, setToken] = useState("");
-  
-  //token 확인(refresh, verify)
-  useEffect(() => {
-    if (dispatch && dispatch !== null && dispatch !== undefined)
-      dispatch(check_auth_status());
-      getAccessToken();
-  }, []);
-
 
   const getAccessToken = async () => {
     if (dispatch && dispatch !== null && dispatch !== undefined) {
@@ -56,48 +48,62 @@ function accountSetting() {
   const onClickLogout = async (e) => {
     e.preventDefault();
     await dispatch(logout());
-    router.push('/');
-  }
+    router.push("/");
+  };
 
+  //token 확인(refresh, verify)
+  useEffect(() => {
+    if (dispatch && dispatch !== null && dispatch !== undefined)
+      dispatch(check_auth_status());
+    getAccessToken();
+  }, [dispatch]);
 
   return (
     <>
-    <Layout
-      title='Diggging | 계정설정'
-      content='개발자들을 위한 커뮤니티 디깅 계정설정 페이지'  
-    >
-      <NavBar />
-      <Alert />
-      <FormBox>
-        <PageTitle>계정 설정하기</PageTitle>
-        <NicknameBox>
-          <ProfileTitle>{userData.user.user_nickname}</ProfileTitle><ProfileTitle2>님의 프로필</ProfileTitle2>
-        </NicknameBox>
-        <ProfileInfoBox userData={userData} token={token}/>
-        <BioUpdateBox userData={userData} token={token}/>
-        <ProfileBox padding="2.375rem">
-          <YellowTitle>이메일</YellowTitle>
-          {/* <ContentText>{email}</ContentText> */}
-        </ProfileBox>
-        <NicknameUpdateBox userData={userData} token={token} />
-        <PasswordSetBox userData={userData} token={token} />
-        <AccountBtnBox>
-          {/* <WhiteButton paddingTop="0.625rem" paddingRight="2rem" fontSize="0.8125rem">회원탈퇴 😥</WhiteButton> */}
-          <WhiteButton onSubmit={(e) => onClickLogout(e)}
-            type="submit"
-            paddingTop="0.625rem" 
-            paddingRight="2rem" 
-            fontSize="0.8125rem"
-            >로그아웃 💨 </WhiteButton>
-        </AccountBtnBox>
-        {/* <Link href="">변경하기</Link> 여기에 reset password url필요 */}
-      </FormBox>
-    </Layout>
-  </>
+      <Layout
+        title="Diggging | 계정설정"
+        content="개발자들을 위한 커뮤니티 디깅 계정설정 페이지"
+      >
+        <NavBar />
+        {user?.user.id ? (
+          <>
+            <Alert />
+            <FormBox>
+              <PageTitle>계정 설정하기</PageTitle>
+              <NicknameBox>
+                <ProfileTitle>{user.user.user_nickname}</ProfileTitle>
+                <ProfileTitle2>님의 프로필</ProfileTitle2>
+              </NicknameBox>
+              <ProfileInfoBox userData={user} token={token} />
+              <BioUpdateBox userData={user} token={token} />
+              <ProfileBox padding="2.375rem">
+                <YellowTitle>이메일</YellowTitle>
+                {/* <ContentText>{email}</ContentText> */}
+              </ProfileBox>
+              <NicknameUpdateBox userData={user} token={token} />
+              <PasswordSetBox userData={user} token={token} />
+              <AccountBtnBox>
+                {/* <WhiteButton paddingTop="0.625rem" paddingRight="2rem" fontSize="0.8125rem">회원탈퇴 😥</WhiteButton> */}
+                <WhiteButton
+                  onSubmit={(e) => onClickLogout(e)}
+                  type="submit"
+                  paddingTop="0.625rem"
+                  paddingRight="2rem"
+                  fontSize="0.8125rem"
+                >
+                  로그아웃 💨{" "}
+                </WhiteButton>
+              </AccountBtnBox>
+              {/* <Link href="">변경하기</Link> 여기에 reset password url필요 */}
+            </FormBox>
+          </>
+        ) : null}
+      </Layout>
+    </>
   );
 }
 
-export {ProfileBioBox, ProfileBox};
+export { ProfileBioBox, ProfileBox };
 export default accountSetting;
 
 const FormBox = styled.div`
@@ -116,28 +122,27 @@ const NicknameBox = styled.header`
 
 const ProfileTitle = styled.span`
   font-size: 1.625rem;
-  color: #FFBA42;
-  font-family: 'Pretendard-Bold';
+  color: #ffba42;
+  font-family: "Pretendard-Bold";
   margin-bottom: 1.5rem;
 `;
 
 const ProfileTitle2 = styled.span`
   font-size: 1.25rem;
-  color: #FFBA42;
-  font-family: 'Pretendard-Bold';
-  margin-left:0.125rem;
+  color: #ffba42;
+  font-family: "Pretendard-Bold";
+  margin-left: 0.125rem;
 `;
 
 const ProfileBox = styled.form`
   display: flex;
   flex-direction: row;
-  padding: ${({padding}) => padding} 0;
+  padding: ${({ padding }) => padding} 0;
   border-bottom: solid 2px #e5e5e5;
   justify-content: flex-start;
   align-items: baseline;
   justify-content: space-between;
   position: relative;
-  
 `;
 
 const ProfileBioBox = styled(ProfileBox)`

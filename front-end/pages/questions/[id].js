@@ -98,10 +98,10 @@ const Question = () => {
   useEffect(() => {
     if (dispatch && dispatch !== null && dispatch !== undefined)
       dispatch(check_auth_status());
-    dispatch(load_user());
+      dispatch(load_user());
   }, [dispatch]);
 
-  console.log(item);
+  console.log(user);
 
   return (
     <>

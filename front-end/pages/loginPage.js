@@ -108,7 +108,10 @@ function loginPage() {
     }
   }
   
- 
+  if (isAuthenticated) {
+    router.push('/')
+  }
+  
   return (
     <Layout
       title='Diggging | 로그인'

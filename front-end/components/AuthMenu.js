@@ -17,8 +17,14 @@ function AuthMenu() {
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
   const [imgBase64, setImgBase64] = useState(''); // 파일 base64 : 미리보기용
 
-
-
+  // const user = useSelector(state => state.auth.user);
+  
+  // const {user_profile_image} = user.user;
+  // console.log(user_profile_image)
+  // const strProfileImg = user_profile_image.toString()
+  // console.log(strProfileImg)
+  
+  // console.log("navBar")
   useEffect(() => {
     if (isAuthenticated === true) {
       const user = useSelector(state => state.auth.user);
@@ -29,6 +35,7 @@ function AuthMenu() {
       console.log(strProfileImg)
       setImgBase64(strProfileImg);
     }
+    // setImgBase64(strProfileImg);
     
   }, [])
   
