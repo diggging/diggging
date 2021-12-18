@@ -1,16 +1,16 @@
 import React, {useEffect, useState} from 'react'
 import axios from 'axios';
-import {API_URL} from '../config/index'
-import Layout from '../hocs/Layout';
+import {API_URL} from '../../../../config/index'
+import Layout from '../../../../hocs/Layout';
 import styled from 'styled-components';
-import NavBar from '../components/NavBar';
-import GreyInput from '../components/common/GreyInput';
-import YellowButton from "../components/common/YellowButton";
-import YellowTitle from '../components/common/YellowTitle';
+import NavBar from '../../../../components/NavBar';
+import GreyInput from '../../../../components/common/GreyInput';
+import YellowButton from "../../../../components/common/YellowButton";
+import YellowTitle from '../../../../components/common/YellowTitle';
 import { useRouter } from 'next/router';
-import { FormBox, GuideMessage, PageTitle } from './findPassword';
-import FlexColumn from '../components/common/FlexColumn';
-import { reset_password_confirm } from '../redux/actions/auth';
+import { FormBox, GuideMessage, PageTitle } from '../../../findPassword';
+import FlexColumn from '../../../../components/common/FlexColumn';
+import { reset_password_confirm } from '../../../../redux/actions/auth';
 
 function ResetPassword({match, reset_password_confirm}) {
   const [requestSent, setRequestSent] = useState(false)
@@ -30,9 +30,9 @@ function ResetPassword({match, reset_password_confirm}) {
 
   const onUpdatePassword = (e) => {
     e.preventDefault();
-
     const uid = match.params.uid;
     const token = match.params.token;
+
 
     reset_password_confirm(uid, token, newPW, confirmPW);
     setRequestSent(true)

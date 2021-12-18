@@ -135,7 +135,7 @@ class ChangedescSerializer(serializers.ModelSerializer):
         ]
 
     def update(self, instance, validated_data):
-        if len(validated_data["user_progile_content"]) <= 100:
+        if len(validated_data["user_profile_content"]) <= 100:
             instance.user_profile_content = validated_data.get(
                 "user_profile_content", instance.user_profile_content
             )

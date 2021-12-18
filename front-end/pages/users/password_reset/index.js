@@ -1,15 +1,15 @@
 import React, {useState} from 'react'
-import Layout from '../hocs/Layout';
+import Layout from '../../../hocs/Layout'
 import styled from 'styled-components';
-import NavBar from '../components/NavBar';
-import GreyInput from '../components/common/GreyInput';
-import YellowButton from "../components/common/YellowButton";
-import YellowTitle from '../components/common/YellowTitle';
-import {alertService} from '../components/alert.service';
-import { Alert } from '../components/Alert';
-import { reset_password } from '../redux/actions/auth';
+import YellowButton from "../../../components/common/YellowButton";
+import YellowTitle from '../../../components/common/YellowTitle';
+import {alertService} from '../../../components/alert.service';
+import GreyInput from '../../../components/common/GreyInput';
 import { Router, useRouter } from 'next/router';
 import { connect, useDispatch } from 'react-redux';
+import { Alert } from '../../../components/Alert';
+import { reset_password } from '../../../redux/actions/auth';
+import NavBar from '../../../components/NavBar';
 
 function findPassword() {
   const router = useRouter();

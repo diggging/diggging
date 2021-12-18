@@ -254,16 +254,13 @@ export const reset_password = (email) => async (dispatch) => {
   const body = JSON.stringify({email});
 
   try {
-    const res = await axios.post(`${API_URL}/users/password_reset`, {
+    await axios.post(`${API_URL}/users/password_reset`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
       body: body,
     });
-      
-      console.log(`res ${res}`)
-      console.log(`res ${res.status}`)
     
     dispatch({
       type: PASSWORD_RESET_SUCCESS
