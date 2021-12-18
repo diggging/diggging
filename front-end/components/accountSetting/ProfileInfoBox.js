@@ -25,7 +25,7 @@ function ProfileInfoBox ({userData, token}) {
   }, [])
 
   console.log(userData, 'userData')
-
+  
   const profileImgInput = useRef();
   const [updatedImg, setUpdatedImg] = useState(user_profile_image) //업로드 파일 이미지url
   const [imgBase64, setImgBase64] = useState(user_profile_image.toString()); // 파일 base64 : 미리보기용
@@ -84,6 +84,7 @@ function ProfileInfoBox ({userData, token}) {
       }
     }
   }
+
   return (
     <ProfileBioBox padding="1.875rem" onSubmit={(e) => updateProfileImg(e)}>
       <ImageBox>

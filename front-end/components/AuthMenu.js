@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import NavItem from './NavBar';
+
 //user라는state가져와서 거기 저장되어있는 프사이미지 사용
 //근데 왜 무한루프?
 function AuthMenu() {
@@ -16,43 +17,46 @@ function AuthMenu() {
   const router = useRouter();
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
   const [imgBase64, setImgBase64] = useState(''); // 파일 base64 : 미리보기용
-
-  // const user = useSelector(state => state.auth.user);
+  const user = useSelector(state => state.auth.user);
+  const [userProfileImage, setUserProfileImage] = useState("");
   
-  // const {user_profile_image} = user.user;
-  // console.log(user_profile_image)
+  
   // const strProfileImg = user_profile_image.toString()
-  // console.log(strProfileImg)
-  
-  // console.log("navBar")
-  useEffect(() => {
-    if (isAuthenticated === true) {
-      const user = useSelector(state => state.auth.user);
-  
-      const {user_profile_image} = user.user;
-      console.log(user_profile_image)
-      const strProfileImg = user_profile_image.toString()
-      console.log(strProfileImg)
-      setImgBase64(strProfileImg);
-    }
-    // setImgBase64(strProfileImg);
-    
-  }, [])
+
+  // if (isAuthenticated === true) {
+  //     const user = useSelector(state => state.auth.user);
+  //     const {user_profile_image} = user.user;
+  //     console.log(user_profile_image)
+  //     const strProfileImg = user_profile_image.toString()
+  //     console.log(strProfileImg)
+  //     setImgBase64(strProfileImg);
+  //   }
+
+  // useEffect(() => {
+  //   if (isAuthenticated === true) {
+  //     const user = useSelector(state => state.auth.user);
+  //     const {user_profile_image} = user.user;
+  //     console.log(user_profile_image)
+  //     const strProfileImg = user_profile_image.toString()
+  //     console.log(strProfileImg)
+  //     setImgBase64(strProfileImg);
+  //   }
+  // }, [])
   
 
   const [open, setOpen] = useState({
     alarmOpen: false,
     profileOpen: false,
   });
+
   const [alarmData, setAlarmData] = useState([]);
-  const {alarmOpen, profileOpen} = open;
+  // const {alarmOpen, profileOpen} = open;
 
-
-  const logoutHandler = async () => {
-    if (dispatch && dispatch !== null && dispatch !== undefined)
-    await dispatch(logout());
-    router.push("/loginPage");
-  };
+  // const logoutHandler = async () => {
+  //   if (dispatch && dispatch !== null && dispatch !== undefined)
+  //   await dispatch(logout());
+  //   router.push("/loginPage");
+  // };
 
   //알람
   // const getAlarmList = async() => {
@@ -67,9 +71,10 @@ function AuthMenu() {
   //     console.log(err)
   //   }
   // }
+
   return (
     <>
-      <Link href="/" passHref>
+      {user?.user.id ? (<><Link href="/" passHref>
         <NavItem>
           <Alarm onClick={() => {setOpen({...open, alarmOpen: !alarmOpen})}} />
         </NavItem>
@@ -112,13 +117,13 @@ function AuthMenu() {
           </DropList>
         </DropBox>
         )}
-      </NavItem>
+      </NavItem></>) : null}
+      
     </>
   )
 }
 
-export default AuthMenu;
-
+export default React.memo(AuthMenu);
 
 const ToggleContainer = styled.button`
 background-color: #ffffff;

@@ -20,7 +20,7 @@ function navBar() {
     if (dispatch && dispatch !== null && dispatch !== undefined) {
       dispatch(load_user()); 
     }
-  }, [])
+  }, [dispatch])
 
   return (
     <div>
@@ -53,7 +53,7 @@ function navBar() {
               <NavSearch height="1.5rem" width="1.375rem"/>
             </NavItem>
           </Link>
-          {isAuthenticated ? ( null
+          {isAuthenticated ? ( <>asdasd</>
             // <AuthMenu /> 
           ) : (
             <>
