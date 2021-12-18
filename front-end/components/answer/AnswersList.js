@@ -14,6 +14,7 @@ function AnswersList({ answer, user, token, questionId, questionUserId }) {
   const [answerToken, setAnswerToken] = useState(token);
   const [isSelected, setIsSelected] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [commentIsOpen, setCommentIsOpen] = useState(true);
 
   const router = useRouter();
 
@@ -24,6 +25,10 @@ function AnswersList({ answer, user, token, questionId, questionUserId }) {
   const createdDate = createdAtDate.getDate();
   const createdHour = createdAtDate.getHours();
   const createdMinutes = createdAtDate.getMinutes();
+
+  const handleCommentOpen = () => {
+    setCommentIsOpen(!commentIsOpen);
+  };
 
   const deleteAnswer = async (id) => {
     try {
@@ -106,15 +111,15 @@ function AnswersList({ answer, user, token, questionId, questionUserId }) {
                   </>
                 ) : null}
                 <AnswerBtn onClick={() => onOpen()}>채택하기</AnswerBtn>
-                <AnswerBtn>댓글 접기</AnswerBtn>
+                <AnswerBtn onClick={() => handleCommentOpen()}>{commentIsOpen === true ? (<>댓글 접기</>) : (<>댓글 {answer.answer_comment_count}</>)}</AnswerBtn>
               </>
             ) : (
               <>
-                <AnswerBtn>댓글 접기</AnswerBtn>
+                <AnswerBtn onClick={() => handleCommentOpen()}>{commentIsOpen === true ? (<>댓글 접기</>) : (<>댓글 {answer.answer_comment_count}</>)}</AnswerBtn>
               </>
             )}
           </FlexContainer>
-
+          
           <ProfileContainer>
             <ProfileImg></ProfileImg>
             <ProfileInfoContainer>
@@ -133,13 +138,16 @@ function AnswersList({ answer, user, token, questionId, questionUserId }) {
               </>
             ) : null}
           </ProfileContainer>
-
-          <AnswerComment
-            commentCount={answer.answer_comment_count}
-            comments={answer.answer_comments}
-            id={answer.id}
-            token={token}
-          />
+          {commentIsOpen === true ? (
+            <>
+              <AnswerComment
+                commentCount={answer.answer_comment_count}
+                comments={answer.answer_comments}
+                id={answer.id}
+                token={token}
+              />
+            </>
+          ) : null}
         </Container>
       </MainContainer>
     </>

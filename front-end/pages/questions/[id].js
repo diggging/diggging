@@ -15,6 +15,10 @@ import Answers from "../../components/answer/Answers";
 import { API_URL } from "../../config";
 
 const Question = () => {
+  const [item, setItem] = useState([]);
+  const [token, setToken] = useState("");
+  const [commentIsOpen, setCommentIsOpen] = useState(true);
+
   const router = useRouter();
   const dispatch = useDispatch();
   //유저 정보
@@ -22,9 +26,6 @@ const Question = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const { id } = router.query;
-  const [item, setItem] = useState([]);
-  const [token, setToken] = useState("");
-
   const { created } = item;
 
   const createdAtDate = new Date(created);
@@ -34,13 +35,15 @@ const Question = () => {
   const createdHour = createdAtDate.getHours();
   const createdMinutes = createdAtDate.getMinutes();
 
+  const handleCommentOpen = () => {
+    setCommentIsOpen(!commentIsOpen);
+  };
+
   const handleData = async () => {
     try {
-      await axios
-        .get(`${API_URL}/questions/${id}/detail/`)
-        .then((res) => {
-          setItem(res.data);
-        });
+      await axios.get(`${API_URL}/questions/${id}/detail/`).then((res) => {
+        setItem(res.data);
+      });
     } catch (e) {
       console.log(e);
     }
@@ -73,9 +76,12 @@ const Question = () => {
         .catch((err) => console.log(err));
     }
   };
-  const Viewer = dynamic(() => import("../../components/questions/QuestionView"), {
-    ssr: false,
-  });
+  const Viewer = dynamic(
+    () => import("../../components/questions/QuestionView"),
+    {
+      ssr: false,
+    }
+  );
 
   //id값을 넣어줘야 데이터가 안사라짐
   useEffect(() => {
@@ -89,7 +95,7 @@ const Question = () => {
   useEffect(() => {
     if (dispatch && dispatch !== null && dispatch !== undefined)
       dispatch(check_auth_status());
-      dispatch(load_user());
+    dispatch(load_user());
   }, [dispatch]);
 
   console.log(item);
@@ -136,7 +142,9 @@ const Question = () => {
                       <Hash>{hash}</Hash>
                     ))}
                   </HashContainer>
-                  <CommentBtn>댓글 접기</CommentBtn>
+                  <CommentBtn onClick={() => handleCommentOpen()}>
+                  {commentIsOpen === true ? (<>댓글 접기</>) : (<>댓글 {item.comment_count}</>)}
+                  </CommentBtn>
                 </FlexContainer>
 
                 <ProfileContainer>
@@ -159,17 +167,19 @@ const Question = () => {
                 </ProfileContainer>
                 <DetailLike token={token} id={id} />
 
-                <Comment
-                  commentCount={item.comment_count}
-                  comments={item.question_comments}
-                  id={id}
-                  token={token}
-                />
-
+                {commentIsOpen === true ? (
+                  <>
+                    <Comment
+                      commentCount={item.comment_count}
+                      comments={item.question_comments}
+                      id={id}
+                      token={token}
+                    />
+                  </>
+                ) : null}
               </Container>
 
               <AnswerContainer>
-
                 {isAuthenticated && item.user?.id !== user?.user?.id ? (
                   <>
                     <Link href={`/answer/create/${item.id}`} passHref>
@@ -177,9 +187,14 @@ const Question = () => {
                     </Link>
                   </>
                 ) : null}
-                <Answers questionId={id} answers={item.answers} user={user} token={token} questionUserId={item.user.id}/>
+                <Answers
+                  questionId={id}
+                  answers={item.answers}
+                  user={user}
+                  token={token}
+                  questionUserId={item.user.id}
+                />
               </AnswerContainer>
-
             </MainContainer>
           </>
         ) : null}
