@@ -13,7 +13,7 @@ import YellowButton from "../components/common/YellowButton";
 import YellowTitle from "../components/common/YellowTitle";
 import ContentText from "../components/common/ContentText";
 import FlexColumn from "../components/common/FlexColumn";
-import { FormBox, PageTitle } from "../pages/findPassword";
+import { PageTitle } from "../pages/findPassword";
 import BioUpdateBox from "../components/accountSetting/BioUpdateBox";
 import NicknameUpdateBox from "../components/accountSetting/NicknameUpdateBox";
 import PasswordSetBox from "../components/accountSetting/PasswordSetBox";
@@ -100,6 +100,12 @@ function accountSetting() {
 export {ProfileBioBox, ProfileBox};
 export default accountSetting;
 
+const FormBox = styled.div`
+  width: 49.375rem;
+  margin: auto auto;
+  margin-top: 11.25rem;
+  position: relative;
+`;
 
 const NicknameBox = styled.header`
   margin-top: 5.375rem;
