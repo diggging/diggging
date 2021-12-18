@@ -74,7 +74,7 @@ const ListContainer = styled.ul`
   background: #ffffff;
   box-shadow: 0rem 0.25rem 1.25rem rgba(0, 0, 0, 0.04);
   border-radius: 0.125rem;
-  margin-top: 3.125rem;
+  margin-top: 24px;
   padding: 1.625rem 2.1875rem;
   cursor: pointer;
 `;

@@ -226,6 +226,7 @@ const TabItemContainer = styled.div`
   padding: 10px 20px;
   margin-top: 98px;
   position: relative;
+  margin-bottom: 46px;
 `;
 
 const TabContainer = styled.div`
