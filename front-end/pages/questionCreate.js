@@ -96,7 +96,6 @@ function questionCreate() {
 
 export default React.memo(questionCreate);
 
-
 const MainContainer = styled.div`
   margin-top: 9.0625rem;
   margin-bottom: 4.375rem;

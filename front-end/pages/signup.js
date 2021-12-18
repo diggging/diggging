@@ -115,9 +115,7 @@ function signup() {
         alertService.warn('회원가입 도중 서버에 문제가 생겼습니다🙁')
       } else if (res === 405) {
         alertService.warn('허용되지 않는 접근입니다.')
-      } else {
-
-      }
+      } 
     })
     .catch((err) => {
         alertService.warn(err);

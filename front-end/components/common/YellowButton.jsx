@@ -2,9 +2,9 @@ import React from 'react'
 import styled from 'styled-components';
 import { lighten, darken } from 'polished';
 
-function YellowButton({ children, paddingTop, paddingRight }) {
+function YellowButton({ children, paddingTop, paddingRight, type }) {
   return (
-    <StyledYellowButton paddingTop={paddingTop} paddingRight={paddingRight}>
+    <StyledYellowButton type={type} paddingTop={paddingTop} paddingRight={paddingRight}>
       {children}
     </StyledYellowButton>
   )
@@ -22,6 +22,5 @@ const StyledYellowButton = styled.button`
   font-size: 1rem;
 
   box-shadow: 0.2rem 0.2rem 0.5rem 0.2rem rgba(0, 0, 0, 0.1);
-
-  
+  cursor: pointer;
 `;

@@ -5,7 +5,8 @@ from django.http import HttpResponse
 from django.views.decorators.http import require_POST, require_GET
 from .models import Post, Folder
 from users.models import Sand
-#from .forms import PostForm
+
+# from .forms import PostForm
 import json
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
@@ -13,7 +14,13 @@ from django.core.paginator import Paginator
 from questions.models import QuestionPost
 
 from rest_framework.views import APIView
-from posts.serializers import PostSerializer, UserSerializer, PostDetailSerializer, QuestionThumbnailSerializer, SearchSerializer
+from posts.serializers import (
+    PostSerializer,
+    UserSerializer,
+    PostDetailSerializer,
+    QuestionThumbnailSerializer,
+    SearchSerializer,
+)
 from rest_framework.response import Response
 from rest_framework import viewsets, permissions, status, generics, mixins
 from rest_framework.decorators import action
@@ -22,7 +29,11 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .permissions import IsOwnerOrReadOnly
 from django.db.models import Prefetch
-from rest_framework.decorators import ( api_view, permission_classes, authentication_classes, )
+from rest_framework.decorators import (
+    api_view,
+    permission_classes,
+    authentication_classes,
+)
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 import re
 from django.db.models import Q
@@ -37,16 +48,19 @@ from django.db.models import Q
 
 #         return Response({"me": me_serializer.data, "all_posts":posts_serializer.data})
 
+
 class Main(generics.ListAPIView):
     authentication_classes = [BasicAuthentication, SessionAuthentication]
+    permission_classes = [AllowAny]
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
+    print("Aa")
+
 
 # main 페이지
 # def main(request):
 #     me = request.user
 #     return render(request, "posts/post_scrap.html", {"user":me})
-
 
 
 def helped(request):
@@ -192,14 +206,16 @@ def my_recent_axios(request):
 #     def patch(self, request, *args, **kwargs):
 #         return self.partial_update(request, *args, **kwargs)
 
-#------------------------------------------------------- post detail -------------------------------------------------------
+# ------------------------------------------------------- post detail -------------------------------------------------------
 # class PostCreateView(generics.CreateAPIView):
 class PostCreateView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
 
     def create(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data, context={'request': request})
+        serializer = self.serializer_class(
+            data=request.data, context={"request": request}
+        )
         if serializer.is_valid():
             instance = serializer.save()
         # 포스팅 시에 sand 추가해주기
@@ -280,14 +296,16 @@ class PostCreateView(generics.ListCreateAPIView):
 #     return render(request, "posts/post_create.html", context=ctx)
 
 
-
 class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
-    #comment 보내주기
-    #authentication_classes = [BasicAuthentication, SessionAuthentication]
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly] # 로그인한, 쓴사람만 수정 가능
+    # comment 보내주기
+    # authentication_classes = [BasicAuthentication, SessionAuthentication]
+    permission_classes = [
+        IsAuthenticatedOrReadOnly,
+        IsOwnerOrReadOnly,
+    ]  # 로그인한, 쓴사람만 수정 가능
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
-    lookup_field = 'pk'
+    lookup_field = "pk"
 
     def get(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -296,6 +314,7 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
         instance.save()
 
         return self.retrieve(request, *args, **kwargs)
+
 
 # def post_update(request, pk):
 #     # 눈물나는 update.......................
@@ -537,7 +556,6 @@ def post_scrap(request, user_id, post_id):
     return HttpResponse(json.dumps(ctx), content_type="application/json")
 
 
-
 def search_quest(request):
     questions = QuestionPost.objects.all()  ##질문만 받아오기
     p = request.POST.get("p", "")
@@ -626,6 +644,7 @@ def get_post(request, user_id, post_id):
 def service_view(request):
     return render(request, "posts/our_service.html")
 
+
 # =================================================================================================================================
 @permission_classes([AllowAny])
 class QuestionSearchView(APIView):
@@ -633,19 +652,21 @@ class QuestionSearchView(APIView):
         question_query = QuestionPost.objects.all()
         serializer = QuestionThumbnailSerializer(question_query, many=True)
         return Response(serializer.data)
+
     def post(self, request):
         query = request.data
         serializer = SearchSerializer(query)
         print(serializer.data)
         return Response(serializer.data)
-        #return redirect("posts:search_quest_result", serializer.data['query'])
+        # return redirect("posts:search_quest_result", serializer.data['query'])
 
 
 @permission_classes([AllowAny])
 class QuestionSearchResultView(APIView):
     def get(self, request, *args, **kwargs):
-        key_word = kwargs.get('query')
-        question_query = QuestionPost.objects.filter(Q(title__icontains=key_word)|Q(desc__icontains = key_word))
+        key_word = kwargs.get("query")
+        question_query = QuestionPost.objects.filter(
+            Q(title__icontains=key_word) | Q(desc__icontains=key_word)
+        )
         serializer = QuestionThumbnailSerializer(question_query, many=True)
         return Response(serializer.data)
-

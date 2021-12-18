@@ -19,7 +19,10 @@ class User(AbstractUser):
 
     LOGIN_CHOICES = ((LOGIN_EMAIL, "Email"), (LOGIN_GITHUB, "Github"))
     user_nickname = models.CharField(
-        verbose_name="nickname", max_length=8, blank=True, default="익명"
+        verbose_name="nickname",
+        max_length=8,
+        blank=True,
+        default="익명",
     )
     user_level = models.IntegerField(verbose_name="level", default=0)
     user_point = models.IntegerField(verbose_name="point", default=0)
@@ -30,8 +33,8 @@ class User(AbstractUser):
         "self", symmetrical=False, blank=True, default=[0], related_name="user_followed"
     )
     # user_followed = models.ManyToManyField("self", symmetrical=False, blank=True, default=0)
-    user_profile_content = models.TextField(
-        verbose_name="personal description", blank=True
+    user_profile_content = models.CharField(
+        verbose_name="personal_description", blank=True, max_length=50
     )
     user_profile_image = ResizedImageField(
         size=[50, 50],

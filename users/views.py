@@ -45,6 +45,10 @@ from .serializers import (
     UserSerializer,
     RegisterSerializer,
     AlarmSerailzer,
+    ChangePasswordSerializer,
+    ChangedescSerializer,
+    ChangeimageSerializer,
+    ChangeNicknameSerializer,
 )
 from rest_framework.response import Response
 from django.contrib.auth import login
@@ -73,16 +77,18 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+)
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
 # 회원가입
 # 아래 도메인은 이메일 인증 관련 도메인 바뀌면 my_site domain도 변경해주어야함.
-"""my_site = Site.objects.get(pk=1)
-my_site.domain = "diggging.com"
+my_site = Site.objects.get(pk=1)
+my_site.domain = "localhost:8000"
 my_site.name = "digging_main"
-my_site.save()"""
+my_site.save()
 
 
 class Registration(generics.GenericAPIView):
@@ -115,6 +121,7 @@ class Registration(generics.GenericAPIView):
         to_email = serializer.cleaned_data.get("email")
         email = EmailMessage(mail_subject, message, to=[to_email])
         email.send()
+
         # request 필요 -> 오류 발생
         return Response(
             {
@@ -781,8 +788,11 @@ def account_detail(request, pk):
     return render(request, template_name="users/account_detail.html", context=ctx)
 
 
-def change_desc(request, pk):
-    context = {}
+@permission_classes([IsAuthenticated])
+class ChangeDesc(generics.RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = ChangedescSerializer
+    """context = {}
     user = get_object_or_404(User, pk=pk)
     if request.method == "POST":
         new_desc = request.POST.get("new_desc")
@@ -790,10 +800,17 @@ def change_desc(request, pk):
         user.save()
         return redirect("users:account_detail", user.id)
     return redirect("users:account_detail", user.id)
+"""
 
 
-def change_nickname(request, pk):
-    context = {}
+@permission_classes([IsAuthenticated])
+class ChangeNicknameApi(generics.RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = ChangeNicknameSerializer
+    # if queryset.objects.filter(user_nickname=name):
+    # raise Exception("중복된 닉네임이 있습니다.")
+
+    """context = {}
     if request.method == "POST":
         new_nickname = request.POST.get("new_nickname")
         user = get_object_or_404(
@@ -807,35 +824,52 @@ def change_nickname(request, pk):
             user.save()
             return redirect("users:account_detail", user.id)
     return redirect("users:account_detail", user.id)
+"""
 
 
 # 비밀번호 변경 함수
-def change_pw(request, pk):
-    context = {}
-    if request.method == "POST":
+@permission_classes([IsAuthenticated])
+class ChangepasswordView(generics.RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = ChangePasswordSerializer
+    """def post(self, request, pk, *args, **kwargs):
+        context = {}
         current_password = request.POST.get("origin_password")
         user = get_object_or_404(User, pk=pk)
+        print(check_password(current_password, str(user.password)))
+        print(current_password, user.password)
         if check_password(current_password, user.password):
-            new_password = request.POST.get("password1")
-            password_confirm = request.POST.get("password2")
+            new_password = request.POST.get("new_password")
+            password_confirm = request.POST.get("password_confirm")
             if new_password == password_confirm and len(new_password) >= 8:
                 user.set_password(new_password)
                 user.save()
                 # backend 인자 추가
-                login(
-                    request, user, backend="django.contrib.auth.backends.ModelBackend"
-                )
-                return redirect("users:login")
+                # login(
+                #   request,
+                #  user,
+                # backend="django.contrib.auth.backends.ModelBackend",
+                # )
+                return Response({"user": user.data}, status=status.HTTP_200_OK)
             else:
-                context.update({"error": "새로운 비밀번호를 다시 확인해주세요."})
-    else:
-        context.update({"error": "현재 비밀번호가 일치하지 않습니다."})
+                return Response(
+                    {"error": "새로운 비밀번호를 다시 확인해주세요."},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
+        else:
+            return Response(
+                {"error": "현재 비밀번호가 일치하지 않습니다."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+"""
 
-    return redirect("users:login")
 
+@permission_classes([IsAuthenticated])
+class ChangeImgView(generics.RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = ChangeimageSerializer
 
-def change_img(request, pk):
-    user = get_object_or_404(User, pk=pk)
+    """user = get_object_or_404(User, pk=pk)
     if request.method == "POST":
         new_img = request.FILES.get("new_img", None)
         if new_img:
@@ -846,6 +880,7 @@ def change_img(request, pk):
             user.user_profile_image = new_img
             user.save()
     return redirect("users:account_detail", user.id)
+"""
 
 
 # ________________________________________________ alarm ________________________________________________

@@ -135,6 +135,7 @@ const BannerBackground = styled.div`
 `;
 
 const SubTitle = styled.h2`
+  min-width: 270px;
   margin-top: 2.5rem;
   color: white;
   font-family: "Pretendard-Bold";
@@ -170,6 +171,7 @@ const ServiceTitle = styled.h3`
 `;
 
 const ServiceIntro = styled.p`
+  min-width: 454px;
   color: #343434;
   font-family: "Pretendard-Medium";
   font-size: 1.5rem;

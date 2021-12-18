@@ -3,52 +3,66 @@ import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { API_URL } from '../../config';
 import SearchIcon from '../../public/static/images/Search';
+import CloseIcon from '../../public/static/images/CloseIcon';
 
-function SearchInput({setSearchData, setNoData, searchData}) {
-  console.log(searchData, 'searchData나와라');
+function SearchInput({setSearchData, setNoData, searchData, setLoading}) {
   const [searchInput, setSearchInput] = useState("");
 
   const onInputChange = (e) => {
     setSearchInput(e.target.value);
-    console.log(searchInput);
   }
-  
+
   const getSearchData = async () => {
-    const apiRes = await axios.get(`${API_URL}/posts/search_quest_result/${searchInput}`)
-    return apiRes;
+    setLoading(true);
+    const trimmedInput = searchInput.trim();
+    if (trimmedInput == '') {
+      const apiRes = await axios.get(`${API_URL}/posts/search_quest/`)
+      setLoading(false);
+      return apiRes;
+    } else {
+      const apiRes = await axios.get(`${API_URL}/posts/search_quest_result/${trimmedInput}`)
+      setLoading(false);
+      return apiRes;
+    }
   }
 
   const onSubmitSearch = async (e) => {
     e.preventDefault();
       //get해오는api연결
+      axios.defaults.headers.common["Authorization"] = "";
       try {
         const apiRes = await getSearchData()
         if (apiRes.status == 200) {
-          console.log(apiRes.data, 'apiRes.data')
           const newData = [...apiRes.data];
-          console.log(newData)
           await setSearchData(newData); //searchData로 담아주기
-          console.log(searchData, 'searchData');
-          setNoData(false);
+          if (newData.length == 0) { //검색결과가 없을 때
+            setNoData(true); //noResult 컴포넌트 뜰 수 있도록
+          } else {
+            setNoData(false);
+          }
           return {searchData};
         } else {
-          // setSearchData([])
-          setNoData(true);
-          return {searchData};
+          console.log(apiRes)
         }
       } catch (err) {
         return {err}
       }
   }
 
+  const onClickReset = () => {
+    setSearchInput('');
+  }
+
   return (
     <form onSubmit={(e) => onSubmitSearch(e)}>
       <SearchInputBox>
+        <SearchIcon width="1.75rem" height="1.625rem" />
         <StyledSearchInput 
           type="text" 
-          placeHolder="검색어를 입력해주세요" 
+          placeholder="무엇을 찾고 있나요?" 
+          value={searchInput}
           onChange={(e) => onInputChange(e)} />
-        <SearchIcon width="1.75rem" height="1.625rem" />
+        {searchInput && <CloseIcon onClick={onClickReset} cursor="pointer"/>}
       </SearchInputBox>
     </form>
   )
@@ -82,14 +96,26 @@ const StyledSearchInput = styled.input`
       return css`
         width: 100%;
         height: 4.5rem;
-        margin-right: 1.875rem;
+        margin-left: 1.2rem;
         border: none;
+        outline: none;
         
         font-size: 1.5rem;
         font-family: 'Pretendard-Regular';
         color: ${colors.grey}; //c4c4c4
         
-        outline: none;
+        &:hover{
+          transition: 300ms;
+          color: ${colors.black};
+          font-family: 'Pretendard-Medium';
+        }
+
+        ::placeholder {
+          color: ${colors.grey};
+        }
+        ::placeholder:hover {
+          color: ${colors.black};
+        }
         
         &:active {
           outline: none;

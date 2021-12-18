@@ -69,7 +69,7 @@ function QuestionList({ data, count }) {
 export default React.memo(QuestionList);
 
 const ListContainer = styled.ul`
-  width: 67rem;
+  max-width: 67rem;
   height: 100%;
   background: #ffffff;
   box-shadow: 0rem 0.25rem 1.25rem rgba(0, 0, 0, 0.04);
