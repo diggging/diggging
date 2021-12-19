@@ -299,21 +299,9 @@ def password_reset_email(request, uidb64, token):
         return render(request, template_name="password_email_fail.html", context=ctx)
 
 
-class Password_reset_form(APIView):
-    def post(request, pk):
-        user = get_object_or_404(User, pk=pk)
-        if request.method == "POST":
-            new_password = request.POST.get("password1")
-            password_confirm = request.POST.get("password2")
-            if new_password == password_confirm and len(new_password) >= 8:
-                user.set_password(new_password)
-                user.save()
-                login(
-                    request, user, backend="django.contrib.auth.backends.ModelBackend"
-                )
-                return JsonResponse(status=status.HTTP_200_OK)
-        ctx = {"user": user}
-        return JsonResponse(request, status=status.HTTP_200_OK, context=ctx)
+class Password_reset(generics.RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = ChangePasswordSerializer
 
 
 # _______________________________________________social login____________________________________________

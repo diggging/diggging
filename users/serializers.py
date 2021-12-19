@@ -205,3 +205,27 @@ class InputEmailSerializer(serializers.ModelSerializer):
         def get_cleaned_data(self):
             data_dict = super().get_cleaned_data()
             return data_dict
+
+
+class ChangePasswordSerializer(serializers.ModelSerializer):
+    new_password = serializers.CharField(
+        style={"input_type": "password"}, write_only=True
+    )
+    password_confirm = serializers.CharField(
+        style={"input_type": "password"}, write_only=True
+    )
+
+    class Meta:
+        model = User
+        fields = ["password"]
+
+    def update(self, instance, validated_data):
+        if validated_data["new_password"] == validated_data["password_confirm"]:
+            instance.password = validated_data.get(
+                "password_confirm", instance.password
+            )
+            instance.save()
+        else:
+
+            raise serializers.ValidationError({"password": "패스워드를 재확인하세요"})
+        return instance

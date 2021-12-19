@@ -41,9 +41,9 @@ urlpatterns = [
         name="password_reset_email",
     ),
     path(
-        "<int:pk>/password_reset_form/",
-        view=views.Password_reset_form.as_view(),
-        name="password_reset_form",
+        "<int:pk>/password_reset_API/",
+        view=views.Password_reset.as_view(),
+        name="password_reset_API",
     ),
     # my_page
     path("<int:pk>/my_page/", view=views.my_page, name="my_page"),  # my page
