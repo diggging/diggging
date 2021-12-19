@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import Paging from "../Paging";
 import { setQuestion, setPage, setMine } from "../../modules/questions";
-import Like from '../../public/static/images/Like';
+import HeartIcon from '../../public/static/images/HeartIcon.js';
 
 function QuestionList({ data, count }) {
   
@@ -47,7 +47,7 @@ function QuestionList({ data, count }) {
 
               <DescContainer>{list.desc.replace(/(<([^>]+)>)/ig,"").slice(0, 315)}</DescContainer>
               <BottomContainer>
-                <Like />
+                <HeartBtn></HeartBtn>
                 <BottomText>
                   {list.helped_num}
                 </BottomText>
@@ -183,4 +183,16 @@ const BottomText = styled.div`
   margin-left: 5px;
   color: #8C8D8D;
   padding: 1.5px;
+`;
+
+const HeartBtn = styled(HeartIcon)`
+  margin-left: 1rem;
+  vertical-align: middle;
+
+  path {
+    fill: #FFD358;
+  }
+  /* & :hover path{
+    fill: #FFD358;
+  } */
 `;
