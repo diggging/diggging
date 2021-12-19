@@ -260,7 +260,7 @@ class Password_reset(generics.GenericAPIView):
                 {
                     "user": user,
                     "domain": current_site.domain,
-                    "domain": my_site.domain,
+                    # "domain": my_site.domain,
                     "uid": urlsafe_base64_encode(force_bytes(user.pk)),
                     "token": password_reset_token.make_token(user),
                 },
@@ -293,13 +293,13 @@ def password_reset_email(request, uidb64, token):
         ctx = {
             "user": user,
         }
-        return redirect("users:password_reset_form", user.id)
+        return JsonResponse(user.id, status=status.HTTP_200_OK)
     else:
         ctx = {"user": user}
         return render(request, template_name="password_email_fail.html", context=ctx)
 
 
-class Password_reset(generics.RetrieveUpdateAPIView):
+class Password_resetAPI(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = Unlogin_ChangePasswordSerializer
 

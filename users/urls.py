@@ -42,7 +42,7 @@ urlpatterns = [
     ),
     path(
         "<int:pk>/password_reset_API/",
-        view=views.Password_reset.as_view(),
+        view=views.Password_resetAPI.as_view(),
         name="password_reset_API",
     ),
     # my_page
