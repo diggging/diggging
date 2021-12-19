@@ -185,7 +185,6 @@ def activate(request, uidb64, token):
 
 
 # 유저정보 api
-@permission_classes([AllowAny])
 class LoadUserView(APIView):
     def get(self, request, format=None):
         try:
