@@ -244,22 +244,20 @@ export const logout = () => async dispatch => {
 
 //PASSWORD찾기에서의 reset_password
 //email보내주기
-export const reset_password = (email, username) => async (dispatch) => {
+export const reset_password = (email, username) => async dispatch => {
   
-  // const body = JSON.stringify({email, username});
-
+  const body = JSON.stringify({email, username});
   try {
-    const apiRes = await axios.post(`/api/account/reset_password/`,  {
-      email: email,
-      username: username,
-    }, {
+    const apiRes = await fetch(`/api/account/reset_password/`,  {
+      method: 'POST',
       headers: {
-        "Accept": "application/json",
-      }
-    })
+        "Content-Type": "application/json"
+      },
+      body: body,
+    });
 
-    const data = await apiRes.json();
-    if (apiRes.ok || apiRes === 200) {
+    console.log(apiRes, `apiRes`)
+    if (apiRes.ok || apiRes.status === 200) {
       dispatch({
         type: PASSWORD_RESET_SUCCESS
       })
