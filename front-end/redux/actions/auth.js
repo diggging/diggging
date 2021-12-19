@@ -246,7 +246,7 @@ export const logout = () => async dispatch => {
 //email보내주기
 export const reset_password = (email, username) => async (dispatch) => {
   
-  const body = JSON.stringify({email, username});
+  // const body = JSON.stringify({email, username});
 
   try {
     const apiRes = await axios.post(`/api/account/reset_password/`,  {

@@ -31,7 +31,6 @@ function findPassword() {
   const {email, username} = inputs;
 
   const onSubmitEmail = async (e) => {
-    console.log(email, username)
     e.preventDefault();
     dispatch(reset_password(email, username))
     .then((res) => alertService.warn(res))
