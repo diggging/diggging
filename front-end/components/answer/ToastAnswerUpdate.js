@@ -1,7 +1,12 @@
 import React, { useRef } from "react";
 import axios from "axios";
 import styled from "styled-components";
+import Prism from 'prismjs';
 import "@toast-ui/editor/dist/toastui-editor.css";
+import 'prismjs/themes/prism.css';
+import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
+import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
+import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 import { Editor } from "@toast-ui/react-editor";
 import { setDesc } from "../../modules/editor";
 import { useDispatch, useSelector } from "react-redux";
@@ -52,6 +57,7 @@ function ToastAnswerUpdate({id, title, desc, token, questionId }) {
         height="702px"
         initialEditType="wysiwyg"
         placeholder="내용을 입력해주세요."
+        plugins={[[codeSyntaxHighlight, { highlighter: Prism }], [colorSyntax]]}
         autofocus={false}
         ref={editorRef}
         onChange={() => onChange()}

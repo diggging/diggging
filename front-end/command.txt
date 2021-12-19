@@ -40,3 +40,9 @@ npm i react-copy-to-clipboard
 
 //textarea auto size
 npm install --save react-autosize-textarea
+
+//code-syntax-highlight plugin
+npm install --save @toast-ui/editor-plugin-code-syntax-highlight
+npm install --save prismjs
+npm install --save @toast-ui/editor-plugin-color-syntax
+
