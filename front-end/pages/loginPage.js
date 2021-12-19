@@ -123,6 +123,7 @@ function loginPage() {
       <BackgroundColor>
         <LoginBox>
         <Alert />
+        <Link href="/" passHref>
           <Logo>
             <svg
               width="131"
@@ -137,6 +138,7 @@ function loginPage() {
               />
             </svg>
           </Logo>
+        </Link>
           <GuideMessage>
             실력있는 개발자들에게 질문하고 매일매일 성장하세요
           </GuideMessage>
