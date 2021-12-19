@@ -50,6 +50,7 @@ from .serializers import (
     ChangeimageSerializer,
     ChangeNicknameSerializer,
     InputEmailSerializer,
+    Unlogin_ChangePasswordSerializer,
 )
 from rest_framework.response import Response
 from django.contrib.auth import login
@@ -301,7 +302,7 @@ def password_reset_email(request, uidb64, token):
 
 class Password_reset(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
-    serializer_class = ChangePasswordSerializer
+    serializer_class = Unlogin_ChangePasswordSerializer
 
 
 # _______________________________________________social login____________________________________________

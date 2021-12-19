@@ -207,7 +207,7 @@ class InputEmailSerializer(serializers.ModelSerializer):
             return data_dict
 
 
-class ChangePasswordSerializer(serializers.ModelSerializer):
+class Unlogin_ChangePasswordSerializer(serializers.ModelSerializer):
     new_password = serializers.CharField(
         style={"input_type": "password"}, write_only=True
     )
@@ -217,15 +217,20 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["password"]
+        fields = ("new_password", "password_confirm")
+
+    def validate(self, attrs):
+        if attrs["new_password"] != attrs["password_confirm"]:
+            raise serializers.ValidationError({"password": "패스워드를 재확인하세요"})
+        return attrs
 
     def update(self, instance, validated_data):
-        if validated_data["new_password"] == validated_data["password_confirm"]:
-            instance.password = validated_data.get(
-                "password_confirm", instance.password
-            )
+        if (
+            len(validated_data["new_password"]) >= 8
+            or len(validated_data["password_confirm"]) >= 8
+        ):
+            instance.set_password(validated_data["password_confirm"])
             instance.save()
         else:
-
-            raise serializers.ValidationError({"password": "패스워드를 재확인하세요"})
+            raise serializers.ValidationError({"password": "8자리 이상 입력하세요."})
         return instance
