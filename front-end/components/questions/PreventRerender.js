@@ -20,8 +20,10 @@ function Prevent({ children }) {
   const ToggleDispatch = (bigCriteria, smallCriteria) => {
     if (bigCriteria !== undefined) {
       dispatch(setQuestion(1, bigCriteria, smallCriteria));
+      setOpen(false);
     } else if (bigCriteria === undefined) {
       dispatch(setMine(1, smallCriteria, mineToken));
+      setOpen(false);
     }
   };
 
@@ -82,7 +84,7 @@ function Prevent({ children }) {
               setOpen(!open);
             }}
           >
-            답변 전체
+            {smallCriteria === "all" ? <>답변 전체</> : (smallCriteria === "wait_answer" ? <>답변 대기 중</> : (smallCriteria === "answer_done" ? <>답변 완료</> : null))}
           </ToggleContainer>
           {open ? (
             <DropBox>

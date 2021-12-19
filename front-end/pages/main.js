@@ -85,8 +85,7 @@ function main({ children }) {
             onClick={() => {
               setOpen(!open);
             }}
-          >
-            답변 전체
+          > {smallCriteria === "all" ? <>답변 전체</> : (smallCriteria === "wait_answer" ? <>답변 대기 중</> : (smallCriteria === "answer_done" ? <>답변 완료</> : null))}
           </ToggleContainer>
           {open ? (
             <DropBox>
