@@ -23,10 +23,7 @@ function ToastAnswerUpdate({id, title, desc, token, questionId }) {
 
   const onChange = () => {
     const editorData = editorRef.current.getInstance().getHTML();
-    dispatch(setDesc(editorData));
-    if(!content) {
-      dispatch(setDesc(desc));
-    }
+    setDescState(editorData);
   };
 
   const handleUpdate = async () => {
@@ -36,7 +33,7 @@ function ToastAnswerUpdate({id, title, desc, token, questionId }) {
       await axios
         .put(`${API_URL}/questions/${id}/answer_update/`, {
           title: title,
-          desc: content,
+          desc: descState,
         })
         .then((response) => {
           router.push(`/questions/${questionId}`);

@@ -24,12 +24,10 @@ function ToastUiUpdate({id, title, desc, tags, token }) {
   const onChange = () => {
     const editorData = editorRef.current.getInstance().getHTML();
     console.log(editorData)
-    dispatch(setDesc(editorData));
-    if(!content) {
-      dispatch(setDesc(desc));
-    }
+    setDescState(editorData);
   };
 
+  console.log(content);
   const handleUpdate = async () => {
     try {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -37,12 +35,12 @@ function ToastUiUpdate({id, title, desc, tags, token }) {
       await axios
         .put(`${API_URL}/questions/${id}/update/`, {
           title: title,
-          desc: content,
+          desc: descState,
           question_folder: [],
           question_tags: tags,
         })
         .then((response) => {
-          router.push(`/`);
+          router.push(`/questions/${id}`);
         })
         .catch((error) => {
           console.log(error);
@@ -51,6 +49,7 @@ function ToastUiUpdate({id, title, desc, tags, token }) {
       console.log(e);
     }
   };
+  
   return (
     <>
       <Editor

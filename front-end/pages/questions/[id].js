@@ -169,7 +169,6 @@ const Question = () => {
                   ) : null}
                 </ProfileContainer>
                 <DetailLike token={token} id={id} />
-
                 {commentIsOpen === true ? (
                   <>
                     <Comment
