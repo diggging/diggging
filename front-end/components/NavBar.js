@@ -1,19 +1,20 @@
-import React, {useState, useEffect} from 'react';
-import styled from 'styled-components';
-import Link from 'next/link';
-import NavSearch from '../public/static/images/Search';
-import Alarm from '../public/static/images/Alarm';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import Link from "next/link";
+import NavSearch from "../public/static/images/Search";
+import Alarm from "../public/static/images/Alarm";
 // import Directory from '../public/static/images/Directory';
-import ToggleBtn from '../public/static/images/ToggleBtn';
-import SvgDiggging from '../public/static/images/Diggging';
+import ToggleBtn from "../public/static/images/ToggleBtn";
+import SvgDiggging from "../public/static/images/Diggging";
 // import img from '../public/static/images/profile_img.jpg'; //기본 프로필이미지 넣어주기
-import {useSelector, useDispatch} from 'react-redux';
-import { logout } from '../redux/actions/auth'
-import { useRouter } from 'next/router';
-import { check_auth_status } from '../redux/actions/auth';
-import { load_user } from '../redux/actions/auth';
+import { useSelector, useDispatch } from "react-redux";
+import Image from "next/image";
+import { logout } from "../redux/actions/auth";
+import { useRouter } from "next/router";
+import { check_auth_status } from "../redux/actions/auth";
+import { load_user } from "../redux/actions/auth";
 import { changePage } from "../modules/questions";
-import AlarmContainer from './AlarmContainer';
+import AlarmContainer from "./AlarmContainer";
 
 const Nav = styled.nav`
   min-width: 42.5rem;
@@ -38,7 +39,7 @@ const NavLeft = styled.div`
 `;
 
 const NavItem = styled.a`
-  font-family: 'Pretendard-SemiBold';
+  font-family: "Pretendard-SemiBold";
   display: flex;
   margin: 0.5rem 0.5rem;
   border-radius: 0.625rem;
@@ -51,7 +52,7 @@ const NavItem = styled.a`
 
   &:hover {
     color: #202020;
-    font-family: 'Pretendard-Bold';
+    font-family: "Pretendard-Bold";
     transition: all ease-in 200ms;
   }
 
@@ -110,15 +111,15 @@ const DropBox = styled.div`
 const DropList = styled.ul`
   list-style: none;
   line-height: 2rem;
-  font-family: 'Pretendard-Regular';
+  font-family: "Pretendard-Regular";
 `;
 
 const DropListItem = styled.li`
-  color: #B6B6B6;
+  color: #b6b6b6;
 
   &:hover {
     color: #343434;
-    font-family: 'Pretendard-Medium';
+    font-family: "Pretendard-Medium";
   }
 `;
 const LogoutButton = styled(DropList)`
@@ -128,41 +129,44 @@ const LogoutButton = styled(DropList)`
 function navBar() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-  const user = useSelector(state => state.auth.user);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const user = useSelector((state) => state.auth.user);
+
   const [open, setOpen] = useState({
     alarmOpen: false,
     profileOpen: false,
   });
   const [alarmData, setAlarmData] = useState([]);
+  const [profileImage, setProfileImage] = useState("");
   
-  const {alarmOpen, profileOpen} = open;
+  const { alarmOpen, profileOpen } = open;
 
   const logoutHandler = async () => {
     if (dispatch && dispatch !== null && dispatch !== undefined)
-    await dispatch(logout());
+      await dispatch(logout());
     router.push("/loginPage");
   };
 
   //계정설정 이동시 유저 데이터 넘겨주기
   useEffect(() => {
     if (dispatch && dispatch !== null && dispatch !== undefined) {
-      dispatch(load_user()); 
+      dispatch(load_user());
     }
-  }, [])
+  }, []);
 
-  const getAlarmList = async() => {
+  const getAlarmList = async () => {
     try {
       const apiRes = axios.get(``);
       if (apiRes.status === 200) {
         setAlarmData(apiRes.data);
       } else {
-        setAlarmData([])
+        setAlarmData([]);
       }
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
+
   return (
     <div>
       <Nav>
@@ -191,43 +195,68 @@ function navBar() {
         <NavRight>
           <Link href="/search" passHref>
             <NavItem>
-              <NavSearch height="1.5rem" width="1.375rem"/>
+              <NavSearch height="1.5rem" width="1.375rem" />
             </NavItem>
           </Link>
           {isAuthenticated ? (
             <>
               <Link href="/" passHref>
                 <NavItem>
-                  <Alarm onClick={() => {setOpen({...open, alarmOpen: !alarmOpen})}} />
+                  <Alarm
+                    onClick={() => {
+                      setOpen({ ...open, alarmOpen: !alarmOpen });
+                    }}
+                  />
                 </NavItem>
               </Link>
-              {alarmOpen && (<AlarmContainer />)}
+              {alarmOpen && <AlarmContainer />}
               {/* <Link href="/" passHref>
                 <NavItem>
                   <Directory />
                 </NavItem>
               </Link> */}
               <NavItem>
-                <ToggleContainer onClick={() => {setOpen({...open, profileOpen: !profileOpen})}}>
-                  <UserImg />
+                <ToggleContainer
+                  onClick={() => {
+                    setOpen({ ...open, profileOpen: !profileOpen });
+                  }}
+                > 
+                  {user?.user.user_profile_image ? (<><Image
+                    src={`http://localhost:8000${user.user.user_profile_image}`}
+                    width={50}
+                    height={50}
+                    alt="profileImage"
+                    quality={90}
+                    layout="fill"
+                    objectFit="cover"
+                  /></>) : null}
                   <ToggleBtn />
                 </ToggleContainer>
                 {profileOpen && (
-                <DropBox>
-                  <DropList> 
-                    <DropListItem><Link href="/questionCreate">새 글 작성</Link></DropListItem>
-                    <DropListItem><Link 
-                      // href={{
-                      //   pathname: `/accountSetting`,
-                      //   query: {user: JSON.stringify(user)},
-                      // }}
-                      // as={`/accountSetting`}
-                      href="/accountSetting"
-                      >계정설정</Link>
-                    </DropListItem>
-                    <DropListItem><LogoutButton onClick={logoutHandler}>로그아웃</LogoutButton></DropListItem>
-                  </DropList>
-                </DropBox>
+                  <DropBox>
+                    <DropList>
+                      <DropListItem>
+                        <Link href="/questionCreate">새 글 작성</Link>
+                      </DropListItem>
+                      <DropListItem>
+                        <Link
+                          // href={{
+                          //   pathname: `/accountSetting`,
+                          //   query: {user: JSON.stringify(user)},
+                          // }}
+                          // as={`/accountSetting`}
+                          href="/accountSetting"
+                        >
+                          계정설정
+                        </Link>
+                      </DropListItem>
+                      <DropListItem>
+                        <LogoutButton onClick={logoutHandler}>
+                          로그아웃
+                        </LogoutButton>
+                      </DropListItem>
+                    </DropList>
+                  </DropBox>
                 )}
               </NavItem>
             </>

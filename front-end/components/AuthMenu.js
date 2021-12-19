@@ -61,7 +61,7 @@ function AuthMenu({userData, isAuthenticated}) {
   //     console.log(err)
   //   }
   // }
-
+  console.log(userData);
   return (
     <>
       {userData?.user.id && (<>
