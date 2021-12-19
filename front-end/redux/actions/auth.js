@@ -273,19 +273,23 @@ export const reset_password = (email, username) => async dispatch => {
 
 
 export const reset_password_confirm = (newPW, confirmPW) => async dispatch => {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  };
   
   const body = JSON.stringify({newPW, confirmPW});
   
   try {
-    await axios.post(`${API_URL}/users/${userId}/password_reset_API/`, body, config);
-    dispatch({
-      type: PASSWORD_RESET_CONFIRM_SUCCESS
+    const apiRes = await axios.fetch(`api/account/reset_password_confirm`, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: body,
     });
+    console.log(apiRes, 'apiRes')
+    if (apiRes.ok || apiRes.status === 200) {
+      dispatch({
+        type: PASSWORD_RESET_CONFIRM_SUCCESS
+      });
+    }
   } catch (err) {
     dispatch({
       type: PASSWORD_RESET_CONFIRM_FAIL
