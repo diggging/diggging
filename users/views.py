@@ -49,6 +49,7 @@ from .serializers import (
     ChangedescSerializer,
     ChangeimageSerializer,
     ChangeNicknameSerializer,
+    InputEmailSerializer,
 )
 from rest_framework.response import Response
 from django.contrib.auth import login
@@ -85,10 +86,10 @@ from rest_framework_simplejwt.views import (
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
 # 회원가입
 # 아래 도메인은 이메일 인증 관련 도메인 바뀌면 my_site domain도 변경해주어야함.
-"""my_site = Site.objects.get(pk=1)
-my_site.domain = "diggging.com"
+my_site = Site.objects.get(pk=1)
+my_site.domain = "127.0.0.1"
 my_site.name = "digging_main"
-my_site.save()"""
+my_site.save()
 
 
 class Registration(generics.GenericAPIView):
@@ -237,17 +238,13 @@ class LogoutView(APIView):
 
 
 # 비밀번호를 모르겠을때, email을 작성하는 부분
-
-"""class Password_reset(APIView):
+class Password_reset(generics.GenericAPIView):
     # email 받으면
-    serializer_class = changePasswordsendEmailSerializer
+    serializer_class = InputEmailSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-
+        email = request.POST.get("email")
         username = request.POST.get("username")
-        email = serializer.get("email")
-        print(email)
         # email 이 존재하는 이메일인지 확인
         if User.objects.filter(email=email, username=username).exists():
             # 있으면 메일 보내기
@@ -267,14 +264,13 @@ class LogoutView(APIView):
             mail_subject = "Change your Password."
             email = EmailMessage(mail_subject, message, to=[email])
             email.send()
-            return HttpResponse(
-                '<div style="font-size: 40px; width: 100%; height:100%; display:flex; text-align:center; '
-                'justify-content: center; align-items: center;">'
-                "입력하신 이메일<span>로 인증 링크가 전송되었습니다.</span>"
-                "</div>"
-            )
+            return JsonResponse(status=status.HTTP_200_OK)
+        else:
+            # 없으면 없는 메일ㅇ이라고 하고 다시 redirect
+            return JsonResponse(status=status.HTTP_400_BAD_REQUEST)
 
 
+# 이메일 인증
 class Password_reset_email(APIView):
     def post(request, uidb64, token):
         try:
@@ -287,48 +283,15 @@ class Password_reset_email(APIView):
             ctx = {
                 "user": user,
             }
-            return redirect("users:password_reset_form", user.id)
+            return JsonResponse(user.id, status=status.HTTP_200_OK)
         else:
             ctx = {"user": user}
-            return render(
-                request, template_name="password_email_fail.html", context=ctx
-            )
+            return JsonResponse(request, ctx, status=status.HTTP_400_BAD_REQUEST)
 
 
 class Password_reset_form(APIView):
-    serializer_class = ChangePasswordSerializer
-    model = User
-    permission_classes = IsAuthenticated
-
-    def get_object(self, queryset=None):
-        obj = self.request.user
-        return obj
-
-    def update(self, request, pk):
-        self.object = self.get_object()
-        serializer = self.get_serializer(data=request.data)
-
-        if serializer.is_valid():
-            if not self.object.check_password(serializer.data.get("old_password")):
-                return Response(
-                    {"old_password": ["Wrong password"]},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-            self.object.set_password(serializer.data.get("new_password"))
-            self.object.save()
-
-            ctx = {
-                "status": "success",
-                "code": status.HTTP_200_OK,
-                "message": "Password updated successfully",
-                "data": [],
-            }
-            return Response(ctx)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-"""
-"""
-user = get_object_or_404(User, pk=pk)
+    def post(request, pk):
+        user = get_object_or_404(User, pk=pk)
         if request.method == "POST":
             new_password = request.POST.get("password1")
             password_confirm = request.POST.get("password2")
@@ -338,12 +301,10 @@ user = get_object_or_404(User, pk=pk)
                 login(
                     request, user, backend="django.contrib.auth.backends.ModelBackend"
                 )
-                return redirect("users:login")
+                return JsonResponse(status=status.HTTP_200_OK)
         ctx = {"user": user}
-        return render(
-            request, template_name="users/password_reset_form.html", context=ctx
-        )
-"""
+        return JsonResponse(request, status=status.HTTP_200_OK, context=ctx)
+
 
 # _______________________________________________social login____________________________________________
 # github login

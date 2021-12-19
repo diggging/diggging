@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import user_passes_test
 from django.db.models.fields import EmailField
 from rest_framework import fields, serializers, exceptions, status
 from rest_framework.exceptions import ValidationError
@@ -37,7 +38,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class RegisterSerializer(RegisterSerializer):
 
-    user_nickname = serializers.CharField()
+    user_nickname = serializers.CharField(max_length=7, min_length=4)
     email = serializers.EmailField()
     password1 = serializers.CharField(style={"input_type": "password"}, write_only=True)
     password2 = serializers.CharField(style={"input_type": "password"}, write_only=True)
@@ -176,5 +177,15 @@ class ChangeNicknameSerializer(serializers.ModelSerializer):
             )
             instance.save()
         else:
+
             raise serializers.ValidationError({"nickname": "7글자 이하로 입력하세요."})
         return instance
+
+
+class InputEmailSerializer(serializers.ModelSerializer):
+    email = serializers.CharField()
+    username = serializers.CharField()
+
+    class Meta:
+        model = User
+        fields = ["email", "username"]
