@@ -130,7 +130,7 @@ class Registration(generics.GenericAPIView):
                 # 디폴트 정보 context는 request, view, format
                 "user": UserSerializer(user, context=self.get_serializer_context()).data
             },
-            status=status.HTTP_201_CREATED,
+            status=status.HTTP_200_OK,
         )
 
 
@@ -238,7 +238,7 @@ class LogoutView(APIView):
 
 
 # 비밀번호를 모르겠을때, email을 작성하는 부분
-"""class Password_reset(generics.GenericAPIView):
+class Password_reset(generics.GenericAPIView):
     # email 받으면
     serializer_class = InputEmailSerializer
 
@@ -246,9 +246,14 @@ class LogoutView(APIView):
         serializer = self.get_serializer(data=request.data)
         current_site = get_current_site(request)
         # email 이 존재하는 이메일인지 확인
-        if serializer.is_valid(raise_exception=True)
+        if not serializer.is_valid(raise_exception=True):
+            return Response({"message": "이미 존재함"}, status=status.HTTP_409_CONFLICT)
+        else:
             # 있으면 메일 보내기
-            user = User.objects.get(email=email, username=username)
+            user = User.objects.get(
+                email=self.request.data.get("email"),
+                username=self.request.data.get("username"),
+            )
             current_site = get_current_site(request)
             message = render_to_string(
                 "users/password_reset_email.html",
@@ -262,31 +267,36 @@ class LogoutView(APIView):
             )
             # sending mail to future user
             mail_subject = "Change your Password."
-            email = EmailMessage(mail_subject, message, to=[email])
+            email = EmailMessage(
+                mail_subject, message, to=[self.request.data.get("email")]
+            )
             email.send()
-            return JsonResponse(status=status.HTTP_200_OK)
-        else:
-            # 없으면 없는 메일ㅇ이라고 하고 다시 redirect
-            return JsonResponse(status=status.HTTP_400_BAD_REQUEST)
-"""
+            return Response(
+                {
+                    "user": UserSerializer(
+                        user, context=self.get_serializer_context()
+                    ).data
+                },
+                status=status.HTTP_200_OK,
+            )
+
 
 # 이메일 인증
-class Password_reset_email(APIView):
-    def post(request, uidb64, token):
-        try:
-            uid = force_text(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            user = None
-        # 잘 넘어오면
-        if user is not None and password_reset_token.check_token(user, token):
-            ctx = {
-                "user": user,
-            }
-            return JsonResponse(user.id, status=status.HTTP_200_OK)
-        else:
-            ctx = {"user": user}
-            return JsonResponse(request, ctx, status=status.HTTP_400_BAD_REQUEST)
+def password_reset_email(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    # 잘 넘어오면
+    if user is not None and password_reset_token.check_token(user, token):
+        ctx = {
+            "user": user,
+        }
+        return redirect("users:password_reset_form", user.id)
+    else:
+        ctx = {"user": user}
+        return render(request, template_name="password_email_fail.html", context=ctx)
 
 
 class Password_reset_form(APIView):

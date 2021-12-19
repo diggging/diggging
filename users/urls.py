@@ -37,7 +37,7 @@ urlpatterns = [
     path("password_reset/", view=views.Password_reset.as_view(), name="password_reset"),
     path(
         "password_reset_email/<slug:uidb64>/<slug:token>/",
-        view=views.Password_reset_email.as_view(),
+        views.password_reset_email,
         name="password_reset_email",
     ),
     path(

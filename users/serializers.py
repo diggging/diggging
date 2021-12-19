@@ -17,6 +17,16 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 
+try:
+    from allauth.account import app_settings as allauth_settings
+    from allauth.utils import email_address_exists, get_username_max_length
+    from allauth.account.adapter import get_adapter
+    from allauth.account.utils import setup_user_email
+    from allauth.socialaccount.helpers import complete_social_login
+    from allauth.socialaccount.models import SocialAccount
+    from allauth.socialaccount.providers.base import AuthProcess
+except ImportError:
+    raise ImportError("allauth needs to be added to INSTALLED_APPS.")
 JWT_PAYLOAD_HANDLER = api_settings.JWT_PAYLOAD_HANDLER
 JWT_ENCODE_HANDLER = api_settings.JWT_ENCODE_HANDLER
 User = get_user_model()
@@ -183,9 +193,15 @@ class ChangeNicknameSerializer(serializers.ModelSerializer):
 
 
 class InputEmailSerializer(serializers.ModelSerializer):
-    email = serializers.CharField()
-    username = serializers.CharField()
+    email = serializers.CharField(required=allauth_settings.EMAIL_REQUIRED)
+    username = serializers.CharField(
+        required=allauth_settings.USERNAME_REQUIRED,
+    )
 
     class Meta:
         model = User
         fields = ["email", "username"]
+
+        def get_cleaned_data(self):
+            data_dict = super().get_cleaned_data()
+            return data_dict
