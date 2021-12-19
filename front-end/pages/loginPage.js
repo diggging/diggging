@@ -40,7 +40,10 @@ function loginPage() {
     }
   }, [dispatch])
 
-
+  if (isAuthenticated) {
+    router.push('/')
+  }
+  
   const onInput = useCallback(e => {
     setInputs({
       ...inputs,

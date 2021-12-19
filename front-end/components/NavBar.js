@@ -14,13 +14,14 @@ import AuthMenu from "./AuthMenu";
 function navBar() {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+  const userData = useSelector(state => state.auth.user);
 
   //계정설정 이동시 유저 데이터 넘겨주기
   useEffect(() => {
     if (dispatch && dispatch !== null && dispatch !== undefined) {
-      dispatch(load_user()); 
-    }
-  }, [dispatch])
+      dispatch(check_auth_status()); 
+    } 
+  }, [])
 
   return (
     <div>
@@ -53,9 +54,9 @@ function navBar() {
               <NavSearch height="1.5rem" width="1.375rem"/>
             </NavItem>
           </Link>
-          {isAuthenticated ? ( <>asdasd</>
-            // <AuthMenu /> 
-          ) : (
+          { isAuthenticated ?
+          (<AuthMenu userData={userData} isAuthenticated={isAuthenticated}/>)
+          : (
             <>
               <Link href="/loginPage" passHref>
                 <NavItem>로그인</NavItem>
