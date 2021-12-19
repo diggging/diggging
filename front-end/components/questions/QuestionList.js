@@ -89,14 +89,17 @@ const TitleHashContainer = styled.div`
 `;
 
 const ListTitle = styled.div`
-  width: 23.3819rem;
-  height: 1.5rem;
+  width: 100%;
+  /* height: 1.5rem; */
   font-family: Noto Sans KR;
   font-style: normal;
   font-weight: 500;
   font-size: 1.25rem;
   line-height: 1.8125rem;
   color: #343434;
+  display: flex;
+  align-items: center;
+  margin-right: 0;
 `;
 
 const ListHashContainer = styled.div`

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import "@toast-ui/editor/dist/toastui-editor.css";
@@ -14,10 +14,14 @@ function ToastUiUpdate({id, title, desc, tags, token }) {
   const dispatch = useDispatch();
   const editorRef = useRef();
   const content = useSelector((state) => state.content.desc);
+  const [descState, setDescState] = useState(desc);
 
   const onChange = () => {
     const editorData = editorRef.current.getInstance().getHTML();
     dispatch(setDesc(editorData));
+    if(editorData === null) {
+      dispatch(setDesc(desc));
+    }
   };
 
   const handleUpdate = async () => {
