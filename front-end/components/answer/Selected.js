@@ -2,8 +2,11 @@ import React from 'react';
 import axios from "axios";
 import styled from 'styled-components';
 import { API_URL } from '../../config';
+import { useRouter } from "next/router";
 
-function Selected({setIsOpen, id, token}) {
+
+function Selected({setIsOpen, id, token, questionId}) {
+  const router = useRouter();
 
   const selectAnswer = async (id) => {
     try {
@@ -13,6 +16,7 @@ function Selected({setIsOpen, id, token}) {
         .put(`${API_URL}/questions/${id}/select_answer/`)
         .then((response) => {
           setIsOpen(false);
+          router.reload(`/questions/${questionId}`);
         });
     } catch (e) {
       console.log(e);

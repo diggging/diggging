@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef,useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import Prism from 'prismjs';
@@ -23,10 +23,7 @@ function ToastAnswerUpdate({id, title, desc, token, questionId }) {
 
   const onChange = () => {
     const editorData = editorRef.current.getInstance().getHTML();
-    dispatch(setDesc(editorData));
-    if(editorData === null) {
-      dispatch(setDesc(desc));
-    }
+    setDescState(editorData);
   };
 
   const handleUpdate = async () => {
@@ -36,7 +33,7 @@ function ToastAnswerUpdate({id, title, desc, token, questionId }) {
       await axios
         .put(`${API_URL}/questions/${id}/answer_update/`, {
           title: title,
-          desc: content,
+          desc: descState,
         })
         .then((response) => {
           router.push(`/questions/${questionId}`);
@@ -61,7 +58,6 @@ function ToastAnswerUpdate({id, title, desc, token, questionId }) {
         autofocus={false}
         ref={editorRef}
         onChange={() => onChange()}
-        language="ko"
         events={{
           focus: () => {
             console.log("⭐ focus");

@@ -12,7 +12,6 @@ function Mine() {
   const [token, setToken] = useState(""); 
 
   const test = useSelector((state) => state.questions);
-  console.log(test);
   
   const getAccessToken = async () => {
     if (dispatch && dispatch !== null && dispatch !== undefined) {
@@ -30,7 +29,6 @@ function Mine() {
   useEffect(() => {
     getAccessToken();  
     dispatch(setMine(1, "all", token));  
-    console.log("mine입니다");
   }, [dispatch, token]);
   
   return (
