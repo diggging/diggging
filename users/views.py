@@ -254,13 +254,14 @@ class Password_reset(generics.GenericAPIView):
                 email=self.request.data.get("email"),
                 username=self.request.data.get("username"),
             )
+            user_data = serializer.data
             current_site = get_current_site(request)
             message = render_to_string(
                 "users/password_reset_email.html",
                 {
                     "user": user,
                     "domain": current_site.domain,
-                    "domain": my_site.domain,
+                    # "domain": my_site.domain,
                     "uid": urlsafe_base64_encode(force_bytes(user.pk)),
                     "token": password_reset_token.make_token(user),
                 },
@@ -271,14 +272,7 @@ class Password_reset(generics.GenericAPIView):
                 mail_subject, message, to=[self.request.data.get("email")]
             )
             email.send()
-            return Response(
-                {
-                    "user": UserSerializer(
-                        user, context=self.get_serializer_context()
-                    ).data
-                },
-                status=status.HTTP_200_OK,
-            )
+            return Response(user_data, status=status.HTTP_200_OK)
 
 
 # 이메일 인증
@@ -293,13 +287,15 @@ def password_reset_email(request, uidb64, token):
         ctx = {
             "user": user,
         }
-        return redirect("users:password_reset_form", user.id)
+        return redirect(
+            "http://localhost:3000/users/password_reset_confirm/uid64/token", user.id
+        )
     else:
         ctx = {"user": user}
         return render(request, template_name="password_email_fail.html", context=ctx)
 
 
-class Password_reset(generics.RetrieveUpdateAPIView):
+class Password_resetAPI(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = Unlogin_ChangePasswordSerializer
 
