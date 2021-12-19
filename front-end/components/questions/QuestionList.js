@@ -87,15 +87,23 @@ const TitleHashContainer = styled.div`
 const ListTitle = styled.div`
   width: 100%;
   /* height: 1.5rem; */
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: 500;
+  font-family: 'Pretendard-SemiBold';
   font-size: 1.25rem;
   line-height: 1.8125rem;
   color: #343434;
   display: flex;
   align-items: center;
   margin-right: 0;
+  margin-bottom: 0.6rem;
+
+  min-width: 36.125rem;
+
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
 
 const ListHashContainer = styled.div`
@@ -121,6 +129,11 @@ const ListHash = styled.div`
   line-height: 1rem;
   text-align: right;
   color: #7A7A7A;
+  border-radius: 1.25rem;
+  background-color: #F1EFE9;
+  font-family: 'Pretendard-SemiBold';
+  font-size: 0.625rem;
+  line-height: 1;
 `;
 
 const ProfileContainer = styled.div`
@@ -138,13 +151,19 @@ const ProfileImg = styled.div`
 `;
 
 const ProfileName = styled.div`
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 16px;
+  font-family: 'Pretendard-Medium';
+  font-size: 0.875rem;
+  color: #8C8D8D;
   text-align: center;
-  color: #212529;
+  line-height: 16px;
+  
+  min-width: 
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
 
 const DescContainer = styled.div`
@@ -158,6 +177,14 @@ const DescContainer = styled.div`
   color: #8d8c85;
   overflow: hidden;
   margin-top: 19px;
+  height: 6.75rem;
+  
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 4; //4줄이면 자르기
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
 
 const FlexContainer = styled.div`
@@ -174,10 +201,8 @@ const BottomContainer = styled.div`
 
 const BottomText = styled.div`
   height: 16px;
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 12px;
+  font-family: 'Pretendard-Regular';
+  font-size: 0.6rem;
   line-height: 16px;
   text-align: right;
   margin-left: 5px;

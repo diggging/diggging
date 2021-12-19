@@ -76,7 +76,7 @@ export default DetailLike;
 const Container = styled.div`
     position: fixed;
     right: 2%;
-    top: 6%;
+    top: 10%;
 `;
 
 const ElementContainer = styled.div`

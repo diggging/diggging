@@ -223,7 +223,7 @@ const TabItemContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 20px;
+  padding: 1rem 1.25rem;
   margin-top: 98px;
   position: relative;
   margin-bottom: 46px;
@@ -236,6 +236,7 @@ const TabContainer = styled.div`
 `;
 
 const Tab = styled.div`
+  font-family: 'Pretendard-Medium';
   width: 130px;
   height: 53px;
   color: #898a90;
@@ -248,7 +249,8 @@ const Tab = styled.div`
   /* margin-right: 30px; */
 
   &:hover {
-    color: black;
+    color: #343434;
+    font-family: 'Pretendard-SemiBold';
   }
 `;
 
@@ -258,6 +260,9 @@ const QuestionsContainer = styled.div`
 `;
 
 const ToggleContainer = styled.button`
+  font-size: 1rem;
+  font-family: 'Pretendard-Bold';
+  color: #343434;
   background: white;
   width: 8.25rem;
   height: 2.5rem;
@@ -267,11 +272,7 @@ const ToggleContainer = styled.button`
   align-items: center;
   -webkit-box-pack: justify;
   justify-content: center;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-  font-weight: 600;
   color: rgb(73, 80, 87);
-  font-size: 0.875rem;
   box-shadow: rgb(0 0 0 / 5%) 0px 0px 4px;
   cursor: pointer;
       <ImageContainer>
@@ -299,16 +300,16 @@ const DropList = styled.ul`
   text-align: center;
   list-style: none;
   line-height: 2rem;
-  font-family: "Pretendard-Regular";
 `;
 
 const DropListItem = styled.li`
-  color: #b6b6b6;
-  padding: 5px 10px;
+  padding: 0.625rem 1.5rem;
   cursor: pointer;
+  font-family: "Pretendard-Bold";
+  color: #343434;
+  font-size: 0.875rem;
 
   &:hover {
-    color: #343434;
-    font-family: "Pretendard-Medium";
+    color: #FFBA42;
   }
 `;
