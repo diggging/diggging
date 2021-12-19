@@ -53,6 +53,8 @@ function AnswersList({ answer, user, token, questionId, questionUserId }) {
     ssr: false,
   });
 
+  console.log(answer);
+
   return (
     <>
       <MainContainer>
@@ -99,7 +101,7 @@ function AnswersList({ answer, user, token, questionId, questionUserId }) {
           </DescContainer>
 
           <FlexContainer>
-            {questionUserId === user?.user?.id ? (
+            {questionUserId === user?.user?.id && answer.selection === false? (
               <>
                 {isOpen === true ? (
                   <>
@@ -107,6 +109,7 @@ function AnswersList({ answer, user, token, questionId, questionUserId }) {
                       setIsOpen={setIsOpen}
                       id={answer.id}
                       token={token}
+                      questionId={answer.question}
                     />
                   </>
                 ) : null}
