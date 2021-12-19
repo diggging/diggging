@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import user_passes_test
 from django.db.models.fields import EmailField
 from rest_framework import fields, serializers, exceptions, status
 from rest_framework.exceptions import ValidationError
@@ -16,6 +17,16 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 
+try:
+    from allauth.account import app_settings as allauth_settings
+    from allauth.utils import email_address_exists, get_username_max_length
+    from allauth.account.adapter import get_adapter
+    from allauth.account.utils import setup_user_email
+    from allauth.socialaccount.helpers import complete_social_login
+    from allauth.socialaccount.models import SocialAccount
+    from allauth.socialaccount.providers.base import AuthProcess
+except ImportError:
+    raise ImportError("allauth needs to be added to INSTALLED_APPS.")
 JWT_PAYLOAD_HANDLER = api_settings.JWT_PAYLOAD_HANDLER
 JWT_ENCODE_HANDLER = api_settings.JWT_ENCODE_HANDLER
 User = get_user_model()
@@ -37,7 +48,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class RegisterSerializer(RegisterSerializer):
 
-    user_nickname = serializers.CharField()
+    user_nickname = serializers.CharField(max_length=7, min_length=4)
     email = serializers.EmailField()
     password1 = serializers.CharField(style={"input_type": "password"}, write_only=True)
     password2 = serializers.CharField(style={"input_type": "password"}, write_only=True)
@@ -177,5 +188,50 @@ class ChangeNicknameSerializer(serializers.ModelSerializer):
             )
             instance.save()
         else:
+
             raise serializers.ValidationError({"nickname": "7글자 이하로 입력하세요."})
+        return instance
+
+
+class InputEmailSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(required=allauth_settings.EMAIL_REQUIRED)
+    username = serializers.CharField(
+        required=allauth_settings.USERNAME_REQUIRED,
+    )
+
+    class Meta:
+        model = User
+        fields = ["email", "username"]
+
+        def get_cleaned_data(self):
+            data_dict = super().get_cleaned_data()
+            return data_dict
+
+
+class Unlogin_ChangePasswordSerializer(serializers.ModelSerializer):
+    new_password = serializers.CharField(
+        style={"input_type": "password"}, write_only=True
+    )
+    password_confirm = serializers.CharField(
+        style={"input_type": "password"}, write_only=True
+    )
+
+    class Meta:
+        model = User
+        fields = ("new_password", "password_confirm")
+
+    def validate(self, attrs):
+        if attrs["new_password"] != attrs["password_confirm"]:
+            raise serializers.ValidationError({"password": "패스워드를 재확인하세요"})
+        return attrs
+
+    def update(self, instance, validated_data):
+        if (
+            len(validated_data["new_password"]) >= 8
+            or len(validated_data["password_confirm"]) >= 8
+        ):
+            instance.set_password(validated_data["password_confirm"])
+            instance.save()
+        else:
+            raise serializers.ValidationError({"password": "8자리 이상 입력하세요."})
         return instance

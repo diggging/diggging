@@ -49,6 +49,8 @@ from .serializers import (
     ChangedescSerializer,
     ChangeimageSerializer,
     ChangeNicknameSerializer,
+    InputEmailSerializer,
+    Unlogin_ChangePasswordSerializer,
 )
 from rest_framework.response import Response
 from django.contrib.auth import login
@@ -129,7 +131,7 @@ class Registration(generics.GenericAPIView):
                 # 디폴트 정보 context는 request, view, format
                 "user": UserSerializer(user, context=self.get_serializer_context()).data
             },
-            status=status.HTTP_201_CREATED,
+            status=status.HTTP_200_OK,
         )
 
 
@@ -236,113 +238,71 @@ class LogoutView(APIView):
 
 
 # 비밀번호를 모르겠을때, email을 작성하는 부분
-
-"""class Password_reset(APIView):
+class Password_reset(generics.GenericAPIView):
     # email 받으면
-    serializer_class = changePasswordsendEmailSerializer
+    serializer_class = InputEmailSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-
-        username = request.POST.get("username")
-        email = serializer.get("email")
-        print(email)
+        current_site = get_current_site(request)
         # email 이 존재하는 이메일인지 확인
-        if User.objects.filter(email=email, username=username).exists():
+        if not serializer.is_valid(raise_exception=True):
+            return Response({"message": "이미 존재함"}, status=status.HTTP_409_CONFLICT)
+        else:
             # 있으면 메일 보내기
-            user = User.objects.get(email=email, username=username)
+            user = User.objects.get(
+                email=self.request.data.get("email"),
+                username=self.request.data.get("username"),
+            )
             current_site = get_current_site(request)
             message = render_to_string(
                 "users/password_reset_email.html",
                 {
                     "user": user,
-                    #'domain': current_site.domain,
-                    #'domain': my_site.domain,
+                    "domain": current_site.domain,
+                    "domain": my_site.domain,
                     "uid": urlsafe_base64_encode(force_bytes(user.pk)),
                     "token": password_reset_token.make_token(user),
                 },
             )
             # sending mail to future user
             mail_subject = "Change your Password."
-            email = EmailMessage(mail_subject, message, to=[email])
+            email = EmailMessage(
+                mail_subject, message, to=[self.request.data.get("email")]
+            )
             email.send()
-            return HttpResponse(
-                '<div style="font-size: 40px; width: 100%; height:100%; display:flex; text-align:center; '
-                'justify-content: center; align-items: center;">'
-                "입력하신 이메일<span>로 인증 링크가 전송되었습니다.</span>"
-                "</div>"
+            return Response(
+                {
+                    "user": UserSerializer(
+                        user, context=self.get_serializer_context()
+                    ).data
+                },
+                status=status.HTTP_200_OK,
             )
 
 
-class Password_reset_email(APIView):
-    def post(request, uidb64, token):
-        try:
-            uid = force_text(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            user = None
-        # 잘 넘어오면
-        if user is not None and password_reset_token.check_token(user, token):
-            ctx = {
-                "user": user,
-            }
-            return redirect("users:password_reset_form", user.id)
-        else:
-            ctx = {"user": user}
-            return render(
-                request, template_name="password_email_fail.html", context=ctx
-            )
-
-
-class Password_reset_form(APIView):
-    serializer_class = ChangePasswordSerializer
-    model = User
-    permission_classes = IsAuthenticated
-
-    def get_object(self, queryset=None):
-        obj = self.request.user
-        return obj
-
-    def update(self, request, pk):
-        self.object = self.get_object()
-        serializer = self.get_serializer(data=request.data)
-
-        if serializer.is_valid():
-            if not self.object.check_password(serializer.data.get("old_password")):
-                return Response(
-                    {"old_password": ["Wrong password"]},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-            self.object.set_password(serializer.data.get("new_password"))
-            self.object.save()
-
-            ctx = {
-                "status": "success",
-                "code": status.HTTP_200_OK,
-                "message": "Password updated successfully",
-                "data": [],
-            }
-            return Response(ctx)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-"""
-"""
-user = get_object_or_404(User, pk=pk)
-        if request.method == "POST":
-            new_password = request.POST.get("password1")
-            password_confirm = request.POST.get("password2")
-            if new_password == password_confirm and len(new_password) >= 8:
-                user.set_password(new_password)
-                user.save()
-                login(
-                    request, user, backend="django.contrib.auth.backends.ModelBackend"
-                )
-                return redirect("users:login")
+# 이메일 인증
+def password_reset_email(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    # 잘 넘어오면
+    if user is not None and password_reset_token.check_token(user, token):
+        ctx = {
+            "user": user,
+        }
+        return redirect("users:password_reset_form", user.id)
+    else:
         ctx = {"user": user}
-        return render(
-            request, template_name="users/password_reset_form.html", context=ctx
-        )
-"""
+        return render(request, template_name="password_email_fail.html", context=ctx)
+
+
+class Password_reset(generics.RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = Unlogin_ChangePasswordSerializer
+
 
 # _______________________________________________social login____________________________________________
 # github login
