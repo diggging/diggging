@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
@@ -10,10 +10,10 @@ function QuestionList({ data, count }) {
   
   const dispatch = useDispatch();
   const { page, bigCriteria, smallCriteria, loading, error, mineToken} = useSelector((state) => state.questions);
+  const [removeTagDesc, setRemoveTagDesc] = useState([]);
 
   const postPage = (page) => {
     dispatch(setPage(page));
-
     if(bigCriteria !== undefined) {
       dispatch(setQuestion(page, bigCriteria, smallCriteria));
     } else if (bigCriteria === undefined) {
@@ -24,7 +24,8 @@ function QuestionList({ data, count }) {
   return (
     <div>
       <ul>
-        {data.map((list) => (
+        {removeTagDesc.length > 0 ? (<></>) : null}
+        {data && data.map((list) => (
           <Link href={`/questions/${list.id}`} passHref>
             <ListContainer key={list.id}>
               <FlexContainer>
@@ -41,14 +42,11 @@ function QuestionList({ data, count }) {
                   <ProfileImg></ProfileImg>
                   <ProfileName>{list.user.user_nickname}</ProfileName>
                 </ProfileContainer>
+
               </FlexContainer>
 
-              <DescContainer>{list.desc.slice(0, 315)}</DescContainer>
-
+              <DescContainer>{list.desc.replace(/(<([^>]+)>)/ig,"").slice(0, 315)}</DescContainer>
               <BottomContainer>
-                {/* <BottomText>
-                  <Like />
-                </BottomText> */}
                 <Like />
                 <BottomText>
                   {list.helped_num}
@@ -60,8 +58,6 @@ function QuestionList({ data, count }) {
                   {list.comment_count}
                 </BottomText>
               </BottomContainer>
-
-              
             </ListContainer>
           </Link>
         ))}

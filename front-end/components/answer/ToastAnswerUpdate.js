@@ -14,10 +14,14 @@ function ToastAnswerUpdate({id, title, desc, token, questionId }) {
   const dispatch = useDispatch();
   const editorRef = useRef();
   const content = useSelector((state) => state.content.desc);
+  const [descState, setDescState] = useState(desc);
 
   const onChange = () => {
     const editorData = editorRef.current.getInstance().getHTML();
     dispatch(setDesc(editorData));
+    if(editorData === null) {
+      dispatch(setDesc(desc));
+    }
   };
 
   const handleUpdate = async () => {

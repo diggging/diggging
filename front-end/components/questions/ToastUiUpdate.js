@@ -18,6 +18,7 @@ function ToastUiUpdate({id, title, desc, tags, token }) {
 
   const onChange = () => {
     const editorData = editorRef.current.getInstance().getHTML();
+    console.log(editorData)
     dispatch(setDesc(editorData));
     if(editorData === null) {
       dispatch(setDesc(desc));
@@ -46,6 +47,9 @@ function ToastUiUpdate({id, title, desc, tags, token }) {
     }
   };
 
+  const removeHtml = (text) => {
+    text.replace(/(<([^>]+)>)/ig,"");
+  }
   return (
     <>
       <Editor
@@ -57,6 +61,7 @@ function ToastUiUpdate({id, title, desc, tags, token }) {
         autofocus={false}
         ref={editorRef}
         onChange={() => onChange()}
+        customHTMLSanitizer={() => removeHtml(desc)}
         language="ko"
         events={{
           focus: () => {
