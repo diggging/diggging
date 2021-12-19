@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "svg": "svgr -d public/static/images public/static/images/svg"
+    "svg": "svgr -d public/static/images public/static/images/svg",
+    "vercel-deploy": "next build && next export"
   },
   "dependencies": {
     "@svgr/cli": "^6.1.0",

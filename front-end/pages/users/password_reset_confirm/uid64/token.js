@@ -34,7 +34,7 @@ function ResetPassword({match, reset_password_confirm}) {
     const token = match.params.token;
 
 
-    reset_password_confirm(uid, token, newPW, confirmPW);
+    reset_password_confirm(newPW, confirmPW, userId);
     setRequestSent(true)
   }
   return (

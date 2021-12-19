@@ -22,7 +22,7 @@ import {
   PASSWORD_RESET_CONFIRM_SUCCESS,
 } from './types';
 import {API_URL} from '../../config/index';
-
+import axios from 'axios';
 //유저정보 불러오기
 export const load_user = () => async dispatch => {
   try {
@@ -244,27 +244,26 @@ export const logout = () => async dispatch => {
 
 //PASSWORD찾기에서의 reset_password
 //email보내주기
-export const reset_password = (email) => async (dispatch) => {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  };
-
-  const body = JSON.stringify({email});
+export const reset_password = (email, username) => async (dispatch) => {
+  
+  const body = JSON.stringify({email, username});
 
   try {
-    await axios.post(`${API_URL}/users/password_reset`, {
+    const apiRes = await axios.post(`/api/account/reset_password/`,  {
+      email: email,
+      username: username,
+    }, {
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: body,
-    });
-    
-    dispatch({
-      type: PASSWORD_RESET_SUCCESS
+        "Accept": "application/json",
+      }
     })
+
+    const data = await apiRes.json();
+    if (apiRes.ok || apiRes === 200) {
+      dispatch({
+        type: PASSWORD_RESET_SUCCESS
+      })
+    } 
   } catch (err) {
     dispatch({
       type: PASSWORD_RESET_FAIL
@@ -272,17 +271,20 @@ export const reset_password = (email) => async (dispatch) => {
   }
 };
 
-export const reset_password_confirm = (uid, token, newPW, confirmPW) => async dispatch => {
+
+
+
+export const reset_password_confirm = (newPW, confirmPW) => async dispatch => {
   const config = {
     headers: {
       'Content-Type': 'application/json'
     }
   };
   
-  const body = JSON.stringify({uid, token, newPW, confirmPW});
+  const body = JSON.stringify({newPW, confirmPW});
   
   try {
-    await axios.post(`${API_URL}/users/password_reset_confirm/`, body, config);
+    await axios.post(`${API_URL}/users/${userId}/password_reset_API/`, body, config);
     dispatch({
       type: PASSWORD_RESET_CONFIRM_SUCCESS
     });

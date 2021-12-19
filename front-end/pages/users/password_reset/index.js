@@ -14,26 +14,35 @@ import NavBar from '../../../components/NavBar';
 function findPassword() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [email, setEmail] = useState('');
+  const [inputs, setInputs] = useState({
+    email: '',
+    username: '',
+  });
   const [requestSent, setRequestSent] = useState(false)
 
   const onInput = (e) => {
-    setEmail(e.target.value);
+    const {name, value} = e.target;
+    setInputs({
+      ...inputs,
+      [name]: value,
+    })
   }
 
-  //API주소 과연맞는가... 404에러뜬다
+  const {email, username} = inputs;
+
   const onSubmitEmail = async (e) => {
+    console.log(email, username)
     e.preventDefault();
-
-    if (dispatch && dispatch !== null && dispatch !== undefined) {
-      dispatch(reset_password(email))
-      .then((res) => {alertService.warn(res, 'gkdl')
-      router.push('/users/password_reset/done/')}
-      )
-      .catch((err)=>alertService.warn(err))
-    }
-    setRequestSent(true);
+    dispatch(reset_password(email, username))
+    .then((res) => alertService.warn(res))
+    .catch((err) => alertService.warn(err))
+      // if (apiRes.status === 200) {
+      //   alertService.warn('이메일이 전송되었습니다.')
+      //   // router.push('/users/password_reset/done/')
+      //   setRequestSent(true);
+      // }
   }
+  
   
   return (
     <>
@@ -45,6 +54,7 @@ function findPassword() {
         <GuideMessage>가입하신 이메일을 입력하시면 해당 주소로 비밀번호 변경 링크를 보내드립니다.</GuideMessage>
           <YellowTitle fontSize="1.375rem" >이메일</YellowTitle>
           <GreyInput
+            name="email"
             width="28.75rem"
             height="3.125rem"
             marginRight="2.875rem"
@@ -53,6 +63,18 @@ function findPassword() {
             placeholder="이메일"
             onChange={(e) => onInput(e)}
             value={email}
+            required
+          />
+          <YellowTitle fontSize="1.375rem" >아이디</YellowTitle>
+          <GreyInput
+            name="username"
+            width="28.75rem"
+            height="3.125rem"
+            marginRight="2.875rem"
+            marginLeft="2.75rem"
+            placeholder="아이디"
+            onChange={(e) => onInput(e)}
+            value={username}
             required
           />
           <YellowButton type="submit" paddingTop="0.9375rem" paddingRight="2.1875rem">전송</YellowButton>
@@ -67,6 +89,8 @@ const FormBox = styled.form`
   margin-top: 11.25rem;
   position: relative;
 `;
+
+
 
 const PageTitle = styled.span`
   font-family: 'Pretendard-Bold';
