@@ -82,13 +82,14 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
 )
+from django.core.mail import EmailMultiAlternatives
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
 # 회원가입
 # 아래 도메인은 이메일 인증 관련 도메인 바뀌면 my_site domain도 변경해주어야함.
 my_site = Site.objects.get(pk=1)
-my_site.domain = "127.0.0.1"
+my_site.domain = "localhost:3000"
 my_site.name = "digging_main"
 my_site.save()
 
@@ -187,7 +188,8 @@ def activate(request, uidb64, token):
 
 
 # 유저정보 api
-@permission_classes([AllowAny])
+
+
 class LoadUserView(APIView):
     def get(self, request, format=None):
         try:
@@ -268,10 +270,10 @@ class Password_reset(generics.GenericAPIView):
             )
             # sending mail to future user
             mail_subject = "Change your Password."
-            email = EmailMessage(
+            msg = EmailMultiAlternatives(
                 mail_subject, message, to=[self.request.data.get("email")]
             )
-            email.send()
+            msg.send()
             return Response(
                 {
                     "user": UserSerializer(
@@ -280,9 +282,12 @@ class Password_reset(generics.GenericAPIView):
                 },
                 status=status.HTTP_200_OK,
             )
+            "users:password_reset_form", user.id
 
 
 # 이메일 인증
+
+
 def password_reset_email(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
@@ -294,13 +299,13 @@ def password_reset_email(request, uidb64, token):
         ctx = {
             "user": user,
         }
-        return redirect("users:password_reset_form", user.id)
+        return redirect("users:password_reset_API", user.id)
     else:
         ctx = {"user": user}
         return render(request, template_name="password_email_fail.html", context=ctx)
 
 
-class Password_reset(generics.RetrieveUpdateAPIView):
+class Password_resetAPI(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = Unlogin_ChangePasswordSerializer
 
