@@ -6,8 +6,11 @@ import LinkDetail from "../../public/static/images/LinkDetail";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useRouter } from "next/router";
 import {API_URL} from '../../config/index';
+import { alertService } from "../alert.service";
 
-function DetailLike({ token, id }) {
+
+
+function DetailLike({ token, id, handleLinkAlarm }) {
   const router = useRouter();
   const [like, setLike] = useState([]);
   const [isClick, setIsClick] = useState(false);
@@ -41,18 +44,10 @@ function DetailLike({ token, id }) {
     }
   };
 
-
-  const handleLinkAlarm = () => {
-    if(isClick) {
-      setIsClick(false)
-    } else {
-      setIsClick(true)
-    }
-  }
-
   useEffect(() => {
     handleData();
   }, [])
+
 
   return (
     <Container>
@@ -63,21 +58,15 @@ function DetailLike({ token, id }) {
           </Element>
           {like}
         </FlexContainer>
-
         <FlexContainer>
           <CopyToClipboard text={url}>
             <Element onClick={()=>handleLinkAlarm()}>
               <LinkDetail />
             </Element>
           </CopyToClipboard>
-          {"LINK"}
+          <span>LINK</span>
         </FlexContainer>
       </ElementContainer>
-      {isClick ? (
-        <>
-          <LinkClickAlarm>링크가 복사되었습니다.</LinkClickAlarm>
-        </>
-      ) : null}
     </Container>
   );
 }
@@ -85,8 +74,9 @@ function DetailLike({ token, id }) {
 export default DetailLike;
 
 const Container = styled.div`
-  position: absolute;
-  right: 1.5rem;
+    position: fixed;
+    right: 2%;
+    top: 6%;
 `;
 
 const ElementContainer = styled.div`

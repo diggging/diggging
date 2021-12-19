@@ -14,7 +14,8 @@ import Comment from "../../components/comment/questionComment/Comment";
 import Answers from "../../components/answer/Answers";
 import { API_URL } from "../../config";
 import Loader from 'react-loader-spinner';
-
+import { Alert } from "../../components/Alert";
+import { alertService } from "../../components/alert.service";
 
 const Question = () => {
   const [item, setItem] = useState([]);
@@ -78,6 +79,7 @@ const Question = () => {
         .catch((err) => console.log(err));
     }
   };
+
   const Viewer = dynamic(
     () => import("../../components/questions/QuestionView"),
     {
@@ -95,11 +97,15 @@ const Question = () => {
   }, [id]);
 
   //token 확인(refresh, verify)
-  useEffect(() => {
-    if (dispatch && dispatch !== null && dispatch !== undefined)
-      dispatch(check_auth_status());
-      dispatch(load_user());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   if (dispatch && dispatch !== null && dispatch !== undefined)
+  //     dispatch(check_auth_status());
+  //     dispatch(load_user());
+  // }, [dispatch]);
+
+  const handleLinkAlarm = () => {
+    alertService.warn('링크가 복사되었습니다.')
+  }
 
   console.log(user);
 
@@ -114,7 +120,9 @@ const Question = () => {
               <meta name="description" content="질문 디테일 페이지 입니다" />
             </Head>
             <MainContainer>
+              <Alert />
               <Container>
+                <DetailLike token={token} id={id} handleLinkAlarm={handleLinkAlarm}/>
                 <HeadContainer>
                   <Title>{item.title}</Title>
                   {item.user?.id === user?.user?.id ? (
@@ -168,8 +176,7 @@ const Question = () => {
                     </>
                   ) : null}
                 </ProfileContainer>
-                <DetailLike token={token} id={id} />
-
+                
                 {commentIsOpen === true ? (
                   <>
                     <Comment
@@ -226,6 +233,7 @@ const Container = styled.div`
   background-color: #ffffff;
   margin: auto;
   padding: 2.625rem;
+  position: relative;
 `;
 
 const HeadContainer = styled.div`
