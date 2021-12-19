@@ -62,7 +62,6 @@ function ToastAnswerCreate({title, token, id}) {
           autofocus={false}
           ref={editorRef}
           onChange={() => onChange()}
-          language="ko"
           events={{
             focus: () => {
               console.log('⭐ focus');
