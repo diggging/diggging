@@ -238,15 +238,15 @@ class LogoutView(APIView):
 
 
 # 비밀번호를 모르겠을때, email을 작성하는 부분
-class Password_reset(generics.GenericAPIView):
+"""class Password_reset(generics.GenericAPIView):
     # email 받으면
     serializer_class = InputEmailSerializer
 
     def post(self, request, *args, **kwargs):
-        email = request.POST.get("email")
-        username = request.POST.get("username")
+        serializer = self.get_serializer(data=request.data)
+        current_site = get_current_site(request)
         # email 이 존재하는 이메일인지 확인
-        if User.objects.filter(email=email, username=username).exists():
+        if serializer.is_valid(raise_exception=True)
             # 있으면 메일 보내기
             user = User.objects.get(email=email, username=username)
             current_site = get_current_site(request)
@@ -254,8 +254,8 @@ class Password_reset(generics.GenericAPIView):
                 "users/password_reset_email.html",
                 {
                     "user": user,
-                    #'domain': current_site.domain,
-                    #'domain': my_site.domain,
+                    "domain": current_site.domain,
+                    "domain": my_site.domain,
                     "uid": urlsafe_base64_encode(force_bytes(user.pk)),
                     "token": password_reset_token.make_token(user),
                 },
@@ -268,7 +268,7 @@ class Password_reset(generics.GenericAPIView):
         else:
             # 없으면 없는 메일ㅇ이라고 하고 다시 redirect
             return JsonResponse(status=status.HTTP_400_BAD_REQUEST)
-
+"""
 
 # 이메일 인증
 class Password_reset_email(APIView):
