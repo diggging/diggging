@@ -46,6 +46,9 @@ function QuestionList({ data, count }) {
               <DescContainer>{list.desc.slice(0, 315)}</DescContainer>
 
               <BottomContainer>
+                {/* <BottomText>
+                  <Like />
+                </BottomText> */}
                 <Like />
                 <BottomText>
                   {list.helped_num}
@@ -57,6 +60,8 @@ function QuestionList({ data, count }) {
                   {list.comment_count}
                 </BottomText>
               </BottomContainer>
+
+              
             </ListContainer>
           </Link>
         ))}
@@ -158,6 +163,8 @@ const DescContainer = styled.div`
 
 const FlexContainer = styled.div`
   display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const BottomContainer = styled.div`
@@ -174,6 +181,7 @@ const BottomText = styled.div`
   font-size: 12px;
   line-height: 16px;
   text-align: right;
-  margin-left: 15px;
+  margin-left: 5px;
   color: #8C8D8D;
+  padding: 1.5px;
 `;

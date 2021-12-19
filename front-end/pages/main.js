@@ -27,6 +27,7 @@ function main({ children }) {
   //여기도 고쳐야함
   const ToggleDispatch = (smallCriteria) => {
     dispatch(setQuestion(1, "recent", smallCriteria));
+    setOpen(false);
   };
 
   return (
