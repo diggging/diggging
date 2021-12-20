@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Link from "next/link";
 import NavBar from "../components/NavBar";
 import Image from "next/image";
@@ -8,11 +8,10 @@ import QuestionList from "../components/questions/QuestionList";
 import Layout from "../hocs/Layout";
 import SvgDigggingLogo from "../public/static/images/DigggingLogo";
 import { useRouter } from "next/router";
-import {
-  setQuestion,
-} from "../modules/questions";
+import { setQuestion } from "../modules/questions";
 
 function main({ children }) {
+  const ref = useRef();
   const [open, setOpen] = useState(false);
 
   const dispatch = useDispatch();
@@ -24,6 +23,18 @@ function main({ children }) {
     dispatch(setQuestion(1, "recent", "all"));
   }, [dispatch]);
 
+  useEffect(() => {
+    const checkClickOutSide = (e) => {
+      if(open && ref.current && !ref.current.contains(e.target)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", checkClickOutSide)
+    return () => {
+      document.addEventListener("mousedown", checkClickOutSide)
+    }
+  },[open])
+
   //여기도 고쳐야함
   const ToggleDispatch = (smallCriteria) => {
     dispatch(setQuestion(1, "recent", smallCriteria));
@@ -31,9 +42,9 @@ function main({ children }) {
   };
 
   const style = {
-    color: "#FFD358"
-  }
-
+    color: "#FFD358",
+  };
+  
   return (
     <Layout>
       <NavBar />
@@ -90,11 +101,19 @@ function main({ children }) {
             onClick={() => {
               setOpen(!open);
             }}
-          > {smallCriteria === "all" ? <>답변 전체</> : (smallCriteria === "wait_answer" ? <>답변 대기 중</> : (smallCriteria === "answer_done" ? <>답변 완료</> : null))}
+            ref={ref}
+          >
+            {smallCriteria === "all" ? (
+              <>답변 전체</>
+            ) : smallCriteria === "wait_answer" ? (
+              <>답변 대기 중</>
+            ) : smallCriteria === "answer_done" ? (
+              <>답변 완료</>
+            ) : null}
           </ToggleContainer>
           {open ? (
             <DropBox>
-              <DropList>
+              <DropList ref={ref}>
                 <DropListItem onClick={() => ToggleDispatch("wait_answer")}>
                   답변 대기 중
                 </DropListItem>
@@ -240,7 +259,7 @@ const TabContainer = styled.div`
 `;
 
 const Tab = styled.div`
-  font-family: 'Pretendard-Medium';
+  font-family: "Pretendard-Medium";
   width: 130px;
   height: 53px;
   color: #898a90;
@@ -254,7 +273,7 @@ const Tab = styled.div`
 
   &:hover {
     color: #343434;
-    font-family: 'Pretendard-SemiBold';
+    font-family: "Pretendard-SemiBold";
   }
 `;
 
@@ -264,9 +283,6 @@ const QuestionsContainer = styled.div`
 `;
 
 const ToggleContainer = styled.button`
-  font-size: 1rem;
-  font-family: 'Pretendard-Bold';
-  color: #343434;
   background: white;
   width: 8.25rem;
   height: 2.5rem;
@@ -276,12 +292,13 @@ const ToggleContainer = styled.button`
   align-items: center;
   -webkit-box-pack: justify;
   justify-content: center;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-weight: 600;
   color: rgb(73, 80, 87);
+  font-size: 0.875rem;
   box-shadow: rgb(0 0 0 / 5%) 0px 0px 4px;
   cursor: pointer;
-      <ImageContainer>
-        <Image src="/../public/static/images/a.png" width={1440} height={511} />
-      </ImageContainer>
 
   & svg {
     margin-left: 10px;
@@ -304,16 +321,18 @@ const DropList = styled.ul`
   text-align: center;
   list-style: none;
   line-height: 2rem;
+  font-family: "Pretendard-Regular";
+  font-size: 0.875rem;
 `;
 
 const DropListItem = styled.li`
-  padding: 0.625rem 1.5rem;
+  color: #b6b6b6;
+  padding: 5px 10px;
   cursor: pointer;
-  font-family: "Pretendard-Bold";
-  color: #343434;
-  font-size: 0.875rem;
 
   &:hover {
-    color: #FFBA42;
+    color: #343434;
+    font-family: "Pretendard-Medium";
   }
 `;
+

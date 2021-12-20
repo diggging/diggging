@@ -27,7 +27,7 @@ function ToastUi({ title, folder, tags, token }) {
     dispatch(setDesc(editorData));
     setCurrentContent(editorData)
   };
-  
+
   const handleCreate = async () => {
     try {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
