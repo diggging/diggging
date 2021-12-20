@@ -330,6 +330,7 @@ const TabContainer = styled.div`
 `;
 
 const Tab = styled.div`
+  font-family: 'Pretendard-SemiBold';
   width: 130px;
   height: 53px;
   color: #898a90;
@@ -337,12 +338,13 @@ const Tab = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 20px;
+  font-size: 1.25rem;
   line-height: 28.96px;
   /* margin-right: 30px; */
 
   &:hover {
-    color: black;
+    font-family: 'Pretendard-Bold';
+    color: #343434;
   }
 `;
 

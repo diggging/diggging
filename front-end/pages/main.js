@@ -31,7 +31,7 @@ function main({ children }) {
   };
 
   const style = {
-    color: "#FFD358"
+    color: "#FFD358",
   }
 
   return (
@@ -118,25 +118,6 @@ function main({ children }) {
 
 export default main;
 
-const BannerBackground = styled.div`
-  width: 100%;
-  height: 32.5rem;
-  position: relative;
-  padding: 4rem 6rem;
-  & img {
-    z-index: -2;
-  }
-
-  @media ${({ theme: { device } }) => device.laptop} {
-    padding: 4rem 6rem;
-  }
-  @media ${({ theme: { device } }) => device.tablet} {
-    padding: 4rem 5rem;
-  }
-  @media ${({ theme: { device } }) => device.mobile} {
-    padding: 4rem 3rem;
-  }
-`;
 
 const SubTitle = styled.h2`
   min-width: 270px;
@@ -240,7 +221,7 @@ const TabContainer = styled.div`
 `;
 
 const Tab = styled.div`
-  font-family: 'Pretendard-Medium';
+  font-family: 'Pretendard-Bold';
   width: 130px;
   height: 53px;
   color: #898a90;
@@ -248,13 +229,12 @@ const Tab = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 20px;
+  font-size: 1.25rem;
   line-height: 28.96px;
-  /* margin-right: 30px; */
 
   &:hover {
     color: #343434;
-    font-family: 'Pretendard-SemiBold';
+    font-family: 'Pretendard-Bold';
   }
 `;
 
