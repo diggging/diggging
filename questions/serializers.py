@@ -115,7 +115,6 @@ class QuestionDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
             "is_selected",
         ]
         read_only_fields = ["hits", "answer_exist", "is_selected"]
-
     # def get_question_comments(self, obj):
     #     qc_q = QuestionPost.question_comments.filter(id=obj.id)
     #     question_comments = CommentSerializer(qc_q, many=True).data

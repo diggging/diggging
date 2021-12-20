@@ -21,6 +21,10 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
+from comments.serializers import (
+    QuestionCommentSerializer,
+    AnswerCommentSerializer,
+    )
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
