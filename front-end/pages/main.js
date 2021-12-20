@@ -115,7 +115,7 @@ function main({ children }) {
     </Layout>
   );
 }
-
+export {BannerBackground, SubTitle}
 export default main;
 const BannerBackground = styled.div`
   width: 100%;

@@ -10,7 +10,8 @@ import { useRouter } from "next/router";
 import { setQuestion, setMine } from "../../modules/questions";
 import recent from "../../pages/recent";
 import SvgDigggingLogo from "../../public/static/images/digggingLogo";
-
+import SvgToggleBtn from "../../public/static/images/ToggleBtn";
+import { BannerBackground, SubTitle } from "../../pages/main";
 function Prevent({ children }) {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
@@ -56,7 +57,8 @@ function Prevent({ children }) {
   };
 
   const style = {
-    color: "#FFD358",
+    color: "#343434",
+    fontFamily: "Pretendard-Bold"
   };
 
   useEffect(() => {
@@ -177,6 +179,7 @@ function Prevent({ children }) {
             ) : smallCriteria === "answer_done" ? (
               <>답변 완료</>
             ) : null}
+            <ToggleBtn />
           </ToggleContainer>
           {open ? (
             <DropBox>
@@ -210,44 +213,7 @@ function Prevent({ children }) {
 
 export default Prevent;
 
-const BannerBackground = styled.div`
-  width: 100%;
-  height: 32.5rem;
-  position: relative;
-  padding: 4rem 6rem;
-  & img {
-    z-index: -2;
-  }
 
-  @media ${({ theme: { device } }) => device.laptop} {
-    padding: 4rem 6rem;
-  }
-  @media ${({ theme: { device } }) => device.tablet} {
-    padding: 4rem 5rem;
-  }
-  @media ${({ theme: { device } }) => device.mobile} {
-    padding: 4rem 3rem;
-  }
-`;
-
-const SubTitle = styled.h2`
-  margin-top: 2.5rem;
-  color: white;
-  font-family: "Pretendard-Bold";
-  font-size: 1.75rem;
-  display: inline-block;
-  background-color: #ffba42;
-  margin-bottom: 1rem;
-  padding: 0.1rem 0.6rem;
-  border-radius: 0.4rem;
-
-  @media ${({ theme: { device } }) => device.tablet} {
-    font-size: 1.5rem;
-  }
-  @media ${({ theme: { device } }) => device.mobile} {
-    font-size: 1.3rem;
-  }
-`;
 
 const ServiceTitle = styled.h3`
   color: #343434;
@@ -341,10 +307,17 @@ const Tab = styled.div`
   font-size: 1.25rem;
   line-height: 28.96px;
   /* margin-right: 30px; */
-
+  transition: 200ms;
   &:hover {
     font-family: 'Pretendard-Bold';
     color: #343434;
+  }
+`;
+
+const ToggleBtn = styled(SvgToggleBtn)`
+  margin-left: 0.5rem;
+  &path {
+    fill: #343434;
   }
 `;
 
@@ -357,7 +330,7 @@ const ToggleContainer = styled.button`
   background: white;
   width: 8.25rem;
   height: 2.5rem;
-  border-radius: 4px;
+  border-radius: 0.625rem;
   display: flex;
   -webkit-box-align: center;
   align-items: center;
@@ -369,6 +342,11 @@ const ToggleContainer = styled.button`
   color: rgb(73, 80, 87);
   font-size: 0.875rem;
   box-shadow: rgb(0 0 0 / 5%) 0px 0px 4px;
+  transition: 300ms;
+  font-family: 'Pretendard-Bold';
+  color: #343434;
+  font-size: 1rem;
+  transition: 300ms;
   cursor: pointer;
       <ImageContainer>
         <Image src="/../public/static/images/a.png" width={1440} height={511} />
@@ -376,6 +354,9 @@ const ToggleContainer = styled.button`
 
   & svg {
     margin-left: 10px;
+  }
+  & path {
+    fill: #343434;
   }
 `;
 
@@ -389,6 +370,8 @@ const DropBox = styled.div`
   background: #ffffff;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
+ 
+
 `;
 
 const DropList = styled.ul`
@@ -402,9 +385,9 @@ const DropListItem = styled.li`
   color: #b6b6b6;
   padding: 5px 10px;
   cursor: pointer;
-
+  transition: 200ms;
   &:hover {
     color: #343434;
-    font-family: "Pretendard-Medium";
+    font-family: "Pretendard-SemiBold";
   }
 `;

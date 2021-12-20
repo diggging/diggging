@@ -36,7 +36,7 @@ function findPassword() {
     .then((res) => {
       console.log(res)
       if (res.status === 200) {
-        alertService.warn('이메일이 전송되었습니다.')
+        alertService.warn('이메일이 전송되었습니다📧');
         setTimeout(() => {
           router.push("/password_reset_submit");
         }, 3000);
