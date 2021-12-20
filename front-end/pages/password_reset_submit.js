@@ -12,6 +12,8 @@ import { useDispatch } from 'react-redux';
 import { alertService } from '../components/alert.service';
 import { Alert } from '../components/Alert';
 import { reset_password_confirm } from '../redux/actions/auth';
+import { PWFormBox } from './findPassword';
+import { lighten, darken } from 'polished';
 
 function ResetPassword() {
   const dispatch = useDispatch();
@@ -52,7 +54,7 @@ function ResetPassword() {
       <Layout />
       <NavBar />
       <Alert />
-      <form onSubmit={(e) => onUpdatePassword(e)}>
+      <PWFormBox onSubmit={(e) => onUpdatePassword(e)}>
         <PageTitle>비밀번호 변경하기 </PageTitle>
         <GuideMessage>새 비밀번호를 입력하시면 비밀번호가 변경됩니다.</GuideMessage>
         <FlexColumn>
@@ -115,8 +117,8 @@ function ResetPassword() {
             />
         </StyledFlexRow>
         </FlexColumn>
-        <YellowButton type="submit" paddingTop="0.9375rem" paddingRight="2.1875rem" >전송</YellowButton>
-      </form>
+        <SubmitButton type="submit" >전송</SubmitButton>
+      </PWFormBox>
     </>
   )
 }
@@ -126,6 +128,31 @@ const StyledFlexRow = styled.div`
   flex-direction: row;
   justify-content: space-between;
   margin-top: 1.5rem;
+  align-items: center;
 `;
+
+
+const SubmitButton = styled.button`
+  margin-top: 1.5rem;
+  margin-left: 82%;
+  padding: 0.9375rem 2.1875rem;
+  border-radius: 1.5625rem;
+
+  background-color: #FFD358;
+  color: #343434;
+  font-family: 'Pretendard-SemiBold';
+  font-size: 1rem;
+
+  box-shadow: 0.2rem 0.2rem 0.5rem 0.2rem rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: 300ms;
+  &:hover {
+    background-color: ${lighten(0.02, '#FFD358')};
+    box-shadow: 0.2rem 0.2rem 0.5rem 0.2rem rgba(0, 0, 0, 0.15);
+  }
+  &:active {
+    background-color: ${darken(0.02, '#FFD358')};
+`
+;
 
 export default ResetPassword;

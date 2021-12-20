@@ -23,4 +23,11 @@ const StyledYellowButton = styled.button`
 
   box-shadow: 0.2rem 0.2rem 0.5rem 0.2rem rgba(0, 0, 0, 0.1);
   cursor: pointer;
+  transition: 300ms;
+  &:hover {
+    background-color: ${lighten(0.02, '#FFD358')};
+    box-shadow: 0.2rem 0.2rem 0.5rem 0.2rem rgba(0, 0, 0, 0.15);
+  }
+  &:active {
+    background-color: ${darken(0.02, '#FFD358')};
 `;
