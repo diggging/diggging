@@ -1,25 +1,24 @@
 import { API_URL } from "../../../config";
 
 export default async (req, res) => {
-  
   const {email, username} = req.body;
   const body = JSON.stringify({
-    username,
     email,
-  })
+    username,
+  });
 
   try {
-     const apiRes = await fetch(`${API_URL}/users/request-reset-email/`,{
+     const apiRes = await fetch(`${API_URL}/users/request-reset-email/`, {
       method: 'POST', 
       headers: {
         "Content-Type": "application/json"
       },
       body: body,
     })
-
+    
     const data = await apiRes.json();
-
-    if (apiRes.ok || apiRes === 200) {
+    console.log(data, 'data')
+    if (apiRes.ok || apiRes.status === 200) {
       return res.status(apiRes.status).json({data})
     } else {
       return res.status(apiRes.status).json({data})

@@ -256,7 +256,6 @@ export const reset_password = (email, username) => async dispatch => {
       body: body,
     });
 
-    console.log(apiRes, `apiRes`)
     if (apiRes.ok || apiRes.status === 200) {
       dispatch({
         type: PASSWORD_RESET_SUCCESS
@@ -272,18 +271,18 @@ export const reset_password = (email, username) => async dispatch => {
 
 
 
-export const reset_password_confirm = (newPW, confirmPW) => async dispatch => {
-  
-  const body = JSON.stringify({newPW, confirmPW});
+export const reset_password_confirm = (username, temp, new_password, password_confirm) => async dispatch => {
+  const body = JSON.stringify({username, temp, new_password, password_confirm});
   
   try {
-    const apiRes = await axios.fetch(`api/account/reset_password_confirm`, {
-      method: 'POST',
+    const apiRes = await fetch(`/api/account/reset_password_confirm/`, {
+      method: 'PUT',
       headers: {
         "Content-Type": "application/json"
       },
       body: body,
     });
+    
     console.log(apiRes, 'apiRes')
     if (apiRes.ok || apiRes.status === 200) {
       dispatch({

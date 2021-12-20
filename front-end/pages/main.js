@@ -117,7 +117,25 @@ function main({ children }) {
 }
 
 export default main;
+const BannerBackground = styled.div`
+  width: 100%;
+  height: 32.5rem;
+  position: relative;
+  padding: 4rem 6rem;
+  & img {
+    z-index: -2;
+  }
 
+  @media ${({ theme: { device } }) => device.laptop} {
+    padding: 4rem 6rem;
+  }
+  @media ${({ theme: { device } }) => device.tablet} {
+    padding: 4rem 5rem;
+  }
+  @media ${({ theme: { device } }) => device.mobile} {
+    padding: 4rem 3rem;
+  }
+`;
 
 const SubTitle = styled.h2`
   min-width: 270px;
