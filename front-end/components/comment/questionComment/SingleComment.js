@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { check_auth_status } from "../../../redux/actions/auth";
 import TextareaAutosize from "react-autosize-textarea";
 import { API_URL } from "../../../config";
+import Image from "next/image";
+
 
 function SingleComment({
   data,
@@ -115,7 +117,17 @@ function SingleComment({
                   </>
                 ) : (
                   <>
-                    <UserImg></UserImg>
+                    <UserImg>
+                      <Image
+                          src={`${data.user.user_profile_image}`}
+                          width={50}
+                          height={50}
+                          alt="profileImage"
+                          quality={100}
+                          // layout="fill"
+                          objectFit="cover"
+                        />
+                    </UserImg>
                     <UserInfoContainer>
                       <NameDateContainer>
                         <FlexContainer>
@@ -174,9 +186,11 @@ const Container = styled.div`
 const UserImg = styled.div`
   width: 44px;
   height: 44px;
-  background: #ffd358;
   border-radius: 50px;
   margin-right: 20px;
+  & img {
+    border-radius: 50%;
+  }
 `;
 
 const UserInfoContainer = styled.div`

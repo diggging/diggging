@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Head from "next/head";
 import axios from "axios";
+import Image from "next/image";
 import Layout from "../../hocs/Layout";
 import NavBar from "../../components/NavBar";
 import dynamic from "next/dynamic";
@@ -107,8 +108,6 @@ const Question = () => {
     alertService.warn('링크가 복사되었습니다.')
   }
 
-  console.log(user);
-
   return (
     <>
       <Layout>
@@ -159,7 +158,17 @@ const Question = () => {
                 </FlexContainer>
 
                 <ProfileContainer>
-                  <ProfileImg></ProfileImg>
+                  <ProfileImg>
+                    <Image
+                        src={`${item.user.user_profile_image}`}
+                        width={50}
+                        height={50}
+                        alt="profileImage"
+                        quality={100}
+                        // layout="fill"
+                        objectFit="cover"
+                      />
+                  </ProfileImg>
                   <ProfileInfoContainer>
                     {item.user?.user_nickname ? (
                       <>
@@ -359,9 +368,11 @@ const ProfileContainer = styled.div`
 const ProfileImg = styled.div`
   width: 50px;
   height: 50px;
-  background: linear-gradient(239.19deg, #fabe56 26.85%, #fbd362 73.3%);
   border-radius: 50px;
   margin-right: 20px;
+  & img {
+    border-radius: 50%;
+  }
 `;
 
 const ProfileInfoContainer = styled.div`

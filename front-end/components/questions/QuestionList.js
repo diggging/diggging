@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import Paging from "../Paging";
@@ -39,7 +40,17 @@ function QuestionList({ data, count }) {
                 </TitleHashContainer>
 
                 <ProfileContainer>
-                  <ProfileImg></ProfileImg>
+                  <ProfileImg>
+                    <Image
+                      src={`${list.user.user_profile_image}`}
+                      width={50}
+                      height={50}
+                      alt="profileImage"
+                      quality={100}
+                      // layout="fill"
+                      objectFit="cover"
+                    />
+                  </ProfileImg>
                   <ProfileName>{list.user.user_nickname}</ProfileName>
                 </ProfileContainer>
 
@@ -145,9 +156,11 @@ const ProfileContainer = styled.div`
 const ProfileImg = styled.div`
   width: 40px;
   height: 40px;
-  background: linear-gradient(239.19deg, #fabe56 26.85%, #fbd362 73.3%);
   border-radius: 50px;
   margin-bottom: 10px;
+  & img {
+    border-radius: 50%;
+  }
 `;
 
 const ProfileName = styled.div`

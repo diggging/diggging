@@ -9,6 +9,7 @@ import NotSelectedAnswer from "../../public/static/images/NotSelectedAnswer";
 import Selected from "./Selected";
 import { API_URL } from "../../config";
 import AnswerComment from "../comment/answerComment/AnswerComment";
+import Image from "next/image";
 
 function AnswersList({ answer, user, token, questionId, questionUserId }) {
   const [answerToken, setAnswerToken] = useState(token);
@@ -46,14 +47,12 @@ function AnswersList({ answer, user, token, questionId, questionUserId }) {
 
   const onOpen = () => {
     setIsOpen(!isOpen);
-    console.log(isOpen);
   };
 
   const Viewer = dynamic(() => import("../../components/answer/AnswerView"), {
     ssr: false,
   });
 
-  console.log(answer);
 
   return (
     <>
@@ -101,7 +100,7 @@ function AnswersList({ answer, user, token, questionId, questionUserId }) {
           </DescContainer>
 
           <FlexContainer>
-            {questionUserId === user?.user?.id && answer.selection === false? (
+            {questionUserId === user?.user?.id && answer.selection === false ? (
               <>
                 {isOpen === true ? (
                   <>
@@ -114,17 +113,39 @@ function AnswersList({ answer, user, token, questionId, questionUserId }) {
                   </>
                 ) : null}
                 <AnswerBtn onClick={() => onOpen()}>채택하기</AnswerBtn>
-                <AnswerBtn onClick={() => handleCommentOpen()}>{commentIsOpen === true ? (<>댓글 접기</>) : (<>댓글 {answer.answer_comment_count}</>)}</AnswerBtn>
+                <AnswerBtn onClick={() => handleCommentOpen()}>
+                  {commentIsOpen === true ? (
+                    <>댓글 접기</>
+                  ) : (
+                    <>댓글 {answer.answer_comment_count}</>
+                  )}
+                </AnswerBtn>
               </>
             ) : (
               <>
-                <AnswerBtn onClick={() => handleCommentOpen()}>{commentIsOpen === true ? (<>댓글 접기</>) : (<>댓글 {answer.answer_comment_count}</>)}</AnswerBtn>
+                <AnswerBtn onClick={() => handleCommentOpen()}>
+                  {commentIsOpen === true ? (
+                    <>댓글 접기</>
+                  ) : (
+                    <>댓글 {answer.answer_comment_count}</>
+                  )}
+                </AnswerBtn>
               </>
             )}
           </FlexContainer>
-          
+
           <ProfileContainer>
-            <ProfileImg></ProfileImg>
+            <ProfileImg>
+              <Image
+                src={`http://localhost:8000${answer.user.user_profile_image}`}
+                width={50}
+                height={50}
+                alt="profileImage"
+                quality={100}
+                // layout="fill"
+                objectFit="cover"
+              />
+            </ProfileImg>
             <ProfileInfoContainer>
               {answer.user?.user_nickname ? (
                 <>
@@ -302,9 +323,11 @@ const ProfileContainer = styled.div`
 const ProfileImg = styled.div`
   width: 50px;
   height: 50px;
-  background: linear-gradient(239.19deg, #fabe56 26.85%, #fbd362 73.3%);
   border-radius: 50px;
   margin-right: 20px;
+  & img {
+    border-radius: 50%;
+  }
 `;
 
 const ProfileInfoContainer = styled.div`
