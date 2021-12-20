@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
 import QuestionList from "../components/questions/QuestionList";
 import Layout from "../hocs/Layout";
-import SvgDigggingLogo from "../public/static/images/digggingLogo";
+import SvgDigggingLogo from "../public/static/images/DigggingLogo";
 import { useRouter } from "next/router";
 import {
   setQuestion,

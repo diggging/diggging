@@ -6,10 +6,10 @@ import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
 import QuestionList from "../questions/QuestionList";
 import Layout from "../../hocs/Layout";
-import SvgDigggingLogo from "../../public/static/images/DigggingLogo";
 import { useRouter } from "next/router";
 import { setQuestion, setMine } from "../../modules/questions";
 import recent from "../../pages/recent";
+import SvgDigggingLogo from "../../public/static/images/digggingLogo"; 
 
 function Prevent({ children }) {
   const [open, setOpen] = useState(false);
