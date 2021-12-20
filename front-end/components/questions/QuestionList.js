@@ -166,7 +166,7 @@ const ProfileImg = styled.div`
 const ProfileName = styled.div`
   font-family: 'Pretendard-Medium';
   font-size: 0.875rem;
-  color: #8C8D8D;
+  color: #343434;
   text-align: center;
   line-height: 16px;
   

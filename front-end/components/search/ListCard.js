@@ -44,8 +44,14 @@ function ListCard({data}) {
             </TagWrapper>
           </FlexColumn>
           <ProfileBox>
-            <ProfileImg src={user_profile_image} alt="profileImg" width={40} height={40} layout="fixed"/>
-            <NumberData>{user_nickname}</NumberData>
+            <ProfileImg src={`http://localhost:8000${user_profile_image}`}
+                width={40}
+                height={40}
+                alt="profileImage"
+                quality={100}
+                // layout="fill"
+                objectFit="cover"/>
+            <Username>{user_nickname}</Username>
           </ProfileBox>
       </CardHead>
       <ContentWrapper>
@@ -159,14 +165,13 @@ const Username = styled.span`
   color: #343434;
   font-size: 0.875rem;
   text-align: center;
-
-  min-width: 
   white-space: normal;
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
   overflow: hidden;
+  margin-top: 7px;
 `;
 
 
