@@ -1,7 +1,7 @@
 import React from "react";
 import AnswersList from "./AnswersList";
 
-function Answers({ questionId, answers, user, token, questionUserId }) {
+function Answers({ questionId, answers, user, token, questionUserId, AnswerisSelected }) {
   return (
     <>
       {answers &&
@@ -13,6 +13,7 @@ function Answers({ questionId, answers, user, token, questionUserId }) {
             token={token}
             answer={answer}
             questionUserId={questionUserId}
+            AnswerisSelected={AnswerisSelected}
           />
         ))}
     </>

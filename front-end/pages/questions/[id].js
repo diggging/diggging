@@ -109,7 +109,7 @@ const Question = () => {
   }
 
   console.log(item);
-  
+
   return (
     <>
       <Layout>
@@ -214,6 +214,7 @@ const Question = () => {
                   user={user}
                   token={token}
                   questionUserId={item.user.id}
+                  AnswerisSelected={item.is_selected}
                 />
               </AnswerContainer>
             </MainContainer>

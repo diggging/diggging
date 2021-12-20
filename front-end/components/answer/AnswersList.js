@@ -11,7 +11,7 @@ import { API_URL } from "../../config";
 import AnswerComment from "../comment/answerComment/AnswerComment";
 import Image from "next/image";
 
-function AnswersList({ answer, user, token, questionId, questionUserId }) {
+function AnswersList({ answer, user, token, questionId, questionUserId, AnswerisSelected }) {
   const [answerToken, setAnswerToken] = useState(token);
   const [isSelected, setIsSelected] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -100,7 +100,7 @@ function AnswersList({ answer, user, token, questionId, questionUserId }) {
           </DescContainer>
 
           <FlexContainer>
-            {questionUserId === user?.user?.id && answer.selection === false ? (
+            {questionUserId === user?.user?.id && AnswerisSelected === false ? (
               <>
                 {isOpen === true && answer.selection === false ? (
                   <>
