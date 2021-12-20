@@ -9,13 +9,25 @@ import Layout from "../../hocs/Layout";
 import { useRouter } from "next/router";
 import { setQuestion, setMine } from "../../modules/questions";
 import recent from "../../pages/recent";
-import SvgDigggingLogo from "../../public/static/images/digggingLogo"; 
+import SvgDigggingLogo from "../../public/static/images/digggingLogo";
 
 function Prevent({ children }) {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
-  const {data, count, page, bigCriteria, smallCriteria, loading, error, mineToken} = useSelector((state) => state.questions);
+  const {
+    data,
+    count,
+    page,
+    bigCriteria,
+    smallCriteria,
+    loading,
+    error,
+    mineToken,
+  } = useSelector((state) => state.questions);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const [isRcent, setIsRcent] = useState(false);
+  const [isPopular, setIsPopular] = useState(false);
+  const [isMine, setIsMine] = useState(false);
 
   const ToggleDispatch = (bigCriteria, smallCriteria) => {
     if (bigCriteria !== undefined) {
@@ -26,6 +38,30 @@ function Prevent({ children }) {
       setOpen(false);
     }
   };
+
+  const styleHandle = () => {
+    if (bigCriteria === "recent") {
+      setIsRcent(true);
+      setIsPopular(false);
+      setIsMine(false);
+    } else if (bigCriteria === "popular") {
+      setIsRcent(false);
+      setIsPopular(true);
+      setIsMine(false);
+    } else {
+      setIsRcent(false);
+      setIsPopular(false);
+      setIsMine(true);
+    }
+  };
+
+  const style = {
+    color: "#FFD358",
+  };
+
+  useEffect(() => {
+    styleHandle();
+  }, [bigCriteria]);
 
   return (
     <Layout>
@@ -59,24 +95,74 @@ function Prevent({ children }) {
         <TabItemContainer>
           {isAuthenticated ? (
             <TabContainer>
-              <Link href="/recent">
-                <Tab>최신 질문 순</Tab>
-              </Link>
-              <Link href="/popular">
-                <Tab>인기 순</Tab>
-              </Link>
-              <Link href="/mine">
-                <Tab>내가 남긴 질문</Tab>
-              </Link>
+              {isRcent ? (
+                <>
+                  <Link href="/recent">
+                    <Tab style={style}>최신 질문 순</Tab>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/recent">
+                    <Tab>최신 질문 순</Tab>
+                  </Link>
+                </>
+              )}
+              {isPopular ? (
+                <>
+                  <Link href="/popular">
+                    <Tab style={style}>인기 순</Tab>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/popular">
+                    <Tab>인기 순</Tab>
+                  </Link>
+                </>
+              )}
+              {isMine ? (
+                <>
+                  <Link href="/mine">
+                    <Tab style={style}>내가 남긴 질문</Tab>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/mine">
+                    <Tab>내가 남긴 질문</Tab>
+                  </Link>
+                </>
+              )}
             </TabContainer>
           ) : (
             <TabContainer>
-              <Link href="/recent">
-                <Tab>최신 질문 순</Tab>
-              </Link>
-              <Link href="/popular">
-                <Tab>인기 순</Tab>
-              </Link>
+              {isRcent ? (
+                <>
+                  <Link href="/recent">
+                    <Tab style={style}>최신 질문 순</Tab>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/recent">
+                    <Tab>최신 질문 순</Tab>
+                  </Link>
+                </>
+              )}
+              {isPopular ? (
+                <>
+                  <Link href="/popular">
+                    <Tab style={style}>인기 순</Tab>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/popular">
+                    <Tab>인기 순</Tab>
+                  </Link>
+                </>
+              )}
             </TabContainer>
           )}
           <ToggleContainer
@@ -84,7 +170,13 @@ function Prevent({ children }) {
               setOpen(!open);
             }}
           >
-            {smallCriteria === "all" ? <>답변 전체</> : (smallCriteria === "wait_answer" ? <>답변 대기 중</> : (smallCriteria === "answer_done" ? <>답변 완료</> : null))}
+            {smallCriteria === "all" ? (
+              <>답변 전체</>
+            ) : smallCriteria === "wait_answer" ? (
+              <>답변 대기 중</>
+            ) : smallCriteria === "answer_done" ? (
+              <>답변 완료</>
+            ) : null}
           </ToggleContainer>
           {open ? (
             <DropBox>
@@ -109,7 +201,7 @@ function Prevent({ children }) {
           ) : null}
         </TabItemContainer>
         <QuestionsContainer>
-            <>{children}</>
+          <>{children}</>
         </QuestionsContainer>
       </Container>
     </Layout>
