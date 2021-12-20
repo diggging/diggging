@@ -11,14 +11,22 @@ import { useRouter } from 'next/router';
 import { FormBox, GuideMessage, PageTitle } from '../../../findPassword';
 import FlexColumn from '../../../../components/common/FlexColumn';
 import { reset_password_confirm } from '../../../../redux/actions/auth';
+import { useDispatch } from 'react-redux';
 
 function ResetPassword({match, reset_password_confirm}) {
+  const router = useRouter();
+  console.log(router.query.page);
+  const dispatch = useDispatch();
   const [requestSent, setRequestSent] = useState(false)
   const [inputs, setInputs] = useState({
     newPW: '',
     confirmPW: '',
   });
   
+  // const uid = match.params.uid64;
+  // const token = match.params.token;
+  // const userId = match.params.user.id
+
   const {newPW, confirmPW} = inputs;
 
   const onInput = (e) => {
@@ -30,11 +38,18 @@ function ResetPassword({match, reset_password_confirm}) {
 
   const onUpdatePassword = (e) => {
     e.preventDefault();
-    const uid = match.params.uid;
-    const token = match.params.token;
+   
+
+    console.log(uid64)
+    console.log(token)
+    console.log(userId)
+
+    console.log('햐햐핳')
 
 
-    reset_password_confirm(uid, token, newPW, confirmPW);
+    dispatch(reset_password_confirm(newPW, confirmPW))
+    .then((res) => alertService.warn(res))
+    .catch((err) => alertService.warn(err))
     setRequestSent(true)
   }
   return (
@@ -57,7 +72,6 @@ function ResetPassword({match, reset_password_confirm}) {
                 name="newPW"
                 placeholder="새 비밀번호"
                 onChange={onInput}
-                value={newPW}
                 required
               />
             </StyledFlexRow>
@@ -72,7 +86,6 @@ function ResetPassword({match, reset_password_confirm}) {
                 name="confirmPW"
                 placeholder="비밀번호 확인"
                 onChange={onInput}
-                value={confirmPW}
                 required
               />
           </StyledFlexRow>
