@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
-from django.conf.urls import include
+from django.conf.urls import include, url
 from posts import views as posts_views
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache

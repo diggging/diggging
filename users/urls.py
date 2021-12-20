@@ -34,17 +34,21 @@ urlpatterns = [
     #     auth_views.PasswordResetCompleteView.as_view(),
     #     name="password_reset_complete",
     # ),
-    path("password_reset/", view=views.Password_reset.as_view(), name="password_reset"),
-    path(
-        "password_reset_email/<slug:uidb64>/<slug:token>/",
-        views.password_reset_email,
-        name="password_reset_email",
-    ),
-    path(
-        "<int:pk>/password_reset_API/",
-        view=views.Password_resetAPI.as_view(),
-        name="password_reset_API",
-    ),
+
+
+    # path("password_reset/", view=views.Password_reset.as_view(), name="password_reset"),
+    # path(
+    #     "password_reset_email/<slug:uidb64>/<slug:token>/",
+    #     views.password_reset_email,
+    #     name="password_reset_email",
+    # ),
+    # path(
+    #     "<int:pk>/password_reset_API/",
+    #     view=views.Password_resetAPI.as_view(),
+    #     name="password_reset_API",
+    # ),
+
+
     # my_page
     path("<int:pk>/my_page/", view=views.my_page, name="my_page"),  # my page
     path("<int:host_pk>/follow", view=views.follow, name="follow"),
@@ -108,7 +112,11 @@ urlpatterns = [
     path(
         "<int:host_id>/my_page/my_questions",
         view=views.my_questions,
-        name="my_questions",
+        name="my_questions", 
     ),
     # path('dashboard/', view=views.index, name="dashboard"),
+    #new url
+    path('request-reset-email/', view = views.RequestPasswordResetEmail.as_view(), name="request-reset-email"),
+    path('password-reset/<uidb64>/<token>', view = views.PasswordTokenCheckAPI.as_view(), name='password-reset-confirm'),
+    path('password-reset-complete', view = views.SetNewPasswordAPIView.as_view(), name='password-reset-complete')
 ]
