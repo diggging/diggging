@@ -8,8 +8,8 @@ import YellowTitle from '../components/common/YellowTitle';
 import {alertService} from '../components/alert.service';
 import { Alert } from '../components/Alert';
 import { reset_password } from '../redux/actions/auth';
-import { Router, useRouter } from 'next/router';
-import { connect, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
 
 
 function findPassword() {
@@ -19,7 +19,6 @@ function findPassword() {
     email: '',
     username: '',
   });
-  const [requestSent, setRequestSent] = useState(false)
 
   const onInput = (e) => {
     const {name, value} = e.target;
@@ -34,13 +33,18 @@ function findPassword() {
   const onSubmitEmail = async (e) => {
     e.preventDefault();
     dispatch(reset_password(email, username))
-    .then((res) => alertService.warn(res))
+    .then((res) => {
+      console.log(res)
+      if (res.status === 200) {
+        alertService.warn('이메일이 전송되었습니다.')
+        setTimeout(() => {
+          router.push("/password_reset_submit");
+        }, 3000);
+      } else if (res.status === 400) {
+        alertService.warn('아이디 또는 이메일이 틀렸습니다. 다시 입력해주세요')
+      }
+    })
     .catch((err) => alertService.warn(err))
-      // if (apiRes.status === 200) {
-      //   alertService.warn('이메일이 전송되었습니다.')
-      //   // router.push('/users/password_reset/done/')
-      //   setRequestSent(true);
-      // }
   }
   
   
@@ -89,7 +93,6 @@ const PWFormBox = styled.form`
   width: 49.375rem;
   margin: auto auto;
   margin-top: 11.25rem;
-  position: relative;
 `;
 
 const PageTitle = styled.span`

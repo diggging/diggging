@@ -260,11 +260,13 @@ export const reset_password = (email, username) => async dispatch => {
       dispatch({
         type: PASSWORD_RESET_SUCCESS
       })
+      return apiRes;
     } 
   } catch (err) {
     dispatch({
       type: PASSWORD_RESET_FAIL
     });
+    return apiRes;
   }
 };
 
@@ -288,11 +290,13 @@ export const reset_password_confirm = (username, temp, new_password, password_co
       dispatch({
         type: PASSWORD_RESET_CONFIRM_SUCCESS
       });
+      return apiRes;
     }
   } catch (err) {
     dispatch({
       type: PASSWORD_RESET_CONFIRM_FAIL
     });
+    return apiRes;
   }
 }; 
 

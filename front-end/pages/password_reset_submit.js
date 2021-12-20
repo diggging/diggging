@@ -17,6 +17,7 @@ import { lighten, darken } from 'polished';
 
 function ResetPassword() {
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const [inputs, setInputs] = useState({
     new_password: '',
@@ -43,10 +44,23 @@ function ResetPassword() {
 
     if (dispatch && dispatch !== null && dispatch !== undefined) {
       dispatch(reset_password_confirm(username, temp, new_password, password_confirm))
-      .then((res) => alertService.warn(res))
+      .then((res) => {
+        console.log(res)
+        if (res.status === 200) {
+          alertService.warn('비밀번호가 성공적으로 변경되었습니다🔑.')
+          setTimeout(() => {
+            router.push("/loginPage");
+          }, 3000);
+        } else if (res.status === 400) {
+          if (new_password !== password_confirm) {
+            alertService.warn('비밀번호가 일치하지 않습니다');
+          } else {
+            alertService.warn('아이디 또는 인증번호를 다시 확인해주세요')
+          }
+        }
+      })
       .catch((err) => alertService.warn(err))
     }
-    console.log(username, temp, new_password, password_confirm, "username, temp, new_password, password_confirm")
   }
 
   return (
