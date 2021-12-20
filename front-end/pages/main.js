@@ -29,6 +29,7 @@ function main({ children }) {
         setOpen(false);
       }
     }
+
     document.addEventListener("mousedown", checkClickOutSide)
     return () => {
       document.addEventListener("mousedown", checkClickOutSide)
@@ -45,9 +46,10 @@ function main({ children }) {
     color: "#FFD358",
   };
   
+  console.log(open)
   return (
     <Layout>
-      <NavBar />
+      <NavBar/>
       <BannerBackground>
         <Image
           src="/../public/static/images/main_banner_back.png"
@@ -99,7 +101,7 @@ function main({ children }) {
           )}
           <ToggleContainer
             onClick={() => {
-              setOpen(!open);
+              setOpen(!open)
             }}
             ref={ref}
           >
@@ -112,8 +114,8 @@ function main({ children }) {
             ) : null}
           </ToggleContainer>
           {open ? (
-            <DropBox>
-              <DropList ref={ref}>
+            <DropBox >
+              <DropList>
                 <DropListItem onClick={() => ToggleDispatch("wait_answer")}>
                   답변 대기 중
                 </DropListItem>
@@ -128,7 +130,7 @@ function main({ children }) {
           ) : null}
         </TabItemContainer>
         <QuestionsContainer>
-          <QuestionList data={data} count={count} />
+          <QuestionList data={data} count={count}/>
         </QuestionsContainer>
       </Container>
     </Layout>

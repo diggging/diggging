@@ -185,7 +185,7 @@ function Prevent({ children }) {
           </ToggleContainer>
           {open ? (
             <DropBox>
-              <DropList ref={ref}>
+              <DropList>
                 <DropListItem
                   onClick={() => ToggleDispatch(bigCriteria, "wait_answer")}
                 >
