@@ -85,6 +85,10 @@ const ToggleContainer = styled.button`
   & svg {
     margin-left: 10px;
   }
+
+  & img {
+    border-radius: 50%;
+  }
 `;
 
 const UserImg = styled.div`
@@ -227,7 +231,7 @@ function navBar() {
                     height={50}
                     alt="profileImage"
                     quality={90}
-                    layout="fill"
+                    // layout="fill"
                     objectFit="cover"
                   /></>) : null}
                   <ToggleBtn />
