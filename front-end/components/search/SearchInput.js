@@ -15,7 +15,7 @@ function SearchInput({setSearchData, setNoData, searchData, setLoading}) {
   const getSearchData = async () => {
     setLoading(true);
     const trimmedInput = searchInput.trim();
-    if (trimmedInput == '') {
+    if (trimmedInput == '' || trimmedInput == '#' || trimmedInput == '/' || trimmedInput == '?') {
       const apiRes = await axios.get(`${API_URL}/posts/search_quest/`)
       setLoading(false);
       return apiRes;

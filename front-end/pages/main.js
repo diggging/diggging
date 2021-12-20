@@ -30,6 +30,10 @@ function main({ children }) {
     setOpen(false);
   };
 
+  const style = {
+    color: "#FFD358"
+  }
+
   return (
     <Layout>
       <NavBar />
@@ -63,7 +67,7 @@ function main({ children }) {
           {isAuthenticated ? (
             <TabContainer>
               <Link href="/recent">
-                <Tab>최신 질문 순</Tab>
+                <Tab style={style}>최신 질문 순</Tab>
               </Link>
               <Link href="/popular">
                 <Tab>인기 순</Tab>
@@ -75,7 +79,7 @@ function main({ children }) {
           ) : (
             <TabContainer>
               <Link href="/recent">
-                <Tab>최신 질문 순</Tab>
+                <Tab style={style}>최신 질문 순</Tab>
               </Link>
               <Link href="/popular">
                 <Tab>인기 순</Tab>
