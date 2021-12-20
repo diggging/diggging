@@ -284,12 +284,13 @@ def password_reset_email(request, uidb64, token):
         user = None
     # 잘 넘어오면
     if user is not None and password_reset_token.check_token(user, token):
-        ctx = {
-            "user": user,
-        }
+        # ctx = {
+        #    "user": user,
+        # }
         return redirect(
-            "http://localhost:3000/users/password_reset_confirm/uid64/token", user.id
+            "http://localhost:3000/users/password_reset_confirm/uid64/token/?user_id={user.id}"
         )
+
     else:
         ctx = {"user": user}
         return render(request, template_name="password_email_fail.html", context=ctx)

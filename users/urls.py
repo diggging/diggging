@@ -41,7 +41,7 @@ urlpatterns = [
         name="password_reset_email",
     ),
     path(
-        "<int:pk>/password_reset_API/",
+        "password_reset_API/",
         view=views.Password_resetAPI.as_view(),
         name="password_reset_API",
     ),
