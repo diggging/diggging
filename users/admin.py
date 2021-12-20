@@ -19,6 +19,7 @@ class CustomUserAdmin(admin.ModelAdmin):
         "user_following",
         "login_method",
         "is_active",
+        "temp",
     )
     list_display = (
         "username",
@@ -29,6 +30,7 @@ class CustomUserAdmin(admin.ModelAdmin):
         "id",
         "is_active",
         "login_method",
+        "temp",
     )
 
 
