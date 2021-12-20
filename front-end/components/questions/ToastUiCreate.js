@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import Prism from 'prismjs';
@@ -19,14 +19,13 @@ function ToastUi({ title, folder, tags, token }) {
   const dispatch = useDispatch();
   const editorRef = useRef();
   const content = useSelector((state) => state.content.desc);
-
   const [currentContent, setCurrentContent] = useState("");
 
-  const onChange = () => {
+  const onChange = useCallback(() => {
     const editorData = editorRef.current.getInstance().getHTML();
     dispatch(setDesc(editorData));
     setCurrentContent(editorData)
-  };
+  }, [currentContent]);
 
   const handleCreate = async () => {
     try {
@@ -50,11 +49,11 @@ function ToastUi({ title, folder, tags, token }) {
       console.log(e);
     }
   };
-  // console.log(tags);
+
   return (
     <>
       <Editor
-        initialValue={currentContent}
+        initialValue={content}
         previewStyle="vertical"
         height="702px"
         initialEditType="wysiwyg"

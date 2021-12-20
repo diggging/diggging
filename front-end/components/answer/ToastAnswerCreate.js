@@ -53,7 +53,7 @@ function ToastAnswerCreate({title, token, id}) {
     return (
       <>
         <Editor
-          initialValue={currentContent}
+          initialValue={content}
           previewStyle="vertical"
           height="702px"
           initialEditType="wysiwyg"

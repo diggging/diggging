@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import Prism from 'prismjs';
@@ -23,11 +23,10 @@ function ToastUiUpdate({id, title, desc, tags, token }) {
 
   const onChange = () => {
     const editorData = editorRef.current.getInstance().getHTML();
-    console.log(editorData)
-    setDescState(editorData);
+    dispatch(setDesc(editorData));
+    // setDescState(editorData);
   };
 
-  console.log(content);
   const handleUpdate = async () => {
     try {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -49,11 +48,15 @@ function ToastUiUpdate({id, title, desc, tags, token }) {
       console.log(e);
     }
   };
-  
+
+  useEffect(() => {
+    setDescState(editorRef.current.getInstance().getHTML())
+  }, [descState])
+
   return (
     <>
       <Editor
-        initialValue={desc}
+        initialValue={descState}
         previewStyle="vertical"
         height="702px"
         initialEditType="wysiwyg"
@@ -64,7 +67,7 @@ function ToastUiUpdate({id, title, desc, tags, token }) {
         onChange={() => onChange()}
         events={{
           focus: () => {
-            console.log("⭐ focus");
+            
           },
         }}
       />
