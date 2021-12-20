@@ -9,8 +9,8 @@ export default async (req, res) => {
   })
 
   try {
-     const apiRes = await fetch(`${API_URL}/users/password_reset/`,{
-      method: 'POST',
+     const apiRes = await fetch(`${API_URL}/users/request-reset-email/`,{
+      method: 'POST', 
       headers: {
         "Content-Type": "application/json"
       },
