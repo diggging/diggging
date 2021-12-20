@@ -112,6 +112,16 @@ class AlarmSerailzer(serializers.ModelSerializer):
         model = Alarm
         fields = "__all__"
 
+class AlarmUpdateSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Alarm
+        fields = "__all__"
+        read_only_fields = ["user", "request_user_nickname",
+        "request_user_profile_image", "title", "desc", "alarm_kind",
+        "is_checked"]
+
 
 class ChangePasswordSerializer(serializers.ModelSerializer):
     password = serializers.CharField(style={"input_type": "password"}, write_only=True)
@@ -291,3 +301,4 @@ class SetNewPasswordSerializer(serializers.Serializer):
             return user
         except Exception as e:
             raise AuthenticationFailed("비밀번호 변경 링크가 잘못되었습니다.", 401)
+        
