@@ -102,7 +102,7 @@ function AnswersList({ answer, user, token, questionId, questionUserId }) {
           <FlexContainer>
             {questionUserId === user?.user?.id && answer.selection === false ? (
               <>
-                {isOpen === true ? (
+                {isOpen === true && answer.selection === false ? (
                   <>
                     <Selected
                       setIsOpen={setIsOpen}

@@ -336,3 +336,9 @@ const DropListItem = styled.li`
   }
 `;
 
+const CurrentTab = styled.div`
+  width: 121px;
+  height: 4px;
+  background: #FFD358;
+`;
+

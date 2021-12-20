@@ -59,7 +59,7 @@ function ToastUi({ title, folder, tags, token }) {
         height="702px"
         initialEditType="wysiwyg"
         placeholder="내용을 입력해주세요."
-        plugins={[[codeSyntaxHighlight, { highlighter: Prism }], [colorSyntax]]}
+        // plugins={[[codeSyntaxHighlight, { highlighter: Prism }], [colorSyntax]]}
         autofocus={false}
         ref={editorRef}
         onChange={() => onChange()}
