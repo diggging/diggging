@@ -13,9 +13,7 @@ import { reset_password_confirm } from '../redux/actions/auth';
 import { useDispatch } from 'react-redux';
 import { API_URL } from '../config';
 
-function ResetPassword({match, reset_password_confirm}) {
-  const router = useRouter();
-  console.log(router.query.page);
+function ResetPassword() {
   const dispatch = useDispatch();
   const [requestSent, setRequestSent] = useState(false)
   const [inputs, setInputs] = useState({
@@ -23,10 +21,6 @@ function ResetPassword({match, reset_password_confirm}) {
     confirmPW: '',
   });
   
-  // const uid = match.params.uid64;
-  // const token = match.params.token;
-  // const userId = match.params.user.id
-
   const {newPW, confirmPW} = inputs;
 
   const onInput = (e) => {
@@ -38,14 +32,6 @@ function ResetPassword({match, reset_password_confirm}) {
 
   const onUpdatePassword = (e) => {
     e.preventDefault();
-   
-
-    console.log(uid64)
-    console.log(token)
-    console.log(userId)
-
-    console.log('햐햐핳')
-
 
     dispatch(reset_password_confirm(newPW, confirmPW))
     .then((res) => alertService.warn(res))
