@@ -217,7 +217,9 @@ class InputEmailSerializer(serializers.ModelSerializer):
             return data_dict
 
 
-class Unlogin_ChangePasswordSerializer(serializers.ModelSerializer):
+class Unlogin_ChangePasswordSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    temp = serializers.IntegerField()
     new_password = serializers.CharField(
         style={"input_type": "password"}, write_only=True
     )
@@ -226,59 +228,50 @@ class Unlogin_ChangePasswordSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = User
-        fields = ("new_password", "password_confirm")
+        # model = User
+        fields = ["username", "temp", "new_password", "password_confirm"]
 
     def validate(self, attrs):
         if attrs["new_password"] != attrs["password_confirm"]:
             raise serializers.ValidationError({"password": "패스워드를 재확인하세요"})
         return attrs
 
-    def update(self, instance, validated_data):
-        if (
-            len(validated_data["new_password"]) >= 8
-            or len(validated_data["password_confirm"]) >= 8
-        ):
-            instance.set_password(validated_data["password_confirm"])
-            instance.save()
-        else:
-            raise serializers.ValidationError({"password": "8자리 이상 입력하세요."})
-        return instance
-
 
 # changed code
 class ResetPasswordEmailSerializer(serializers.Serializer):
     email = serializers.EmailField()
     username = serializers.CharField()
+    # temp = serializers.IntegerField()
 
     class Meta:
         fields = ["email", "username"]
+        # read_only_fields = ["temp"]
 
 
-class SetNewPasswordSerializer(serializers.Serializer):
-    password = serializers.CharField(write_only=True)
-    token = serializers.CharField(write_only=True)
-    uidb64 = serializers.CharField(write_only=True)
+# class SetNewPasswordSerializer(serializers.Serializer):
+#     password = serializers.CharField(write_only=True)
+#     token = serializers.CharField(write_only=True)
+#     uidb64 = serializers.CharField(write_only=True)
 
-    class Meta:
-        fields = ["password", "token", "uidb64"]
+#     class Meta:
+#         fields = ["password", "token", "uidb64"]
 
-    def validate(self, attrs):
-        try:
-            password = attrs.get("password")
-            token = attrs.get("token")
-            uidb64 = attrs.get("uidb64")
+#     def validate(self, attrs):
+#         try:
+#             password = attrs.get("password")
+#             token = attrs.get("token")
+#             uidb64 = attrs.get("uidb64")
 
-            id = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(id=id)
+#             id = force_str(urlsafe_base64_decode(uidb64))
+#             user = User.objects.get(id=id)
 
-            if not PasswordResetTokenGenerator().check_token(user, token):
-                raise AuthenticationFailed("비밀번호 변경 링크가 잘못되었습니다", 401)
+#             if not PasswordResetTokenGenerator().check_token(user, token):
+#                 raise AuthenticationFailed("비밀번호 변경 링크가 잘못되었습니다", 401)
 
-            # user.password = password
+#             # user.password = password
 
-            user.set_password(password)
-            user.save()
-            return user
-        except Exception as e:
-            raise AuthenticationFailed("비밀번호 변경 링크가 잘못되었습니다.", 401)
+#             user.set_password(password)
+#             user.save()
+#             return user
+#         except Exception as e:
+#             raise AuthenticationFailed("비밀번호 변경 링크가 잘못되었습니다.", 401)

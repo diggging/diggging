@@ -59,6 +59,7 @@ class User(AbstractUser):
     login_method = models.CharField(
         max_length=50, choices=LOGIN_CHOICES, default=LOGIN_EMAIL
     )
+    temp = models.IntegerField(verbose_name="인증번호", default=0)
 
     def __str__(self):
         return self.username
