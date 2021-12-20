@@ -107,7 +107,9 @@ const Question = () => {
   const handleLinkAlarm = () => {
     alertService.warn('링크가 복사되었습니다.')
   }
+
   console.log(item);
+  
   return (
     <>
       <Layout>

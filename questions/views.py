@@ -236,18 +236,31 @@ class AnswerSelectAPIView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly, IsQuestionOwnerOrReadOnly]
 
     def perform_update(self, serializer, *args, **kwargs):
-        answer = get_object_or_404(Answer, pk=self.kwargs["pk"])
+        answer = get_object_or_404(Answer, pk=self.kwargs['pk'])
+        question = QuestionPost.objects.get(id = answer.question.id)
+        answers = question.answers.all()
 
-        if answer.selection == True:
-            answer.selection = False
+        if question.is_selected == True:
+            flag = 0
+            for answer_ind in answers:
+                if answer_ind.selection == True:
+                    flag = answer_ind.id
+            if flag == answer.id:
+                answer.selection = False
+                question.is_selected = False
         else:
             answer.selection = True
+            question.is_selected = True
+        
+        question.save()
 
-        new_alarm = Alarm.objects.create(
-            user=answer.user, reason="질문 " + answer.question.title + " 에 남긴 답변이 채택되었어요."
-        )
+        new_alarm = Alarm.objects.create(user=answer.user, 
+        title = answer.question.title,
+        alarm_kind = "answer_select", desc = answer.desc,
+        request_user_nickname=self.request.user.user_nickname,
+        request_user_profile_image=self.request.user.user_profile_image)
         answer.save()
-        serializer.save(selection=answer.selection)
+        serializer.save(selection = answer.selection)
 
 
 # ---------------------------------------------------------------------------------

@@ -53,7 +53,7 @@ function AnswersList({ answer, user, token, questionId, questionUserId }) {
     ssr: false,
   });
 
-
+  console.log(answer);
   return (
     <>
       <MainContainer>
