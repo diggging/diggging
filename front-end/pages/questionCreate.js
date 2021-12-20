@@ -119,7 +119,7 @@ const FormContainer = styled.div`
 `;
 
 const QuestionTitle = styled.input`
-  width: 51.375rem;
+  width: 940px;
   height: 4.375rem;
   margin-bottom: 1.5rem;
   background-color: #f5f5f7;
@@ -151,7 +151,7 @@ const QuestionFolder = styled.select`
 `;
 
 const QuestionHash = styled.input`
-  width: 51.375rem;
+  width: 940px;
   height: 4.375rem;
   margin-bottom: 1.5rem;
   background-color: #f5f5f7;

@@ -90,7 +90,7 @@ const FormContainer = styled.div`
 `;
 
 const AnswerTitle = styled.input`
-  width: 51.375rem;
+  width: 58.75rem;
   height: 4.375rem;
   margin-bottom: 1.5rem;
   background-color: #f5f5f7;

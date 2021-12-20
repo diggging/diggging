@@ -45,6 +45,13 @@ const GlobalStyles = createGlobalStyle`
     background-color: none;
     cursor: pointer;
   }
+  .toastui-editor-contents {
+    width: 940px;
+  }
+  .toastui-editor-defaultUI-toolbar {
+    width: 940px;
+  }
+  
 `;
 
 function MyApp({ Component, pageProps }) {
