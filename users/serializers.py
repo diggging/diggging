@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import user_passes_test
 from django.db.models.fields import EmailField
 from rest_framework import fields, serializers, exceptions, status
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import AuthenticationFailed, ValidationError
 
 from .models import User, Alarm
 from django.contrib.auth import authenticate
@@ -11,11 +11,21 @@ from rest_auth.registration.serializers import RegisterSerializer
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth import authenticate
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.utils.encoding import smart_str, force_str, DjangoUnicodeDecodeError
+from django.utils.encoding import (
+    smart_str,
+    force_str,
+    smart_bytes,
+    DjangoUnicodeDecodeError,
+)
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.sites.shortcuts import get_current_site
+from django.urls import reverse
+from .utils import Util
+
 
 try:
     from allauth.account import app_settings as allauth_settings
@@ -239,3 +249,41 @@ class Unlogin_ChangePasswordSerializer(serializers.ModelSerializer):
         else:
             raise serializers.ValidationError({"password": "8자리 이상 입력하세요."})
         return instance
+
+
+# changed code
+class ResetPasswordEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    username = serializers.CharField()
+
+    class Meta:
+        fields = ["email", "username"]
+
+
+class SetNewPasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(write_only=True)
+    token = serializers.CharField(write_only=True)
+    uidb64 = serializers.CharField(write_only=True)
+
+    class Meta:
+        fields = ["password", "token", "uidb64"]
+
+    def validate(self, attrs):
+        try:
+            password = attrs.get("password")
+            token = attrs.get("token")
+            uidb64 = attrs.get("uidb64")
+
+            id = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(id=id)
+
+            if not PasswordResetTokenGenerator().check_token(user, token):
+                raise AuthenticationFailed("비밀번호 변경 링크가 잘못되었습니다", 401)
+
+            # user.password = password
+
+            user.set_password(password)
+            user.save()
+            return user
+        except Exception as e:
+            raise AuthenticationFailed("비밀번호 변경 링크가 잘못되었습니다.", 401)
