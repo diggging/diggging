@@ -11,13 +11,18 @@ from rest_auth.registration.serializers import RegisterSerializer
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth import authenticate
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
+from django.utils.encoding import (
+    smart_str,
+    force_str,
+    smart_bytes,
+    DjangoUnicodeDecodeError,
+)
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.contrib.sites.shortcuts import get_current_site 
+from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from .utils import Util
 
@@ -247,34 +252,33 @@ class ResetPasswordEmailSerializer(serializers.Serializer):
     username = serializers.CharField()
 
     class Meta:
-        fields = ['email', 'username']
+        fields = ["email", "username"]
+
 
 class SetNewPasswordSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
     token = serializers.CharField(write_only=True)
-    uidb64 = serializers.CharField(write_only = True)
+    uidb64 = serializers.CharField(write_only=True)
 
     class Meta:
-        fields = ['password', 'token', 'uidb64']
+        fields = ["password", "token", "uidb64"]
 
     def validate(self, attrs):
         try:
-            password = attrs.get('password')
-            token = attrs.get('token')
-            uidb64 = attrs.get('uidb64')
-            
+            password = attrs.get("password")
+            token = attrs.get("token")
+            uidb64 = attrs.get("uidb64")
+
             id = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(id=id)
 
             if not PasswordResetTokenGenerator().check_token(user, token):
-                raise AuthenticationFailed('비밀번호 변경 링크가 잘못되었습니다', 401)
+                raise AuthenticationFailed("비밀번호 변경 링크가 잘못되었습니다", 401)
 
-            user.password = password
+            # user.password = password
+
+            user.set_password(password)
             user.save()
-
-            return (user)
+            return user
         except Exception as e:
-            raise AuthenticationFailed('비밀번호 변경 링크가 잘못되었습니다.', 401)
-
-        
-
+            raise AuthenticationFailed("비밀번호 변경 링크가 잘못되었습니다.", 401)

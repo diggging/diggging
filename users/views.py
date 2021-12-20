@@ -86,13 +86,19 @@ from rest_framework_simplejwt.views import (
 )
 from django.core.mail import EmailMultiAlternatives
 
-#import for new code
+# import for new code
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
+from django.utils.encoding import (
+    smart_str,
+    force_str,
+    smart_bytes,
+    DjangoUnicodeDecodeError,
+)
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from .utils import Util
+
 # ------------------------------
 
 # Create your views here.
@@ -875,48 +881,81 @@ class AlarmAPI(APIView):
 
         return Response(data)
 
-#new code
+
+# new code
 class RequestPasswordResetEmail(generics.GenericAPIView):
     serializer_class = ResetPasswordEmailSerializer
 
     def post(self, request):
-        serializer = self.serializer_class(data = request.data)
+        serializer = self.serializer_class(data=request.data)
 
-        email = request.data['email']
-        username = request.data['username'] 
+        email = request.data["email"]
+        username = request.data["username"]
 
         if User.objects.filter(email=email, username=username).exists():
-            user = User.objects.get(email=email, username = username)
+            user = User.objects.get(email=email, username=username)
             uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
             token = PasswordResetTokenGenerator().make_token(user)
-            current_site = get_current_site(request=request).domain 
-            relativeLink = reverse('password-reset-confirm', kwargs={'uidb64': uidb64, 'token': token})
-            absurl = 'http://' + current_site + relativeLink 
-            email_body = '안녕하세요, \n 아래 링크를 눌러 비밀번호를 변경하세요\n' + absurl 
-            data = {'email_body': email_body, 'to_email': user.email, 'email_subject': '비밀번호 변경'}
+            current_site = get_current_site(request=request).domain
+            relativeLink = reverse(
+                "users:password-reset-confirm",
+                kwargs={"uidb64": uidb64, "token": token},
+            )
+            absurl = "http://" + current_site + relativeLink
+            email_body = "안녕하세요, \n 아래 링크를 눌러 비밀번호를 변경하세요\n" + absurl
+            data = {
+                "email_body": email_body,
+                "to_email": user.email,
+                "email_subject": "비밀번호 변경",
+            }
 
             Util.send_email(data)
-        return Response({'success': '비밀번호 변경 링크를 보냈습니다.'}, status = status.HTTP_200_OK)
+            return Response(
+                {"success": "비밀번호 변경 링크를 보냈습니다."}, status=status.HTTP_200_OK
+            )
+        else:
+            return Response(
+                {"Fail": "아이디 또는 이메일이 틀렸습니다. 다시 입력해주세요 "},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
 
 class PasswordTokenCheckAPI(generics.GenericAPIView):
     def get(self, request, uidb64, token):
         try:
             id = smart_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(id = id)
+            user = User.objects.get(id=id)
 
             if not PasswordResetTokenGenerator().check_token(user, token):
-                return Response({'error': '토큰이 맞지 않습니다. 새로운 토큰을 발행해주세요'}, status = status.HTTP_401_UNAUTHORIZED)
+                return Response(
+                    {"error": "토큰이 맞지 않습니다. 새로운 토큰을 발행해주세요"},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
 
-            return Response({'success': True, 'message': 'Credentials Valid', 'uidb64': uidb64, 'token': token}, status = status.HTTP_200_OK)
-        
+            return Response(
+                {
+                    "success": True,
+                    "message": "Credentials Valid",
+                    "uidb64": uidb64,
+                    "token": token,
+                },
+                status=status.HTTP_200_OK,
+            )
+
         except DjangoUnicodeDecodeError as identifier:
             if not PasswordResetTokenGenerator().check_token(user):
-                return Response({'error': '토큰이 유효하지 않음. 새로운 토큰 발행해주세요'}, status = status.HTTP_401_UNAUTHORIZED)
+                return Response(
+                    {"error": "토큰이 유효하지 않음. 새로운 토큰 발행해주세요"},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
+
 
 class SetNewPasswordAPIView(generics.GenericAPIView):
     serializer_class = SetNewPasswordSerializer
 
     def patch(self, request):
-        serializer = self.serializer_class(data = request.data)
-        serializer.is_valid(raise_exception = True)
-        return Response({'success': True, 'message': '비밀번호 변경 성공'}, status = status.HTTP_200_OK)
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(
+            {"success": True, "message": "비밀번호 변경 성공"}, status=status.HTTP_200_OK
+        )
