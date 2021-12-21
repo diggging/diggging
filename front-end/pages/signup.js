@@ -59,13 +59,17 @@ function signup() {
       case "username":
         if (e.target.value.length < 4) {
           setUsernameMessage("아이디를 4자 이상 입력해주세요.");
+        } else if (e.target.value.length > 10) {
+          setUsernameMessage("아이디는 10자 이하로 입력해주세요.")
         } else {
           setUsernameMessage("올바른 아이디 형식입니다 😏");
         }
         break;
       case "user_nickname":
         if (e.target.value.length < 2) {
-          setUserNicknameMessage("닉네임을 2자 이상 입력해주세요.");
+          setUserNicknameMessage("닉네임을 4자 이상 입력해주세요.");
+        } else if (e.target.value.length > 7) {
+          setUserNicknameMessage("닉네임을 7자 이하로 입력해주세요")
         } else {
           setUserNicknameMessage("올바른 닉네임 형식입니다. 😏");
         }
@@ -114,6 +118,12 @@ function signup() {
             alertService.warn(
               `비밀번호가 일치하지 않습니다. 다시 입력해주세요😅`
             );
+          } else if (username.length < 4 || username.length > 10) {
+            alertService.warn(
+              `아이디는 4자 이상 10자 이하로 설정해주세요`
+            );
+          } else if (user_nickname.length > 7 || user_nickname.length < 4) {
+            alertService.warn('닉네임은 4자 이상 7자 이하로 설정해주세요')
           } else {
             alertService.warn("이미 사용중인 아이디 혹은 이메일입니다😅");
           }
@@ -213,9 +223,9 @@ function signup() {
               />
               <VerifyMessage>{passwordConfirmMessage}</VerifyMessage>
               {loading ? (
-                <LoaderWrapper>
+                <LoaderBox>
                   <Loader type="Oval" color="#ffd358" width={30} height={30} />
-                </LoaderWrapper>
+                </LoaderBox>
               ) : (
                 <FormBtn type="submit">회원가입하기</FormBtn>
               )}
@@ -246,12 +256,12 @@ export {
   LinkBtn,
   LinkBox,
   VerifyMessage,
-  LoaderWrapper,
+  LoaderBox,
   FormBtn,
 };
 export default signup;
 
-const LoaderWrapper = styled.div`
+const LoaderBox = styled.div`
   display: flex;
   justify-content: center;
   margin: auto auto;
