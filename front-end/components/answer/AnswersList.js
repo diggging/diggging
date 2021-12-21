@@ -10,6 +10,7 @@ import Selected from "./Selected";
 import { API_URL } from "../../config";
 import AnswerComment from "../comment/answerComment/AnswerComment";
 import Image from "next/image";
+import WhiteButton from "../common/WhiteButton";
 
 function AnswersList({ answer, user, token, questionId, questionUserId }) {
   const [answerToken, setAnswerToken] = useState(token);
@@ -112,24 +113,24 @@ function AnswersList({ answer, user, token, questionId, questionUserId }) {
                     />
                   </>
                 ) : null}
-                <AnswerBtn onClick={() => onOpen()}>채택하기</AnswerBtn>
-                <AnswerBtn onClick={() => handleCommentOpen()}>
+                <WhiteButton onClick={() => onOpen()}>채택하기</WhiteButton>
+                <WhiteButton onClick={() => handleCommentOpen()}>
                   {commentIsOpen === true ? (
                     <>댓글 접기</>
                   ) : (
                     <>댓글 {answer.answer_comment_count}</>
                   )}
-                </AnswerBtn>
+                </WhiteButton>
               </>
             ) : (
               <>
-                <AnswerBtn onClick={() => handleCommentOpen()}>
+                <WhiteButton onClick={() => handleCommentOpen()}>
                   {commentIsOpen === true ? (
                     <>댓글 접기</>
                   ) : (
                     <>댓글 {answer.answer_comment_count}</>
                   )}
-                </AnswerBtn>
+                </WhiteButton>
               </>
             )}
           </FlexContainer>
@@ -212,18 +213,14 @@ const HeadContainer = styled.div`
 `;
 
 const Title = styled.div`
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: bold;
+  font-family: 'Pretendard-Bold';
   font-size: 1.75rem;
   line-height: 3rem;
   color: #212529;
 `;
 
 const Selection = styled.div`
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: 500;
+  font-family: 'Pretendard-Regular';
   font-size: 13px;
   line-height: 19px;
   text-align: center;
@@ -243,8 +240,7 @@ const SecondContainer = styled.div`
 const Data = styled.div`
   margin-right: auto;
   height: 19px;
-  font-family: Noto Sans KR;
-  font-style: normal;
+  font-family: 'Pretendard-Regular';
   font-weight: 500;
   font-size: 12px;
   line-height: 17px;
@@ -260,9 +256,7 @@ const BtnContainer = styled.div`
 const Btn = styled.div`
   width: 100%;
   height: 1.1875rem;
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: 500;
+  font-family: 'Pretendard-Bold';
   font-size: 0.8125rem;
   line-height: 1.1875rem;
   text-align: center;
@@ -295,9 +289,7 @@ const AnswerBtn = styled.div`
   border-radius: 25px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: 500;
+  font-family: 'Pretendard-Bold';
   font-size: 13px;
   line-height: 19px;
   text-align: center;
@@ -339,18 +331,14 @@ const ProfileInfoContainer = styled.div`
 `;
 
 const ProfileName = styled.div`
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: bold;
+  font-family: 'Pretendard-Bold';
   font-size: 16px;
   line-height: 23px;
   color: #343434;
 `;
 
 const ProfileLevel = styled.div`
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: 500;
+  font-family: 'Pretendard-Bold';
   font-size: 12px;
   line-height: 17px;
   color: #7a7a7a;
@@ -359,9 +347,7 @@ const ProfileLevel = styled.div`
 const ProfileContent = styled.div`
   width: 672px;
   height: 38px;
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: normal;
+  ffont-family: 'Pretendard-Regular';
   font-size: 13px;
   line-height: 19px;
   color: #8d8c85;

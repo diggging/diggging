@@ -295,9 +295,7 @@ const CommentSendBtn = styled.button`
   background: #ffd358;
   box-shadow: 4px 4px 8px rgba(170, 170, 170, 0.1);
   border-radius: 20px;
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: bold;
+  font-family: 'Pretenard-Bold';
   font-size: 13px;
   line-height: 19px;
   color: #343434;

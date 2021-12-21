@@ -17,6 +17,8 @@ import { API_URL } from "../../config";
 import Loader from 'react-loader-spinner';
 import { Alert } from "../../components/Alert";
 import { alertService } from "../../components/alert.service";
+import { lighten, darken } from 'polished';
+import WhiteButton from "../../components/common/WhiteButton";
 
 const Question = () => {
   const [item, setItem] = useState([]);
@@ -152,9 +154,9 @@ const Question = () => {
                       <Hash>{hash}</Hash>
                     ))}
                   </HashContainer>
-                  <CommentBtn onClick={() => handleCommentOpen()}>
+                  <WhiteButton paddingTop="10px" paddingRight="18px" fontSize="13px" onClick={() => handleCommentOpen()}>
                   {commentIsOpen === true ? (<>댓글 접기</>) : (<>댓글 {item.comment_count}</>)}
-                  </CommentBtn>
+                  </WhiteButton>
                 </FlexContainer>
 
                 <ProfileContainer>
@@ -341,9 +343,7 @@ const CommentBtn = styled.div`
   border-radius: 25px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: 500;
+  font-family: 'Pretendard-Bold';
   font-size: 13px;
   line-height: 19px;
   text-align: center;
@@ -428,22 +428,22 @@ const AnswerContainer = styled.div`
 `;
 
 const AnswerCreateBtn = styled.div`
-  width: 132px;
-  height: 44px;
-  background: #ffd358;
-  box-shadow: 4px 4px 8px rgba(170, 170, 170, 0.1);
-  border-radius: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 15px;
-  line-height: 22px;
-  display: flex;
-  align-items: center;
-  text-align: center;
+  padding: 0.625rem 1.875rem;
+  border-radius: 1.5625rem;
+  
+
+  background-color: #FFD358;
   color: #343434;
+  font-family: 'Pretendard-SemiBold';
+  font-size: 1rem;
+
+  box-shadow: 0.2rem 0.2rem 0.5rem 0.2rem rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: 300ms;
+  &:hover {
+    background-color: ${lighten(0.02, '#FFD358')};
+    box-shadow: 0.2rem 0.2rem 0.5rem 0.2rem rgba(0, 0, 0, 0.15);
+  }
+  &:active {
+    background-color: ${darken(0.02, '#FFD358')};
 `;

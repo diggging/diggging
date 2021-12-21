@@ -68,7 +68,7 @@ const CommentInput = styled(TextareaAutosize)`
   box-sizing: border-box;
   border-radius: 8px;
   padding: 1rem 1rem 1.5rem;
-  font-family: Noto Sans KR;
+  font-family: 'Pretenard-Regular';
   font-size: 1rem;
   color: rgb(33, 37, 41);
   line-height: 1.75;
@@ -83,9 +83,7 @@ const CommentSendBtn = styled.button`
   background: #ffd358;
   box-shadow: 4px 4px 8px rgba(170, 170, 170, 0.1);
   border-radius: 20px;
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: bold;
+  font-family: 'Pretendard-Bold';
   font-size: 13px;
   line-height: 19px;
   color: #343434;
@@ -93,9 +91,7 @@ const CommentSendBtn = styled.button`
 
 const CommentCount = styled.div`
   width: 100%;
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: bold;
+  font-family: 'Pretenard-Bold';
   font-size: 18px;
   line-height: 21px;
   color: #343434;
