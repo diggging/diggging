@@ -39,13 +39,17 @@ function ToastAnswerUpdate({id, title, desc, token, questionId }) {
         .then((response) => {
           dispatch(setDesc(""));
           alertService.success("답변이 수정 되었습니다.");
-          router.push(`/questions/${questionId}`);
+          setTimeout(() => {
+            router.push(`/questions/${questionId}`);
+          }, 1500)
         })
         .catch((error) => {
-          console.log(error);
+          if(e.response === 400) {
+            alertService.warn("빈 칸 없이 모두 작성해주세요.");
+          }
         });
     } catch (e) {
-      console.log(e);
+      alertService.warn("답변이 수정 되지 않았습니다.");
     }
   };
 

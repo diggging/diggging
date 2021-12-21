@@ -42,13 +42,17 @@ function ToastUiUpdate({ id, title, desc, tags, token }) {
         .then((response) => {
           dispatch(setDesc(""));
           alertService.success("질문이 수정 되었습니다.");
-          router.push(`/questions/${id}`);
+          setTimeout(() => {
+            router.push(`/questions/${id}`);
+          }, 1500)
         })
         .catch((error) => {
-          console.log(error);
+          if(e.response === 400) {
+            alertService.warn("빈 칸 없이 모두 작성해주세요.");
+          }
         });
     } catch (e) {
-      console.log(e);
+      alertService.warn("질문이 수정 되지 않았습니다.");
     }
   };
 

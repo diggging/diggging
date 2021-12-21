@@ -125,7 +125,7 @@ function Alert({ id, fade }) {
 }
 
 const AlertBody = styled.div`
-  position: absolute;
+  position: fixed;
   top: 10%;
   left: 50%;
   transform: translate(-50%, 0); //중앙정렬
@@ -137,6 +137,7 @@ const AlertBody = styled.div`
   display: flex;
   max-width: 100%;
   justify-content: space-between;
+  z-index: 50;
 `;
 
 const AlertClose = styled.a`

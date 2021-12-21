@@ -30,6 +30,12 @@ function Comment({ commentCount, comments, id, token }) {
           setNewComment(response.data);
           setText("");
           setCommentNum(commentNum + 1);
+        }).catch((e) => {
+          if(e.response.status === 400) {
+            alertService.warn("댓글을 작성해주세요");      
+          } else if(e.response.status === 401) {
+            alertService.success("로그인 후 이용해주세요.");
+          }
         });
     } catch (e) {
       alertService.success("로그인 후 이용해주세요.");

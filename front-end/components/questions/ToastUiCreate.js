@@ -40,15 +40,18 @@ function ToastUi({ title, folder, tags, token }) {
           question_tags: tags,
         })
         .then((response) => {
-          dispatch(setDesc(""));
           alertService.success("질문이 업로드 되었습니다.");
-          router.push(`/`);
+          dispatch(setDesc(""));
+          setTimeout(() => {
+            router.push(`/`);
+          }, 1500)
+        }).catch ((e) => {
+          if(e.response.status === 400) {
+            alertService.warn("빈 칸 없이 모두 작성해주세요.");
+          }
         })
-        .catch((error) => {
-          console.log(error);
-        });
     } catch (e) {
-      console.log(e);
+      alertService.warn("업로드에 실패했습니다.");
     }
   };
 

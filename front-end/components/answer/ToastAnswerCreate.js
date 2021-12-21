@@ -41,13 +41,17 @@ function ToastAnswerCreate({title, token, id}) {
           .then((response) => {
             dispatch(setDesc(""));
             alertService.success("답변이 업로드 되었습니다.");
-            router.push(`/questions/${id}`);
+            setTimeout(() => {
+              router.push(`/questions/${id}`);
+            }, 1500)
           })
           .catch((error) => {
-            console.log(error);
+            if(errorr.response === 400) {
+              alertService.warn("빈 칸 없이 모두 작성해주세요.");
+            }
           });
       } catch (e) {
-        console.log(e);
+        alertService.warn("업로드에 실패했습니다.");
       }
     };
     

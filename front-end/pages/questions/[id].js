@@ -64,7 +64,6 @@ const Question = () => {
       await axios
         .delete(`${API_URL}/questions/${id}/delete/`)
         .then((response) => {
-          console.log(response);
           router.push(`/`);
         });
     } catch (e) {
