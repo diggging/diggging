@@ -70,11 +70,12 @@ function Prevent({ children }) {
         setOpen(false);
       }
     }
-    document.addEventListener("mousedown", checkClickOutSide)
+    document.addEventListener("click", checkClickOutSide)
     return () => {
-      document.addEventListener("mousedown", checkClickOutSide)
+      document.addEventListener("click", checkClickOutSide)
     }
   },[open])
+  console.log(open, smallCriteria)
 
   return (
     <Layout>

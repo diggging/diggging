@@ -23,20 +23,19 @@ function main({ children }) {
     dispatch(setQuestion(1, "recent", "all"));
   }, [dispatch]);
 
+
   useEffect(() => {
     const checkClickOutSide = (e) => {
-      if(open && ref.current && !ref.current.contains(e.target)) {
+      if(open === true && ref.current && !ref.current.contains(e.target)) {
         setOpen(false);
       }
     }
-
-    document.addEventListener("mousedown", checkClickOutSide)
+    document.addEventListener("click", checkClickOutSide)
     return () => {
-      document.addEventListener("mousedown", checkClickOutSide)
+      document.addEventListener("click", checkClickOutSide)
     }
   },[open])
 
-  //여기도 고쳐야함
   const ToggleDispatch = (smallCriteria) => {
     dispatch(setQuestion(1, "recent", smallCriteria));
     setOpen(false);
@@ -112,9 +111,9 @@ function main({ children }) {
             ) : smallCriteria === "answer_done" ? (
               <>답변 완료</>
             ) : null}
-          </ToggleContainer>
+          </ToggleContainer >
           {open ? (
-            <DropBox >
+            <DropBox>
               <DropList>
                 <DropListItem onClick={() => ToggleDispatch("wait_answer")}>
                   답변 대기 중
