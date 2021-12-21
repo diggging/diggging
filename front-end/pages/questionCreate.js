@@ -27,10 +27,6 @@ function questionCreate() {
     if (user) {
       const userData = user.user;
       const { email, user_nickname, username } = userData;
-      console.log(user.user);
-      console.log(response, "response");
-    } else {
-      console.log("유저없엉");
     }
   };
 
@@ -66,6 +62,7 @@ function questionCreate() {
           <FormContainer>
             <QuestionTitle
               name="title"
+              value={title}
               onChange={onChangeTitle}
               placeholder="제목을 입력하세요."
             />
@@ -79,8 +76,9 @@ function questionCreate() {
             </QuestionFolder> */}
             <QuestionHash
               name="question_tags"
+              value={tags}
               onChange={onChangeTags}
-              placeholder="#해시태그를 #입력해보세요"
+              placeholder="#해시태그를 #입력해보세요 #쉼표를 통해서 구분해주세요.   Ex) diggging,해시태그"
             />
             <ToastCreate
               title={title}
@@ -123,7 +121,7 @@ const FormContainer = styled.div`
 `;
 
 const QuestionTitle = styled.input`
-  width: 51.375rem;
+  width: 58.75rem;
   height: 4.375rem;
   margin-bottom: 1.5rem;
   background-color: #f5f5f7;
@@ -155,7 +153,7 @@ const QuestionFolder = styled.select`
 `;
 
 const QuestionHash = styled.input`
-  width: 51.375rem;
+  width: 58.75rem;
   height: 4.375rem;
   margin-bottom: 1.5rem;
   background-color: #f5f5f7;

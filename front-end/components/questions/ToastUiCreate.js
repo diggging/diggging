@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import Prism from 'prismjs';
@@ -13,21 +13,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { API_URL } from "../../config";
+import { alertService } from "../alert.service";
+import { Alert } from "../Alert";
 
 function ToastUi({ title, folder, tags, token }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const editorRef = useRef();
   const content = useSelector((state) => state.content.desc);
-
   const [currentContent, setCurrentContent] = useState("");
-
-  const onChange = () => {
+  
+  const onChange = useCallback(() => {
     const editorData = editorRef.current.getInstance().getHTML();
     dispatch(setDesc(editorData));
     setCurrentContent(editorData)
-  };
-  
+  }, [currentContent]);
+
   const handleCreate = async () => {
     try {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -40,33 +41,39 @@ function ToastUi({ title, folder, tags, token }) {
           question_tags: tags,
         })
         .then((response) => {
-          console.log(response);
-          router.push(`/`);
+          alertService.success("질문이 업로드 되었습니다.");
+          dispatch(setDesc(""));
+          setTimeout(() => {
+            router.push(`/`);
+          }, 1500)
+        }).catch ((e) => {
+          console.log(e.response);
+          if(e.response.status === 400) {
+            alertService.warn("빈 칸 없이 모두 작성해주세요.");
+          }
         })
-        .catch((error) => {
-          console.log(error);
-        });
     } catch (e) {
-      console.log(e);
+      alertService.warn("업로드에 실패했습니다.");
     }
   };
-  // console.log(tags);
+
   return (
     <>
+      <Alert/>
       <Editor
-        initialValue={currentContent}
+        initialValue={content}
         previewStyle="vertical"
         height="702px"
         initialEditType="wysiwyg"
         placeholder="내용을 입력해주세요."
-        plugins={[[codeSyntaxHighlight, { highlighter: Prism }], [colorSyntax]]}
+        // plugins={[[codeSyntaxHighlight, { highlighter: Prism }], [colorSyntax]]}
         autofocus={false}
         ref={editorRef}
         onChange={() => onChange()}
         // language="ko"
         events={{
           focus: () => {
-            console.log('⭐ focus');
+            
           },
         }}
       />

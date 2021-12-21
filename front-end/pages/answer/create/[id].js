@@ -48,7 +48,7 @@ function answerCreate() {
             <AnswerTitle
               name="title"
               onChange={onChangeTitle}
-              placeholder="제목을 입력하세요."
+              placeholder="#해시태그를 #입력해보세요 #쉼표를 통해서 구분해주세요.   Ex) diggging,해시태그"
             />
             <ToastCreate
               title={title}
@@ -90,7 +90,7 @@ const FormContainer = styled.div`
 `;
 
 const AnswerTitle = styled.input`
-  width: 51.375rem;
+  width: 58.75rem;
   height: 4.375rem;
   margin-bottom: 1.5rem;
   background-color: #f5f5f7;

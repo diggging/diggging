@@ -5,16 +5,14 @@ import LikeDetail from "../../public/static/images/LikeDetail";
 import LinkDetail from "../../public/static/images/LinkDetail";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useRouter } from "next/router";
-import {API_URL} from '../../config/index';
+import { API_URL } from "../../config/index";
 import { alertService } from "../alert.service";
-
-
 
 function DetailLike({ token, id, handleLinkAlarm }) {
   const router = useRouter();
   const [like, setLike] = useState([]);
   const [isClick, setIsClick] = useState(false);
-  
+
   const url =
     typeof window !== "undefined" && window.location.origin
       ? window.location.href
@@ -28,16 +26,23 @@ function DetailLike({ token, id, handleLinkAlarm }) {
         .put(`${API_URL}/questions/${id}/like_create/`)
         .then((response) => {
           setLike(response.data.helped_num);
+        })
+        .catch((e) => {
+          if (e.response.status === 403) {
+            alertService.warn("작성자는 좋아요를 누를 수 없습니다!");
+          } else if(e.response.status === 401) {
+            alertService.warn("로그인 후 이용해주세요.");
+          }
         });
     } catch (e) {
-      console.log(e);
+      alertService.warn("로그인 후 이용해주세요.");
     }
   };
 
   const handleData = () => {
     try {
       axios.get(`${API_URL}/questions/${id}/detail/`).then((res) => {
-      setLike(res.data.helped_num);
+        setLike(res.data.helped_num);
       });
     } catch (e) {
       console.log(e);
@@ -46,8 +51,7 @@ function DetailLike({ token, id, handleLinkAlarm }) {
 
   useEffect(() => {
     handleData();
-  }, [])
-
+  }, []);
 
   return (
     <Container>
@@ -60,7 +64,7 @@ function DetailLike({ token, id, handleLinkAlarm }) {
         </FlexContainer>
         <FlexContainer>
           <CopyToClipboard text={url}>
-            <Element onClick={()=>handleLinkAlarm()}>
+            <Element onClick={() => handleLinkAlarm()}>
               <LinkDetail />
             </Element>
           </CopyToClipboard>
@@ -74,9 +78,9 @@ function DetailLike({ token, id, handleLinkAlarm }) {
 export default DetailLike;
 
 const Container = styled.div`
-    position: fixed;
-    right: 2%;
-    top: 10%;
+  position: fixed;
+  right: 2%;
+  top: 10%;
 `;
 
 const ElementContainer = styled.div`

@@ -13,6 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import {API_URL} from '../../config/index';
+import { Alert } from "../Alert";
+import { alertService } from "../alert.service";
 
 function ToastAnswerCreate({title, token, id}) {
     const router = useRouter();
@@ -38,27 +40,33 @@ function ToastAnswerCreate({title, token, id}) {
             desc: content,
           })
           .then((response) => {
-            console.log(response);
-            router.push(`/questions/${id}`);
+            dispatch(setDesc(""));
+            alertService.success("답변이 업로드 되었습니다.");
+            setTimeout(() => {
+              router.push(`/questions/${id}`);
+            }, 1500)
           })
           .catch((error) => {
-            console.log(error);
+            if(errorr.response === 400) {
+              alertService.warn("빈 칸 없이 모두 작성해주세요.");
+            }
           });
       } catch (e) {
-        console.log(e);
+        alertService.warn("업로드에 실패했습니다.");
       }
     };
     
 
     return (
       <>
+        <Alert/>
         <Editor
-          initialValue={currentContent}
+          initialValue={content}
           previewStyle="vertical"
           height="702px"
           initialEditType="wysiwyg"
           placeholder="내용을 입력해주세요."
-          plugins={[[codeSyntaxHighlight, { highlighter: Prism }], [colorSyntax]]}
+          // plugins={[[codeSyntaxHighlight, { highlighter: Prism }], [colorSyntax]]}
           autofocus={false}
           ref={editorRef}
           onChange={() => onChange()}

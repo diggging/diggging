@@ -4,6 +4,7 @@ import CommentList from "../../comment/questionComment/CommentList";
 import axios from "axios";
 import TextareaAutosize from "react-autosize-textarea";
 import { API_URL } from "../../../config";
+import { alertService } from "../../alert.service";
 
 function Comment({ commentCount, comments, id, token }) {
   const [text, setText] = useState("");
@@ -29,9 +30,15 @@ function Comment({ commentCount, comments, id, token }) {
           setNewComment(response.data);
           setText("");
           setCommentNum(commentNum + 1);
+        }).catch((e) => {
+          if(e.response.status === 400) {
+            alertService.warn("댓글을 작성해주세요");      
+          } else if(e.response.status === 401) {
+            alertService.success("로그인 후 이용해주세요.");
+          }
         });
     } catch (e) {
-      console.log(e);
+      alertService.success("로그인 후 이용해주세요.");
     }
   };
 

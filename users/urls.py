@@ -65,6 +65,7 @@ urlpatterns = [
     path("login/github", views.github_login, name="github_login"),
     path("login/github/callback", views.github_callback, name="github_callback"),
     path("<int:pk>/alarm/", views.AlarmAPI.as_view(), name="alarm"),
+    path("alarm/<int:pk>/", views.UpdateAlarmAPIView.as_view(), name="alarm_update"),
     # 삽질기록모음 ajax
     path("<int:pk>/lang_folder/", views.lang_folder, name="lang_folder"),
     path("<int:pk>/solved_folder/", views.solved_folder, name="solved_folder"),

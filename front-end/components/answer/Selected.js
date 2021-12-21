@@ -1,12 +1,13 @@
-import React from 'react';
+import React, {useRef, useEffect} from 'react';
 import axios from "axios";
 import styled from 'styled-components';
 import { API_URL } from '../../config';
 import { useRouter } from "next/router";
 
 
-function Selected({setIsOpen, id, token, questionId}) {
+function Selected({setIsOpen, id, token, questionId, isOpen}) {
   const router = useRouter();
+  const ref = useRef();
 
   const selectAnswer = async (id) => {
     try {
@@ -23,12 +24,24 @@ function Selected({setIsOpen, id, token, questionId}) {
     }
   };
 
+  useEffect(() => {
+    const checkClickOutSide = (e) => {
+      if(isOpen === true && ref.current && !ref.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("click", checkClickOutSide)
+    return () => {
+      document.addEventListener("click", checkClickOutSide)
+    }
+  },[isOpen])
+
   const notSelectAnswer = () => {
     setIsOpen(false);
   }
-
+  isOpen
     return (
-        <SelectedContainer>
+        <SelectedContainer ref={ref}>
           <IsSelected>
             채택하시겠습니까?
           </IsSelected>
@@ -58,6 +71,7 @@ const SelectedContainer = styled.div`
 `;
 
 const IsSelected = styled.div`
+  height: 100%;
   font-family: Noto Sans KR;
   font-style: normal;
   font-weight: bold;
@@ -72,6 +86,7 @@ const IsSelected = styled.div`
 const FlexContainer = styled.div`
   display: flex;
   align-items: center;
+  height: 100%;
 `;
 
 const SeletedBtn = styled.button`

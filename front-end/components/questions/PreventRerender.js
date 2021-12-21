@@ -13,6 +13,7 @@ import SvgDigggingLogo from "../../public/static/images/digggingLogo";
 import SvgToggleBtn from "../../public/static/images/ToggleBtn";
 import { BannerBackground, SubTitle } from "../../pages/main";
 function Prevent({ children }) {
+  const ref = useRef();
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const {
@@ -65,6 +66,19 @@ function Prevent({ children }) {
   useEffect(() => {
     styleHandle();
   }, [bigCriteria]);
+
+  useEffect(() => {
+    const checkClickOutSide = (e) => {
+      if(open && ref.current && !ref.current.contains(e.target)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("click", checkClickOutSide)
+    return () => {
+      document.addEventListener("click", checkClickOutSide)
+    }
+  },[open])
+  console.log(open, smallCriteria)
 
   return (
     <Layout>
@@ -153,25 +167,17 @@ function Prevent({ children }) {
                   </Link>
                 </>
               )}
-              {isPopular ? (
-                <>
-                  <Link href="/popular">
-                    <Tab style={style}>인기 순</Tab>
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link href="/popular">
-                    <Tab>인기 순</Tab>
-                  </Link>
-                </>
-              )}
+
+              <Link href="/popular">
+                <Tab>인기 순</Tab>
+              </Link>
             </TabContainer>
           )}
           <ToggleContainer
             onClick={() => {
               setOpen(!open);
             }}
+            ref={ref}
           >
             {smallCriteria === "all" ? (
               <>답변 전체</>
@@ -348,9 +354,6 @@ const ToggleContainer = styled.button`
   font-size: 1rem;
   transition: 300ms;
   cursor: pointer;
-      <ImageContainer>
-        <Image src="/../public/static/images/a.png" width={1440} height={511} />
-      </ImageContainer>
 
   & svg {
     margin-left: 10px;
@@ -370,7 +373,6 @@ const DropBox = styled.div`
   background: #ffffff;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
- 
 
 `;
 
@@ -379,6 +381,7 @@ const DropList = styled.ul`
   list-style: none;
   line-height: 2rem;
   font-family: "Pretendard-Regular";
+  font-size: 0.875rem;
 `;
 
 const DropListItem = styled.li`

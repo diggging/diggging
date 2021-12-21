@@ -1,4 +1,5 @@
 import { Viewer } from "@toast-ui/react-editor";
+import styled from "styled-components";
 import "@toast-ui/editor/dist/toastui-editor-viewer.css";
 import Prism from "prismjs";
 import "prismjs/themes/prism.css";
@@ -10,7 +11,8 @@ function QuestionView({ desc }) {
     <>
       <Viewer
         initialValue={desc}
-        plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
+        width={100}
+        // plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
       />
     </>
   );

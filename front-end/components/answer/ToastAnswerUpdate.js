@@ -13,6 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { API_URL } from "../../config";
+import { Alert } from "../Alert";
+import { alertService } from "../alert.service";
 
 function ToastAnswerUpdate({id, title, desc, token, questionId }) {
   const router = useRouter();
@@ -23,7 +25,7 @@ function ToastAnswerUpdate({id, title, desc, token, questionId }) {
 
   const onChange = () => {
     const editorData = editorRef.current.getInstance().getHTML();
-    setDescState(editorData);
+    dispatch(setDesc(editorData));
   };
 
   const handleUpdate = async () => {
@@ -33,37 +35,64 @@ function ToastAnswerUpdate({id, title, desc, token, questionId }) {
       await axios
         .put(`${API_URL}/questions/${id}/answer_update/`, {
           title: title,
-          desc: descState,
+          desc: content,
         })
         .then((response) => {
-          router.push(`/questions/${questionId}`);
+          dispatch(setDesc(""));
+          alertService.success("답변이 수정 되었습니다.");
+          setTimeout(() => {
+            router.push(`/questions/${questionId}`);
+          }, 1500)
         })
         .catch((error) => {
-          console.log(error);
+          if(e.response === 400) {
+            alertService.warn("빈 칸 없이 모두 작성해주세요.");
+          }
         });
     } catch (e) {
-      console.log(e);
+      alertService.warn("답변이 수정 되지 않았습니다.");
     }
   };
 
   return (
     <>
-      <Editor
-        initialValue={desc}
-        previewStyle="vertical"
-        height="702px"
-        initialEditType="wysiwyg"
-        placeholder="내용을 입력해주세요."
-        plugins={[[codeSyntaxHighlight, { highlighter: Prism }], [colorSyntax]]}
-        autofocus={false}
-        ref={editorRef}
-        onChange={() => onChange()}
-        events={{
-          focus: () => {
-            console.log("⭐ focus");
-          },
-        }}
-      />
+      {content ? (
+        <>
+          <Alert/>
+          <Editor
+            initialValue={content}
+            previewStyle="vertical"
+            height="702px"
+            initialEditType="wysiwyg"
+            placeholder="내용을 입력해주세요."
+            // plugins={[[codeSyntaxHighlight, { highlighter: Prism }], [colorSyntax]]}
+            autofocus={false}
+            ref={editorRef}
+            onChange={onChange}
+            events={{
+              focus: () => {},
+            }}
+          />
+        </>
+      ) : (
+        <>
+          <Alert/>
+          <Editor
+            initialValue={descState}
+            previewStyle="vertical"
+            height="702px"
+            initialEditType="wysiwyg"
+            placeholder="내용을 입력해주세요."
+            // plugins={[[codeSyntaxHighlight, { highlighter: Prism }], [colorSyntax]]}
+            autofocus={false}
+            ref={editorRef}
+            onChange={onChange}
+            events={{
+              focus: () => {},
+            }}
+          />
+        </>
+      )}
       <BtnContainer>
         <Btn onClick={handleUpdate}>수정하기</Btn>
         <Link href={`/questions/${questionId}`} passHref>

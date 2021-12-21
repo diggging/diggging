@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Link from "next/link";
 import NavBar from "../components/NavBar";
 import Image from "next/image";
@@ -8,11 +8,10 @@ import QuestionList from "../components/questions/QuestionList";
 import Layout from "../hocs/Layout";
 import SvgDigggingLogo from "../public/static/images/DigggingLogo";
 import { useRouter } from "next/router";
-import {
-  setQuestion,
-} from "../modules/questions";
+import { setQuestion } from "../modules/questions";
 
 function main({ children }) {
+  const ref = useRef();
   const [open, setOpen] = useState(false);
 
   const dispatch = useDispatch();
@@ -24,7 +23,19 @@ function main({ children }) {
     dispatch(setQuestion(1, "recent", "all"));
   }, [dispatch]);
 
-  //여기도 고쳐야함
+
+  useEffect(() => {
+    const checkClickOutSide = (e) => {
+      if(open === true && ref.current && !ref.current.contains(e.target)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("click", checkClickOutSide)
+    return () => {
+      document.addEventListener("click", checkClickOutSide)
+    }
+  },[open])
+
   const ToggleDispatch = (smallCriteria) => {
     dispatch(setQuestion(1, "recent", smallCriteria));
     setOpen(false);
@@ -37,7 +48,7 @@ function main({ children }) {
 
   return (
     <Layout>
-      <NavBar />
+      <NavBar/>
       <BannerBackground>
         <Image
           src="/../public/static/images/main_banner_back.png"
@@ -89,10 +100,18 @@ function main({ children }) {
           )}
           <ToggleContainer
             onClick={() => {
-              setOpen(!open);
+              setOpen(!open)
             }}
-          > {smallCriteria === "all" ? <>답변 전체</> : (smallCriteria === "wait_answer" ? <>답변 대기 중</> : (smallCriteria === "answer_done" ? <>답변 완료</> : null))}
-          </ToggleContainer>
+            ref={ref}
+          >
+            {smallCriteria === "all" ? (
+              <>답변 전체</>
+            ) : smallCriteria === "wait_answer" ? (
+              <>답변 대기 중</>
+            ) : smallCriteria === "answer_done" ? (
+              <>답변 완료</>
+            ) : null}
+          </ToggleContainer >
           {open ? (
             <DropBox>
               <DropList>
@@ -110,7 +129,7 @@ function main({ children }) {
           ) : null}
         </TabItemContainer>
         <QuestionsContainer>
-          <QuestionList data={data} count={count} />
+          <QuestionList data={data} count={count}/>
         </QuestionsContainer>
       </Container>
     </Layout>
@@ -263,9 +282,6 @@ const QuestionsContainer = styled.div`
 `;
 
 const ToggleContainer = styled.button`
-  font-size: 1rem;
-  font-family: 'Pretendard-Bold';
-  color: #343434;
   background: white;
   width: 8.25rem;
   height: 2.5rem;
@@ -275,12 +291,13 @@ const ToggleContainer = styled.button`
   align-items: center;
   -webkit-box-pack: justify;
   justify-content: center;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-weight: 600;
   color: rgb(73, 80, 87);
+  font-size: 0.875rem;
   box-shadow: rgb(0 0 0 / 5%) 0px 0px 4px;
   cursor: pointer;
-      <ImageContainer>
-        <Image src="/../public/static/images/a.png" width={1440} height={511} />
-      </ImageContainer>
 
   & svg {
     margin-left: 10px;
@@ -303,16 +320,24 @@ const DropList = styled.ul`
   text-align: center;
   list-style: none;
   line-height: 2rem;
+  font-family: "Pretendard-Regular";
+  font-size: 0.875rem;
 `;
 
 const DropListItem = styled.li`
-  padding: 0.625rem 1.5rem;
+  color: #b6b6b6;
+  padding: 5px 10px;
   cursor: pointer;
-  font-family: "Pretendard-Bold";
-  color: #343434;
-  font-size: 0.875rem;
 
   &:hover {
-    color: #FFBA42;
+    color: #343434;
+    font-family: "Pretendard-Medium";
   }
 `;
+
+const CurrentTab = styled.div`
+  width: 121px;
+  height: 4px;
+  background: #FFD358;
+`;
+

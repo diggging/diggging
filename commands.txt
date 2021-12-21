@@ -12,3 +12,6 @@ pip install django-rest-passwordreset (비밀번호 변경할때 사용함 ㅋ)
 
 pip install django-taggit (해시태그 구현을 위함) 
 pip install django-taggit-serializer (taggit 전용 serializer)
+
+Nginx, Apache 연동 X 시 static file 확인 방법 
+-> python manage.py runserver --insecure 0.0.0.0:8000 --settings=shoveling.settings.prod 
