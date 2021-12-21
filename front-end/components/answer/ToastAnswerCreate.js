@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import {API_URL} from '../../config/index';
+import { Alert } from "../Alert";
 import { alertService } from "../alert.service";
 
 function ToastAnswerCreate({title, token, id}) {
@@ -58,6 +59,7 @@ function ToastAnswerCreate({title, token, id}) {
 
     return (
       <>
+        <Alert/>
         <Editor
           initialValue={content}
           previewStyle="vertical"

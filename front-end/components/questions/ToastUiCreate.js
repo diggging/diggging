@@ -14,6 +14,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { API_URL } from "../../config";
 import { alertService } from "../alert.service";
+import { Alert } from "../Alert";
 
 function ToastUi({ title, folder, tags, token }) {
   const router = useRouter();
@@ -21,7 +22,7 @@ function ToastUi({ title, folder, tags, token }) {
   const editorRef = useRef();
   const content = useSelector((state) => state.content.desc);
   const [currentContent, setCurrentContent] = useState("");
-
+  
   const onChange = useCallback(() => {
     const editorData = editorRef.current.getInstance().getHTML();
     dispatch(setDesc(editorData));
@@ -46,6 +47,7 @@ function ToastUi({ title, folder, tags, token }) {
             router.push(`/`);
           }, 1500)
         }).catch ((e) => {
+          console.log(e.response);
           if(e.response.status === 400) {
             alertService.warn("빈 칸 없이 모두 작성해주세요.");
           }
@@ -57,6 +59,7 @@ function ToastUi({ title, folder, tags, token }) {
 
   return (
     <>
+      <Alert/>
       <Editor
         initialValue={content}
         previewStyle="vertical"
@@ -70,7 +73,7 @@ function ToastUi({ title, folder, tags, token }) {
         // language="ko"
         events={{
           focus: () => {
-            console.log('⭐ focus');
+            
           },
         }}
       />

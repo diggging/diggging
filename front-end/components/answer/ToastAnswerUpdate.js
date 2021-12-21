@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { API_URL } from "../../config";
+import { Alert } from "../Alert";
 import { alertService } from "../alert.service";
 
 function ToastAnswerUpdate({id, title, desc, token, questionId }) {
@@ -57,6 +58,7 @@ function ToastAnswerUpdate({id, title, desc, token, questionId }) {
     <>
       {content ? (
         <>
+          <Alert/>
           <Editor
             initialValue={content}
             previewStyle="vertical"
@@ -74,6 +76,7 @@ function ToastAnswerUpdate({id, title, desc, token, questionId }) {
         </>
       ) : (
         <>
+          <Alert/>
           <Editor
             initialValue={descState}
             previewStyle="vertical"
