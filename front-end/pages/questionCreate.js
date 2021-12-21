@@ -62,6 +62,7 @@ function questionCreate() {
           <FormContainer>
             <QuestionTitle
               name="title"
+              value={title}
               onChange={onChangeTitle}
               placeholder="제목을 입력하세요."
             />
@@ -75,6 +76,7 @@ function questionCreate() {
             </QuestionFolder> */}
             <QuestionHash
               name="question_tags"
+              value={tags}
               onChange={onChangeTags}
               placeholder="#해시태그를 #입력해보세요"
             />

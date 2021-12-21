@@ -1,12 +1,12 @@
 import React, { useRef, useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
-import Prism from 'prismjs';
+import Prism from "prismjs";
 import "@toast-ui/editor/dist/toastui-editor.css";
-import 'prismjs/themes/prism.css';
-import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
-import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
-import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
+import "prismjs/themes/prism.css";
+import "@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css";
+import codeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight";
+import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 import { Editor } from "@toast-ui/react-editor";
 import { setDesc } from "../../modules/editor";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,17 +14,17 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { API_URL } from "../../config";
 
-function ToastUiUpdate({id, title, desc, tags, token }) {
+function ToastUiUpdate({ id, title, desc, tags, token }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const editorRef = useRef();
   const content = useSelector((state) => state.content.desc);
+
   const [descState, setDescState] = useState(desc);
 
   const onChange = () => {
     const editorData = editorRef.current.getInstance().getHTML();
     dispatch(setDesc(editorData));
-    // setDescState(editorData);
   };
 
   const handleUpdate = async () => {
@@ -34,7 +34,7 @@ function ToastUiUpdate({id, title, desc, tags, token }) {
       await axios
         .put(`${API_URL}/questions/${id}/update/`, {
           title: title,
-          desc: descState,
+          desc: content,
           question_folder: [],
           question_tags: tags,
         })
@@ -49,28 +49,43 @@ function ToastUiUpdate({id, title, desc, tags, token }) {
     }
   };
 
-  useEffect(() => {
-    setDescState(editorRef.current.getInstance().getHTML())
-  }, [descState])
-
   return (
     <>
-      <Editor
-        initialValue={descState}
-        previewStyle="vertical"
-        height="702px"
-        initialEditType="wysiwyg"
-        placeholder="내용을 입력해주세요."
-        // plugins={[[codeSyntaxHighlight, { highlighter: Prism }], [colorSyntax]]}
-        autofocus={false}
-        ref={editorRef}
-        onChange={() => onChange()}
-        events={{
-          focus: () => {
-            
-          },
-        }}
-      />
+      {content ? (
+        <>
+          <Editor
+            initialValue={content}
+            previewStyle="vertical"
+            height="702px"
+            initialEditType="wysiwyg"
+            placeholder="내용을 입력해주세요."
+            // plugins={[[codeSyntaxHighlight, { highlighter: Prism }], [colorSyntax]]}
+            autofocus={false}
+            ref={editorRef}
+            onChange={onChange}
+            events={{
+              focus: () => {},
+            }}
+          />
+        </>
+      ) : (
+        <>
+          <Editor
+            initialValue={descState}
+            previewStyle="vertical"
+            height="702px"
+            initialEditType="wysiwyg"
+            placeholder="내용을 입력해주세요."
+            // plugins={[[codeSyntaxHighlight, { highlighter: Prism }], [colorSyntax]]}
+            autofocus={false}
+            ref={editorRef}
+            onChange={onChange}
+            events={{
+              focus: () => {},
+            }}
+          />
+        </>
+      )}
       <BtnContainer>
         <Btn onClick={handleUpdate}>수정하기</Btn>
         <Link href={`/questions/${id}`} passHref>

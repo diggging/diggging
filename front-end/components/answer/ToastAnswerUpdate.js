@@ -23,7 +23,7 @@ function ToastAnswerUpdate({id, title, desc, token, questionId }) {
 
   const onChange = () => {
     const editorData = editorRef.current.getInstance().getHTML();
-    setDescState(editorData);
+    dispatch(setDesc(editorData));
   };
 
   const handleUpdate = async () => {
@@ -33,7 +33,7 @@ function ToastAnswerUpdate({id, title, desc, token, questionId }) {
       await axios
         .put(`${API_URL}/questions/${id}/answer_update/`, {
           title: title,
-          desc: descState,
+          desc: content,
         })
         .then((response) => {
           router.push(`/questions/${questionId}`);
@@ -48,22 +48,41 @@ function ToastAnswerUpdate({id, title, desc, token, questionId }) {
 
   return (
     <>
-      <Editor
-        initialValue={desc}
-        previewStyle="vertical"
-        height="702px"
-        initialEditType="wysiwyg"
-        placeholder="내용을 입력해주세요."
-        // plugins={[[codeSyntaxHighlight, { highlighter: Prism }], [colorSyntax]]}
-        autofocus={false}
-        ref={editorRef}
-        onChange={() => onChange()}
-        events={{
-          focus: () => {
-            console.log("⭐ focus");
-          },
-        }}
-      />
+      {content ? (
+        <>
+          <Editor
+            initialValue={content}
+            previewStyle="vertical"
+            height="702px"
+            initialEditType="wysiwyg"
+            placeholder="내용을 입력해주세요."
+            // plugins={[[codeSyntaxHighlight, { highlighter: Prism }], [colorSyntax]]}
+            autofocus={false}
+            ref={editorRef}
+            onChange={onChange}
+            events={{
+              focus: () => {},
+            }}
+          />
+        </>
+      ) : (
+        <>
+          <Editor
+            initialValue={descState}
+            previewStyle="vertical"
+            height="702px"
+            initialEditType="wysiwyg"
+            placeholder="내용을 입력해주세요."
+            // plugins={[[codeSyntaxHighlight, { highlighter: Prism }], [colorSyntax]]}
+            autofocus={false}
+            ref={editorRef}
+            onChange={onChange}
+            events={{
+              focus: () => {},
+            }}
+          />
+        </>
+      )}
       <BtnContainer>
         <Btn onClick={handleUpdate}>수정하기</Btn>
         <Link href={`/questions/${questionId}`} passHref>
