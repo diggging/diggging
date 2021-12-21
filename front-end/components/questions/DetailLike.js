@@ -30,7 +30,7 @@ function DetailLike({ token, id, handleLinkAlarm }) {
           setLike(response.data.helped_num);
         });
     } catch (e) {
-      console.log(e);
+      alertService.warn("로그인 후 이용해주세요.")
     }
   };
 

@@ -126,7 +126,7 @@ function Alert({ id, fade }) {
 
 const AlertBody = styled.div`
   position: absolute;
-  top: 50%;
+  top: 10%;
   left: 50%;
   transform: translate(-50%, 0); //중앙정렬
   padding: 1rem;

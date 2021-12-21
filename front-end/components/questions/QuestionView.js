@@ -8,18 +8,14 @@ import codeSyntaxHighlight from "@toast-ui/editor-plugin-code-syntax-highlight";
 
 function QuestionView({ desc }) {
   return (
-    <FlexContainer>
+    <>
       <Viewer
         initialValue={desc}
         width={100}
-        plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
+        // plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
       />
-    </FlexContainer>
+    </>
   );
 }
 
 export default QuestionView;
-
-const FlexContainer = styled.div`
-  text-align: start;
-`;

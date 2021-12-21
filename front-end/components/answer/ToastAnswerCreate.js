@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import {API_URL} from '../../config/index';
+import { alertService } from "../alert.service";
 
 function ToastAnswerCreate({title, token, id}) {
     const router = useRouter();
@@ -39,6 +40,7 @@ function ToastAnswerCreate({title, token, id}) {
           })
           .then((response) => {
             dispatch(setDesc(""));
+            alertService.success("답변이 업로드 되었습니다.");
             router.push(`/questions/${id}`);
           })
           .catch((error) => {

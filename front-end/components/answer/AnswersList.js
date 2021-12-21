@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -10,13 +10,15 @@ import Selected from "./Selected";
 import { API_URL } from "../../config";
 import AnswerComment from "../comment/answerComment/AnswerComment";
 import Image from "next/image";
+import Loader from 'react-loader-spinner';
 
 function AnswersList({ answer, user, token, questionId, questionUserId, AnswerisSelected }) {
+  const ref = useRef();
   const [answerToken, setAnswerToken] = useState(token);
   const [isSelected, setIsSelected] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [commentIsOpen, setCommentIsOpen] = useState(true);
-
+  const [loaderHeight, setLoaderHeight] = useState(null);
   const router = useRouter();
 
   const { created } = answer;
@@ -51,9 +53,13 @@ function AnswersList({ answer, user, token, questionId, questionUserId, Answeris
 
   const Viewer = dynamic(() => import("../../components/answer/AnswerView"), {
     ssr: false,
+    loading: () => <Loader type="Oval" color="#FFE59C" width={100} height={loaderHeight}/>
   });
+  
+  useEffect(() => {
+    setLoaderHeight(ref.current.clientHeight);
+  }, [])
 
-  console.log(answer);
   return (
     <>
       <MainContainer>
@@ -97,7 +103,7 @@ function AnswersList({ answer, user, token, questionId, questionUserId, Answeris
             )}
           </SecondContainer>
 
-          <DescContainer>
+          <DescContainer ref={ref}>
             <Viewer desc={answer.desc} />
           </DescContainer>
 
@@ -150,14 +156,14 @@ function AnswersList({ answer, user, token, questionId, questionUserId, Answeris
               />
             </ProfileImg>
             <ProfileInfoContainer>
-              {answer.user?.user_nickname ? (
+              {answer?.user?.user_nickname ? (
                 <>
                   <ProfileName>{answer.user.user_nickname}</ProfileName>
                   <ProfileLevel>LV.{answer.user.user_level}</ProfileLevel>
                 </>
               ) : null}
             </ProfileInfoContainer>
-            {answer.user?.user_profile_content ? (
+            {answer?.user?.user_profile_content ? (
               <>
                 <ProfileContent>
                   {answer.user.user_profile_content.slice(0, 250)}
@@ -191,7 +197,6 @@ const MainContainer = styled.div`
 const Container = styled.div`
   width: 64rem;
   display: flex;
-  height: 100%;
   justify-content: center;
   flex-direction: column;
   align-items: center;
@@ -295,6 +300,7 @@ const DescContainer = styled.div`
 const FlexContainer = styled.div`
   position: relative;
   width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-end;

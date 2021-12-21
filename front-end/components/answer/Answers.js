@@ -20,4 +20,4 @@ function Answers({ questionId, answers, user, token, questionUserId, AnswerisSel
   );
 }
 
-export default Answers;
+export default React.memo(Answers);

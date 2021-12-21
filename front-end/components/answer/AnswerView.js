@@ -1,3 +1,4 @@
+import React from "react";
 import { Viewer } from "@toast-ui/react-editor";
 import "@toast-ui/editor/dist/toastui-editor-viewer.css";
 import Prism from "prismjs";
@@ -9,9 +10,10 @@ function AnswerView({ desc }) {
   return (
     <Viewer
       initialValue={desc}
-      plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
+      height="100px"
+      // plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
     />
   );
 }
 
-export default AnswerView;
+export default React.memo(AnswerView);

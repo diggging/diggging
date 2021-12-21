@@ -78,7 +78,7 @@ function questionCreate() {
               name="question_tags"
               value={tags}
               onChange={onChangeTags}
-              placeholder="#해시태그를 #입력해보세요"
+              placeholder="#해시태그를 #입력해보세요 [쉼표를 통해서 구분해주세요. Ex) diggging,해시태그]"
             />
             <ToastCreate
               title={title}

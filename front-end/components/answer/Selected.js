@@ -86,6 +86,7 @@ const IsSelected = styled.div`
 const FlexContainer = styled.div`
   display: flex;
   align-items: center;
+  height: 100%;
 `;
 
 const SeletedBtn = styled.button`

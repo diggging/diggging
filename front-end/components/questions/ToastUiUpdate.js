@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { API_URL } from "../../config";
+import { alertService } from "../alert.service";
 
 function ToastUiUpdate({ id, title, desc, tags, token }) {
   const router = useRouter();
@@ -40,6 +41,7 @@ function ToastUiUpdate({ id, title, desc, tags, token }) {
         })
         .then((response) => {
           dispatch(setDesc(""));
+          alertService.success("질문이 수정 되었습니다.");
           router.push(`/questions/${id}`);
         })
         .catch((error) => {

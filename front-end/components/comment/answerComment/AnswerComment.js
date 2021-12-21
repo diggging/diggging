@@ -4,6 +4,7 @@ import AnswerCommentList from "./AnswerCommentList";
 import axios from "axios";
 import TextareaAutosize from "react-autosize-textarea";
 import { API_URL } from "../../../config";
+import { alertService } from "../../alert.service";
 
 function AnswerComment({ commentCount, comments, id, token }) {
   const [text, setText] = useState("");
@@ -31,7 +32,7 @@ function AnswerComment({ commentCount, comments, id, token }) {
           setCommentNum(commentNum + 1);
         });
     } catch (e) {
-      console.log(e);
+      alertService.success("로그인 후 이용해주세요.");
     }
   };
 
