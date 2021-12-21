@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from 'react-loader-spinner';
 import Layout from '../hocs/Layout'; 
-import { Logo, UserInput, GuideMessage, LinkBtn, LinkBox, VerifyMessage, LoaderWrapper, FormBtn, BackgroundColor } from './signup';
+import { Logo, UserInput, GuideMessage, LinkBtn, LinkBox, VerifyMessage, LoaderBox, FormBtn, BackgroundColor } from './signup';
 import { Alert } from '../components/Alert';
 import { alertService } from '../components/alert.service';
 
@@ -163,9 +163,9 @@ function loginPage() {
             />
             <VerifyMessage>{passwordError}</VerifyMessage>
             {loading ? (
-                <LoaderWrapper>
+                <LoaderBox>
                   <Loader type="Oval" color="#ffd664" width={32} height={32} />
-                </LoaderWrapper>
+                </LoaderBox>
               ) : <FormBtn type="submit">로그인</FormBtn>}
             <VerifyMessage>{loginError}</VerifyMessage>
             </form>

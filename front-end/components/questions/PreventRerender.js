@@ -58,7 +58,8 @@ function Prevent({ children }) {
 
   const style = {
     color: "#343434",
-    fontFamily: "Pretendard-Bold"
+    fontFamily: "Pretendard-Bold",
+    borderTop: "4px solid #ffd358"
   };
 
   useEffect(() => {
@@ -265,9 +266,7 @@ const CreateBtn = styled.button`
   background: #ffffff;
   border-radius: 25px;
   box-shadow: 4px 4px 8px rgba(170, 170, 170, 0.1);
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: bold;
+  font-family: 'Pretendard-Bold';
   font-size: 16px;
   line-height: 32px;
   letter-spacing: 0.01em;
@@ -281,17 +280,17 @@ const TabItemContainer = styled.div`
   height: 70px;
   border-top: 2px solid rgba(219, 214, 199, 0.4);
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  padding: 10px 20px;
+  padding: 0 1.25rem;
   margin-top: 98px;
   position: relative;
   margin-bottom: 46px;
 `;
 
 const TabContainer = styled.div`
-  display: flex;
-  align-items: center;
+   display: flex;
+  align-items: baseline;
   justify-content: center;
 `;
 
@@ -306,8 +305,9 @@ const Tab = styled.div`
   align-items: center;
   font-size: 1.25rem;
   line-height: 28.96px;
-  /* margin-right: 30px; */
-  transition: 200ms;
+  transition: 300ms;
+  padding-top: 0.75rem;
+
   &:hover {
     font-family: 'Pretendard-Bold';
     color: #343434;

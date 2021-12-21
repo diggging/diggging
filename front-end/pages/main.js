@@ -31,7 +31,8 @@ function main({ children }) {
   };
 
   const style = {
-    color: "#FFD358",
+    color: "#343434",
+    borderTop: "4px solid #ffd358"
   }
 
   return (
@@ -208,9 +209,7 @@ const CreateBtn = styled.button`
   background: #ffffff;
   border-radius: 25px;
   box-shadow: 4px 4px 8px rgba(170, 170, 170, 0.1);
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: bold;
+  font-family: 'Pretendard-Bold';
   font-size: 16px;
   line-height: 32px;
   letter-spacing: 0.01em;
@@ -224,9 +223,9 @@ const TabItemContainer = styled.div`
   height: 70px;
   border-top: 2px solid rgba(219, 214, 199, 0.4);
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  padding: 1rem 1.25rem;
+  padding: 0 1.25rem;
   margin-top: 98px;
   position: relative;
   margin-bottom: 46px;
@@ -234,12 +233,12 @@ const TabItemContainer = styled.div`
 
 const TabContainer = styled.div`
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: center;
 `;
 
 const Tab = styled.div`
-  font-family: 'Pretendard-Bold';
+  font-family: 'Pretendard-SemiBold';
   width: 130px;
   height: 53px;
   color: #898a90;
@@ -249,6 +248,8 @@ const Tab = styled.div`
   align-items: center;
   font-size: 1.25rem;
   line-height: 28.96px;
+  padding-top: 0.75rem;
+  transition: 300ms;
 
   &:hover {
     color: #343434;

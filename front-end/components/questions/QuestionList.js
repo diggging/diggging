@@ -89,6 +89,11 @@ const ListContainer = styled.ul`
   margin-top: 24px;
   padding: 1.625rem 2.1875rem;
   cursor: pointer;
+  &:hover {
+    transition: ease-out 200ms;
+    transform: translateY(-6px);
+    box-shadow: 0rem 0.25rem 1.25rem rgba(0, 0, 0, 0.05);
+  }
 `;
 
 const TitleHashContainer = styled.div`

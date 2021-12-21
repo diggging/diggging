@@ -47,3 +47,4 @@ const LoaderWrapper = styled.div`
   justify-content: center;
   position: fixed;
 `;
+
