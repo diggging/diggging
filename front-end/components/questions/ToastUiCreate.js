@@ -39,7 +39,7 @@ function ToastUi({ title, folder, tags, token }) {
           question_tags: tags,
         })
         .then((response) => {
-          console.log(response);
+          dispatch(setDesc(""));
           router.push(`/`);
         })
         .catch((error) => {

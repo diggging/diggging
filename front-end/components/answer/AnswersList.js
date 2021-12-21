@@ -69,7 +69,9 @@ function AnswersList({ answer, user, token, questionId, questionUserId, Answeris
             ) : (
               <>
                 <Selection>
-                  채택 완료
+                  <SelectionText>
+                    채택 완료
+                  </SelectionText>
                   <SelectedAnswer />
                 </Selection>
               </>
@@ -105,6 +107,7 @@ function AnswersList({ answer, user, token, questionId, questionUserId, Answeris
                 {isOpen === true && answer.selection === false ? (
                   <>
                     <Selected
+                      isOpen={isOpen}
                       setIsOpen={setIsOpen}
                       id={answer.id}
                       token={token}
@@ -221,7 +224,10 @@ const Title = styled.div`
 `;
 
 const Selection = styled.div`
-  font-family: Noto Sans KR;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Pretendard-Bold';
   font-style: normal;
   font-weight: 500;
   font-size: 13px;
@@ -229,6 +235,11 @@ const Selection = styled.div`
   text-align: center;
   color: #5f5f5f;
 `;
+
+const SelectionText = styled.div`
+  margin-right: 1rem;
+`;
+
 
 const SecondContainer = styled.div`
   width: 58.375rem;

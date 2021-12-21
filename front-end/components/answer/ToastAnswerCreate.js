@@ -38,7 +38,7 @@ function ToastAnswerCreate({title, token, id}) {
             desc: content,
           })
           .then((response) => {
-            console.log(response);
+            dispatch(setDesc(""));
             router.push(`/questions/${id}`);
           })
           .catch((error) => {

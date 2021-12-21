@@ -36,6 +36,7 @@ function ToastAnswerUpdate({id, title, desc, token, questionId }) {
           desc: content,
         })
         .then((response) => {
+          dispatch(setDesc(""));
           router.push(`/questions/${questionId}`);
         })
         .catch((error) => {

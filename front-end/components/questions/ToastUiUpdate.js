@@ -39,6 +39,7 @@ function ToastUiUpdate({ id, title, desc, tags, token }) {
           question_tags: tags,
         })
         .then((response) => {
+          dispatch(setDesc(""));
           router.push(`/questions/${id}`);
         })
         .catch((error) => {
