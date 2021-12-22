@@ -133,7 +133,7 @@ function AnswersList({ answer, user, token, questionId, questionUserId, Answeris
               </>
             ) : (
               <>
-                <WhiteButton onClick={() => handleCommentOpen()}>
+                <WhiteButton paddingTop="10px" paddingRight="18px" fontSize="13px" onClick={() => handleCommentOpen()}>
                   {commentIsOpen === true ? (
                     <>댓글 접기</>
                   ) : (
@@ -364,7 +364,7 @@ const ProfileLevel = styled.div`
 const ProfileContent = styled.div`
   width: 672px;
   height: 38px;
-  ffont-family: 'Pretendard-Regular';
+  font-family: 'Pretendard-Regular';
   font-size: 13px;
   line-height: 19px;
   color: #8d8c85;

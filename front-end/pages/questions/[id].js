@@ -386,9 +386,7 @@ const ProfileInfoContainer = styled.div`
 `;
 
 const ProfileName = styled.div`
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: bold;
+  font-family: 'Pretendard-Bold';
   font-size: 16px;
   line-height: 23px;
   color: #343434;
@@ -406,9 +404,7 @@ const ProfileLevel = styled.div`
 const ProfileContent = styled.div`
   width: 672px;
   height: 38px;
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: normal;
+  font-family: "Pretendard-Regular";
   font-size: 13px;
   line-height: 19px;
   color: #8d8c85;

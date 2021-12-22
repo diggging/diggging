@@ -187,9 +187,7 @@ const ProfileName = styled.div`
 const DescContainer = styled.div`
   width: 100%;
   height: 117px;
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: normal;
+  font-family: 'Pretendard-Regular';
   font-size: 14px;
   line-height: 26px;
   color: #8d8c85;

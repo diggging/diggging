@@ -15,6 +15,7 @@ import Link from 'next/link';
 import { API_URL } from "../../config";
 import { alertService } from "../alert.service";
 import { Alert } from "../Alert";
+import WhiteButton from "../common/WhiteButton";
 
 function ToastUi({ title, folder, tags, token }) {
   const router = useRouter();
@@ -78,9 +79,9 @@ function ToastUi({ title, folder, tags, token }) {
         }}
       />
       <BtnContainer>
-        <Btn onClick={handleCreate}>작성하기</Btn>
+        <WhiteButton onClick={handleCreate} paddingTop="0.75rem" paddingRight="2.375rem" fontSize="1rem">작성하기</WhiteButton>
         <Link href="/" passHref>
-          <Btn>나가기</Btn>
+          <WhiteButton paddingTop="0.75rem" paddingRight="2.375rem" fontSize="1rem">나가기</WhiteButton>
         </Link>
       </BtnContainer>
     </>

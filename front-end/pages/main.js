@@ -43,6 +43,7 @@ function main({ children }) {
 
   const style = {
     color: "#343434",
+    fontFamily: "Pretendard-Bold",
     borderTop: "4px solid #ffd358"
   }
 
@@ -285,7 +286,7 @@ const ToggleContainer = styled.button`
   background: white;
   width: 8.25rem;
   height: 2.5rem;
-  border-radius: 4px;
+  border-radius: 0.625rem;
   display: flex;
   -webkit-box-align: center;
   align-items: center;
@@ -297,10 +298,18 @@ const ToggleContainer = styled.button`
   color: rgb(73, 80, 87);
   font-size: 0.875rem;
   box-shadow: rgb(0 0 0 / 5%) 0px 0px 4px;
+  transition: 300ms;
+  font-family: 'Pretendard-Bold';
+  color: #343434;
+  font-size: 1rem;
+  transition: 300ms;
   cursor: pointer;
 
   & svg {
     margin-left: 10px;
+  }
+  & path {
+    fill: #343434;
   }
 `;
 
@@ -328,6 +337,8 @@ const DropListItem = styled.li`
   color: #b6b6b6;
   padding: 5px 10px;
   cursor: pointer;
+  font-size: 0.9375rem;
+  transition: 200ms;
 
   &:hover {
     color: #343434;

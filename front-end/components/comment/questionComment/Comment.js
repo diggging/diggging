@@ -5,6 +5,7 @@ import axios from "axios";
 import TextareaAutosize from "react-autosize-textarea";
 import { API_URL } from "../../../config";
 import { alertService } from "../../alert.service";
+import YellowButton from "../../common/YellowButton";
 
 function Comment({ commentCount, comments, id, token }) {
   const [text, setText] = useState("");
@@ -17,6 +18,13 @@ function Comment({ commentCount, comments, id, token }) {
     },
     [text]
   );
+
+  const onClickIsAuth = () => {
+    if (!token) {
+      alertService.warn("로그인 후 이용해주세요.")
+    }
+  }
+
 
   const CreateComment = async () => {
     try {
@@ -45,8 +53,8 @@ function Comment({ commentCount, comments, id, token }) {
   return (
     <FormContainer >
       <CommentContainer>
-        <CommentInput placeholder="댓글을 입력하세요" value={text} onChange={onChange} />
-        <CommentSendBtn onClick={CreateComment} type="button">댓글 남기기</CommentSendBtn>
+        <CommentInput placeholder="댓글을 입력하세요" value={text} onChange={onChange} onClick={onClickIsAuth} />
+        <YellowButton paddingTop="0.6rem" paddingRight="1.5rem" onClick={CreateComment} type="button">댓글 남기기</YellowButton>
       </CommentContainer>
       <CommentCount>댓글 {commentNum}개</CommentCount>
       <CommentList id={id} comments={comments} newComment={newComment} setCommentNum={setCommentNum} commentNum={commentNum}/>
@@ -75,7 +83,7 @@ const CommentInput = styled(TextareaAutosize)`
   box-sizing: border-box;
   border-radius: 8px;
   padding: 1rem 1rem 1.5rem;
-  font-family: 'Pretenard-Regular';
+  font-family: 'Pretendard-Regular';
   font-size: 1rem;
   color: rgb(33, 37, 41);
   line-height: 1.75;
@@ -98,7 +106,7 @@ const CommentSendBtn = styled.button`
 
 const CommentCount = styled.div`
   width: 100%;
-  font-family: 'Pretenard-Bold';
+  font-family: 'Pretendard-Bold';
   font-size: 18px;
   line-height: 21px;
   color: #343434;

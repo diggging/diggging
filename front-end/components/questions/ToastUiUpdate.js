@@ -15,6 +15,7 @@ import Link from "next/link";
 import { API_URL } from "../../config";
 import { Alert } from "../Alert";
 import { alertService } from "../alert.service";
+import WhiteButton from "../common/WhiteButton";
 
 function ToastUiUpdate({ id, title, desc, tags, token }) {
   const router = useRouter();
@@ -97,9 +98,10 @@ function ToastUiUpdate({ id, title, desc, tags, token }) {
         </>
       )}
       <BtnContainer>
-        <Btn onClick={handleUpdate}>수정하기</Btn>
+        <WhiteButton onClick={handleUpdate}
+          paddingTop="0.75rem" paddingRight="2.375rem" fontSize="1rem">수정하기</WhiteButton>
         <Link href={`/questions/${id}`} passHref>
-          <Btn>나가기</Btn>
+          <WhiteButton paddingTop="0.75rem" paddingRight="2.375rem" fontSize="1rem">나가기</WhiteButton>
         </Link>
       </BtnContainer>
     </>

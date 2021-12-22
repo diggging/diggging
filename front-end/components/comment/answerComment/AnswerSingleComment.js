@@ -6,6 +6,7 @@ import { check_auth_status } from "../../../redux/actions/auth";
 import TextareaAutosize from "react-autosize-textarea";
 import { API_URL } from "../../../config";
 import Image from "next/image";
+import YellowButton from "../../common/YellowButton";
 
 function AnswerSingleComment({
   data,
@@ -79,6 +80,12 @@ function AnswerSingleComment({
       console.log(e);
     }
   }
+  
+  const onClickIsAuth = () => {
+    if (!token) {
+      alertService.warn("로그인 후 이용해주세요.")
+    }
+  }
 
   const getAccessToken = async () => {
     if (dispatch && dispatch !== null && dispatch !== undefined) {
@@ -109,8 +116,8 @@ function AnswerSingleComment({
                 {isUpdated ? (
                   <>
                     <CommentUpdateContainer>
-                      <CommentInput name="text" value={text} onChange={onChange}/>
-                      <CommentSendBtn type="button" onClick={() => upDataAnswerComment(data.id)}>댓글 남기기</CommentSendBtn>
+                      <CommentInput name="text" value={text} onChange={onChange} onClick={onClickIsAuth}/>
+                      <YellowButton paddingTop="0.6rem" paddingRight="1.5rem" type="button" onClick={() => upDataAnswerComment(data.id)}>댓글 남기기</YellowButton>
                     </CommentUpdateContainer>
                   </>
                 ) : (

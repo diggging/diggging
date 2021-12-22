@@ -167,10 +167,19 @@ function Prevent({ children }) {
                   </Link>
                 </>
               )}
-
-              <Link href="/popular">
-                <Tab>인기 순</Tab>
-              </Link>
+              {isPopular ? (
+                <>
+                  <Link href="/popular">
+                    <Tab style={style}>인기 순</Tab>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/popular">
+                    <Tab>인기 순</Tab>
+                  </Link>
+                </>
+              )}
             </TabContainer>
           )}
           <ToggleContainer
@@ -389,6 +398,7 @@ const DropListItem = styled.li`
   padding: 5px 10px;
   cursor: pointer;
   transition: 200ms;
+  font-size: 0.9375rem;
   &:hover {
     color: #343434;
     font-family: "Pretendard-SemiBold";

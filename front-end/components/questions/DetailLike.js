@@ -104,9 +104,7 @@ const FlexContainer = styled.div`
   align-items: center;
   flex-direction: column;
   margin: 0 auto;
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: 500;
+  font-family: 'Pretendard-Bold';
   font-size: 13px;
   line-height: 19px;
   text-align: center;
@@ -118,9 +116,7 @@ const LinkClickAlarm = styled.div`
   height: 50px;
   background: #f5f5f5;
   border-radius: 20px;
-  font-family: Noto Sans KR;
-  font-style: normal;
-  font-weight: 500;
+  font-family: 'Pretendard-Bold';
   font-size: 13px;
   line-height: 19px;
   text-align: center;

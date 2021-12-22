@@ -15,7 +15,7 @@ import Link from 'next/link';
 import {API_URL} from '../../config/index';
 import { Alert } from "../Alert";
 import { alertService } from "../alert.service";
-
+import WhiteButton from "../common/WhiteButton";
 function ToastAnswerCreate({title, token, id}) {
     const router = useRouter();
     const dispatch = useDispatch();
@@ -77,9 +77,9 @@ function ToastAnswerCreate({title, token, id}) {
           }}
         />
         <BtnContainer>
-          <Btn onClick={handleAnswerCreate}>작성하기</Btn>
+          <WhiteButton onClick={handleAnswerCreate} paddingTop="0.75rem" paddingRight="2.375rem" fontSize="1rem">작성하기</WhiteButton>
           <Link href="/" passHref>
-            <Btn>나가기</Btn>
+            <WhiteButton paddingTop="0.75rem" paddingRight="2.375rem" fontSize="1rem">나가기</WhiteButton>
           </Link>
         </BtnContainer>
       </>
@@ -94,15 +94,4 @@ const BtnContainer = styled.div`
   justify-content: space-around;
   align-items: center;
   margin-top: 1.5rem;
-`;
-
-const Btn = styled.button`
-  width: 8.75rem;
-  height: 3rem;
-  background-color: #f5f5f7;
-  /* border: 3px solid #FFFFFF; */
-  /* border: none; */
-  box-sizing: border-box;
-  border-radius: 1.5625rem;
-  cursor: pointer;
 `;
