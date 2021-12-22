@@ -20,6 +20,8 @@ function AnswerComment({ commentCount, comments, id, token }) {
     [text]
   );
 
+    
+
 
   const CreateAnswerComment = async () => {
     try {
@@ -44,6 +46,12 @@ function AnswerComment({ commentCount, comments, id, token }) {
       alertService.warn("로그인 후 이용해주세요.");
     }
   };
+
+  const onClickIsAuth = () => {
+    if (!token) {
+      alertService.warn("로그인 후 이용해주세요.")
+    }
+  }
 
   return (
     <FormContainer>

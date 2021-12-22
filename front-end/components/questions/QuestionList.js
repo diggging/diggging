@@ -91,7 +91,7 @@ const ListContainer = styled.ul`
   cursor: pointer;
   &:hover {
     transition: ease-out 200ms;
-    transform: translateY(-6px);
+    transform: translateY(-3px);
     box-shadow: 0rem 0.25rem 1.25rem rgba(0, 0, 0, 0.05);
   }
 `;

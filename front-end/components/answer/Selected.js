@@ -72,7 +72,7 @@ const SelectedContainer = styled.div`
 
 const IsSelected = styled.div`
   height: 100%;
-  font-family: 'Pretenard-Bold';
+  font-family: 'Pretendard-Bold';
   font-size: 14px;
   line-height: 20px;
   display: flex;
@@ -91,7 +91,7 @@ const SelectedBtn = styled.button`
   width: 100px;
   height: 39px;
   background: #ffffff;
-  font-family: 'Pretenard-Bold';
+  font-family: 'Pretendard-Bold';
   
   &:hover {
     background: rgba(196, 196, 196, 0.15);

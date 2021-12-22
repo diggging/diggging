@@ -93,6 +93,12 @@ const CardBox = styled.button`
   text-align: left;
   background-color: white;
   box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  &:hover {
+    transition: ease-out 200ms;
+    transform: translateY(-3px);
+    box-shadow: 0rem 0.25rem 1.25rem rgba(0, 0, 0, 0.05);
+  }
 `;
 
 //title 글자수 표시제한 필요:54글자로.
@@ -145,6 +151,7 @@ const ProfileBox = styled.div`
   justify-content: center;
   text-align: center;
   margin-left: 1rem;
+  align-items: center;
 `;
 
 const ProfileImg = styled(Image)`
