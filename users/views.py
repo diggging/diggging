@@ -107,7 +107,7 @@ import random
 # 회원가입
 # 아래 도메인은 이메일 인증 관련 도메인 바뀌면 my_site domain도 변경해주어야함.
 my_site = Site.objects.get(pk=1)
-my_site.domain = "localhost:3000"
+my_site.domain = "diggging.com"
 my_site.name = "digging_main"
 my_site.save()
 
@@ -923,13 +923,13 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
             # "users:password-reset-confirm",
             # kwargs={"uidb64": uidb64, "token": token},
             # )
-            absurl = "http://localhost:3000/password_reset_submit"  # current_site + relativeLink
+            # absurl = "https://diggging.com"  # current_site + relativeLink
             user_get = User.objects.get(username=username)
-            print(user_get)
+            # print(user_get)
             temp = random.randrange(10000, 50000)
             user_get.temp = temp
             user_get.save()
-            print(user_get.temp)
+            # print(user_get.temp)
             email_body = (
                 "안녕하세요, \n 아래 링크를 눌러 인증번호를 입력한후 비밀번호를 변경하세요\n"
                 + absurl
