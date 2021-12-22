@@ -16,7 +16,6 @@ const CLEAR_BIG_CRITERIA = "editor/CLEAR_BIG_CRITERIA";
 /* fetch data */
 export const setQuestion = (page, bigCriteria, smallCriteria) => async (dispatch) => {
   dispatch({type:GET_QUESTIONS});
-  console.log(`${bigCriteria} 요청중`);
   try {
     const res = await fetch(
       `${API_URL}/questions/question_list/?big_criteria=${bigCriteria}&page=${page}&small_criteria=${smallCriteria}`,
@@ -37,16 +36,13 @@ export const setQuestion = (page, bigCriteria, smallCriteria) => async (dispatch
         smallCriteria,
       });
     }
-    console.log(`${bigCriteria} 성공`);
   } catch (e) {
     dispatch({type:GET_QUESTIONS_FAIL, error:e});
-    console.log(`${bigCriteria} 실패`);
   }
 };
 
 export const setMine = (page, smallCriteria, mineToken) => async (dispatch) => {
   dispatch({type:GET_MINE_QUESTIONS});
-  console.log('mine 요청중');
   try {
     const res = await fetch(
       `${API_URL}/questions/question_list/?big_criteria=mine&page=${page}&small_criteria=${smallCriteria}`,
@@ -67,11 +63,9 @@ export const setMine = (page, smallCriteria, mineToken) => async (dispatch) => {
           smallCriteria,
           mineToken,
       });
-      console.log('mine 성공');
     }
   } catch (e) {
     dispatch({type:GET_MINE_QUESTIONS_FAIL});
-    console.log('mine 실패');
   }
 };
 

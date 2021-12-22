@@ -122,7 +122,7 @@ function AnswersList({ answer, user, token, questionId, questionUserId, Answeris
                     />
                   </>
                 ) : null}
-                <WhiteButton paddingTop="0.625rem" paddingRight="1.125rem" onClick={() => onOpen()}>채택하기</WhiteButtonp>
+                <WhiteButton paddingTop="0.625rem" paddingRight="1.125rem" onClick={() => onOpen()}>채택하기</WhiteButton>
                 <WhiteButton paddingTop="0.625rem" paddingRight="1.125rem"  onClick={() => handleCommentOpen()}>
                   {commentIsOpen === true ? (
                     <>댓글 접기</>

@@ -20,7 +20,7 @@ const ProfileBioInput = styled.textarea`
   font-family: 'Pretendard-Regular';
   font-size: 0.875rem;
   color: #999893; 
-
+  resize: none;
   background-color:#F5F5F7;
   border-radius: 0.5rem;
   padding: 0.875rem 1rem;

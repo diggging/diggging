@@ -84,13 +84,13 @@ function ProfileInfoBox ({userData, token}) {
       }
     }
   }
-
+  console.log(imgBase64);
   return (
     <ProfileBioBox padding="1.875rem" onSubmit={(e) => updateProfileImg(e)}>
       <ImageBox>
         <ProfileImgWrapper>
           <Image 
-          src={imgBase64}
+          src={`http://localhost:8000${imgBase64}`}
           width={120} 
           height={120} 
           alt="profileImage" 
