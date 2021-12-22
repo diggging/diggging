@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import Loader from 'react-loader-spinner';
+import Layout from "../../../hocs/Layout";
 
 function answerCreate() {
   const dispatch = useDispatch();
@@ -41,7 +42,7 @@ function answerCreate() {
   }, [dispatch]);
 
   return (
-    <div>
+    <Layout>
       <MainContainer>
         <Container>
           <FormContainer>
@@ -58,7 +59,7 @@ function answerCreate() {
           </FormContainer>
         </Container>
       </MainContainer>
-    </div>
+    </Layout>
   );
 }
 

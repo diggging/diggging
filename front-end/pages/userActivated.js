@@ -4,6 +4,8 @@ import Image from 'next/image';
 import YellowButton from '../components/common/YellowButton';
 
 function userActivated() {
+  //axios 통신 (토큰, 유저아이디); -> 성공 -> 리다이렉트
+  
   return (
     <AlarmWrapper>
       <Image src="/static/images/email.png" width={84} height={48} alt="email_icon" quality={100}/>
@@ -15,7 +17,6 @@ function userActivated() {
 }
 
 export default userActivated;
-
 
 const AlarmWrapper = styled.div`
   display: block;

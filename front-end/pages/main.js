@@ -9,6 +9,7 @@ import Layout from "../hocs/Layout";
 import SvgDigggingLogo from "../public/static/images/DigggingLogo";
 import { useRouter } from "next/router";
 import { setQuestion } from "../modules/questions";
+import SvgToggleBtn from "../public/static/images/ToggleBtn";
 
 function main({ children }) {
   const ref = useRef();
@@ -112,6 +113,7 @@ function main({ children }) {
             ) : smallCriteria === "answer_done" ? (
               <>답변 완료</>
             ) : null}
+            <ToggleBtn />
           </ToggleContainer >
           {open ? (
             <DropBox>
@@ -346,9 +348,9 @@ const DropListItem = styled.li`
   }
 `;
 
-const CurrentTab = styled.div`
-  width: 121px;
-  height: 4px;
-  background: #FFD358;
+const ToggleBtn = styled(SvgToggleBtn)`
+  margin-left: 0.5rem;
+  &path {
+    fill: #343434;
+  }
 `;
-

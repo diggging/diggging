@@ -66,10 +66,13 @@ const Question = () => {
       await axios
         .delete(`${API_URL}/questions/${id}/delete/`)
         .then((response) => {
-          router.push(`/`);
+          alertService.success("질문이 삭제 되었습니다.");
+          setTimeout(() => {
+            router.push(`/`);
+          }, 1000)
         });
     } catch (e) {
-      console.log(e);
+      alertService.warn("질문이 삭제 되지않았습니다.");
     }
   };
 
@@ -106,7 +109,7 @@ const Question = () => {
       setLoaderHeight(ref.current.offsetHeight);
     }
   }, [])
-
+  
   const handleLinkAlarm = () => {
     alertService.warn('링크가 복사되었습니다.')
   }

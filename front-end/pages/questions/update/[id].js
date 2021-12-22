@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import dynamic from "next/dynamic";
 import axios from "axios";
 import {API_URL} from '../../../config/index';
+import Layout from "../../../hocs/Layout";
 
 function update() {
   const router = useRouter();
@@ -77,7 +78,7 @@ function update() {
   }, [id]);
 
   return (
-    <div>
+    <Layout>
       {id ? (
         <>
           <MainContainer>
@@ -115,7 +116,7 @@ function update() {
           </MainContainer>
         </>
       ) : null}
-    </div>
+    </Layout>
   );
 }
 

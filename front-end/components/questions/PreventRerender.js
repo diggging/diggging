@@ -12,6 +12,7 @@ import recent from "../../pages/recent";
 import SvgDigggingLogo from "../../public/static/images/digggingLogo";
 import SvgToggleBtn from "../../public/static/images/ToggleBtn";
 import { BannerBackground, SubTitle } from "../../pages/main";
+
 function Prevent({ children }) {
   const ref = useRef();
   const [open, setOpen] = useState(false);

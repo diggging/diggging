@@ -51,11 +51,12 @@ function AnswerSingleComment({
       await axios
         .delete(`${API_URL}/comments/${id}/comment_delete/`)
         .then((response) => {
+          alertService.success("댓글이 삭제되었습니다.");
           setComment(comment.filter((comment) => comment.id !== data.id));
           setCommentNum(commentNum - 1);
         });
     } catch (e) {
-      console.log(e);
+      alertService.warn("댓글이 삭제되지 않았습니다.");
     }
   };
 

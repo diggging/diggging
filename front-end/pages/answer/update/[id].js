@@ -7,12 +7,13 @@ import dynamic from "next/dynamic";
 import axios from "axios";
 import {API_URL} from '../../../config/index';
 import Loader from 'react-loader-spinner';
+import Layout from "../../../hocs/Layout";
 
 function answerUpdate() {
-    const router = useRouter();
-    const { id } = router.query;
+  const router = useRouter();
+  const { id } = router.query;
 
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [title, setTitle] = useState("");
   const [token, setToken] = useState("");
   const [desc, setDesc] = useState("");
@@ -71,7 +72,7 @@ function answerUpdate() {
   }, [id]);
 
   return (
-    <div>
+    <Layout>
       {id ? (
         <>
           <MainContainer>
@@ -95,7 +96,7 @@ function answerUpdate() {
           </MainContainer>
         </>
       ) : null}
-    </div>
+    </Layout>
   );
 }
 

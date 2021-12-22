@@ -41,10 +41,13 @@ function AnswersList({ answer, user, token, questionId, questionUserId, Answeris
       await axios
         .delete(`${API_URL}/questions/${id}/answer_delete/`)
         .then((response) => {
-          router.reload(`/questions/${questionId}`);
+          alertService.success("답변이 삭제 되었습니다.");
+          setTimeout(() => {
+            router.reload(`/questions/${questionId}`);
+          }, 1000)
         });
     } catch (e) {
-      console.log(e);
+      alertService.warn("답변이 삭제되지 않았습니다");
     }
   };
 
