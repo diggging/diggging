@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import styled from 'styled-components';
 import axios from "axios";
 import Prism from 'prismjs';
@@ -45,7 +45,7 @@ function ToastAnswerCreate({title, token, id}) {
             alertService.success("답변이 업로드 되었습니다.");
             setTimeout(() => {
               router.push(`/questions/${id}`);
-            }, 1500)
+            }, 1000)
           })
           .catch((error) => {
             if(errorr.response === 400) {
@@ -56,8 +56,13 @@ function ToastAnswerCreate({title, token, id}) {
         alertService.warn("업로드에 실패했습니다.");
       }
     };
-    
 
+    useEffect(() => {
+      return () => {
+        dispatch(setDesc(""));
+      }
+    }, [])
+    
     return (
       <>
         <Alert/>

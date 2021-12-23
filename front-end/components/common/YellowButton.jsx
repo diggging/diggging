@@ -2,9 +2,9 @@ import React from 'react'
 import styled from 'styled-components';
 import { lighten, darken } from 'polished';
 
-function YellowButton({ children, paddingTop, paddingRight, type }) {
+function YellowButton({ children, paddingTop, paddingRight, type, onClick }) {
   return (
-    <StyledYellowButton type={type} paddingTop={paddingTop} paddingRight={paddingRight}>
+    <StyledYellowButton type={type} paddingTop={paddingTop} paddingRight={paddingRight} onClick={onClick}>
       {children}
     </StyledYellowButton>
   )

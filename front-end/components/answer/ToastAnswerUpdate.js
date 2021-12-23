@@ -1,4 +1,4 @@
-import React, { useRef,useState } from "react";
+import React, { useRef,useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import Prism from 'prismjs';
@@ -53,6 +53,12 @@ function ToastAnswerUpdate({id, title, desc, token, questionId }) {
       alertService.warn("답변이 수정 되지 않았습니다.");
     }
   };
+
+  useEffect(() => {
+    if(!content) {
+      dispatch(setDesc(descState));
+    }
+  }, [])
 
   return (
     <>

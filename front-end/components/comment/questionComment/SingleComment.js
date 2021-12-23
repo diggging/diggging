@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { check_auth_status } from "../../../redux/actions/auth";
 import TextareaAutosize from "react-autosize-textarea";
 import { API_URL } from "../../../config";
+import { alertService } from "../../alert.service";
 import Image from "next/image";
 import YellowButton from "../../common/YellowButton";
 

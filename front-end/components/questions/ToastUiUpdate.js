@@ -57,6 +57,12 @@ function ToastUiUpdate({ id, title, desc, tags, token }) {
       alertService.warn("질문이 수정 되지 않았습니다.");
     }
   };
+  
+  useEffect(() => {
+    if(!content) {
+      dispatch(setDesc(descState));
+    }
+  }, [])
 
   return (
     <>

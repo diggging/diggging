@@ -47,7 +47,7 @@ function ToastUi({ title, folder, tags, token }) {
           dispatch(setDesc(""));
           setTimeout(() => {
             router.push(`/`);
-          }, 1500)
+          }, 1000)
         }).catch ((e) => {
           console.log(e.response);
           if(e.response.status === 400) {
@@ -58,6 +58,12 @@ function ToastUi({ title, folder, tags, token }) {
       alertService.warn("업로드에 실패했습니다.");
     }
   };
+
+  useEffect(() => {
+    return () => {
+      dispatch(setDesc(""));
+    }
+  }, [])
 
   return (
     <>

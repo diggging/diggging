@@ -9,7 +9,7 @@ import Layout from "../../hocs/Layout";
 import { useRouter } from "next/router";
 import { setQuestion, setMine } from "../../modules/questions";
 import recent from "../../pages/recent";
-import SvgDigggingLogo from "../../public/static/images/digggingLogo";
+import SvgDigggingLogo from "../../public/static/images/DigggingLogo";
 import SvgToggleBtn from "../../public/static/images/ToggleBtn";
 import { BannerBackground, SubTitle } from "../../pages/main";
 

@@ -11,6 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Image from "next/image";
 import { logout } from "../redux/actions/auth";
 import { useRouter } from "next/router";
+import axios from "axios";
 import { check_auth_status } from "../redux/actions/auth";
 import { load_user } from "../redux/actions/auth";
 import { changePage } from "../modules/questions";
@@ -204,7 +205,7 @@ function navBar() {
           </Link>
           {isAuthenticated ? (
             <>
-              <Link href="/" passHref>
+              {/* <Link href="/" passHref>
                 <NavItem>
                   <Alarm
                     onClick={() => {
@@ -213,7 +214,7 @@ function navBar() {
                   />
                 </NavItem>
               </Link>
-              {alarmOpen && <AlarmContainer />}
+              {alarmOpen && <AlarmContainer />} */}
               {/* <Link href="/" passHref>
                 <NavItem>
                   <Directory />
