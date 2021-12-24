@@ -27,8 +27,10 @@ const Question = () => {
   const [token, setToken] = useState("");
   const [commentIsOpen, setCommentIsOpen] = useState(true);
   const [loaderHeight, setLoaderHeight] = useState(0);
+  
   const [updateCount, setUpdateCount] = useState(null);
   const [updateComment, setUpdateComment] = useState([]);
+
 
   const router = useRouter();
   const dispatch = useDispatch();
