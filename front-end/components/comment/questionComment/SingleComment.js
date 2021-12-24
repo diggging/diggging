@@ -13,9 +13,11 @@ import YellowButton from "../../common/YellowButton";
 function SingleComment({
   data,
   comment,
+  comments,
   setComment,
-  setCommentNum,
-  commentNum,
+  setUpdateCount,
+  updateCount,
+  setUpdateComment,
 }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
@@ -40,8 +42,6 @@ function SingleComment({
     [text]
   );
   
-
-
   const onClickUpdate = () => {
     setIsUpdated(true);
     setText(updateData);
@@ -56,7 +56,8 @@ function SingleComment({
         .then((response) => {
           alertService.success("댓글이 삭제되었습니다.");
           setComment(comment.filter((comment) => comment.id !== data.id));
-          setCommentNum(commentNum - 1);
+          setUpdateComment(comments.filter((comments) => comments.id !== data.id));
+          setUpdateCount(updateCount - 1);
         });
     } catch (e) {
       alertService.warn("댓글이 삭제되지 않았습니다.");

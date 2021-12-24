@@ -7,9 +7,8 @@ import { API_URL } from "../../../config";
 import { alertService } from "../../alert.service";
 import YellowButton from "../../common/YellowButton";
 
-function Comment({ commentCount, comments, id, token }) {
+function Comment({ updateCount, comments, id, token, setUpdateCount, setUpdateComment }) {
   const [text, setText] = useState("");
-  const [commentNum, setCommentNum] = useState(commentCount);
   const [newComment, setNewComment] = useState([]);
   
   const onChange = useCallback(
@@ -25,7 +24,6 @@ function Comment({ commentCount, comments, id, token }) {
     }
   }
 
-
   const CreateComment = async () => {
     try {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -36,8 +34,9 @@ function Comment({ commentCount, comments, id, token }) {
         })
         .then((response) => {
           setNewComment(response.data);
+          setUpdateComment([...comments, response.data])
           setText("");
-          setCommentNum(commentNum + 1);
+          setUpdateCount(updateCount + 1);
         }).catch((e) => {
           if(e.response.status === 400) {
             alertService.warn("댓글을 작성해주세요");      
@@ -56,8 +55,9 @@ function Comment({ commentCount, comments, id, token }) {
         <CommentInput placeholder="댓글을 입력하세요" value={text} onChange={onChange} onClick={onClickIsAuth} />
         <YellowButton paddingTop="0.6rem" paddingRight="1.5rem" onClick={CreateComment} type="button">댓글 남기기</YellowButton>
       </CommentContainer>
-      <CommentCount>댓글 {commentNum}개</CommentCount>
-      <CommentList id={id} comments={comments} newComment={newComment} setCommentNum={setCommentNum} commentNum={commentNum}/>
+      {/* {updateCount !== undefined ? (<><CommentCount>댓글 {updateCount}개</CommentCount></>) : (<><CommentCount>댓글 {commentNum}개</CommentCount></>)} */}
+      <CommentCount>댓글 {updateCount}개</CommentCount>
+      <CommentList id={id} comments={comments} newComment={newComment} setUpdateCount={setUpdateCount} setUpdateComment={setUpdateComment} updateCount={updateCount}/>
     </FormContainer>
   );
 }
