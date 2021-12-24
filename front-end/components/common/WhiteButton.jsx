@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components';
 import { lighten, darken } from 'polished';
 
-function WhiteButton({ paddingTop, paddingRight, fontSize, children, type, onClick }) {
+function WhiteButton({ marginRight, paddingTop, paddingRight, fontSize, children, type, onClick }) {
   return (
     <StyledButton
       paddingTop={paddingTop}
@@ -10,6 +10,7 @@ function WhiteButton({ paddingTop, paddingRight, fontSize, children, type, onCli
       fontSize={fontSize}
       type={type}
       onClick={onClick}
+      marginRight={marginRight}
     >{children}</StyledButton>
   )
 }
@@ -21,6 +22,7 @@ const StyledButton = styled.button`
   padding-bottom: ${({ paddingTop }) => paddingTop};
   padding-right: ${({ paddingRight }) => paddingRight};
   padding-left: ${({ paddingRight }) => paddingRight};
+  margin-right: ${({marginRight}) => marginRight};
 
   border-radius: 1.25rem;
   border: solid 3px white;

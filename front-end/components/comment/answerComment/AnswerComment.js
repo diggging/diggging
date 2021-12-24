@@ -8,9 +8,8 @@ import { alertService } from "../../alert.service";
 import YellowButton from "../../common/YellowButton";
 import { Alert } from "../../Alert";
 
-function AnswerComment({ commentCount, comments, id, token }) {
+function AnswerComment({ updateCount, comments, id, token, setUpdateCount, setUpdateComment }) {
   const [text, setText] = useState("");
-  const [commentNum, setCommentNum] = useState(commentCount);
   const [newComment, setNewComment] = useState([]);
 
   const onChange = useCallback(
@@ -30,8 +29,9 @@ function AnswerComment({ commentCount, comments, id, token }) {
         })
         .then((response) => {
           setNewComment(response.data);
+          setUpdateComment([...comments, response.data])
           setText("");
-          setCommentNum(commentNum + 1);
+          setUpdateCount(updateCount + 1);
         }).catch((e) => {
           if(e.response.status === 400) {
             alertService.warn("댓글을 작성해주세요");      
@@ -63,13 +63,9 @@ function AnswerComment({ commentCount, comments, id, token }) {
           댓글 남기기
         </YellowButton>
       </CommentContainer>
-      <CommentCount>댓글 {commentNum}개</CommentCount>
+      <CommentCount>댓글 {updateCount}개</CommentCount>
       <AnswerCommentList
-        id={id}
-        comments={comments}
-        newComment={newComment}
-        setCommentNum={setCommentNum}
-        commentNum={commentNum}
+        id={id} comments={comments} newComment={newComment} setUpdateCount={setUpdateCount} setUpdateComment={setUpdateComment} updateCount={updateCount}
       />
     </FormContainer>
   );

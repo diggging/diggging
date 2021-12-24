@@ -12,9 +12,11 @@ import { alertService } from "../../alert.service";
 function AnswerSingleComment({
   data,
   comment,
+  comments,
   setComment,
-  setCommentNum,
-  commentNum,
+  setUpdateCount,
+  updateCount,
+  setUpdateComment,
 }) {
 
   const dispatch = useDispatch();
@@ -54,7 +56,8 @@ function AnswerSingleComment({
         .then((response) => {
           alertService.success("댓글이 삭제되었습니다.");
           setComment(comment.filter((comment) => comment.id !== data.id));
-          setCommentNum(commentNum - 1);
+          setUpdateComment(comments.filter((comments) => comments.id !== data.id));
+          setUpdateCount(updateCount - 1);
         });
     } catch (e) {
       alertService.warn("댓글이 삭제되지 않았습니다.");
