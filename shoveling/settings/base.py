@@ -15,6 +15,7 @@ from pathlib import Path
 import json
 import sys
 from dotenv import load_dotenv, find_dotenv
+from datetime import timedelta
 
 load_dotenv(find_dotenv())
 
@@ -33,7 +34,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['13.124.23.247', 'diggging.com' ]
+ALLOWED_HOSTS = ["13.124.23.247", "diggging.com"]
 
 # Application definition
 
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "tagging.apps.TaggingConfig",
+    "rest_framework_simplejwt.token_blacklist",
     # t소셜로그인
     "django.contrib.sites",
     # apps
@@ -61,10 +63,75 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.naver",
-    #select search
+    # select search
     "sass_processor",
+    # rest framework
+    "rest_framework",
+    # rest_auth
+    "rest_framework.authtoken",
+    "rest_auth",
+    "rest_auth.registration",
+    # cors
+    "corsheaders",
+    # user_password
+    "django_rest_passwordreset",
+    # django taggit
+    "taggit",
+    # django taggit serializer
+    "taggit_serializer",
 ]
+REST_AUTH_REGISTER_SERIALIZERS = {
+    "REGISTER_SERIALIZER": "thenameofyourapp.serializers.CustomRegisterSerializer",
+}
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_jwt.authentication.JSONWebTokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        # 'rest_framework.authentication.SessionAuthentication',
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        #"rest_framework.permissions.IsAuthenticated",
+        # "rest_framework.permissions.IsAdminUser",
+        "rest_framework.permissions.AllowAny",
+    ],
+}
+JWT_AUTH = {
+    "JWT_ENCODE_HANDLER": "rest_framework_jwt.utils.jwt_encode_handler",
+    "JWT_DECODE_HANDLER": "rest_framework_jwt.utils.jwt_decode_handler",
+    "JWT_PAYLOAD_HANDLER": "rest_framework_jwt.utils.jwt_payload_handler",
+    "JWT_PAYLOAD_GET_USER_ID_HANDLER": "rest_framework_jwt.utils.jwt_get_user_id_from_payload_handler",
+    "JWT_RESPONSE_PAYLOAD_HANDLER": "rest_framework_jwt.utils.jwt_response_payload_handler",
+    "JWT_SECRET_KEY": SECRET_KEY,
+    "JWT_GET_USER_SECRET_KEY": None,
+    "JWT_PUBLIC_KEY": None,
+    "JWT_PRIVATE_KEY": None,
+    "JWT_ALGORITHM": "HS256",
+    "JWT_VERIFY": True,
+    "JWT_VERIFY_EXPIRATION": True,
+    "JWT_LEEWAY": 0,
+    "JWT_EXPIRATION_DELTA": timedelta(days=7),
+    "JWT_AUDIENCE": None,
+    "JWT_ISSUER": None,
+    "JWT_ALLOW_REFRESH": True,
+    "JWT_REFRESH_EXPIRATION_DELTA": timedelta(days=28),
+    "JWT_AUTH_HEADER_PREFIX": "JWT",
+    "JWT_AUTH_COOKIE": None,
+}
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+}
 
+REST_USE_JWT = True
 SASS_PROCESSOR_ENABLED = True
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
@@ -72,21 +139,29 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_ALLOW_NONIMAGE_FILES = True
 
 CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'Default',
-        'toolbar_Default': [
-            ['Bold', 'Font', 'FontSize', 'Bold', 'Strike', 'Underline'],
-            ['TextColor', 'BGColor'],
-            ['NumberedList', 'BulletedList','-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-            {'name': 'insert',
-            'items': ['Image', 'Table','CodeSnippet']},
-            ],
-        'extraPlugins': ','.join(
+    "default": {
+        "toolbar": "Default",
+        "toolbar_Default": [
+            ["Bold", "Font", "FontSize", "Bold", "Strike", "Underline"],
+            ["TextColor", "BGColor"],
             [
-                'codesnippet', 'autoembed',
+                "NumberedList",
+                "BulletedList",
+                "-",
+                "JustifyLeft",
+                "JustifyCenter",
+                "JustifyRight",
+                "JustifyBlock",
+            ],
+            {"name": "insert", "items": ["Image", "Table", "CodeSnippet"]},
+        ],
+        "extraPlugins": ",".join(
+            [
+                "codesnippet",
+                "autoembed",
             ]
         ),
-        'codeSnippet_theme': 'monokai_sublime',
+        "codeSnippet_theme": "monokai_sublime",
     },
 }
 
@@ -99,6 +174,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # cors
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "shoveling.urls"
@@ -128,7 +205,7 @@ WSGI_APPLICATION = "shoveling.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
     }
 }
 
@@ -158,8 +235,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'ko-kr'
-TIME_ZONE = 'Asia/Seoul'
+LANGUAGE_CODE = "ko-kr"
+TIME_ZONE = "Asia/Seoul"
 
 USE_I18N = True
 
@@ -172,22 +249,22 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = "/static/"
+# STATICFILES_DIRS = [
+#   os.path.join(BASE_DIR, "build/static"),
+# ]
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-#STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
-#STATICFILES_DIRS = [
-#    os.path.join(BASE_DIR, "static"),
-#]
 
 STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'sass_processor.finders.CssFinder',
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "sass_processor.finders.CssFinder",
 ]
 
-SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, 'static')
+SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, "static")
 
 
 AUTH_USER_MODEL = "users.User"
@@ -218,3 +295,22 @@ AUTHENTICATION_BACKENDS = (
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SITE_ID = 1
 LOGIN_REDIRECT_URL = "/"
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_EMAIL_REQUIRED = True
+EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "/"
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
+ACCOUNT_EMAIL_SUBJECT_PREFIX = "Diggging"
+
+# cors
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = [
+    "http://127.0.0.1:8000",
+    "http://127.0.0.1:3000",
+]
+
+# django taggit settings
+TAGGIT_CASE_INSENSITIVE = True  # make django taggit to be Case insensitive
+
+# taggit hashtag setings
+TAGGIT_TAGS_FROM_STRING = "shoveling.utils.comma_splitter"
+TAGGIT_STRING_FROM_TAGS = "shoveling.utils.comma_joiner"

@@ -66,7 +66,7 @@ class UserCustomCreationForm(UserCreationForm):
                 code='existed_nickname'
             )
         
-        if input_nickname and len(str(input_nickname)) > 8:
+        if input_nickname and len(str(input_nickname)) > 2:
             raise forms.ValidationError(
                 self.error_messages['nickname_format'],
                 code='nickname_format',

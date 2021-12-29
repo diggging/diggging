@@ -9,11 +9,6 @@ class PostAdmin(admin.ModelAdmin):
     fields = (
         "user",
         "title",
-        "problem_solving",
-        "language",
-        "framework",
-        "os",
-        "error_message",
         "image",
         "desc",
         "code",

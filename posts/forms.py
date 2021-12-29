@@ -5,15 +5,16 @@ from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 class PostForm(forms.ModelForm):
     image = forms.ImageField(required=False, widget=forms.FileInput)
+
     class Meta:
         model = Post
         fields = {
             "title",
-            "problem_solving",
-            "os",
-            "language",
-            "framework",    # frame work 용 절대 지우지마 
-            "error_message",
+            # "problem_solving",
+            # "os",
+            # "language",
+            # "framework",    # frame work 용 절대 지우지마
+            # "error_message",
             "image",
             "desc",
             "is_public",
@@ -27,11 +28,12 @@ class PostForm(forms.ModelForm):
                 attrs={"class": "title_input", "placeholder": "발견한 에러메시지를 기록하세요."},
             ),
             "desc": forms.CharField(widget=CKEditorUploadingWidget()),
-            'is_public': forms.RadioSelect(choices=[(True, '전체공개'), (False, '비공개')]),
+            "is_public": forms.RadioSelect(choices=[(True, "전체공개"), (False, "비공개")]),
         }
 
-class SelectForm(forms.Form):
-    field = forms.ChoiceField(choices=Post.language_choices)
-    field2 = forms.ChoiceField(choices=Post.os_choices)
-    field3 = forms.ChoiceField(choices=Post.problem_choices)
-    field4 = forms.ChoiceField(choices=Post.framework_choices)
+
+# class SelectForm(forms.Form):
+#     field = forms.ChoiceField(choices=Post.language_choices)
+#     field2 = forms.ChoiceField(choices=Post.os_choices)
+#     field3 = forms.ChoiceField(choices=Post.problem_choices)
+#     field4 = forms.ChoiceField(choices=Post.framework_choices)
