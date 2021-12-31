@@ -37,7 +37,7 @@ class QuestionPost(core_models.TimeStampModel):
         blank=True,
         related_name="question_scarps_user",
     )
-    # is_selected = models.BooleanField(default=False)
+    is_selected = models.BooleanField(default=False)
 
     # taggit 기능 추가
     question_tags = TaggableManager(blank = True)

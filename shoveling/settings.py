@@ -17,11 +17,15 @@ import sys
 from dotenv import load_dotenv, find_dotenv
 from datetime import timedelta
 from django.conf import settings
+from django.utils.module_loading import import_string
 
-settings.configure( # ...
-        ROOT_URLCONF=__name__,
+
+#settings.configure( # ...
+#        ROOT_URLCONF=urls,
         # ... ),
-        )
+#        )
+
+ROOT_URLCONF = "shoveling.urls"
 
 load_dotenv(find_dotenv())
 
@@ -37,9 +41,10 @@ ROOT_DIR = os.path.dirname(BASE_DIR)
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ["13.124.23.247", "diggging.com", "3.37.206.59"]
+
+ALLOWED_HOSTS = ["13.124.23.247", "diggging.com", "3.37.206.59", "api-diggging.shop"]
 
 # Application definition
 
@@ -97,11 +102,11 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.TokenAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-        'rest_framework.authentication.SessionAuthentication',
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         #"rest_framework.permissions.IsAuthenticated",
-        "rest_framework.permissions.IsAdminUser",
+       # "rest_framework.permissions.IsAdminUser",
+       "rest_framework.permissions.AllowAny",
     ],
 }
 JWT_AUTH = {
@@ -257,9 +262,11 @@ TAGGIT_LIMIT = 50
 # 이메일 보내기 위한 settings(google 기준)
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get("USER_EMAIL_HOST")
 EMAIL_HOST_PASSWORD = os.environ.get("USER_EMAIL_PASSWORD")
+EMAIL_PORT = 587
+#EMAIL_HOST_USER = os.environ.get("USER_EMAIL_HOST")
+#EMAIL_HOST_PASSWORD = os.environ.get("USER_EMAIL_PASSWORD")
 EMAIL_USE_TLS = True
 
 AUTHENTICATION_BACKENDS = (
@@ -278,8 +285,8 @@ ACCOUNT_EMAIL_SUBJECT_PREFIX = "Diggging"
 # cors
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = [
-    "https://diggging.com",
-    "http://3.37.206.59:8000/",
+    "http://3.37.206.59:8000",
+    "https://diggging-deploy.vercel.app",
 ]
 
 # django taggit settings

@@ -9,7 +9,14 @@ from comments.models import Comment
 from rest_framework.fields import CurrentUserDefault, SerializerMethodField
 from comments.models import Comment
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id", "username", "user_nickname", "user_level", "user_point", "user_profile_content", "user_profile_image", "email", "user_following"]
+
 class QuestionCommentSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
     class Meta:
         model = Comment
         fields = [
@@ -23,6 +30,8 @@ class QuestionCommentSerializer(serializers.ModelSerializer):
         read_only_fields = ['user', 'question', 'created', 'updated']
 
 class AnswerCommentSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
     class Meta:
         model = Comment
         fields = [

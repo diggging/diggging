@@ -21,7 +21,10 @@ class QuestionCommentCreateAPIView(generics.CreateAPIView):
     def perform_create(self, serializer):
         pk = self.request.query_params.get('question_id')
         question = QuestionPost.objects.get(pk=pk)
-        new_alarm = Alarm.objects.create(user=question.user, reason="내가 남긴 질문 \""+question.title+'\" 에 '+self.request.user.user_nickname+' 님이 댓글을 남겼어요.')
+        new_alarm = Alarm.objects.create(user=question.user, title=question.title,
+        alarm_kind = "comment", desc = self.request.data.get('text'),
+        request_user_nickname=self.request.user.user_nickname,
+        request_user_profile_image=self.request.user.user_profile_image)
         serializer.save(user=self.request.user, question=question)
 
 class QuestionCommentUpdateAPIView(generics.RetrieveUpdateAPIView):
@@ -40,7 +43,10 @@ class AnswerCommentCreateAPIView(generics.CreateAPIView):
     def perform_create(self, serializer):
         pk = self.request.query_params.get('answer_id')
         answer = Answer.objects.get(pk=pk)
-        new_alarm = Alarm.objects.create(user=answer.user, reason="내가 남긴 답변 \""+answer.title+'\" 에 '+self.request.user.user_nickname+' 님이 댓글을 남겼어요.')
+        new_alarm = Alarm.objects.create(user=answer.user, title=answer.title, 
+        desc = self.request.data.get('text'), alarm_kind="comment",
+        request_user_nickname=self.request.user.user_nickname,
+        request_user_profile_image = self.request.user.user_profile_image)
         serializer.save(user=self.request.user, answer=answer)
 
 class AnswerCommentUpdateAPIView(generics.RetrieveUpdateAPIView):

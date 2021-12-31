@@ -26,6 +26,10 @@ from rest_framework.decorators import ( api_view, permission_classes, authentica
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 import re
 from django.db.models import Q
+from rest_framework.pagination import PageNumberPagination
+
+class ListPageNumberPagination(PageNumberPagination):
+    page_size = 5
 
 # class Main(APIView):
 #     def get(self, request, format=None, **kwargs):
@@ -39,7 +43,10 @@ from django.db.models import Q
 
 class Main(generics.ListAPIView):
     authentication_classes = [BasicAuthentication, SessionAuthentication]
-    queryset = Post.objects.all()
+    paginator_class = ListPageNumberPagination
+    queryset = Post.objects.all().order_by('id')
+
+    
     serializer_class = PostDetailSerializer
 
 # main 페이지

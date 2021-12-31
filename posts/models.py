@@ -21,7 +21,8 @@ class Post(core_models.TimeStampModel):
 
     hits = models.PositiveIntegerField(verbose_name="조회수", default=0)
 
-
+    class Meta:
+        ordering = ('-created',)
     # problem_choices = (
     #     ("==선택==", "==선택=="),
     #     ("해결", "해결"),

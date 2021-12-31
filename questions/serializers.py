@@ -45,7 +45,7 @@ class AnswerDetailSerializer(serializers.ModelSerializer):
     # answer_comments = serializers.SerializerMethodField()
     class Meta:
         model = Answer
-        fields = ["id", "user", "title", "question","selection", "desc", "answer_comments", "answer_comment_count"]
+        fields = ["id", "user", "title", "question","selection", "desc", "answer_comments", "answer_comment_count","created","updated"]
         read_only_fields = ["user", "title", "question", "selection", "desc", "created", "updated"]
 
     def to_representation(self, instance):
@@ -111,9 +111,10 @@ class QuestionDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
             "created",
             "updated",
             "hits",
-            "answer_exist"
+            "answer_exist",
+            "is_selected",
         ]
-        read_only_fields = ["hits",]
+        read_only_fields = ["hits","answer_exist","is_selected"]
     # def get_question_comments(self, obj):
     #     qc_q = QuestionPost.question_comments.filter(id=obj.id)
     #     question_comments = CommentSerializer(qc_q, many=True).data
@@ -144,6 +145,7 @@ class QuestionListSerializer(TaggitSerializer, serializers.ModelSerializer):
             "updated",
             "comment_count",
             "answer_count",
+            "hits",
             # "big_criteria",
             # "small_criteria",
         ]

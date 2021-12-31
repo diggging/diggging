@@ -152,8 +152,11 @@ class AnswerCreateAPIView(generics.ListCreateAPIView):
         question = get_object_or_404(QuestionPost, pk=pk)
         question.answer_exist = True
         new_alarm = Alarm.objects.create(
-                user=self.request.user,
-                reason="내가 남긴 질문" + question.title + "에 답변이 달렸어요.",
+                user=question.user,
+                title = self.request.data.get('title'),
+                alarm_kind = "answer", desc = self.request.data.get('desc'),
+                request_user_nickname=self.request.user.user_nickname,
+                request_user_profile_image=self.request.user.user_profile_image
             )
         question.save()
         serializer.save(user=self.request.user, question=question)
@@ -191,7 +194,11 @@ class LikeUpDownAPIView(generics.RetrieveUpdateAPIView):
             question_post.likes_user.remove(self.request.user)
         else:
             question_post.helped_num += 1
-            new_alarm = Alarm.objects.create(user=question_post.user, reason="내가 남긴 질문 \""+ question_post.title + "\" 이 " + self.request.user.user_nickname + "님께 도움이 되었어요.")
+            new_alarm = Alarm.objects.create(user=question_post.user, 
+            title = question_post.title,
+            alarm_kind = "like", request_user_nickname=self.request.user.user_nickname,
+            request_user_profile_image=self.request.user.user_profile_image
+            )
             if question_post.helped_num < 0:
                 question_post.helped_num = 0
             question_post.likes_user.add(self.request.user)
@@ -209,13 +216,28 @@ class AnswerSelectAPIView(generics.RetrieveUpdateAPIView):
 
     def perform_update(self, serializer, *args, **kwargs):
         answer = get_object_or_404(Answer, pk=self.kwargs['pk'])
+        question = QuestionPost.objects.get(id = answer.question.id)
+        answers = question.answers.all()
 
-        if answer.selection == True:
-            answer.selection = False
+        if question.is_selected == True:
+            flag = 0
+            for answer_ind in answers:
+                if answer_ind.selection == True:
+                    flag = answer_ind.id
+            if flag == answer.id:
+                answer.selection = False
+                question.is_selected = False
         else:
             answer.selection = True
+            question.is_selected = True
+        
+        question.save()
 
-        new_alarm = Alarm.objects.create(user=answer.user, reason="질문 " + answer.question.title + " 에 남긴 답변이 채택되었어요." )
+        new_alarm = Alarm.objects.create(user=answer.user, 
+        title = answer.question.title,
+        alarm_kind = "answer_select", desc = answer.desc,
+        request_user_nickname=self.request.user.user_nickname,
+        request_user_profile_image=self.request.user.user_profile_image)
         answer.save()
         serializer.save(selection = answer.selection)
 
