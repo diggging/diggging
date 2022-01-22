@@ -14,6 +14,19 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ["id", "username", "user_nickname", "user_level", "user_point", "user_profile_content", "user_profile_image", "email", "user_following"]
 
+class PostCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = [
+            "id",
+            "user",
+            "post",
+            "text",
+            "created",
+            "updated",
+        ]
+        read_only_fields = ["user", "post", "created", "updated"]
+
 class QuestionCommentSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
 

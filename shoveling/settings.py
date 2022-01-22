@@ -44,7 +44,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 DEBUG = True
 
 
-ALLOWED_HOSTS = ["13.124.23.247", "diggging.com", "3.37.206.59", "api-diggging.shop"]
+ALLOWED_HOSTS = ["13.124.23.247", "diggging.com", "3.37.206.59", "api-diggging.shop", 'localhost', '127.0.0.1', '127.0.0.1:3000', '127.0.0.1:8000']
 
 # Application definition
 
@@ -55,10 +55,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
     "tagging.apps.TaggingConfig",
     "rest_framework_simplejwt.token_blacklist",
-    # t소셜로그인
-    "django.contrib.sites",
     # apps
     "core",
     "users",
