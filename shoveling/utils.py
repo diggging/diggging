@@ -7,7 +7,7 @@ def comma_joiner(tags):
     return '# '.join(t.name for t in tags)
 
 # ---------- utils for Question and Post -----------------
-def listing(self, model, big_criteria, small_criteria):
+def listing(self, model, big_criteria, small_criteria="all"):
     if big_criteria == "recent":
         queryset = model.objects.order_by("-created")
         if small_criteria == "all":

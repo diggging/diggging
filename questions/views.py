@@ -94,7 +94,8 @@ class QuestionListAPIView(generics.ListAPIView):
         big_criteria = self.request.query_params.get('big_criteria')
         small_criteria = self.request.query_params.get('small_criteria')
 
-        listing(self, QuestionPost, big_criteria, small_criteria)
+        queryset = listing(self, QuestionPost, big_criteria, small_criteria)
+        return queryset
         
         # if small_criteria == "all":
         #     if big_criteria == "recent":
