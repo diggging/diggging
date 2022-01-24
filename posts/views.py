@@ -71,9 +71,9 @@ class PostListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         big_criteria = self.request.query_params.get('big_criteria')
-        small_criteria = self.request.query_params.get('small_criteria')
 
-        listing(self, Post, big_criteria, small_criteria)
+        queryset = listing(self, Post, big_criteria)
+        return queryset
 
 # ------------------ Like up, down ---------------------------------
 class LikeUpDownAPIView(generics.RetrieveUpdateAPIView):

@@ -13,7 +13,17 @@ from taggit_serializer.serializers import TagList, TagListSerializerField, Taggi
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id","username","user_nickname","user_level","user_point","user_profile_content","user_profile_image","email","user_following"]
+        fields = [
+            "id",
+            "username",
+            "user_nickname",
+            "user_level",
+            "user_point",
+            "user_profile_content",
+            "user_profile_image",
+            "email",
+            "user_following"
+        ]
 
 # ------------- Post Folder Serializer ----------------------------------
 class FolderSerializer(serializers.ModelSerializer):
@@ -44,8 +54,7 @@ class PostCreateUpdateSerializer(TaggitSerializer, serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super(PostCreateUpdateSerializer, self).__init__(*args, **kwargs)
         user = self.context['request'].user
-        self.fields['folder'] = serializers.ManyRelatedField(child_relation = PrimaryKeyRelatedField
-        (queryset = Post.objects.filter(folder_user = user), required=False), required=False)
+        self.fields['folder'] = serializers.ManyRelatedField(child_relation = PrimaryKeyRelatedField(queryset = Folder.objects.filter(folder_user = user), required=False), required=False)
 
 class PostDetailSerializer(TaggitSerializer, serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
