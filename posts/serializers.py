@@ -25,15 +25,6 @@ class UserSerializer(serializers.ModelSerializer):
             "user_following"
         ]
 
-# ------------- Post Folder Serializer ----------------------------------
-class FolderSerializer(serializers.ModelSerializer):
-    folder_name = serializers.StringRelatedField()
-
-    class Meta:
-        model = Folder
-        fields = ["folder_name", "folder_user"]
-# ------------------------------------------------------------------------
-
 # --------------- Post Serializer ------------------------------------------
 class PostCreateUpdateSerializer(TaggitSerializer, serializers.ModelSerializer):
     post_tags = TagListSerializerField(allow_null = True)
@@ -103,6 +94,29 @@ class PostListSerializer(TaggitSerializer, serializers.ModelSerializer):
         ]
 
 # ----------------------------------------------------------------------------------
+
+# ------------- Post Folder Serializer ----------------------------------
+class FolderCreateUpdateSerializer(serializers.ModelSerializer):
+    folder_user = serializers.StringRelatedField()
+
+    class Meta:
+        model = Folder
+        fields = ["folder_name", "folder_user"]
+
+class FolderDetailSerializer(serializers.ModelSerializer):
+    folder_user = serializers.StringRelatedField()
+    content = PostDetailSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Folder
+        fields = ["folder_name", "folder_user", "content"]
+
+class FolderListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Folder
+        fields = ["folder_name", "folder_user"]
+# ------------------------------------------------------------------------
 
 # ----------------------- Like Serailizer ------------------------------------------
 class LikeSerializer(serializers.ModelSerializer):

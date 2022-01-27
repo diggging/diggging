@@ -2,14 +2,20 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from rest_framework.views import APIView
 from questions.models import QuestionPost
-from .models import Post
+from .models import (
+    Post,
+    Folder,
+)
 from posts.serializers import (
+    FolderListSerializer,
     LikeSerializer,
     PostCreateUpdateSerializer,
     PostListSerializer,
     PostDetailSerializer,
     QuestionThumbnailSerializer,
     SearchSerializer,
+    FolderCreateUpdateSerializer,
+    FolderDetailSerializer,
 )
 from rest_framework.response import Response
 from rest_framework import generics
@@ -18,6 +24,9 @@ from questions.permissions import (
     IsNotOwnerOrReadOnly, 
     IsOwnerOrReadOnly, 
     IsPostOwnerOrReadOnly
+)
+from .permissions import (
+    IsFolderOwnerOrReadOnly,
 )
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import (
@@ -87,6 +96,40 @@ class LikeUpDownAPIView(generics.RetrieveUpdateAPIView):
         like(self, post, like_user)
         post.save()
         serializer.save(helped_num = post.helped_num)
+# ------------------------------------------------------------------
+
+# ---------------- Folder CRUD -------------------------------------
+class FolderCreateAPIView(generics.CreateAPIView):
+    queryset = Folder.objects.all()
+    serializer_class = FolderCreateUpdateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(folder_user = self.request.user)
+
+class FolderDetailAPIView(generics.RetrieveAPIView):
+    queryset = Folder.objects.all()
+    serializer_class = FolderDetailSerializer
+
+class FolderUpdateAPIView(generics.RetrieveUpdateAPIView):
+    queryset = Folder.objects.all()
+    serializer_class = FolderCreateUpdateSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsFolderOwnerOrReadOnly]
+class FolderDeleteAPIView(generics.DestroyAPIView):
+    queryset = Folder.objects.all()
+    serializer_class = FolderDetailSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsFolderOwnerOrReadOnly]
+
+class FolderListAPIView(generics.ListAPIView):
+    serializer_class = FolderListSerializer
+    pagination_class = ListPageNumberPagination
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Folder.objects.filter(folder_user=user)
+        return queryset
+
+# -----------------------------------------------------------------------------
 
 @permission_classes([AllowAny])
 class QuestionSearchView(APIView):
