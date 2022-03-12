@@ -15,8 +15,10 @@ urlpatterns = [
     path("folder/<int:pk>/update/", views.FolderUpdateAPIView.as_view(), name="folder-update"),
     path("folder/<int:pk>/delete/", views.FolderDeleteAPIView.as_view(), name="folder-delete"),
     path("folder-list/", views.FolderListAPIView.as_view(), name="folder-list"),
+    path("<int:pk>/like/", views.LikeUpDownAPIView.as_view(), name="like"),
     path("search_quest/", views.QuestionSearchView.as_view(), name="search_quest"),
     path("search_quest_result/<str:query>", views.QuestionSearchResultView.as_view(), name="search_quest_result"),
+    path("<int:pk>/scrap", views.ScrapCreateAPIView.as_view(), name="scrap"),
     ]
 
 # urlpatterns = format_suffix_patterns(urlpatterns)

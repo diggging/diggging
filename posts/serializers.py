@@ -105,7 +105,7 @@ class FolderCreateUpdateSerializer(serializers.ModelSerializer):
 
 class FolderDetailSerializer(serializers.ModelSerializer):
     folder_user = serializers.StringRelatedField()
-    content = PostDetailSerializer(many=True, read_only=True)
+    content = serializers.StringRelatedField(source = 'related_posts.title', read_only=True)
 
     class Meta:
         model = Folder
@@ -143,6 +143,29 @@ class QuestionThumbnailSerializer(serializers.ModelSerializer):
 
 class SearchSerializer(serializers.Serializer):
     query = serializers.CharField(max_length=200)
+
+# -----------------------------------------------------------------------------------
+
+# --------------------- Scrap Serializer --------------------------------------------
+class ScrapSerializer(serializers.Serializer):
+    save_title = serializers.StringRelatedField()
+    # folders = serializers.ListField(source='user.allow_empty = True)
+
+    class Meta:
+        model = Folder
+        fields = [
+            "id",
+            "save_title",
+            "folders",
+            "folder_name",
+            "folder_user",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(ScrapSerializer, self).__init__(*args, **kwargs)
+        user = self.context['request'].user
+        self.fields['folders'] = serializers.ManyRelatedField(child_relation = PrimaryKeyRelatedField(queryset = Folder.objects.filter(folder_user = user), required=False), required=False)
+
 
 #----------------------------------------------------------------------------------
 # class PostSerializer(serializers.ModelSerializer):

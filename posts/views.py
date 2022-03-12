@@ -13,6 +13,7 @@ from posts.serializers import (
     PostListSerializer,
     PostDetailSerializer,
     QuestionThumbnailSerializer,
+    ScrapSerializer,
     SearchSerializer,
     FolderCreateUpdateSerializer,
     FolderDetailSerializer,
@@ -129,6 +130,14 @@ class FolderListAPIView(generics.ListAPIView):
         queryset = Folder.objects.filter(folder_user=user)
         return queryset
 
+# --------------------------------------------------------------------------------
+
+# --------------------------------- Scrap ----------------------------------------
+class ScrapCreateAPIView(generics.RetrieveUpdateAPIView):
+    queryset = Folder.objects.all()
+    serializer_class = ScrapSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
 # -----------------------------------------------------------------------------
 
 @permission_classes([AllowAny])
@@ -152,4 +161,7 @@ class QuestionSearchResultView(APIView):
         question_query = QuestionPost.objects.filter(Q(title__icontains=key_word)|Q(desc__icontains = key_word))
         serializer = QuestionThumbnailSerializer(question_query, many=True)
         return Response(serializer.data)
+
+
+
 
