@@ -116,10 +116,6 @@ class Alarm(core_model.TimeStampModel):
     class Meta:
         ordering = ("-created",)
 
-    # def __str__(self):
-    #     return self.reason
-
-
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:

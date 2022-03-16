@@ -21,10 +21,6 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
-from comments.serializers import (
-    QuestionCommentSerializer,
-    AnswerCommentSerializer,
-    )
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
@@ -103,26 +99,28 @@ class RegisterSerializer(RegisterSerializer):
         return user"""
 
 
-# path valuable
-class AlarmSerailzer(serializers.ModelSerializer):
-
-    user = UserSerializer(read_only=True)
-
-    class Meta:
-        model = Alarm
-        fields = "__all__"
-
-class AlarmUpdateSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+"""class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=30)
+    password = serializers.CharField(
+        style={"input_type": "password"}, max_length=128, write_only=True
+    )
 
     class Meta:
-        model = Alarm
-        fields = "__all__"
-        read_only_fields = ["user", "request_user_nickname",
-        "request_user_profile_image", "title", "desc", "alarm_kind",
-        "is_checked"]
+        model = User
+        fields = ("old_password", "password", "password2")
 
+    def validate(self, attrs):
+        if attrs["password"] != attrs["password2"]:
+            raise serializers.ValidationError(
+                {"password": "Password fields didn't match."}
+            )
 
+        return attrs
+
+        except User.DoesNotExist:
+            raise serializers.ValidationError("User 가 존재하지않습니다.")
+        return {"username": user.username, "token": jwt_token}
+"""
 class ChangePasswordSerializer(serializers.ModelSerializer):
     password = serializers.CharField(style={"input_type": "password"}, write_only=True)
     password2 = serializers.CharField(style={"input_type": "password"}, write_only=True)
@@ -167,6 +165,113 @@ class ChangedescSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             "user_profile_content",
+        ]
+
+    def update(self, instance, validated_data):
+        if len(validated_data["user_profile_content"]) <= 100:
+            instance.user_profile_content = validated_data.get(
+                "user_profile_content", instance.user_profile_content
+            )
+            instance.save()
+        else:
+            raise serializers.ValidationError({"desc": "100글자 이하로 입력하세요."})
+
+        return instance
+
+
+class ChangeimageSerializer(serializers.HyperlinkedModelSerializer):
+    user_profile_image = serializers.ImageField(use_url=True)
+
+    class Meta:
+        model = User
+        fields = ["user_profile_image"]
+
+    def update(self, instance, validated_data):
+        instance.user_profile_image = validated_data.get(
+            "user_profile_image", instance.user_profile_image
+        )
+        instance.save()
+
+        return instance
+
+
+class ChangeNicknameSerializer(serializers.ModelSerializer):
+    user_nickname = serializers.CharField()
+
+    class Meta:
+        model = User
+        fields = ["user_nickname"]
+
+    def update(self, instance, validated_data):
+        if len(validated_data["user_nickname"]) <= 7:
+            instance.user_nickname = validated_data.get(
+                "user_nickname", instance.user_nickname
+            )
+            instance.save()
+        else:
+            raise serializers.ValidationError({"nickname": "7글자 이하로 입력하세요."})
+        return instance
+
+class InputEmailSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(required=allauth_settings.EMAIL_REQUIRED)
+    username = serializers.CharField(
+        required=allauth_settings.USERNAME_REQUIRED,
+    )
+
+    class Meta:
+        model = User
+        fields = ["email", "username"]
+
+        def get_cleaned_data(self):
+            data_dict = super().get_cleaned_data()
+            return data_dict
+
+
+class Unlogin_ChangePasswordSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    temp = serializers.IntegerField()
+    new_password = serializers.CharField(
+        style={"input_type": "password"}, write_only=True
+    )
+    password_confirm = serializers.CharField(
+        style={"input_type": "password"}, write_only=True
+    )
+
+    class Meta:
+        # model = User
+        fields = ["username", "temp", "new_password", "password_confirm"]
+
+    def validate(self, attrs):
+        if attrs["new_password"] != attrs["password_confirm"]:
+            raise serializers.ValidationError({"password": "패스워드를 재확인하세요"})
+        return attrs
+
+
+# changed code
+class ResetPasswordEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    username = serializers.CharField()
+    # temp = serializers.IntegerField()
+
+    class Meta:
+        fields = ["email", "username"]
+
+# path valuable
+class AlarmSerailzer(serializers.ModelSerializer):
+
+    user = UserSerializer(read_only=True)
+    class Meta:
+        model = Alarm
+        fields = "__all__"
+
+class AlarmUpdateSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Alarm
+        fields = "__all__"
+        read_only_fields = ["user", "request_user_nickname",
+        "request_user_profile_image", "title", "desc", "alarm_kind", "is_checked",
         ]
 
     def update(self, instance, validated_data):

@@ -29,3 +29,12 @@ class IsQuestionOwnerOrReadOnly(permissions.BasePermission):
             return True 
         
         return obj.question.user == request.user
+
+class IsPostOwnerOrReadOnly(permissions.BasePermission):
+    message = 'You must be owner of the Post object'
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return obj.post.user == request.user

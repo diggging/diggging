@@ -41,5 +41,5 @@ urlpatterns = [
     path("comments/", include("comments.urls", namespace="comments")),
     path("accounts/", include("django.contrib.auth.urls")),
     path("questions/", include("questions.urls")),
-    path("", posts_views.Main.as_view(), name="main"),
+    # path("", posts_views.Main.as_view(), name="main"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

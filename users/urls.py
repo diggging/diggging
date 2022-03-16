@@ -13,7 +13,33 @@ urlpatterns = [
     path("api/Logout/", views.LogoutView.as_view(), name="Logout"),
     # path("login", obtain_auth_token, name="login"),
     # url(r'^signup/$', views.signup, name='signup'),
-    path("activate/<slug:uidb64>/<slug:token>/", views.activate, name="activate"),
+    path("activate/<slug:uidb64>/<slug:token>/", views.UserActivate.as_view(), name="activate"),
+    # path(
+   #     "password_reset/",
+   #     auth_views.PasswordResetView.as_view(),
+   #     name="password_reset",
+   # ),
+   # path(
+   #     "password_reset/done/",
+   #     auth_views.PasswordResetDoneView.as_view(),
+   #     name="password_reset_done",
+   # ),
+   # path(
+   #     "password_reset_confirm/<uuid:uidb64>/<slug:token>/",
+   #     auth_views.PasswordResetConfirmView.as_view(),
+   #     name="password_reset_confirm",
+   # ),
+   # path(
+   #     "password_reset_complete/",
+   #     auth_views.PasswordResetCompleteView.as_view(),
+   #     name="password_reset_complete",
+   # ),
+     path(
+        "password_reset_API/",
+        view=views.Password_resetAPI.as_view(),
+        name="password_reset_API",
+    ),
+    # path("password_reset/", views.MyPasswordResetView.as_view(), name="password_reset"),
     # path(
     #     "password_reset/",
     #     auth_views.PasswordResetView.as_view(),
@@ -51,16 +77,10 @@ urlpatterns = [
     path("<int:pk>/account_detail", view=views.account_detail, name="account_detail"),
     path("<int:pk>/change_desc/", view=views.ChangeDesc.as_view(), name="change_desc"),
     path(
-        "<int:pk>/change_nickname/",
-        view=views.ChangeNicknameApi.as_view(),
-        name="change_nickname",
+        "<int:pk>/change_nickname/", view=views.ChangeNicknameApi.as_view(), name="change_nickname"
     ),
-    path(
-        "<int:pk>/change_pw/",
-        view=views.ChangepasswordView.as_view(),
-        name="auth_change_password",
-    ),
-    path("<int:pk>/change_img/", view=views.ChangeImgView.as_view(), name="change_img"),
+    path("<int:pk>/change_pw/", view=views.ChangepasswordView.as_view(), name="change_pw"),
+    path("<int:pk>/change_img/", view=views.ChangeImgView.as_view() , name="change_img"),
     # github login
     path("login/github", views.github_login, name="github_login"),
     path("login/github/callback", views.github_callback, name="github_callback"),
@@ -110,6 +130,11 @@ urlpatterns = [
         "<int:host_id>/my_page/my_questions",
         view=views.my_questions,
         name="my_questions",
+    ),
+    path(
+        "request-reset-email/",
+        view=views.RequestPasswordResetEmail.as_view(),
+        name="request-reset-email",
     ),
     # path('dashboard/', view=views.index, name="dashboard"),
     # new url

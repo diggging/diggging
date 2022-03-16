@@ -16,6 +16,16 @@ import json
 import sys
 from dotenv import load_dotenv, find_dotenv
 from datetime import timedelta
+from django.conf import settings
+from django.utils.module_loading import import_string
+
+
+#settings.configure( # ...
+#        ROOT_URLCONF=urls,
+        # ... ),
+#        )
+
+ROOT_URLCONF = "shoveling.urls"
 
 load_dotenv(find_dotenv())
 
@@ -24,7 +34,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 ROOT_DIR = os.path.dirname(BASE_DIR)
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -32,9 +41,10 @@ ROOT_DIR = os.path.dirname(BASE_DIR)
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ["13.124.23.247", "diggging.com"]
+
+ALLOWED_HOSTS = ["13.124.23.247", "diggging.com", "3.37.206.59", "api-diggging.shop", 'localhost', '127.0.0.1', '127.0.0.1:3000', '127.0.0.1:8000']
 
 # Application definition
 
@@ -45,10 +55,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
     "tagging.apps.TaggingConfig",
     "rest_framework_simplejwt.token_blacklist",
-    # t소셜로그인
-    "django.contrib.sites",
     # apps
     "core",
     "users",
@@ -57,8 +66,8 @@ INSTALLED_APPS = [
     "questions",
     # Third party apps
     "six",
-    "ckeditor",
-    "ckeditor_uploader",
+    # "ckeditor",
+    # "ckeditor_uploader",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -76,9 +85,9 @@ INSTALLED_APPS = [
     # user_password
     "django_rest_passwordreset",
     # django taggit
-    "taggit",
+    'taggit',
     # django taggit serializer
-    "taggit_serializer",
+    'taggit_serializer',
 ]
 REST_AUTH_REGISTER_SERIALIZERS = {
     "REGISTER_SERIALIZER": "thenameofyourapp.serializers.CustomRegisterSerializer",
@@ -92,12 +101,11 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.TokenAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-        # 'rest_framework.authentication.SessionAuthentication',
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         #"rest_framework.permissions.IsAuthenticated",
-        # "rest_framework.permissions.IsAdminUser",
-        "rest_framework.permissions.AllowAny",
+       # "rest_framework.permissions.IsAdminUser",
+       "rest_framework.permissions.AllowAny",
     ],
 }
 JWT_AUTH = {
@@ -123,47 +131,16 @@ JWT_AUTH = {
     "JWT_AUTH_COOKIE": None,
 }
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    "ROTATE_REFRESH_TOKENS": True,
-    "BLACKLIST_AFTER_ROTATION": True,
-    "AUTH_HEADER_TYPES": ("Bearer",),
-    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer', ),
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken', ),
 }
 
 REST_USE_JWT = True
 SASS_PROCESSOR_ENABLED = True
-
-CKEDITOR_UPLOAD_PATH = "uploads/"
-
-CKEDITOR_ALLOW_NONIMAGE_FILES = True
-
-CKEDITOR_CONFIGS = {
-    "default": {
-        "toolbar": "Default",
-        "toolbar_Default": [
-            ["Bold", "Font", "FontSize", "Bold", "Strike", "Underline"],
-            ["TextColor", "BGColor"],
-            [
-                "NumberedList",
-                "BulletedList",
-                "-",
-                "JustifyLeft",
-                "JustifyCenter",
-                "JustifyRight",
-                "JustifyBlock",
-            ],
-            {"name": "insert", "items": ["Image", "Table", "CodeSnippet"]},
-        ],
-        "extraPlugins": ",".join(
-            [
-                "codesnippet",
-                "autoembed",
-            ]
-        ),
-        "codeSnippet_theme": "monokai_sublime",
-    },
-}
 
 
 MIDDLEWARE = [
@@ -178,7 +155,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
 ]
 
-ROOT_URLCONF = "shoveling.urls"
+# ROOT_URLCONF = "shoveling.urls"
 
 TEMPLATES = [
     {
@@ -249,14 +226,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = "/static/"
-# STATICFILES_DIRS = [
-#   os.path.join(BASE_DIR, "build/static"),
-# ]
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
+#STATICFILES_DIRS = [
+#   os.path.join(BASE_DIR, "static")
+#   # BASE_DIR / 'static',
+#]
 
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
@@ -283,9 +261,11 @@ TAGGIT_LIMIT = 50
 # 이메일 보내기 위한 settings(google 기준)
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get("USER_EMAIL_HOST")
 EMAIL_HOST_PASSWORD = os.environ.get("USER_EMAIL_PASSWORD")
+EMAIL_PORT = 587
+#EMAIL_HOST_USER = os.environ.get("USER_EMAIL_HOST")
+#EMAIL_HOST_PASSWORD = os.environ.get("USER_EMAIL_PASSWORD")
 EMAIL_USE_TLS = True
 
 AUTHENTICATION_BACKENDS = (
@@ -304,13 +284,13 @@ ACCOUNT_EMAIL_SUBJECT_PREFIX = "Diggging"
 # cors
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = [
-    "http://127.0.0.1:8000",
-    "http://127.0.0.1:3000",
+    "http://3.37.206.59:8000",
+    "https://diggging-deploy.vercel.app",
 ]
 
 # django taggit settings
-TAGGIT_CASE_INSENSITIVE = True  # make django taggit to be Case insensitive
+TAGGIT_CASE_INSENSITIVE = True # make django taggit to be Case insensitive
 
 # taggit hashtag setings
-TAGGIT_TAGS_FROM_STRING = "shoveling.utils.comma_splitter"
-TAGGIT_STRING_FROM_TAGS = "shoveling.utils.comma_joiner"
+TAGGIT_TAGS_FROM_STRING = 'shoveling.utils.comma_splitter'
+TAGGIT_STRING_FROM_TAGS = 'shoveling.utils.comma_joiner'
