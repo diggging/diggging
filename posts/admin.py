@@ -12,14 +12,23 @@ class PostAdmin(admin.ModelAdmin):
         "image",
         "desc",
         "code",
-        "is_public",
-        "is_friend",
+        # "is_public",
+        # "is_friend",
         "folder",
         "scrap_num", 
         "helped_num",
     )
-    list_display = ["pk", "title", "desc", "is_public", "is_friend", "get_folders","scrap_num", "helped_num"]
-    list_filter = ("is_public",)
+    list_display = [
+        "pk", 
+        "title", 
+        "desc", 
+        # "is_public", 
+        # "is_friend", 
+        "get_folders",
+        "scrap_num", 
+        "helped_num"
+    ]
+    # list_filter = ("is_public",)
 
     def short_content(self, Post):
         return Post.content[:20]
@@ -32,7 +41,12 @@ class PostAdmin(admin.ModelAdmin):
 class FolderAdmin(admin.ModelAdmin):
     #inlines = [PostAdmin]
     #fields = ("id", "folder_name", "posts")
-    list_display = ["pk", "folder_name", "posts", "folder_user"]
+    list_display = [
+        "pk", 
+        "folder_name", 
+        "posts", 
+        "folder_user"
+    ]
     list_display_links = ["folder_name"]
     
 

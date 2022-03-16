@@ -9,3 +9,12 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         
         # 요청자(request.user)가 객체(Blog)의 user와 동일한지 확인
         return obj.user == request.user
+
+class IsFolderOwnerOrReadOnly(permissions.BasePermission):
+    message = 'You must be owner of the Folder'
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return obj.folder_user == request.user

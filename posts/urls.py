@@ -1,36 +1,24 @@
-from django.urls import path, include
+from django.urls import path
 from . import views
-from rest_framework.urlpatterns import format_suffix_patterns
 
 app_name = "posts"
 
 urlpatterns = [
-    #path("main/", view=views.main, name="main"),  # main 페이지로 가는 api
-    path("main/", views.Main.as_view(), name="main"),
-    # path("main/helped/", views.helped, name="helped"),
-    # path("main/follow/", views.follow, name="follow"),
-    # path("main/my_recent/", views.my_recent, name="my_recent"),
-
-    # post detail crud
-    path("create/", views.PostCreateView.as_view(), name="post_create"),
-    path("<int:pk>/detail", views.PostDetailView.as_view(), name="post_detail"),
-    #path("<int:pk>/update", views.PostDetailUpdateView.as_view(), name="post_update"),
-    #path("<int:pk>/delete", views.PostDetailDeleteView.as_view(), name="post_delete"),
-    
-    
-    # path("search/", views.search, name="search"),
+    path("create/", views.PostCreateAPIView.as_view(), name="post-create"),
+    path("<int:pk>/post-detail/", views.PostDetailAPIView.as_view(), name="post-detail"),
+    path("<int:pk>/post-update/", views.PostUpdateAPIView.as_view(), name="post-update"),
+    path("<int:pk>/post-delete/", views.PostDeleteAPIView.as_view(), name="post-delete"),
+    path("post-list/", views.PostListAPIView.as_view(), name="post-list"),
+    path("<int:pk>/post-like", views.LikeUpDownAPIView.as_view(), name="post-like"),
+    path("folder/create/", views.FolderCreateAPIView.as_view(), name="folder-create"),
+    path("folder/<int:pk>/detail/", views.FolderDetailAPIView.as_view(), name="folder-detail"),
+    path("folder/<int:pk>/update/", views.FolderUpdateAPIView.as_view(), name="folder-update"),
+    path("folder/<int:pk>/delete/", views.FolderDeleteAPIView.as_view(), name="folder-delete"),
+    path("folder-list/", views.FolderListAPIView.as_view(), name="folder-list"),
+    path("<int:pk>/like/", views.LikeUpDownAPIView.as_view(), name="like"),
     path("search_quest/", views.QuestionSearchView.as_view(), name="search_quest"),
     path("search_quest_result/<str:query>", views.QuestionSearchResultView.as_view(), name="search_quest_result"),
-    
-    # path("<int:user_id>/<int:post_id>/get_post", view=views.get_post, name="get_post"),
-    # path("scrap_axios/", views.scrap_axios, name="scrap_axios"),
-    # path("helped_axios/", views.helped_axios, name="helped_axios"),
-    # path("follow_axios/", views.follow_axios, name="follow_axios"),
-    # path("my_recent_axios/", views.my_recent_axios, name="my_recent_axios"),
-    # path("like/", views.post_like, name="post_like"),
-    path("<int:user_id>/<int:post_id>/scrap/", views.post_scrap, name="post_scrap"),
-    # # 서비스 소개 페이지
-    # path("service_view/", views.service_view, name="service_view"),
+    path("<int:pk>/scrap", views.ScrapCreateAPIView.as_view(), name="scrap"),
     ]
 
 # urlpatterns = format_suffix_patterns(urlpatterns)
