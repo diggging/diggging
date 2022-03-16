@@ -28,8 +28,6 @@ from rest_framework_simplejwt.views import (
 )
 from django.views.generic import TemplateView
 
-from shoveling.settings.base import TEMPLATES
-
 urlpatterns = [
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),

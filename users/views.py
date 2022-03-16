@@ -1,5 +1,5 @@
 import os
-
+import traceback
 from rest_framework.serializers import Serializer
 import users
 import requests
@@ -110,7 +110,6 @@ import random
 # my_site.save()
 
 
-
 class Registration(generics.GenericAPIView):
     serializer_class = RegisterSerializer
 
@@ -128,7 +127,7 @@ class Registration(generics.GenericAPIView):
         user.save()
         to_email = user.email
         message = render_to_string(
-            'user_activate_email.html',
+            "user_activate_email.html",
             {
                 "user": user,
                 "domain": current_site.domain,
@@ -189,7 +188,7 @@ class Registration(generics.GenericAPIView):
 
 
 # 이메일 인증 후 계정 활성화
-#def activate(request, uidb64, token):
+# def activate(request, uidb64, token):
 #    try:
 #        uid = force_text(urlsafe_base64_decode(uidb64))
 #        user = User.objects.get(pk=uid)
@@ -203,6 +202,7 @@ class Registration(generics.GenericAPIView):
 #    else:
 #        return HttpResponse("Activation link is invalid!")
 
+
 class UserActivate(APIView):
     def get(self, request, uidb64, token):
         try:
@@ -210,16 +210,20 @@ class UserActivate(APIView):
             user = User.objects.get(pk=uid)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             user = None
-        try:   
-           if user is not None and account_activation_token.check_token(user, token):
-             user.is_active = True
-             user.save()
-             return Response(user.email + '계정이 활성화 되었습니다.' , status = status.HTTP_200_OK)
-           else:
-               return Response('만료된 링크입니다.',status=status.HTTP_400_BAD_REQUEST)
+        try:
+            if user is not None and account_activation_token.check_token(user, token):
+                user.is_active = True
+                user.save()
+                return Response(
+                    user.email + "계정이 활성화 되었습니다.", status=status.HTTP_200_OK
+                )
+            else:
+                return Response("만료된 링크입니다.", status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
             print(traceback.form_exc())
+
+
 # 유저정보2 api
 @permission_classes([AllowAny])
 class LoadUserView(APIView):
@@ -236,8 +240,8 @@ class LoadUserView(APIView):
             )
 
 
-#@csrf_exempt
-#def log_in(request):
+# @csrf_exempt
+# def log_in(request):
 #    context = {}
 #    if request.method == "POST":
 #        form = AuthenticationCustomForm(request, request.POST)
@@ -278,6 +282,7 @@ class LogoutView(APIView):
 #     # email 받으면
 #     serializer_class = InputEmailSerializer
 
+
 class Password_resetAPI(generics.GenericAPIView):
     # queryset = User.objects.all()
     serializer_class = Unlogin_ChangePasswordSerializer
@@ -299,6 +304,7 @@ class Password_resetAPI(generics.GenericAPIView):
         return Response(
             {"success": True, "message": "비밀번호 변경 성공"}, status=status.HTTP_200_OK
         )
+
 
 # _______________________________________________social login____________________________________________
 # github login
@@ -742,25 +748,27 @@ def account_detail(request, pk):
     }
     return render(request, template_name="users/account_detail.html", context=ctx)
 
+
 @permission_classes([IsAuthenticated])
 class ChangeDesc(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = ChangedescSerializer
-    #context = {}
-    #user = get_object_or_404(User, pk=pk)
-    #if request.method == "POST":
+    # context = {}
+    # user = get_object_or_404(User, pk=pk)
+    # if request.method == "POST":
     #    new_desc = request.POST.get("new_desc")
     #    user.user_profile_content = new_desc
     #    user.save()
     #    return redirect("users:account_detail", user.id)
-    #return redirect("users:account_detail", user.id)
-    
+    # return redirect("users:account_detail", user.id)
+
+
 @permission_classes([IsAuthenticated])
 class ChangeNicknameApi(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = ChangeNicknameSerializer
-    #context = {}
-    #if request.method == "POST":
+    # context = {}
+    # if request.method == "POST":
     #    new_nickname = request.POST.get("new_nickname")
     #    user = get_object_or_404(
     #        User, pk=pk
@@ -772,7 +780,7 @@ class ChangeNicknameApi(generics.RetrieveUpdateAPIView):
     #        user.user_nickname = new_nickname
     #        user.save()
     #        return redirect("users:account_detail", user.id)
-    #return redirect("users:account_detail", user.id)
+    # return redirect("users:account_detail", user.id)
 
 
 # 비밀번호 변경 함수
@@ -809,9 +817,11 @@ class ChangepasswordView(generics.RetrieveUpdateAPIView):
                 {"error": "현재 비밀번호가 일치하지 않습니다."},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+
+
+    return redirect("users:login")
 """
 
-    return redirect("users:login")"""
 
 @permission_classes([IsAuthenticated])
 class ChangeImgView(generics.RetrieveUpdateAPIView):
@@ -827,7 +837,9 @@ class ChangeImgView(generics.RetrieveUpdateAPIView):
             # 새이미지로 바꿈
             user.user_profile_image = new_img
             user.save()
-    return redirect("users:account_detail", user.id)"""
+    return redirect("users:account_detail", user.id)
+"""
+
 
 # ________________________________________________ alarm ________________________________________________
 # @csrf_exempt
@@ -844,6 +856,7 @@ class AlarmAPI(APIView):
 
         return Response(data)
 
+
 # Alarm 읽었다고 체크 할 수 있는 Alarm update
 class UpdateAlarmAPIView(generics.RetrieveUpdateAPIView):
     queryset = Alarm.objects.all()
@@ -851,18 +864,20 @@ class UpdateAlarmAPIView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_update(self, serializer, *args, **kwargs):
-        target_alarm = get_object_or_404(Alarm, pk=self.kwargs['pk'])
+        target_alarm = get_object_or_404(Alarm, pk=self.kwargs["pk"])
 
         if target_alarm.is_checked == False:
             target_alarm.is_checked = True
 
         target_alarm.save()
-        serializer.save(is_checked = target_alarm.is_checked)
+        serializer.save(is_checked=target_alarm.is_checked)
 
-   # def update (self, instance, validated_data):
-       # instance.is_checked = True
-       # instance.save()
-       # return instance
+
+# def update (self, instance, validated_data):
+# instance.is_checked = True
+# instance.save()
+# return instance
+
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
     serializer_class = ResetPasswordEmailSerializer
@@ -882,7 +897,7 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
             # "users:password-reset-confirm",
             # kwargs={"uidb64": uidb64, "token": token},
             # )
-           # absurl = "http://localhost:3000/password_reset_submit"  # current_site + relativeLink
+            # absurl = "http://localhost:3000/password_reset_submit"  # current_site + relativeLink
             user_get = User.objects.get(username=username)
             print(user_get)
             temp = random.randrange(10000, 50000)
