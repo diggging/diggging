@@ -20,9 +20,9 @@ from django.conf import settings
 from django.utils.module_loading import import_string
 
 
-#settings.configure( # ...
+# settings.configure( # ...
 #        ROOT_URLCONF=urls,
-        # ... ),
+# ... ),
 #        )
 
 ROOT_URLCONF = "shoveling.urls"
@@ -44,7 +44,16 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 DEBUG = True
 
 
-ALLOWED_HOSTS = ["13.124.23.247", "diggging.com", "3.37.206.59", "api-diggging.shop", 'localhost', '127.0.0.1', '127.0.0.1:3000', '127.0.0.1:8000']
+ALLOWED_HOSTS = [
+    "13.124.23.247",
+    "diggging.com",
+    "3.37.206.59",
+    "api-diggging.shop",
+    "localhost",
+    "127.0.0.1",
+    "127.0.0.1:3000",
+    "127.0.0.1:8000",
+]
 
 # Application definition
 
@@ -85,9 +94,9 @@ INSTALLED_APPS = [
     # user_password
     "django_rest_passwordreset",
     # django taggit
-    'taggit',
+    "taggit",
     # django taggit serializer
-    'taggit_serializer',
+    "taggit_serializer",
 ]
 REST_AUTH_REGISTER_SERIALIZERS = {
     "REGISTER_SERIALIZER": "thenameofyourapp.serializers.CustomRegisterSerializer",
@@ -103,40 +112,19 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
-        #"rest_framework.permissions.IsAuthenticated",
-       # "rest_framework.permissions.IsAdminUser",
-       "rest_framework.permissions.AllowAny",
+        # "rest_framework.permissions.IsAuthenticated",
+        # "rest_framework.permissions.IsAdminUser",
+        "rest_framework.permissions.AllowAny",
     ],
 }
-JWT_AUTH = {
-    "JWT_ENCODE_HANDLER": "rest_framework_jwt.utils.jwt_encode_handler",
-    "JWT_DECODE_HANDLER": "rest_framework_jwt.utils.jwt_decode_handler",
-    "JWT_PAYLOAD_HANDLER": "rest_framework_jwt.utils.jwt_payload_handler",
-    "JWT_PAYLOAD_GET_USER_ID_HANDLER": "rest_framework_jwt.utils.jwt_get_user_id_from_payload_handler",
-    "JWT_RESPONSE_PAYLOAD_HANDLER": "rest_framework_jwt.utils.jwt_response_payload_handler",
-    "JWT_SECRET_KEY": SECRET_KEY,
-    "JWT_GET_USER_SECRET_KEY": None,
-    "JWT_PUBLIC_KEY": None,
-    "JWT_PRIVATE_KEY": None,
-    "JWT_ALGORITHM": "HS256",
-    "JWT_VERIFY": True,
-    "JWT_VERIFY_EXPIRATION": True,
-    "JWT_LEEWAY": 0,
-    "JWT_EXPIRATION_DELTA": timedelta(days=7),
-    "JWT_AUDIENCE": None,
-    "JWT_ISSUER": None,
-    "JWT_ALLOW_REFRESH": True,
-    "JWT_REFRESH_EXPIRATION_DELTA": timedelta(days=28),
-    "JWT_AUTH_HEADER_PREFIX": "JWT",
-    "JWT_AUTH_COOKIE": None,
-}
+
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
-    'AUTH_HEADER_TYPES': ('Bearer', ),
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken', ),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
 }
 
 REST_USE_JWT = True
@@ -231,10 +219,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
-#STATICFILES_DIRS = [
+# STATICFILES_DIRS = [
 #   os.path.join(BASE_DIR, "static")
 #   # BASE_DIR / 'static',
-#]
+# ]
 
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
@@ -264,8 +252,8 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_HOST_USER = os.environ.get("USER_EMAIL_HOST")
 EMAIL_HOST_PASSWORD = os.environ.get("USER_EMAIL_PASSWORD")
 EMAIL_PORT = 587
-#EMAIL_HOST_USER = os.environ.get("USER_EMAIL_HOST")
-#EMAIL_HOST_PASSWORD = os.environ.get("USER_EMAIL_PASSWORD")
+# EMAIL_HOST_USER = os.environ.get("USER_EMAIL_HOST")
+# EMAIL_HOST_PASSWORD = os.environ.get("USER_EMAIL_PASSWORD")
 EMAIL_USE_TLS = True
 
 AUTHENTICATION_BACKENDS = (
@@ -289,8 +277,8 @@ CORS_ORIGIN_WHITELIST = [
 ]
 
 # django taggit settings
-TAGGIT_CASE_INSENSITIVE = True # make django taggit to be Case insensitive
+TAGGIT_CASE_INSENSITIVE = True  # make django taggit to be Case insensitive
 
 # taggit hashtag setings
-TAGGIT_TAGS_FROM_STRING = 'shoveling.utils.comma_splitter'
-TAGGIT_STRING_FROM_TAGS = 'shoveling.utils.comma_joiner'
+TAGGIT_TAGS_FROM_STRING = "shoveling.utils.comma_splitter"
+TAGGIT_STRING_FROM_TAGS = "shoveling.utils.comma_joiner"

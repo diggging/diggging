@@ -1,86 +1,42 @@
-from django.conf.urls import url
 from django.urls import path
 from . import views
-from django.contrib.auth import views as auth_views
-from rest_framework.authtoken.views import obtain_auth_token
 
 app_name = "users"
 
 urlpatterns = [
     path("api/Signup/", views.Registration.as_view(), name="Signup"),
-    # path("api/Login/", views.Login.as_view(), name="Login"),
     path("api/userinfo/", views.LoadUserView.as_view(), name="userinfo"),
     path("api/Logout/", views.LogoutView.as_view(), name="Logout"),
-    # path("login", obtain_auth_token, name="login"),
-    # url(r'^signup/$', views.signup, name='signup'),
-    path("activate/<slug:uidb64>/<slug:token>/", views.UserActivate.as_view(), name="activate"),
-    # path(
-   #     "password_reset/",
-   #     auth_views.PasswordResetView.as_view(),
-   #     name="password_reset",
-   # ),
-   # path(
-   #     "password_reset/done/",
-   #     auth_views.PasswordResetDoneView.as_view(),
-   #     name="password_reset_done",
-   # ),
-   # path(
-   #     "password_reset_confirm/<uuid:uidb64>/<slug:token>/",
-   #     auth_views.PasswordResetConfirmView.as_view(),
-   #     name="password_reset_confirm",
-   # ),
-   # path(
-   #     "password_reset_complete/",
-   #     auth_views.PasswordResetCompleteView.as_view(),
-   #     name="password_reset_complete",
-   # ),
-     path(
-        "password_reset_API/",
-        view=views.Password_resetAPI.as_view(),
-        name="password_reset_API",
+    path(
+        "activate/<slug:uidb64>/<slug:token>/",
+        views.UserActivate.as_view(),
+        name="activate",
     ),
-    # path("password_reset/", views.MyPasswordResetView.as_view(), name="password_reset"),
-    # path(
-    #     "password_reset/",
-    #     auth_views.PasswordResetView.as_view(),
-    #     name="password_reset",
-    # ),
-    # path(
-    #     "password_reset/done/",
-    #     auth_views.PasswordResetDoneView.as_view(),
-    #     name="password_reset_done",
-    # ),
-    # path(
-    #     "password_reset_confirm/<uuid:uidb64>/<slug:token>/",
-    #     auth_views.PasswordResetConfirmView.as_view(),
-    #     name="password_reset_confirm",
-    # ),
-    # path(
-    #     "password_reset_complete/",
-    #     auth_views.PasswordResetCompleteView.as_view(),
-    #     name="password_reset_complete",
-    # ),
-    # path("password_reset/", view=views.Password_reset.as_view(), name="password_reset"),
-    # path(
-    #     "password_reset_email/<slug:uidb64>/<slug:token>/",
-    #     views.password_reset_email,
-    #     name="password_reset_email",
-    # ),
     path(
         "password_reset_API/",
         view=views.Password_resetAPI.as_view(),
         name="password_reset_API",
     ),
+    path(
+        "request-reset-email/",
+        view=views.RequestPasswordResetEmail.as_view(),
+        name="request-reset-email",
+    ),
+    # ------ 바꾸어야할것들----------------
     # my_page
     path("<int:pk>/my_page/", view=views.my_page, name="my_page"),  # my page
     path("<int:host_pk>/follow", view=views.follow, name="follow"),
     path("<int:pk>/account_detail", view=views.account_detail, name="account_detail"),
     path("<int:pk>/change_desc/", view=views.ChangeDesc.as_view(), name="change_desc"),
     path(
-        "<int:pk>/change_nickname/", view=views.ChangeNicknameApi.as_view(), name="change_nickname"
+        "<int:pk>/change_nickname/",
+        view=views.ChangeNicknameApi.as_view(),
+        name="change_nickname",
     ),
-    path("<int:pk>/change_pw/", view=views.ChangepasswordView.as_view(), name="change_pw"),
-    path("<int:pk>/change_img/", view=views.ChangeImgView.as_view() , name="change_img"),
+    path(
+        "<int:pk>/change_pw/", view=views.ChangepasswordView.as_view(), name="change_pw"
+    ),
+    path("<int:pk>/change_img/", view=views.ChangeImgView.as_view(), name="change_img"),
     # github login
     path("login/github", views.github_login, name="github_login"),
     path("login/github/callback", views.github_callback, name="github_callback"),
@@ -131,18 +87,8 @@ urlpatterns = [
         view=views.my_questions,
         name="my_questions",
     ),
-    path(
-        "request-reset-email/",
-        view=views.RequestPasswordResetEmail.as_view(),
-        name="request-reset-email",
-    ),
     # path('dashboard/', view=views.index, name="dashboard"),
     # new url
-    path(
-        "request-reset-email/",
-        view=views.RequestPasswordResetEmail.as_view(),
-        name="request-reset-email",
-    ),
     # path('password-reset/<uidb64>/<token>', view = views.PasswordTokenCheckAPI.as_view(), name='password-reset-confirm'),
     # path('password-reset-complete', view = views.SetNewPasswordAPIView.as_view(), name='password-reset-complete')
 ]

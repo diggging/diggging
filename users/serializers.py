@@ -1,30 +1,10 @@
-from django.contrib.auth.decorators import user_passes_test
-from django.db.models.fields import EmailField
-from rest_framework import fields, serializers, exceptions, status
-from rest_framework.exceptions import AuthenticationFailed, ValidationError
+from rest_framework import serializers
 
 from .models import User, Alarm
-from django.contrib.auth import authenticate
 from rest_framework_jwt.settings import api_settings
 from django.contrib.auth import get_user_model
 from rest_auth.registration.serializers import RegisterSerializer
-from django.contrib.auth.models import update_last_login
 from django.contrib.auth import authenticate
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.utils.encoding import (
-    smart_str,
-    force_str,
-    smart_bytes,
-    DjangoUnicodeDecodeError,
-)
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from django.contrib.sites.shortcuts import get_current_site
-from django.urls import reverse
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.contrib.sites.shortcuts import get_current_site
-from django.urls import reverse
-from .utils import Util
 
 
 try:
@@ -99,28 +79,6 @@ class RegisterSerializer(RegisterSerializer):
         return user"""
 
 
-"""class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=30)
-    password = serializers.CharField(
-        style={"input_type": "password"}, max_length=128, write_only=True
-    )
-
-    class Meta:
-        model = User
-        fields = ("old_password", "password", "password2")
-
-    def validate(self, attrs):
-        if attrs["password"] != attrs["password2"]:
-            raise serializers.ValidationError(
-                {"password": "Password fields didn't match."}
-            )
-
-        return attrs
-
-        except User.DoesNotExist:
-            raise serializers.ValidationError("User 가 존재하지않습니다.")
-        return {"username": user.username, "token": jwt_token}
-"""
 class ChangePasswordSerializer(serializers.ModelSerializer):
     password = serializers.CharField(style={"input_type": "password"}, write_only=True)
     password2 = serializers.CharField(style={"input_type": "password"}, write_only=True)
@@ -212,6 +170,7 @@ class ChangeNicknameSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"nickname": "7글자 이하로 입력하세요."})
         return instance
 
+
 class InputEmailSerializer(serializers.ModelSerializer):
     email = serializers.CharField(required=allauth_settings.EMAIL_REQUIRED)
     username = serializers.CharField(
@@ -256,13 +215,16 @@ class ResetPasswordEmailSerializer(serializers.Serializer):
     class Meta:
         fields = ["email", "username"]
 
+
 # path valuable
 class AlarmSerailzer(serializers.ModelSerializer):
 
     user = UserSerializer(read_only=True)
+
     class Meta:
         model = Alarm
         fields = "__all__"
+
 
 class AlarmUpdateSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
@@ -270,8 +232,14 @@ class AlarmUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alarm
         fields = "__all__"
-        read_only_fields = ["user", "request_user_nickname",
-        "request_user_profile_image", "title", "desc", "alarm_kind", "is_checked",
+        read_only_fields = [
+            "user",
+            "request_user_nickname",
+            "request_user_profile_image",
+            "title",
+            "desc",
+            "alarm_kind",
+            "is_checked",
         ]
 
     def update(self, instance, validated_data):
