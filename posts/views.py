@@ -157,6 +157,8 @@ class QuestionSearchView(APIView):
 
 @permission_classes([AllowAny])
 class QuestionSearchResultView(APIView):
+    pagination_class = ListPageNumberPagination
+    
     def get(self, request, *args, **kwargs):
         key_word = kwargs.get("query")
         question_query = QuestionPost.objects.filter(

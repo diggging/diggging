@@ -132,14 +132,31 @@ class LikeSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "target_post", "helped_num"]
 # ----------------------------------------------------------------------------------
 class QuestionThumbnailSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
     question_tags = TagListSerializerField(allow_null=True)
+    comment_count = serializers.IntegerField(source='question_comments.count', read_only=True)
+    answer_count = serializers.IntegerField(source='answers.count', read_only=True)
     class Meta:
         model = QuestionPost
-        fields = "__all__"
-    def to_representation(self, instance):
-        response = super().to_representation(instance)
-        response["user"] = UserSerializer(instance.user, read_only=True).data
-        return response
+        fields = [
+            "id",
+            "user",
+            "title",
+            "desc",
+            "scrap_num",
+            "helped_num",
+            "question_tags",
+            "created",
+            "updated",
+            "comment_count",
+            "answer_count",
+            "hits"
+        ]
+        
+    # def to_representation(self, instance):
+    #     response = super().to_representation(instance)
+    #     response["user"] = UserSerializer(instance.user, read_only=True).data
+    #     return response
 
 class SearchSerializer(serializers.Serializer):
     query = serializers.CharField(max_length=200)
