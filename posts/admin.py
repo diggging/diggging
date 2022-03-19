@@ -11,7 +11,7 @@ class PostAdmin(admin.ModelAdmin):
         "title",
         "image",
         "desc",
-        "code",
+        #"code",
         # "is_public",
         # "is_friend",
         "folder",
