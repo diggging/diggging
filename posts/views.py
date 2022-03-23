@@ -186,6 +186,5 @@ def clean_html(querys, key_word):
     print(rm_pk)
     for pk in rm_pk:
         querys.filter(pk=pk).delete()
-        #print(querys)
     
     return querys
