@@ -39,6 +39,8 @@ from shoveling.utils import (
     listing, 
     like,
 )
+from bs4 import BeautifulSoup
+
 class ListPageNumberPagination(PageNumberPagination):
     page_size = 5
 
@@ -164,9 +166,26 @@ class QuestionSearchResultView(APIView):
         question_query = QuestionPost.objects.filter(
             Q(title__icontains=key_word) | Q(desc__icontains=key_word)
         )
-        serializer = QuestionThumbnailSerializer(question_query, many=True)
+        
+        clean_querys = clean_html(question_query, key_word)
+        
+        serializer = QuestionThumbnailSerializer(clean_querys, many=True)
         return Response(serializer.data)
 
-
-
-
+# html tag 삭제
+def clean_html(querys, key_word):
+    rm_pk = []
+    for query in querys:
+        desc = query.desc
+        print(desc)
+        cleantext = BeautifulSoup(desc, "lxml").text
+        print(cleantext)
+        query.desc = cleantext
+        if key_word not in cleantext:
+            rm_pk.append(query.pk)
+    print(rm_pk)
+    for pk in rm_pk:
+        querys.filter(pk=pk).delete()
+        #print(querys)
+    
+    return querys
