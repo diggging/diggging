@@ -152,9 +152,7 @@ class QuestionSearchView(APIView):
     def post(self, request):
         query = request.data
         serializer = SearchSerializer(query)
-        print(serializer.data)
         return Response(serializer.data)
-        # return redirect("posts:search_quest_result", serializer.data['query'])
 
 
 @permission_classes([AllowAny])
