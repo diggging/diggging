@@ -79,6 +79,12 @@ class RegisterSerializer(RegisterSerializer):
         return user"""
 
 
+class FindIdSerializer(serializers.ModelSerializer):
+    class Meta:
+        # model = User
+        fields = ["email", "temp"]
+
+
 class ChangePasswordSerializer(serializers.ModelSerializer):
     password = serializers.CharField(style={"input_type": "password"}, write_only=True)
     password2 = serializers.CharField(style={"input_type": "password"}, write_only=True)

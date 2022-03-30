@@ -51,6 +51,7 @@ from .serializers import (
     Unlogin_ChangePasswordSerializer,
     # SetNewPasswordSerializer,
     AlarmUpdateSerializer,
+    FindIdSerializer,
 )
 from rest_framework.response import Response
 from django.contrib.auth import login
@@ -80,6 +81,8 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from .utils import Util
 import random
+from dtos import DTOResponseFormatter
+from users.services import FoodService
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
@@ -204,6 +207,11 @@ class Password_resetAPI(generics.GenericAPIView):
         return Response(
             {"success": True, "message": "비밀번호 변경 성공"}, status=status.HTTP_200_OK
         )
+
+
+class FindIdAPI(generics.GenericAPIView):
+    def find(self, request):
+        pass
 
 
 # _______________________________________________social login____________________________________________
