@@ -210,8 +210,27 @@ class Password_resetAPI(generics.GenericAPIView):
 
 
 class FindIdAPI(generics.GenericAPIView):
-    def find(self, request):
-        pass
+    serializers = FindIdSerializer
+
+    def put(self, request):
+        serializer = self.get_serializer(data=request.data)
+        email = User.objects.get(email=self.request.data.get("email"))
+        user = serializer.save(request)
+        if email.email == self.request.data.get("email"):
+            if int(email.temp) == int(self.request.data.get("temp")):
+                return Response(
+                    {
+                        "id": UserSerializer(
+                            user, context=self.get_serializer_context()
+                        ).data,
+                        "success": True,
+                        "message": "아이디 찾기 성공",
+                    },
+                    status=status.HTTP_200_OK,
+                )
+
+    # def find(self, request):
+    # pass
 
 
 # _______________________________________________social login____________________________________________

@@ -3,7 +3,7 @@ from typing import Union, List
 from django.db.models import QuerySet, Q
 
 from core.base_service import BaseService
-from dtos import FoodOutputDTO
+from dtos.users import *
 from users.models import User
 from users.serializers import FindIdSerializer
 

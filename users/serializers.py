@@ -80,8 +80,11 @@ class RegisterSerializer(RegisterSerializer):
 
 
 class FindIdSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(required=allauth_settings.EMAIL_REQUIRED)
+    temp = serializers.IntegerField()
+
     class Meta:
-        # model = User
+        model = User
         fields = ["email", "temp"]
 
 
