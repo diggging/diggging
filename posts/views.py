@@ -40,6 +40,7 @@ from shoveling.utils import (
     like,
 )
 from bs4 import BeautifulSoup
+from rest_framework.pagination import PageNumberPagination
 
 class ListPageNumberPagination(PageNumberPagination):
     page_size = 5
@@ -144,9 +145,38 @@ class ScrapCreateAPIView(generics.RetrieveUpdateAPIView):
 
 @permission_classes([AllowAny])
 class QuestionSearchView(APIView):
+    pagination_class = ListPageNumberPagination
+    serializer_class = QuestionThumbnailSerializer
+    
+    @property
+    def paginator(self):
+        if not hasattr(self, '_paginator'):
+            if self.pagination_class is None:
+                self._paginator = None
+            else:
+                self._paginator = self.pagination_class()
+        else:
+            pass
+        return self._paginator
+    def paginate_queryset(self, queryset):
+        
+        if self.paginator is None:
+            return None
+        return self.paginator.paginate_queryset(queryset,
+                   self.request, view=self)
+    def get_paginated_response(self, data):
+        assert self.paginator is not None
+        return self.paginator.get_paginated_response(data)
+    
     def get(self, request):
         question_query = QuestionPost.objects.all()
-        serializer = QuestionThumbnailSerializer(question_query, many=True)
+        page = self.paginate_queryset(question_query)
+        if page is not None:
+            serializer = self.get_paginated_response(self.serializer_class(page, many=True).data)
+        else:
+            serializer = QuestionThumbnailSerializer(question_query, many=True)
+        
+        #serializer = QuestionThumbnailSerializer(clean_querys, many=True)
         return Response(serializer.data)
 
     def post(self, request):
@@ -158,6 +188,27 @@ class QuestionSearchView(APIView):
 @permission_classes([AllowAny])
 class QuestionSearchResultView(APIView):
     pagination_class = ListPageNumberPagination
+    serializer_class = QuestionThumbnailSerializer
+    
+    @property
+    def paginator(self):
+        if not hasattr(self, '_paginator'):
+            if self.pagination_class is None:
+                self._paginator = None
+            else:
+                self._paginator = self.pagination_class()
+        else:
+            pass
+        return self._paginator
+    def paginate_queryset(self, queryset):
+        
+        if self.paginator is None:
+            return None
+        return self.paginator.paginate_queryset(queryset,
+                   self.request, view=self)
+    def get_paginated_response(self, data):
+        assert self.paginator is not None
+        return self.paginator.get_paginated_response(data)
     
     def get(self, request, *args, **kwargs):
         key_word = kwargs.get("query")
@@ -166,13 +217,18 @@ class QuestionSearchResultView(APIView):
         )
         
         clean_querys = clean_html(question_query, key_word)
+        page = self.paginate_queryset(clean_querys)
+        if page is not None:
+            serializer = self.get_paginated_response(self.serializer_class(page, many=True).data)
+        else:
+            serializer = QuestionThumbnailSerializer(clean_querys, many=True)
         
-        serializer = QuestionThumbnailSerializer(clean_querys, many=True)
+        #serializer = QuestionThumbnailSerializer(clean_querys, many=True)
         return Response(serializer.data)
 
 # html tag 삭제
 def clean_html(querys, key_word):
-    rm_pk = []
+    yes_pk = []
     for query in querys:
         desc = query.desc
         print(desc)
@@ -180,9 +236,10 @@ def clean_html(querys, key_word):
         print(cleantext)
         query.desc = cleantext
         if key_word not in cleantext:
-            rm_pk.append(query.pk)
-    print(rm_pk)
-    for pk in rm_pk:
-        querys.filter(pk=pk).delete()
+            yes_pk.append(query.pk)
+    print(yes_pk)
+    querys_list = list(querys)
+    for pk in yes_pk:
+        querys = querys.exclude(pk=pk)
     
     return querys
