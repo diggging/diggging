@@ -10,8 +10,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
 # from django.views.generic.base import TemplateView
-# from .forms import SignUpForm
-from .forms import UserCustomCreationForm, AuthenticationCustomForm
 from .models import User, Sand, Alarm, create_auth_token
 from posts.models import Folder, Post
 from questions.models import QuestionPost, Answer, QuestionFolder
@@ -21,7 +19,6 @@ from django.contrib.auth.hashers import check_password
 
 # 이메일 인증 관련 import
 import logging
-from django.http import HttpResponse
 from django.db.models import Sum, query
 
 # SMTP 관련 인증
@@ -54,11 +51,11 @@ from .serializers import (
     Unlogin_ChangePasswordSerializer,
     # SetNewPasswordSerializer,
     AlarmUpdateSerializer,
+    FindIdSerializer,
 )
 from rest_framework.response import Response
 from django.contrib.auth import login
 from rest_framework import permissions
-from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
 
 # new
@@ -66,11 +63,8 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework import status, mixins
 from rest_framework import generics  # generics class-based view 사용할 계획
-from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
-from rest_framework.decorators import permission_classes, authentication_classes
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
-from rest_framework_jwt.serializers import VerifyJSONWebTokenSerializer
-from rest_framework.exceptions import NotFound
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.decorators import permission_classes
 from rest_framework.views import APIView
 from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC
 from rest_framework.decorators import (
@@ -79,27 +73,16 @@ from rest_framework.decorators import (
     authentication_classes,
 )
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-)
-from django.core.mail import EmailMultiAlternatives
 
 # import for new code
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.utils.encoding import (
-    smart_str,
-    force_str,
-    smart_bytes,
-    DjangoUnicodeDecodeError,
-)
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from .utils import Util
 import random
+from dtos import DTOResponseFormatter
+from users.services import FoodService
 
 # Create your views here.
 # ________________________________________________ 회원가입, 로그인, 로그아웃 ________________________________________________
@@ -152,57 +135,6 @@ class Registration(generics.GenericAPIView):
         )
 
 
-# @csrf_exempt
-# def signup(request):
-#     if request.method == "POST":
-#         user_form = UserCustomCreationForm(request.POST)
-#         if user_form.is_valid():
-#             user = user_form.save(commit=False)
-#             user.is_active = False
-#             user.save()
-#             current_site = get_current_site(request)
-#             message = render_to_string(
-#                 "users/user_activate_email.html",
-#                 {
-#                     "user": user,
-#                     "domain": current_site.domain,
-#                     "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-#                     "token": account_activation_token.make_token(user),
-#                 },
-#             )
-#             # sending mail to future user
-#             mail_subject = "Activate your blog account."
-#             to_email = user_form.cleaned_data.get("email")
-#             email = EmailMessage(mail_subject, message, to=[to_email])
-#             email.send()
-
-#             # user가 생기자마자 바로 해결, 미해결 폴더 만들기
-#             # return HttpResponse('Please confirm your email address to complete the registration') -> 이메일 인증 성공 확인 가능 메세지
-
-#             return redirect("users:login")
-#     else:
-#         user_form = UserCustomCreationForm()
-
-#     ctx = {"signup_form": user_form}
-#     return render(request, "users/signup.html", context=ctx)
-
-
-# 이메일 인증 후 계정 활성화
-# def activate(request, uidb64, token):
-#    try:
-#        uid = force_text(urlsafe_base64_decode(uidb64))
-#        user = User.objects.get(pk=uid)
-#    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-#        user = None
-#    if user is not None and account_activation_token.check_token(user, token):
-#        user.is_active = True
-#        user.save()
-#        login(request, user, backend="django.contrib.auth.backends.ModelBackend")
-#        return redirect("posts:main")
-#    else:
-#        return HttpResponse("Activation link is invalid!")
-
-
 class UserActivate(APIView):
     def get(self, request, uidb64, token):
         try:
@@ -240,27 +172,6 @@ class LoadUserView(APIView):
             )
 
 
-# @csrf_exempt
-# def log_in(request):
-#    context = {}
-#    if request.method == "POST":
-#        form = AuthenticationCustomForm(request, request.POST)
-#        if form.is_valid():
-#            # login(request, form.get_uer())
-#            login(
-#                request,
-#                form.get_user(),
-#                backend="django.contrib.auth.backends.ModelBackend",
-#            )  # 추가
-#            user = form.get_user()
-#            return redirect("posts:main")
-#
-#    else:
-#        form = AuthenticationCustomForm()
-#    ctx = {"form": form}
-#    return render(request, template_name="users/login.html", context=ctx)
-
-
 # 로그아웃
 class LogoutView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -276,15 +187,7 @@ class LogoutView(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-# 비밀번호를 모르겠을때, email을 작성하는 부분
-# one tow
-# class Password_reset(generics.GenericAPIView):
-#     # email 받으면
-#     serializer_class = InputEmailSerializer
-
-
 class Password_resetAPI(generics.GenericAPIView):
-    # queryset = User.objects.all()
     serializer_class = Unlogin_ChangePasswordSerializer
 
     def put(self, request):
@@ -304,6 +207,30 @@ class Password_resetAPI(generics.GenericAPIView):
         return Response(
             {"success": True, "message": "비밀번호 변경 성공"}, status=status.HTTP_200_OK
         )
+
+
+class FindIdAPI(generics.GenericAPIView):
+    serializers = FindIdSerializer
+
+    def put(self, request):
+        serializer = self.get_serializer(data=request.data)
+        email = User.objects.get(email=self.request.data.get("email"))
+        user = serializer.save(request)
+        if email.email == self.request.data.get("email"):
+            if int(email.temp) == int(self.request.data.get("temp")):
+                return Response(
+                    {
+                        "id": UserSerializer(
+                            user, context=self.get_serializer_context()
+                        ).data,
+                        "success": True,
+                        "message": "아이디 찾기 성공",
+                    },
+                    status=status.HTTP_200_OK,
+                )
+
+    # def find(self, request):
+    # pass
 
 
 # _______________________________________________social login____________________________________________
